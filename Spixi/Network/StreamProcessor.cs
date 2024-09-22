@@ -1139,7 +1139,7 @@ namespace SPIXI
                 Logging.error("App with session id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
                 return;
             }
-            app_page.networkDataReceive(sender_address, app_data.data);
+            app_page.networkDataReceived(sender_address, app_data.data);
         }
 
         public static void sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)

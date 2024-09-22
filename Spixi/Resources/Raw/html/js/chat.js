@@ -220,9 +220,9 @@ document.getElementById("ca_send").onclick = function () {
     location.href = "ixian:send";
 }
 
-/*document.getElementById("ca_app").onclick = function () {
+document.getElementById("ca_app").onclick = function () {
     document.getElementById("AppsMenu").style.display = "block";
-}*/
+}
 
 document.getElementById("ca_sendfile").onclick = function () {
     var chatInput = document.getElementById("chat_input");

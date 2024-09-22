@@ -1,9 +1,17 @@
 ﻿using IXICore;
-using IXICore.Meta;
-using System;
 
 namespace SPIXI.CustomApps
 {
+    enum CustomAppCapabilities
+    {
+        SingleUser,
+        MultiUser,
+        Authentication,
+        TransactionSigning,
+        RegisteredNamesManagement,
+        Storage
+    }
+
     class CustomApp
     {
         public string id = "";
@@ -12,6 +20,7 @@ namespace SPIXI.CustomApps
         public string version = "";
         public byte[] publicKey = null;
         public byte[] signature = null;
+        public Dictionary<CustomAppCapabilities, bool> capabilities = null;
 
         public CustomApp(string[] app_info)
         {
@@ -61,8 +70,73 @@ namespace SPIXI.CustomApps
                     case "signature":
                         signature = Crypto.stringToHash(value);
                         break;
+
+                    case "capabilities":
+                        capabilities = parseCapabilities(value);
+                        break;
                 }
             }
+        }
+
+        private Dictionary<CustomAppCapabilities, bool> parseCapabilities(string value)
+        {
+            var capArr = value.Split(',');
+            var caps = new Dictionary<CustomAppCapabilities, bool>();
+            foreach (var cap in capArr)
+            {
+                var trimmedCap = cap.Trim();
+                switch (trimmedCap)
+                {
+                    case "singleUser":
+                        caps.Add(CustomAppCapabilities.SingleUser, true);
+                        break;
+
+                    case "multiUser":
+                        caps.Add(CustomAppCapabilities.MultiUser, true);
+                        break;
+
+                    case "authentication":
+                        caps.Add(CustomAppCapabilities.Authentication, true);
+                        break;
+
+                    case "transactionSigning":
+                        caps.Add(CustomAppCapabilities.TransactionSigning, true);
+                        break;
+
+                    case "registeredNamesManagement":
+                        caps.Add(CustomAppCapabilities.RegisteredNamesManagement, true);
+                        break;
+                }
+            }
+            return caps;
+        }
+
+        public bool hasCapability(CustomAppCapabilities capability)
+        {
+            if (capabilities != null && capabilities.ContainsKey(capability))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public string getCapabilitiesAsString()
+        {
+            string str = "";
+            if (capabilities == null)
+            {
+                return "";
+            }
+
+            foreach (var cap in capabilities)
+            {
+                if (str != "")
+                {
+                    str += ", ";
+                }
+                str += cap.Key.ToString();
+            }
+            return str;
         }
     }
 }

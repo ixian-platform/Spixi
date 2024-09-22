@@ -1,12 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Net.Http;
 
 namespace SPIXI.CustomApps
 {
@@ -24,7 +19,7 @@ namespace SPIXI.CustomApps
         public CustomAppManager(string base_app_path)
         {
             appsPath = Path.Combine(base_app_path, "html", "Apps");
-            if(!Directory.Exists(appsPath))
+            if (!Directory.Exists(appsPath))
             {
                 Directory.CreateDirectory(appsPath);
             }
@@ -300,5 +295,6 @@ namespace SPIXI.CustomApps
                 }
             }
         }
+
     }
 }

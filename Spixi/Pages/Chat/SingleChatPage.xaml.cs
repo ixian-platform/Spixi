@@ -68,6 +68,7 @@ namespace SPIXI
 
         protected override void OnDisappearing()
         {
+            webView = null;
             base.OnDisappearing();
         }
 
@@ -878,12 +879,24 @@ namespace SPIXI
             {
                 foreach (CustomApp app in apps.Values)
                 {
-                    string icon = Node.customAppManager.getAppIconPath(app.id);
-                    if(icon == null)
+                    try
                     {
-                        icon = "";
+                        if (!app.hasCapability(CustomAppCapabilities.MultiUser))
+                        {
+                            continue;
+                        }
+
+                        string icon = Node.customAppManager.getAppIconPath(app.id);
+                        if (icon == null)
+                        {
+                            icon = "";
+                        }
+                        Utils.sendUiCommand(this, "addApp", app.id, app.name, icon);
                     }
-                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon);
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception while loading app '{0}': {1}", app.id, e);
+                    }
                 }
             }
         }

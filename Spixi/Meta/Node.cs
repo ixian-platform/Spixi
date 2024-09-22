@@ -44,6 +44,7 @@ namespace SPIXI.Meta
         public static TransactionInclusion tiv = null;
 
         public static CustomAppManager customAppManager = null;
+        public static CustomAppStorage customAppStorage = null;
 
         public static bool generatedNewWallet = false;
 
@@ -87,6 +88,7 @@ namespace SPIXI.Meta
             localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
 
             customAppManager = new CustomAppManager(Config.spixiUserFolder);
+            customAppStorage = new CustomAppStorage(Config.spixiUserFolder);
 
             FriendList.init(Config.spixiUserFolder);
 

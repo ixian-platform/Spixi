@@ -33,6 +33,7 @@ namespace SPIXI
 
         protected override void OnDisappearing()
         {
+            webView = null;
             base.OnDisappearing();
         }
 

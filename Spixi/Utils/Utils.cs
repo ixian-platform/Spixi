@@ -31,6 +31,11 @@ namespace SPIXI
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
         }
 
+        public static string escapeHtmlParameter(byte[] str)
+        {
+            return Convert.ToBase64String(str);
+        }
+
         public static string amountToHumanFormatString(IxiNumber amount)
         {
             string amount_string = amount.ToString();
@@ -48,18 +53,23 @@ namespace SPIXI
 
                 foreach (string arg in arguments)
                 {
-                    sb.Append(",'");
-                    sb.Append(escapeHtmlParameter(arg));
-                    sb.Append("'");
+                    if (arg != null)
+                    {
+                        sb.Append(",");
+                        sb.Append("'" + escapeHtmlParameter(arg) + "'");
+                    }
+                    else
+                    {
+                        sb.Append(",null");
+                    }
                 }
 
                 sb.Append(");");
                 cmd_str = sb.ToString();
-                // Logging.info("JS {0}", cmd_str);
                 contentPage.sendMessage(cmd_str);
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logging.error("Exception occured in sendUiCommand " + e);
             }

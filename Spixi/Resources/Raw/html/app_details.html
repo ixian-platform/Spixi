@@ -43,26 +43,32 @@
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
 
-        <div class="spixi-container">
-            <img id="AppIcon" class="spixi-avatar" style="float: left; margin-right: 15px;"/>
+        <div class="spixi-container spixi-toolbar">
+            <img id="AppIcon" class="spixi-avatar" style="float: left; margin-right: 15px;" />
             <div class="text" id="AppPublisher"></div>
             <div class="text" id="AppVersion"></div>
+            <div class="text" id="AppCapabilities"></div>
 
             <div class="spixi-holder-20" style="clear:both;"></div>
 
             <div class="spixi-button" onclick="location.href='ixian:uninstall';">*SL{app-details-uninstall}</div>
+            <div id="StartAppBtn" class="spixi-button" style="display: none;" onclick="location.href='ixian:startApp';">*SL{app-details-start}</div>
         </div>
 
     </div>  <!-- Wrap -->
 
     <script type="text/javascript">
-        function init(name, icon, publisher, version) {
+        function init(name, icon, publisher, version, capabilities, singleUserMode) {
             icon = icon.replace(/&#92;/g, '\\');
 
             document.getElementById("AppName").innerHTML = name;
             document.getElementById("AppIcon").src = icon;
             document.getElementById("AppPublisher").innerHTML = "*SL{app-details-publisher} " + publisher;
             document.getElementById("AppVersion").innerHTML = "*SL{app-details-version} " + version;
+            document.getElementById("AppCapabilities").innerHTML = "*SL{app-details-capabilities} " + capabilities;
+            if (singleUserMode == "True") {
+                document.getElementById("StartAppBtn").style.display = "block";
+            }
         }
     </script>
 

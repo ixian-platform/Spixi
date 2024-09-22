@@ -1,4 +1,5 @@
-﻿using SPIXI.CustomApps;
+﻿using IXICore.Meta;
+using SPIXI.CustomApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
@@ -35,6 +36,7 @@ namespace SPIXI
 
         protected override void OnDisappearing()
         {
+            webView = null;
             base.OnDisappearing();
         }
 
@@ -60,6 +62,10 @@ namespace SPIXI
             {
                 onUninstall();
             }
+            else if (current_url.StartsWith("ixian:startApp", StringComparison.Ordinal))
+            {
+                onStartApp();
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -84,7 +90,7 @@ namespace SPIXI
                 icon = "";
             }
 
-            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version);
+            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsString(), app.hasCapability(CustomAppCapabilities.SingleUser).ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -118,6 +124,18 @@ namespace SPIXI
             onBack();
 
             return true;
+        }
+
+        public void onStartApp()
+        {
+            CustomAppPage customAppPage = new CustomAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.customAppManager.getAppEntryPoint(appId));
+            customAppPage.accepted = true;
+            Node.customAppManager.addAppPage(customAppPage);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(customAppPage, Config.defaultXamarinAnimations);
+            });
         }
     }
 }
