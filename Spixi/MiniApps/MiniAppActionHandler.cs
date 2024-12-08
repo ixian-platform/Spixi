@@ -1,17 +1,17 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using Newtonsoft.Json;
-using SPIXI.CustomApps.ActionRequestModels;
-using SPIXI.CustomApps.ActionResponseModels;
+using SPIXI.MiniApps.ActionRequestModels;
+using SPIXI.MiniApps.ActionResponseModels;
 using SPIXI.Storage;
 using IXICore.Utils;
 using static IXICore.Transaction;
 using IXICore.RegNames;
 using System.Text;
 
-namespace SPIXI.CustomApps
+namespace SPIXI.MiniApps
 {
-    public static class CustomAppCommands
+    public static class MiniAppCommands
     {
         public const string AUTH = "auth";
         public const string REGISTER_NAME = "registerName";
@@ -22,38 +22,38 @@ namespace SPIXI.CustomApps
         public const string TRANSFER_NAME = "transferName";
     }
 
-    public static class CustomAppActionHandler
+    public static class MiniAppActionHandler
     {
         public static string? processAction(string command, string actionData)
         {
             string? resp = null;
             switch (command)
             {
-                case CustomAppCommands.AUTH:
+                case MiniAppCommands.AUTH:
                     resp = processAuth(actionData);
                     break;
 
-                case CustomAppCommands.REGISTER_NAME:
+                case MiniAppCommands.REGISTER_NAME:
                     resp = processRegisterName(actionData);
                     break;
 
-                case CustomAppCommands.UPDATE_NAME:
+                case MiniAppCommands.UPDATE_NAME:
                     resp = processUpdateName(actionData);
                     break;
 
-                case CustomAppCommands.EXTEND_NAME:
+                case MiniAppCommands.EXTEND_NAME:
                     resp = processExtendName(actionData);
                     break;
 
-                case CustomAppCommands.UPDATE_CAPACITY:
+                case MiniAppCommands.UPDATE_CAPACITY:
                     resp = processUpdateCapacity(actionData);
                     break;
 
-                /*case CustomAppCommands.ALLOW_SUBNAMES:
+                /*case MiniAppCommands.ALLOW_SUBNAMES:
                     resp = processAllowSubnames(actionData);
                     break;
 
-                case CustomAppCommands.TRANSFER_NAME:
+                case MiniAppCommands.TRANSFER_NAME:
                     resp = processTransferName(actionData);
                     break;*/
             }
@@ -101,9 +101,6 @@ namespace SPIXI.CustomApps
             }
 
             Transaction tx = new Transaction((int)Transaction.Type.RegName, fee, toList, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
-
-            IxianHandler.addTransaction(tx, true);
-            TransactionCache.addUnconfirmedTransaction(tx);
 
             return tx;
         }

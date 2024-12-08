@@ -1,11 +1,11 @@
 ﻿using IXICore;
 
-namespace SPIXI.CustomApps
+namespace SPIXI.MiniApps
 {
-    public class CustomAppStorage
+    public class MiniAppStorage
     {
         string appsStoragePath = "AppsStorage";
-        public CustomAppStorage(string baseAppPath)
+        public MiniAppStorage(string baseAppPath)
         {
             appsStoragePath = Path.Combine(baseAppPath, "AppsStorage");
             if (!Directory.Exists(appsStoragePath))

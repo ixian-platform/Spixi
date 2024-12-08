@@ -1,6 +1,6 @@
-﻿namespace SPIXI.CustomApps.ActionRequestModels
+﻿namespace SPIXI.MiniApps.ActionRequestModels
 {
-    public class CustomAppActionBase
+    public class MiniAppActionBase
     {
         public string command;
         public string requestId;

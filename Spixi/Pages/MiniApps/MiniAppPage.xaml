@@ -2,7 +2,7 @@
 <d:SpixiContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="clr-namespace:SPIXI;assembly=SPIXI"
-             x:Class="SPIXI.CustomAppPage">
+             x:Class="SPIXI.MiniAppPage">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>

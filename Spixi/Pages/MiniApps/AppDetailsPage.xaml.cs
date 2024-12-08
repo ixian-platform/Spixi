@@ -1,5 +1,5 @@
 ﻿using IXICore.Meta;
-using SPIXI.CustomApps;
+using SPIXI.MiniApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
@@ -82,15 +82,15 @@ namespace SPIXI
 
         private void onLoad()
         {
-            CustomApp app = Node.customAppManager.getApp(appId);
+            MiniApp app = Node.MiniAppManager.getApp(appId);
 
-            string icon = Node.customAppManager.getAppIconPath(appId);
+            string icon = Node.MiniAppManager.getAppIconPath(appId);
             if(icon == null)
             {
                 icon = "";
             }
 
-            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsString(), app.hasCapability(CustomAppCapabilities.SingleUser).ToString());
+            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsString(), app.hasCapability(MiniAppCapabilities.SingleUser).ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -98,7 +98,7 @@ namespace SPIXI
 
         private void onUninstall()
         {
-            if(Node.customAppManager.remove(appId))
+            if(Node.MiniAppManager.remove(appId))
             {
                 displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removed-text"), SpixiLocalization._SL("global-dialog-ok"));
             }else
@@ -128,13 +128,13 @@ namespace SPIXI
 
         public void onStartApp()
         {
-            CustomAppPage customAppPage = new CustomAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.customAppManager.getAppEntryPoint(appId));
-            customAppPage.accepted = true;
-            Node.customAppManager.addAppPage(customAppPage);
+            MiniAppPage MiniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.MiniAppManager.getAppEntryPoint(appId));
+            MiniAppPage.accepted = true;
+            Node.MiniAppManager.addAppPage(MiniAppPage);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(customAppPage, Config.defaultXamarinAnimations);
+                Navigation.PushAsync(MiniAppPage, Config.defaultXamarinAnimations);
             });
         }
     }

@@ -245,16 +245,16 @@
 		<MauiXaml Update="Pages\Contacts\ContactNewPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Pages\CustomApp\AppDetailsPage.xaml">
+		<MauiXaml Update="Pages\MiniApps\AppDetailsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Pages\CustomApp\AppNewPage.xaml">
+		<MauiXaml Update="Pages\MiniApps\AppNewPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Pages\CustomApp\AppsPage.xaml">
+		<MauiXaml Update="Pages\MiniApps\AppsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Pages\CustomApp\CustomAppPage.xaml">
+		<MauiXaml Update="Pages\MiniApps\MiniAppPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Pages\Downloads\DownloadsPage.xaml">
@@ -324,6 +324,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<Compile Update="Pages\MiniApps\MiniAppPage.xaml.cs">
+		  <DependentUpon>MiniAppPage.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Properties\Resources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>

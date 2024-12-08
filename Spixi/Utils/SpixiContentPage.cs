@@ -1,6 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.CustomApps;
+using SPIXI.MiniApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.VoIP;
@@ -230,17 +230,17 @@ namespace SPIXI
                 return;
             }
             Utils.sendUiCommand(this, "clearAppRequests");
-            var app_pages = Node.customAppManager.getAppPages();
+            var app_pages = Node.MiniAppManager.getAppPages();
             lock (app_pages)
             {
-                foreach (CustomAppPage page in app_pages.Values)
+                foreach (MiniAppPage page in app_pages.Values)
                 {
                     if (page.accepted)
                     {
                         continue;
                     }
                     Friend f = FriendList.getFriend(page.hostUserAddress);
-                    CustomApp app = Node.customAppManager.getApp(page.appId);
+                    MiniApp app = Node.MiniAppManager.getApp(page.appId);
                     string text = string.Format(SpixiLocalization._SL("global-app-wants-to-use"), f.nickname, app.name);
                     Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(page.sessionId), text, SpixiLocalization._SL("global-app-accept"), SpixiLocalization._SL("global-app-reject"));
                 }
@@ -275,7 +275,7 @@ namespace SPIXI
                 VoIPManager.acceptCall(b_session_id);
                 return;
             }
-            CustomAppPage app_page = Node.customAppManager.acceptAppRequest(b_session_id);
+            MiniAppPage app_page = Node.MiniAppManager.acceptAppRequest(b_session_id);
             if (app_page != null)
             {
                 Navigation.PushAsync(app_page, Config.defaultXamarinAnimations);
@@ -290,7 +290,7 @@ namespace SPIXI
                 VoIPManager.rejectCall(b_session_id);
                 return;
             }
-            Node.customAppManager.rejectAppRequest(b_session_id);
+            Node.MiniAppManager.rejectAppRequest(b_session_id);
         }
 
         public virtual void updateScreen()

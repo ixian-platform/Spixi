@@ -6,7 +6,7 @@ using IXICore.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Spixi;
-using SPIXI.CustomApps;
+using SPIXI.MiniApps;
 using SPIXI.Network;
 using SPIXI.Storage;
 using System.Text;
@@ -43,8 +43,8 @@ namespace SPIXI.Meta
 
         public static TransactionInclusion tiv = null;
 
-        public static CustomAppManager customAppManager = null;
-        public static CustomAppStorage customAppStorage = null;
+        public static MiniAppManager MiniAppManager = null;
+        public static MiniAppStorage MiniAppStorage = null;
 
         public static bool generatedNewWallet = false;
 
@@ -87,8 +87,8 @@ namespace SPIXI.Meta
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
 
-            customAppManager = new CustomAppManager(Config.spixiUserFolder);
-            customAppStorage = new CustomAppStorage(Config.spixiUserFolder);
+            MiniAppManager = new MiniAppManager(Config.spixiUserFolder);
+            MiniAppStorage = new MiniAppStorage(Config.spixiUserFolder);
 
             FriendList.init(Config.spixiUserFolder);
 
@@ -165,7 +165,7 @@ namespace SPIXI.Meta
             // Start the transfer manager
             TransferManager.start();
 
-            customAppManager.start();
+            MiniAppManager.start();
 
             startCounter++;
 
@@ -312,7 +312,7 @@ namespace SPIXI.Meta
 
             localStorage.stop();
 
-            customAppManager.stop();
+            MiniAppManager.stop();
 
             // Stop TIV
             tiv.stop();

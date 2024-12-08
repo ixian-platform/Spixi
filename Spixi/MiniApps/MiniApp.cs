@@ -1,8 +1,8 @@
 ﻿using IXICore;
 
-namespace SPIXI.CustomApps
+namespace SPIXI.MiniApps
 {
-    enum CustomAppCapabilities
+    enum MiniAppCapabilities
     {
         SingleUser,
         MultiUser,
@@ -12,7 +12,7 @@ namespace SPIXI.CustomApps
         Storage
     }
 
-    class CustomApp
+    class MiniApp
     {
         public string id = "";
         public string publisher = "";
@@ -20,9 +20,9 @@ namespace SPIXI.CustomApps
         public string version = "";
         public byte[] publicKey = null;
         public byte[] signature = null;
-        public Dictionary<CustomAppCapabilities, bool> capabilities = null;
+        public Dictionary<MiniAppCapabilities, bool> capabilities = null;
 
-        public CustomApp(string[] app_info)
+        public MiniApp(string[] app_info)
         {
             foreach(string command in app_info)
             {
@@ -78,40 +78,40 @@ namespace SPIXI.CustomApps
             }
         }
 
-        private Dictionary<CustomAppCapabilities, bool> parseCapabilities(string value)
+        private Dictionary<MiniAppCapabilities, bool> parseCapabilities(string value)
         {
             var capArr = value.Split(',');
-            var caps = new Dictionary<CustomAppCapabilities, bool>();
+            var caps = new Dictionary<MiniAppCapabilities, bool>();
             foreach (var cap in capArr)
             {
                 var trimmedCap = cap.Trim();
                 switch (trimmedCap)
                 {
                     case "singleUser":
-                        caps.Add(CustomAppCapabilities.SingleUser, true);
+                        caps.Add(MiniAppCapabilities.SingleUser, true);
                         break;
 
                     case "multiUser":
-                        caps.Add(CustomAppCapabilities.MultiUser, true);
+                        caps.Add(MiniAppCapabilities.MultiUser, true);
                         break;
 
                     case "authentication":
-                        caps.Add(CustomAppCapabilities.Authentication, true);
+                        caps.Add(MiniAppCapabilities.Authentication, true);
                         break;
 
                     case "transactionSigning":
-                        caps.Add(CustomAppCapabilities.TransactionSigning, true);
+                        caps.Add(MiniAppCapabilities.TransactionSigning, true);
                         break;
 
                     case "registeredNamesManagement":
-                        caps.Add(CustomAppCapabilities.RegisteredNamesManagement, true);
+                        caps.Add(MiniAppCapabilities.RegisteredNamesManagement, true);
                         break;
                 }
             }
             return caps;
         }
 
-        public bool hasCapability(CustomAppCapabilities capability)
+        public bool hasCapability(MiniAppCapabilities capability)
         {
             if (capabilities != null && capabilities.ContainsKey(capability))
             {

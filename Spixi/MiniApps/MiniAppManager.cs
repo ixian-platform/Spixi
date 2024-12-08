@@ -3,20 +3,20 @@ using IXICore.Meta;
 using IXICore.Utils;
 using System.IO.Compression;
 
-namespace SPIXI.CustomApps
+namespace SPIXI.MiniApps
 {
-    class CustomAppManager
+    class MiniAppManager
     {
         string appsPath = "Apps";
         string tmpPath = "Tmp";
 
-        Dictionary<string, CustomApp> appList = new Dictionary<string, CustomApp>();
+        Dictionary<string, MiniApp> appList = new Dictionary<string, MiniApp>();
 
-        private Dictionary<byte[], CustomAppPage> appPages = new Dictionary<byte[], CustomAppPage>(new ByteArrayComparer());
+        private Dictionary<byte[], MiniAppPage> appPages = new Dictionary<byte[], MiniAppPage>(new ByteArrayComparer());
 
         bool started = false;
 
-        public CustomAppManager(string base_app_path)
+        public MiniAppManager(string base_app_path)
         {
             appsPath = Path.Combine(base_app_path, "html", "Apps");
             if (!Directory.Exists(appsPath))
@@ -36,7 +36,7 @@ namespace SPIXI.CustomApps
         {
             if(started)
             {
-                Logging.warn("Custom App Manager already started.");
+                Logging.warn("Spixi Mini App Manager already started.");
                 return;
             }
             started = true;
@@ -50,7 +50,7 @@ namespace SPIXI.CustomApps
                     {
                         continue;
                     }
-                    CustomApp app = new CustomApp(File.ReadAllLines(app_info_path));
+                    MiniApp app = new MiniApp(File.ReadAllLines(app_info_path));
                     appList.Add(app.id, app);
                 }
             }
@@ -60,7 +60,7 @@ namespace SPIXI.CustomApps
         {
             if (!started)
             {
-                Logging.warn("Custom App Manager already stopped.");
+                Logging.warn("Spixi Mini App Manager already stopped.");
                 return;
             }
 
@@ -111,7 +111,7 @@ namespace SPIXI.CustomApps
                     archive.ExtractToDirectory(source_app_path);
 
                     // read app info
-                    CustomApp app = new CustomApp(File.ReadAllLines(Path.Combine(source_app_path, "appinfo.spixi")));
+                    MiniApp app = new MiniApp(File.ReadAllLines(Path.Combine(source_app_path, "appinfo.spixi")));
 
                     if (appList.ContainsKey(app.id))
                     {
@@ -179,14 +179,14 @@ namespace SPIXI.CustomApps
                 {
                     return false;
                 }
-                CustomApp app = appList[app_id];
+                MiniApp app = appList[app_id];
                 Directory.Delete(Path.Combine(appsPath, app.id), true);
                 appList.Remove(app_id);
                 return true;
             }
         }
 
-        public CustomApp getApp(string app_id)
+        public MiniApp getApp(string app_id)
         {
             lock(appList)
             {
@@ -220,14 +220,14 @@ namespace SPIXI.CustomApps
             return null;
         }
 
-        public Dictionary<string, CustomApp> getInstalledApps()
+        public Dictionary<string, MiniApp> getInstalledApps()
         {
             return appList;
         }
 
 
 
-        public CustomAppPage getAppPage(byte[] session_id)
+        public MiniAppPage getAppPage(byte[] session_id)
         {
             lock (appPages)
             {
@@ -239,7 +239,7 @@ namespace SPIXI.CustomApps
             }
         }
 
-        public CustomAppPage getAppPage(Address sender_address, string app_id)
+        public MiniAppPage getAppPage(Address sender_address, string app_id)
         {
             lock (appPages)
             {
@@ -252,12 +252,12 @@ namespace SPIXI.CustomApps
             }
         }
 
-        public Dictionary<byte[], CustomAppPage> getAppPages()
+        public Dictionary<byte[], MiniAppPage> getAppPages()
         {
             return appPages;
         }
 
-        public void addAppPage(CustomAppPage page)
+        public void addAppPage(MiniAppPage page)
         {
             lock (appPages)
             {
@@ -273,9 +273,9 @@ namespace SPIXI.CustomApps
             }
         }
 
-        public CustomAppPage acceptAppRequest(byte[] session_id)
+        public MiniAppPage acceptAppRequest(byte[] session_id)
         {
-            CustomAppPage app_page = getAppPage(session_id);
+            MiniAppPage app_page = getAppPage(session_id);
             if (app_page != null)
             {
                 app_page.accepted = true;
@@ -286,7 +286,7 @@ namespace SPIXI.CustomApps
 
         public void rejectAppRequest(byte[] session_id)
         {
-            CustomAppPage app_page = getAppPage(session_id);
+            MiniAppPage app_page = getAppPage(session_id);
             if (app_page != null)
             {
                 if (removeAppPage(session_id))

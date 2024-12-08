@@ -3,7 +3,7 @@ using IXICore.Meta;
 using IXICore.Network;
 using IXICore.SpixiBot;
 using IXICore.Utils;
-using SPIXI.CustomApps;
+using SPIXI.MiniApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Network;
@@ -1133,7 +1133,7 @@ namespace SPIXI
                 VoIPManager.onData(app_data.sessionId, app_data.data);
                 return;
             }
-            CustomAppPage app_page = Node.customAppManager.getAppPage(app_data.sessionId);
+            MiniAppPage app_page = Node.MiniAppManager.getAppPage(app_data.sessionId);
             if(app_page == null)
             {
                 Logging.error("App with session id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
@@ -1229,7 +1229,7 @@ namespace SPIXI
 
         private static void handleAppRequest(Address sender_address, Address recipient_address, byte[] app_data_raw)
         {
-            CustomAppManager am = Node.customAppManager;
+            MiniAppManager am = Node.MiniAppManager;
 
             Friend friend = FriendList.getFriend(sender_address);
             if (friend == null)
@@ -1252,7 +1252,7 @@ namespace SPIXI
                 return;
             }
 
-            CustomAppPage app_page = am.getAppPage(app_data.sessionId);
+            MiniAppPage app_page = am.getAppPage(app_data.sessionId);
             if (app_page != null)
             {
                 Logging.error("App with session id: {0} already exists.", Crypto.hashToString(app_data.sessionId));
@@ -1273,7 +1273,7 @@ namespace SPIXI
             Address[] user_addresses = new Address[] { sender_address };
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                CustomApp app = am.getApp(app_id);
+                MiniApp app = am.getApp(app_id);
                 if (app == null)
                 {
                     if (app_id == "spixi.voip")
@@ -1296,7 +1296,7 @@ namespace SPIXI
                 }
                 if (FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app.id) != null)
                 {
-                    app_page = new CustomAppPage(app_id, sender_address, user_addresses, am.getAppEntryPoint(app_id));
+                    app_page = new MiniAppPage(app_id, sender_address, user_addresses, am.getAppEntryPoint(app_id));
                     app_page.myRequestAddress = recipient_address;
                     app_page.requestedByAddress = sender_address;
                     app_page.sessionId = app_data.sessionId;
@@ -1319,7 +1319,7 @@ namespace SPIXI
                 return;
             }
 
-            CustomAppPage page = Node.customAppManager.getAppPage(app_data.sessionId);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(app_data.sessionId);
             if(page == null)
             {
                 Logging.info("App session does not exist.");
@@ -1346,7 +1346,7 @@ namespace SPIXI
                 return;
             }
 
-            CustomAppPage page = Node.customAppManager.getAppPage(session_id);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");
@@ -1371,7 +1371,7 @@ namespace SPIXI
                 return;
             }
 
-            CustomAppPage page = Node.customAppManager.getAppPage(session_id);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");

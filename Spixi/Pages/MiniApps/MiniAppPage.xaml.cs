@@ -1,8 +1,8 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using Newtonsoft.Json;
-using SPIXI.CustomApps;
-using SPIXI.CustomApps.ActionRequestModels;
+using SPIXI.MiniApps;
+using SPIXI.MiniApps.ActionRequestModels;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System.Text;
@@ -12,7 +12,7 @@ using System.Web;
 namespace SPIXI
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CustomAppPage : SpixiContentPage
+    public partial class MiniAppPage : SpixiContentPage
     {
         public string appId = null;
         public byte[] sessionId = null; // App session ID
@@ -27,7 +27,7 @@ namespace SPIXI
         public long requestReceivedTimestamp = 0;
 
 
-        public CustomAppPage(string app_id, Address host_user_address, Address[] user_addresses, string app_entry_point)
+        public MiniAppPage(string app_id, Address host_user_address, Address[] user_addresses, string app_entry_point)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
@@ -94,14 +94,14 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:getStorageData", StringComparison.Ordinal))
             {
                 var key = current_url.Substring("ixian:getStorageData".Length);
-                var data = Node.customAppStorage.getStorageData(appId, key);
+                var data = Node.MiniAppStorage.getStorageData(appId, key);
                 Utils.sendUiCommand(this, "SpixiAppSdk.onStorageData", key, Crypto.hashToString(data));
             }
             else if (current_url.StartsWith("ixian:setStorageData", StringComparison.Ordinal))
             {
                 var key = current_url.Substring("ixian:setStorageData".Length, current_url.IndexOf('='));
                 var value = current_url.Substring(current_url.IndexOf('='));
-                Node.customAppStorage.setStorageData(appId, key, Crypto.stringToHash(value));
+                Node.MiniAppStorage.setStorageData(appId, key, Crypto.stringToHash(value));
             }
             else if (current_url.StartsWith("ixian:action", StringComparison.Ordinal))
             {
@@ -111,7 +111,7 @@ namespace SPIXI
             else
             {
                 // Otherwise it's just normal navigation
-                // TODO for custom apps (possibly other stuff as well) prevent normal navigation
+                // TODO for mini apps (possibly other stuff as well) prevent normal navigation
                 e.Cancel = false;
                 return;
             }
@@ -122,14 +122,14 @@ namespace SPIXI
         {
             try
             {
-                CustomAppActionBase jsonResult = JsonConvert.DeserializeObject<CustomAppActionBase>(action);
-                if (await displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), action, SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
+                MiniAppActionBase jsonResult = JsonConvert.DeserializeObject<MiniAppActionBase>(action);
+                if (await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-description"), jsonResult.responseUrl, jsonResult.command), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
                 {
-                    string? actionResponse = CustomAppActionHandler.processAction(jsonResult.command, action);
+                    string? actionResponse = MiniAppActionHandler.processAction(jsonResult.command, action);
 
                     if (actionResponse == null)
                     {
-                        await displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), "Unknown action.", SpixiLocalization._SL("global-dialog-ok"));
+                        await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-unknown"), SpixiLocalization._SL("global-dialog-ok"));
                         return;
                     }
                     HttpResponseMessage? response = null;
@@ -137,12 +137,15 @@ namespace SPIXI
                     {
                         try
                         {
-                            await displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), actionResponse, SpixiLocalization._SL("global-dialog-ok"));
-                            HttpContent httpContent = new StringContent(actionResponse, Encoding.UTF8, "application/x-www-form-urlencoded");
-                            response = client.PostAsync(jsonResult.responseUrl, httpContent).Result;
-                            if (response.IsSuccessStatusCode)
+                            if (await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-response-confirmation"), actionResponse), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
                             {
-                                return;
+                                HttpContent httpContent = new StringContent(actionResponse, Encoding.UTF8, "application/x-www-form-urlencoded");
+                                response = client.PostAsync(jsonResult.responseUrl, httpContent).Result;
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-sent"), SpixiLocalization._SL("global-dialog-ok"));
+                                    return;
+                                }
                             }
                         }
                         catch (Exception e)
@@ -152,22 +155,18 @@ namespace SPIXI
                     }
                     if (response != null)
                     {
-                        await displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), "Error sending action response to service (" + response.StatusCode + "): " + (await response.Content.ReadAsStringAsync()) + ".", SpixiLocalization._SL("global-dialog-ok"));
+                        await displaySpixiAlert(SpixiLocalization._SL("app-action-error-sending-title"), string.Format(SpixiLocalization._SL("app-action-error-sending"), "(" + response.StatusCode + "): " + (await response.Content.ReadAsStringAsync())), SpixiLocalization._SL("global-dialog-ok"));
                     }
                     else
                     {
-                        await displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), "Error sending action response to service.", SpixiLocalization._SL("global-dialog-ok"));
+                        await displaySpixiAlert(SpixiLocalization._SL("app-action-error-sending-title"), string.Format(SpixiLocalization._SL("app-action-error-sending"), ""), SpixiLocalization._SL("global-dialog-ok"));
                     }
-                }
-                else
-                {
-                    // ?
                 }
             }
             catch (Exception e)
             {
-                Logging.error("Exception while processing Custom App action '{0}': {1}", action, e);
-                await displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), "Error processing action " + action, SpixiLocalization._SL("global-dialog-ok"));
+                Logging.error("Exception while processing Mini App action '{0}': {1}", action, e);
+                await displaySpixiAlert(SpixiLocalization._SL("app-action-error-processing-title"), string.Format(SpixiLocalization._SL("app-action-error-processing"), action), SpixiLocalization._SL("global-dialog-ok"));
             }
         }
 
@@ -208,7 +207,7 @@ namespace SPIXI
         private void onBack()
         {
             Navigation.PopAsync(Config.defaultXamarinAnimations);
-            Node.customAppManager.removeAppPage(sessionId);
+            Node.MiniAppManager.removeAppPage(sessionId);
         }
 
         public void networkDataReceived(Address sender_address, byte[] data)

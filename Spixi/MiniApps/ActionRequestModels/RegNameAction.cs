@@ -1,9 +1,9 @@
 ﻿using IXICore;
 using IXICore.RegNames;
 
-namespace SPIXI.CustomApps.ActionRequestModels
+namespace SPIXI.MiniApps.ActionRequestModels
 {
-    public class RegNameAction<T> : CustomAppActionBase
+    public class RegNameAction<T> : MiniAppActionBase
     {
         public T data;
         public Address? feeRecipientAddress;

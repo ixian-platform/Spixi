@@ -1,7 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
-using SPIXI.CustomApps;
+using SPIXI.MiniApps;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
@@ -735,9 +735,9 @@ namespace SPIXI
         public void onApp(string app_id)
         {
             Address[] user_addresses = new Address[] { friend.walletAddress };
-            CustomAppPage custom_app_page = new CustomAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
+            MiniAppPage custom_app_page = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.MiniAppManager.getAppEntryPoint(app_id));
             custom_app_page.accepted = true;
-            Node.customAppManager.addAppPage(custom_app_page);
+            Node.MiniAppManager.addAppPage(custom_app_page);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -874,19 +874,19 @@ namespace SPIXI
 
         public void loadApps()
         {
-            var apps = Node.customAppManager.getInstalledApps();
+            var apps = Node.MiniAppManager.getInstalledApps();
             lock (apps)
             {
-                foreach (CustomApp app in apps.Values)
+                foreach (MiniApp app in apps.Values)
                 {
                     try
                     {
-                        if (!app.hasCapability(CustomAppCapabilities.MultiUser))
+                        if (!app.hasCapability(MiniAppCapabilities.MultiUser))
                         {
                             continue;
                         }
 
-                        string icon = Node.customAppManager.getAppIconPath(app.id);
+                        string icon = Node.MiniAppManager.getAppIconPath(app.id);
                         if (icon == null)
                         {
                             icon = "";

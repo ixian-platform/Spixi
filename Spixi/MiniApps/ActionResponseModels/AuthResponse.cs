@@ -1,4 +1,4 @@
-﻿namespace SPIXI.CustomApps.ActionResponseModels
+﻿namespace SPIXI.MiniApps.ActionResponseModels
 {
     public class AuthResponse
     {

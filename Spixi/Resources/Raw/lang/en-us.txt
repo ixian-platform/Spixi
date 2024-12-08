@@ -20,6 +20,7 @@ app-details-title = Spixi App
 app-details-publisher = Publisher:
 app-details-version = Version:
 app-details-uninstall = Uninstall
+app-details-start = Start
 app-details-dialog-title = Spixi App Manager
 app-details-dialog-removed-text = The app was successfully removed.
 app-details-dialog-removefailed-text = An error occurred while removing the application.
@@ -35,6 +36,17 @@ app-new-dialog-installfailed-text = An error occurred while installing the app.
 ; Apps Screen
 apps-title = Spixi Apps
 apps-empty = You don't have any apps installed.
+
+; App Actions
+app-action-title = Service Action
+app-action-description = Service {0} wants to execute action {1}, are you sure you want to continue?
+app-action-unknown = Unknown action.
+app-action-error-processing-title = Error processing action
+app-action-error-processing = Error processing action {0}.
+app-action-error-sending-title = Error sending action response
+app-action-error-sending = Error sending action response to service{0}.
+app-action-sent = App action sent
+app-action-response-confirmation = Do you want to send the following data to the service? {0}
 
 ; Chat Screen
 chat-sent-contact-request = has sent a contact request

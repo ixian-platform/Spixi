@@ -1,11 +1,11 @@
-﻿namespace SPIXI.CustomApps.ActionRequestModels
+﻿namespace SPIXI.MiniApps.ActionRequestModels
 {
     public class AuthData
     {
         public string challenge;
     }
 
-    public class AuthAction : CustomAppActionBase
+    public class AuthAction : MiniAppActionBase
     {
         public AuthData data;
     }
