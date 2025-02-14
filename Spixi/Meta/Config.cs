@@ -25,7 +25,7 @@ namespace SPIXI.Meta
         public static readonly string explorerUrl = "https://explorer.ixian.io/";
 
         public static readonly string pushServiceUrl = "https://ipn.ixian.io/v2";
-        public static readonly string priceServiceUrl = "https://www.ixian.io/ixiprice.txt";
+        public static readonly string priceServiceUrl = "https://resources.ixian.io/ixiprice.txt";
 
         public static readonly int checkPriceSeconds = 1800; // 30 minutes
 
@@ -34,7 +34,7 @@ namespace SPIXI.Meta
 
         public static readonly string version = "spixi-0.9.4"; // Spixi version
 
-        public static readonly string checkVersionUrl = "https://www.ixian.io/spixi-update.txt";
+        public static readonly string checkVersionUrl = "https://resources.ixian.io/spixi-update.txt";
         public static readonly int checkVersionSeconds = 1 * 60 * 60; // 1 hour
 
         public static readonly string supportEmailUrl = "mailto:support@spixi.io?subject=Spixi%20Feedback";
