@@ -1,0 +1,558 @@
+language-code = id-id
+language = Bahasa Indonesia
+
+; Address Screen
+address-title = Alamat Spixi Anda
+address-description = Alamat Spixi Anda terhubung dengan akun Spixi Anda.<br />Ini adalah ID utama Anda, yang dapat Anda gunakan untuk berinteraksi dengan pengguna lain.
+address-copied = Alamat telah disalin ke dalam papan klip
+address-gen-1 = Membuat
+address-gen-1b = Mempersiapkan
+address-gen-2 = SPIXI Milik Anda
+address-gen-2b = SPIXI
+address-gen-3 = alamat
+address-gen-4 = ...
+address-tooltip = ketuk untuk menyalin ke dalam papan klip
+address-copy = Salin
+address-share = Bagikan
+
+; App Details Screen
+app-details-title = Aplikasi Spixi
+app-details-publisher = Penerbit:
+app-details-version = Versi:
+app-details-uninstall = Copot pemasangan
+app-details-dialog-title = Manajer Aplikasi Spixi
+app-details-dialog-removed-text = Aplikasi berhasil dihapus.
+app-details-dialog-removefailed-text = Terjadi kesalahan saat menghapus aplikasi.
+
+; New App Screen
+app-new-title = Aplikasi Baru
+app-new-description = Tambahkan Aplikasi Spixi yang baru dengan menempelkan URL-nya. Aplikasi akan diunduh dan dipasang.
+app-new-install = PASANG
+app-new-dialog-title = Manajer Aplikasi Spixi
+app-new-dialog-installed-text = Aplikasi '{0}' berhasil dipasang.
+app-new-dialog-installfailed-text = Terjadi kesalahan saat memasang aplikasi.
+
+; Apps Screen
+apps-title = Aplikasi Spixi
+apps-empty = Anda tidak memiliki aplikasi yang terpasang.
+
+; Chat Screen
+chat-sent-contact-request = telah mengirim permintaan kontak
+chat-accept = Terima
+chat-ignore = Tolak
+chat-type-placeholder = Ketik pesan Anda...
+chat-send-file = Kirim File
+chat-request-payment = Minta Pembayaran
+chat-send-payment = Kirim Pembayaran
+chat-status = Status
+chat-amount = Jumlah
+chat-view = Detail
+chat-payment-request-sent = Permintaan pembayaran sudah TERKIRIM
+chat-payment-request-received = Permintaan pembayaran sudah DITERIMA
+chat-payment-sent = Pembayaran sudah TERKIRIM
+chat-payment-received = Pembayaran sudah DITERIMA
+chat-payment-status-waiting-confirmation = MENUNGGU KONFIRMASI
+chat-payment-status-declined = DITOLAK
+chat-payment-status-pending = TERTUNDA
+chat-payment-status-confirmed = TERKONFIRMASI
+chat-call-outgoing = Panggilan keluar
+chat-call-incoming = Panggilan masuk
+chat-call-no-answer = Tidak ada jawaban
+chat-call-missed = Panggilan tidak terjawab
+chat-call-ended = Berakhir
+chat-online = Online
+chat-offline = Offline
+chat-waiting-for-response = Menunggu respons
+chat-text-too-long = Teks terlalu panjang. 
+chat-member-count = {0} anggota
+chat-context-pin-message = Sematkan pesan
+chat-context-copy-message = Salin pesan
+chat-context-copy-selected = Salin yang dipilih
+chat-context-tip-user = Tip pengguna
+chat-context-like-message = Sukai pesan
+chat-context-user-info = Info pengguna
+chat-context-send-contact-request = Kirim permintaan kontak
+chat-context-kick-user = Tendang pengguna
+chat-context-ban-user = Blokir pengguna
+chat-context-delete-message = Hapus pesan
+chat-message-cost-bar = Biaya pengiriman pesan {0} per kB
+chat-request-sent-title = Permintaan Pertemanan Terkirim
+chat-request-sent-details = Setelah mereka menerimanya, Anda akan dapat mengobrol dengan mereka dengan aman. 
+chat-request-sent-undo = Batalkan
+chat-request-received-title = Permintaan Pertemanan Diterima
+chat-request-received-details = Seseorang ingin terhubung dengan Anda! Setelah Anda menerima, Anda akan dapat mengobrol dengan aman dengan mereka.
+
+chat-modal-tip-title = Tip {0}?
+chat-modal-tip-body = Ketuk jumlah yang ingin Anda berikan tip atau tetapkan tip khusus.
+chat-modal-tip-custom = KHUSUS
+chat-modal-tip-pay-button = BAYAR
+chat-modal-tip-confirmation-body = Anda akan memberi tip '{0}' {1}. Jumlah ini akan dipotong dari dompet Anda.
+chat-modal-tip-confirmed-body = Anda baru saja memberi tip '{0}' dengan {1}. Jumlah tersebut telah dipotong dari dompet Anda. 
+chat-modal-tip-error-body = Terjadi kesalahan tidak dikenal saat mencoba memberi tip kepada pengguna.
+
+chat-bot-details-info = Info Bot
+chat-bot-address = Alamat Bot
+chat-bot-toggle-notifications = Aktifkan Notifikasi
+chat-bot-invite = Undang Kontak ke dalam Bot Ini
+chat-bot-leave = Tinggalkan Bot
+
+chat-bot-user-address = Alamat Pengguna
+chat-bot-user-send-contact-request = Kirim Permintaan Kontak
+
+chat-modal-kick-title = Tendang {0}?
+chat-modal-kick-body = Apakah Anda yakin ingin menendang '{0}' dari server ini?
+chat-modal-kick-kick-button = Tendang PENGGUNA
+chat-modal-kicked-title = Tendang {0}
+chat-modal-kicked-body = Anda telah menendang '{0}' dari server ini.
+
+chat-modal-ban-title = Blokir {0}?
+chat-modal-ban-body = Apakah Anda yakin ingin memblokir '{0}' dari server ini?
+chat-modal-ban-ban-button = BLOKIR PENGGUNA
+chat-modal-banned-title = Blokir {0}
+chat-modal-banned-body = Anda telah memblokir '{0}' dari server ini.
+
+chat-bot-not-ready-title = Bot belum siap
+chat-bot-not-ready-body = Bot belum siap, silakan coba lagi dalam beberapa menit.
+
+chat-kicked = Anda telah diblokir dari obrolan grup ini.
+chat-banned = Anda telah diblokir dari obrolan grup ini.
+
+; Contact Details Screen
+contact-details-chat = obrolan
+contact-details-send = kirim
+contact-details-receive = terima
+contact-details-notifications = Notifikasi
+contact-details-history = Riwayat
+contact-details-account-address = Alamat Spixi
+contact-details-address-1 = Mengambil
+contact-details-address-2 = SPIXI
+contact-details-address-3 = alamat...
+contact-details-removecontact = HAPUS
+contact-details-removedcontact-title = Dihapus
+contact-details-removedcontact-text = Kontak dihapus dari daftar.
+contact-details-deletehistory = HAPUS RIWAYAT
+contact-details-deletedhistory-title = Dihapus
+contact-details-deletedhistory-text = Riwayat pesan telah dihapus.
+
+; New Contact Screen
+contact-new-title = Kontak Baru
+contact-new-description = Untuk menambahkan kontak baru, tempel atau ketik alamat mereka. Anda juga dapat memindai Kode QR mereka.
+contact-new-placeholder = Tempel / ketik alamat
+contact-new-send-request = KIRIM PERMINTAAN KONTAK
+contact-new-invalid-address-self-text = Alamat yang Anda masukkan adalah alamat Anda sendiri.
+contact-new-invalid-address-exists-text = Kontak ini sudah ada dalam daftar kontak Anda.
+contact-new-scan = Pindai
+contact-new-scan-help = Atau pindai kode QR
+contact-new-send = Kirim
+contact-new-cancel = Batal
+contact-new-confirm-title = Kirim Permintaan Pertemanan?
+contact-new-confirm-details = Anda akan mengirim permintaan pertemanan ke Alamat Spixi berikut:
+
+; Downloads Screen
+downloads-title = Unduhan
+downloads-empty = Anda tidak memiliki berkas yang diunduh.
+
+; Index Screen
+index-balance = Saldo IXI Saya
+index-balance-show = Tampilkan
+index-balance-hide = Sembunyikan
+index-balance-info = Saldo Tersembunyi
+index-notifications = Notifikasi
+index-unread-chats = Obrolan yang Belum Dibaca
+index-no-conversations-title = Tidak Ada Obrolan
+index-no-conversations = Mulai obrolan baru dengan salah satu kontak Anda.<br/>Semua obrolan akan muncul di sini.
+index-new-chat-button = Obrolan Baru
+index-no-transactions-title = Tidak Ada Transaksi
+index-no-transactions = Transaksi Anda akan muncul di sini, setelah Anda mulai menggunakan Dompet IXI Anda. 
+index-send = Kirim
+index-scan = Pindai
+index-receive = Terima
+index-all = Semua
+index-sent = Terkirim
+index-received = Diterima
+index-recent-activity = Aktivitas Terkini
+index-contacts-placeholder = Cari kontak
+index-tab-home = beranda
+index-tab-chats = Obrolan
+index-tab-wallet = Dompet
+index-tab-contacts = Kontak
+index-tab-address = Alamat Saya
+index-new-title = BARU
+index-new-contact = Kontak
+index-new-chat = Obrolan
+index-new-send = Kirim IXI
+index-new-request = Minta IXI
+index-new-cancel = BATAL
+index-side-title = Pengguna Spixi
+index-side-myaddress = Alamat Spixi milik Saya
+index-side-apps = Aplikasi
+index-side-downloads = Unduhan
+index-side-settings = Pengaturan
+index-side-security = Keamanan
+index-side-backup = Cadangkan
+index-side-password = Kata Sandi
+index-side-about = Tentang
+index-side-howtouse = Cara menggunakan Spixi
+index-side-sendlog = Kirim Log
+index-devmode = Mode pengembang diaktifkan
+index-excerpt-payment-request-sent = Permintaan Pembayaran Terkirim
+index-excerpt-payment-request-received = Permintaan Pembayaran Diterima
+index-excerpt-payment-sent = Pembayaran Terkirim
+index-excerpt-payment-received = Pembayaran Diterima
+index-excerpt-contact-accepted = Kontak Diterima
+index-excerpt-contact-request = Permintaan Kontak
+index-excerpt-file = Berkas
+index-excerpt-voice-call = Panggilan Suara
+index-excerpt-self = Saya:
+index-excerpt-typing = Mengetik...
+
+; Intro Screen
+intro-title = Selamat datang di Spixi,
+intro-subtitle = Selamat datang di salah satu aplikasi obrolan paling aman di dunia.
+intro-headline = Mari kita mulai!
+intro-language-text = Bahasa apa yang Anda gunakan?
+intro-text = Harap buat atau pulihkan akun<br/>Spixi Anda untuk melanjutkan
+intro-create-account = Akun Baru
+intro-restore-account = Sudah punya akun?
+intro-restore-link = Klik di sini untuk memulihkan.
+intro-tip-title = Tahukah Anda?
+intro-tip-body = Spixi tidak menggunakan server, semua pesan dikirim langsung ke rekan Anda, sambil dienkripsi sepenuhnya.
+intro-continue = Lanjutkan
+intro-step-1 = Langkah 1 dari 2
+intro-step-2 = Langkah 2 dari 2
+
+; Intro New Screen
+intro-new-description-1 = Tetapkan nama panggilan dan foto milik Anda
+intro-new-description-2 = Nama panggilan dan gambar profil Anda akan ditampilkan ke dalam kontak Anda.
+intro-new-name-placeholder = Nama Panggilan Anda
+intro-new-change-image = Ketuk avatar untuk mengubah gambar profil Anda.
+intro-new-next = BERIKUTNYA
+intro-new-step-1 = Langkah 1 dari 2
+intro-new-step-2 = Langkah 2 dari 2
+intro-new-description-3 = Anda Hampir Selesai.
+intro-new-description-4 = Ini adalah kata sandi utama Anda. Jika Anda perlu mendapatkan kembali akses ke akun Anda, Anda akan memerlukan kata sandi ini dan menggunakannya dengan file cadangan.
+intro-new-description-5 = Kata sandi Anda sangat penting karena akan memungkinkan Anda untuk masuk kembali ke akun Spixi Anda jika Anda perlu memulihkan akses ke akun tersebut. 
+intro-new-password = Ketikkan kata sandi Anda...
+intro-new-password-2 = Ketik ulang kata sandi Anda...
+intro-new-finish = SELESAI
+intro-new-create-title = Membuat Akun Spixi Anda...
+intro-new-create-description = Proses ini mungkin memerlukan waktu beberapa saat pada perangkat yang lebih lambat.
+intro-new-password10 = Kata sandi harus mengandung setidaknya 10 karakter
+intro-new-passwordconf = Masukkan konfirmasi kata sandi
+intro-new-passwordnomatch = Kata sandi tidak cocok
+intro-new-passwordmatch = Kata sandi cocok
+intro-new-emptynick-title = Nama panggilan tidak valid
+intro-new-emptynick-text = Harap masukkan nama panggilan Anda.
+intro-new-avatarerror-title = Kesalahan avatar
+intro-new-walleterror-title = Kesalahan
+intro-new-walleterror-text = Tidak dapat membuat dompet. Silakan coba lagi.
+
+; Intro Restore Screen
+intro-restore-description-1 = Pulihkan akses ke akun Spixi milik Anda
+intro-restore-description-2 = Anda memerlukan file cadangan Spixi dan kata sandi milik Anda untuk melanjutkan.
+intro-restore-password = Ketik kata sandi Anda...
+intro-restore-selectfile = Pilih file cadangan
+intro-restore-backupdescription = Tetapkan File Cadangan yang terkait dengan Kata Sandi Enkripsi
+intro-restore-action = Pulihkan akun milik saya
+intro-restore-title = Memulihkan Akses ke Akun Spixi Anda
+intro-restore-info = Ini mungkin memerlukan waktu beberapa saat
+intro-restore-file-error-title = Kesalahan File
+intro-restore-file-selecterror-text = Kesalahan terjadi saat memilih file pemulihan.
+intro-restore-file-readerror-text = Kesalahan terjadi saat membaca file dompet.
+intro-restore-file-writeerror-text = Kesalahan terjadi saat menyimpan dompet. 
+intro-restore-file-invalidpassword-title = Kata sandi tidak valid
+intro-restore-file-invalidpassword-text = Tidak dapat mendekripsi dompet, silakan coba lagi.
+
+; Intro Retry Screen
+intro-retry-description-1 = Ketikan kembali Kata Sandi Enkripsi milik Anda
+intro-retry-description-2 = Tampaknya ada masalah dalam mengakses akun Anda. Harap masukkan kata sandi Anda untuk melanjutkan.
+intro-retry-placeholder = Masukkan kata sandi enkripsi Anda
+intro-retry-proceed = LANJUTKAN
+intro-retry-title = Memulihkan Akses ke dalam<br />dompet milik Anda
+intro-retry-info = Ini mungkin memerlukan waktu
+intro-retry-invalidpassword-title = Kata Sandi Tidak Valid
+intro-retry-invalidpassword-text = Tidak dapat mendekripsi dompet, harap coba lagi.
+
+; Lock Screen
+lock-description = Spixi TERKUNCI
+lock-placeholder = Masukkan KATA SANDI DOMPET milik Anda
+lock-error = Kata Sandi Salah
+lock-unlock = BUKA KUNCI
+lock-change = GANTI DOMPET
+
+; Settings Screen
+settings-title = Pengaturan
+settings-save = SIMPAN
+settings-cancel = BATAL
+settings-confirm = KONFIRMASI
+settings-description = Ubah pengaturan dan kelola data yang tersimpan di perangkat ini.
+settings-account-information = Pengaturan Dasar
+settings-account-description = Ubah bahasa bawaan, gambar, dan edit nama panggilan Anda.
+settings-account-language-edit = Bahasa
+settings-account-appearance-edit = Tampilan
+settings-account-appearance-automatic = Otomatis
+settings-account-appearance-light = Terang
+settings-account-appearance-dark = Gelap
+settings-account-image-edit = Gambar milik Anda
+settings-account-nick-edit = Nama Panggilan
+settings-account-nick-placeholder = Ketik nama panggilan baru Anda
+settings-account-deleteinfo = Anda dapat menghapus akun Spixi ini dan semua konten yang terkait dengannya dari perangkat ini, kapan saja. <br /><br />Pemberitahuan penting: Anda harus membuat akun baru atau memulihkan akun yang sudah ada untuk terus menggunakan Spixi di perangkat ini.
+settings-account-delete = HAPUS AKUN SAYA
+settings-deletea-title = Hapus Akun Spixi Anda?
+settings-deletea-text = Apakah Anda yakin ingin menghapus akun Spixi Anda?<br/><br/>Tindakan ini tidak dapat dibatalkan! Sebaiknya Anda mencadangkan akun Anda sebelum menghapusnya. Anda akan memerlukan file cadangan jika Anda ingin memulihkan akses ke akun ini.
+settings-deleteda-title = Dihapus
+settings-deleteda-text = Akun Spixi telah dihapus.
+settings-wallet-settings = Pengaturan Dompet
+settings-wallet-description = Dompet Anda dikaitkan dengan akun Spixi Anda. Untuk menghapus dompet, akun, dan semua riwayat pembayaran di perangkat ini, ketuk tombol "Hapus Dompet Saya" di bawah. 
+settings-wallet-delete = HAPUS DOMPET MILIK SAYA
+settings-deletew-title = Hapus dompet ini?
+settings-deletew-text = Apakah Anda yakin ingin menghapus dompet Anda?<br/><br/>Tindakan ini tidak dapat dibatalkan! Dengan menghapus dompet ini, Anda akan kehilangan akses ke semua dana yang ada di dalamnya! Untuk memulihkan dompet ini, Anda memerlukan file cadangan dan kata sandi enkripsi!
+settings-deletew-error-title = Kesalahan
+settings-deletew-error-text = Tidak dapat menghapus file dompet.
+settings-history = Riwayat Pesan
+settings-history-description = Seluruh riwayat pesan dan semua file yang Anda unduh disimpan di perangkat ini. Anda dapat menghapus seluruh riwayat pesan atau unduhan milik Anda kapan saja dengan menekan tombol yang sesuai di bawah ini.
+settings-history-delete = HAPUS RIWAYAT PESAN
+settings-downloads-delete = HAPUS SEMUA UNDUHAN
+settings-deleteh-title = Hapus riwayat pesan? 
+settings-deleteh-text = Apakah Anda yakin ingin menghapus SELURUH riwayat pesan Anda? Tindakan ini tidak dapat dibatalkan!
+settings-deletedh-title = Dihapus
+settings-deletedh-text = Riwayat pesan telah dihapus.
+settings-deleted-title = Hapus semua unduhan?
+settings-deleted-text = Apakah Anda yakin ingin menghapus SEMUA unduhan milik Anda? Semua file yang telah Anda unduh di Spixi akan dihapus! Tindakan ini tidak dapat dibatalkan!
+settings-deletedd-title = Dihapus
+settings-deletedd-text = Menghapus {0} file yang diunduh.
+settings-deleted-error-title = Kesalahan
+settings-deleted-error-text = Telah terjadi kesalahan yang tidak diketahui.
+settings-emptynick-title = Nama panggilan tidak valid
+settings-emptynick-text = Harap masukkan nama panggilan Anda.
+
+; Settings Backup Screen
+settings-backup-title = Cadangkan Akun
+settings-backup-description = Unduh file dompet atau akun yang memungkinkan Anda memulihkan akun Spixi milik Anda.
+settings-backup-save = CADANGAKN DOMPET
+settings-backup-account-save = CADANGKAN AKUN
+settings-backup-notice = Cadangan ini dan kata sandi enkripsi yang terkait dengannya akan diperlukan untuk memulihkan akses Anda dalam kasus berikut:
+settings-backup-notice2 = - kehilangan perangkat ini<br />- hapus Spixi dari perangkat Anda<br />- hapus akun Spixi milik Anda<br />- hapus dompet milik Anda
+settings-backup-invalidpassword-title = Kata sandi tidak valid
+settings-backup-invalidpassword-text = Harap masukkan kata sandi yang valid.
+
+; Settings Encryption Screen
+settings-encryption-title = Kata sandi
+settings-encryption-description = Kata sandi enkripsi adalah kata sandi terpenting untuk akun dan dompet milik Anda. Anda akan memerlukan kata sandi ini jika Anda mencoba memulihkan akses ke akun atau dompet Spixi milik Anda.
+settings-encryption-edit = Edit Kata Sandi Enkripsi milik Anda
+settings-encryption-type = Ketikkan kata sandi <b>SAAT INI</b> milik Anda.
+settings-encryption-placeholder = Kata sandi enkripsi milik Anda saat ini
+settings-encryption-typenew = Ketikkan kata sandi <b>BARU</b> milik Anda. 
+settings-encryption-placeholdernew = Kata sandi enkripsi baru milik Anda
+settings-encryption-placeholderretype = Ketik ulang kata sandi enkripsi baru milik Anda
+settings-encryption-change = GANTI KATA SANDI
+settings-encryption-password10 = Kata sandi harus berisi minimal 10 karakter
+settings-encryption-passwordconf = Masukkan konfirmasi kata sandi
+settings-encryption-passwordnomatch = Kata sandi tidak cocok
+settings-encryption-passwordmatch = Kata sandi cocok
+settings-encryption-invalidpassword-title = Kata sandi tidak valid
+settings-encryption-invalidpassword-text = Harap masukkan kata sandi yang valid.
+settings-encryption-passwordchanged-title = Kata sandi enkripsi
+settings-encryption-passwordchanged-text = Kata sandi berhasil diubah.
+settings-encryption-invalidpassword-current-text = Kata sandi saat ini salah, silakan coba lagi.
+
+; Settings Lock Screen
+settings-lock-title = Kunci Spixi saya
+settings-lock-description = Buat Kata Sandi Kunci untuk Spixi milik Anda, untuk memastikan Anda satu-satunya yang menggunakan akun milik Anda di perangkat ini.
+settings-lock-status = Status keamanan:
+settings-lock-unlocked = TERBUKA
+settings-lock-locked = TERKUNCI
+settings-lock-passwordinfo = Buat atau edit kata sandi kunci milik Anda
+settings-lock-password = Ketikkan kata sandi kunci <b>SAAT INI</b> milik Anda.
+settings-lock-password-new = Ketikkan kata sandi kunci <b>BARU</b> milik Anda.
+settings-lock-placeholder-1 = Ketikkan kata sandi kunci milik Anda
+settings-lock-placeholder-2 = Ketikkan kata sandi kunci Anda yang baru
+settings-lock-placeholder-3 = Ketikkan ulang kata sandi kunci milik Anda yang baru
+settings-lock-info = Kata sandi ini akan diperlukan setiap kali Anda meluncurkan Spixi. 
+settings-lock-save = TETAPKAN KATA SANDI KUNCI
+settings-lock-authinfo = Anda akan memerlukan autentikasi biometrik atau kata sandi dompet Anda untuk membuka Spixi
+settings-lock-confirm-text = Anda harus menyimpan pengaturan Anda agar pengaturan tersebut berlaku.
+
+; Wallet Contact Request Screen
+wallet-contact-request-title = Permintaan Pembayaran
+wallet-contact-request-subtitle = Permintaan Pembayaran dari:
+wallet-contact-request-amount = Jumlah yang Diminta
+wallet-contact-request-info = Pengguna telah meminta pembayaran sejumlah berikut
+wallet-contact-request-respond = Tanggapi Permintaan Pembayaran
+wallet-contact-request-respondinfo = Anda dapat menanggapi permintaan ini dengan menolak atau mengirim pembayaran. Pengguna yang mengirim permintaan akan diberi tahu tentang keputusan Anda.
+wallet-contact-request-decline = TOLAK
+wallet-contact-request-proceed = KIRIM PEMBAYARAN
+
+; Wallet Recipient Screen
+wallet-recipient-title = Pilih Penerima
+wallet-recipient-search-placeholder = Cari kontak
+wallet-recipient-empty = 0 Penerima yang dipilih
+wallet-recipient-add = Tambahkan Penerima
+wallet-recipient-selected = Penerima yang dipilih
+wallet-recipient-new-contact-button = Tambahkan Kontak Baru
+wallet-recipient-no-contact-button = Kontak Baru
+
+; Wallet Request Screen
+wallet-request-title = Minta Pembayaran
+wallet-request-subtitle = Minta Jumlah Spesifik
+wallet-request-amount-placeholder = Ketik jumlah
+wallet-request-address = Alamat Saat Ini
+wallet-request-send-info = Kirim sebagai Permintaan ke Penerima:
+wallet-request-add = Anda dapat mengirim permintaan ini untuk jumlah yang sama ke lebih dari 1 pengguna. <br/>Tambahkan pengguna/alamat tambahan untuk dikirimi permintaan ini.
+wallet-request-placeholder = Tempel/ketik alamat
+wallet-request-send = KIRIM PERMINTAAN
+wallet-request-error-title = Kesalahan
+wallet-request-error-text = Harap masukkan informasi yang valid ke dalam kolom input.
+
+; Wallet Send Screen
+wallet-send-title = Kirim IXI
+wallet-send-details = Tempel atau ketik alamat yang ingin Anda kirimi pembayaran. Anda dapat menelusuri kontak atau memindai kode QR.
+wallet-send-subdetails = Kirim IXI ke
+wallet-send-add = Tambahkan Penerima
+wallet-send-placeholder = Tempel/ketik alamat
+wallet-send-more = Anda dapat menambahkan penerima tambahan untuk transaksi ini. Penerima ini akan menerima pembayaran dengan jumlah yang sama.
+wallet-send-recipients = Penerima
+wallet-send-norecipients = Tidak ada penerima yang dipilih
+wallet-send-next = BERIKUTNYA
+wallet-send-max = Kirim jumlah maksimum
+wallet-send-select = Pilih Kontak
+wallet-send-or = Atau
+
+; Wallet Send 2 Screen
+wallet-send2-title = Konfirmasi Pembayaran
+wallet-send2-policy = Kebijakan biaya transaksi
+wallet-send2-info = Pembayaran IXI tidak dapat dibatalkan.
+wallet-send2-feeinfo = Biaya jaringan IXI sudah termasuk dalam pembayaran.
+wallet-send2-normal = Normal
+wallet-send2-high = Tinggi
+wallet-send2-custom = Kustom
+wallet-send2-placeholder = Berapa banyak yang ingin Anda kirim?
+wallet-send2-amount = Jumlah
+wallet-send2-max-amount = Kirim Jumlah Maksimum
+wallet-send2-max-amount-warning = Anda akan mengirim seluruh saldo dompet milik Anda! 
+wallet-send2-fee = Total biaya transaksi
+wallet-send2-total = Total jumlah yang harus dibayarkan dari saldo
+wallet-send2-send = Kirim IXI
+wallet-send2-confirm-title = Anda akan mengirim
+wallet-send2-confirm = Konfirmasi
+wallet-send2-cancel = Batal
+wallet-send2-edit = Edit pembayaran
+wallet-send2-remove-recipient = Hapus Penerima
+wallet-send2-done = Selesai
+wallet-send2-yourbalance = Saldo Milik Anda
+
+; Wallet Sent Screen
+wallet-sent-title = Rincian Pembayaran
+wallet-sent-subtitle = Pembayaran dikirim ke:
+wallet-status-sent-pending = Pembayaran Sedang Dikirim
+wallet-status-receive-pending = Pembayaran Masuk
+wallet-status-sent = Pembayaran sudah Berhasil Dikirim
+wallet-status-receive = Pembayaran Diterima
+wallet-status-failed = Pembayaran Gagal
+wallet-sent-amount = Jumlah yang Dikirim
+wallet-sent-status = Status Pembayaran
+wallet-sent-confirmed = TERKONFIRMASI
+wallet-sent-unconfirmed = BELUM TERKONFIRMASI
+wallet-sent-details = Jumlah yang Anda kirim telah dipotong dari saldo Anda. 
+wallet-sent-fee = Biaya pembayaran
+wallet-sent-feeinfo = Pembayaran ini memiliki Biaya Jaringan sebesar
+wallet-sent-txid = ID Transaksi
+wallet-sent-view-explorer = Lihat di Penjelajah
+wallet-sent-dismiss = TUTUP
+wallet-sent-unconfirmed-details = Pembayaran telah dikirim, tetapi belum dikonfirmasi oleh jaringan. Setelah dikonfirmasi, Anda akan melihat ID transaksi dan tautan untuk melihatnya di penjelajah.
+wallet-sentrecv-title = Pembayaran Diterima
+wallet-sentrecv-subtitle = Pembayaran diterima dari:
+wallet-sentrecv-amount = Jumlah yang Diterima
+wallet-sentrecv-details = Jumlah yang diterima telah ditambahkan ke saldo dompet Anda.
+
+; Global wallet errors
+wallet-error-amount-title = Jumlah tidak valid
+wallet-error-amount-text = Harap ketik jumlah yang valid.
+wallet-error-amountdecimal-text = Harap ketik jumlah desimal yang benar.
+wallet-error-balance-title = Saldo tidak mencukupi
+wallet-error-balance-text = Saldo milik Anda terlalu rendah untuk transaksi ini. Total biaya transaksi adalah {0}, sedangkan saldo milik Anda adalah {1}.
+
+; Onboarding join official bot
+onboarding-bot-title = Bergabunglah dengan Komunitas resmi Spixi milik kami
+onboarding-bot-text = Obrolan grup, tempat Anda dapat memberi tahu kami pendapat Anda tentang Spixi dan mengikuti perkembangan terkini.
+onboarding-bot-join-button = Bergabunglah sekarang
+onboarding-bot-dont-join-button = Lewati untuk saat ini
+
+; Onboarding 1
+onboarding-screen1-title = Terhubung dengan Percaya Diri
+onboarding-screen1-text = Kendalikan Komunikasi dan Keuangan Anda dengan Salah Satu Aplikasi Obrolan Paling Aman dan Terprivasi di Dunia.
+onboarding-screen1-get-started = Mulai
+onboarding-screen1-skip = Lewati orientasi
+
+; Onboarding 2
+onboarding-screen2-title = Alamat milik Anda adalah satu-satunya ID milik Anda.
+onboarding-screen2-text = Spixi tidak memerlukan nomor telepon atau email milik Anda. Spixi menggunakan alamat milik Anda yang merupakan ID unik milik Anda. Anda dapat menambahkan orang lain dengan menggunakan alamat tersebut.
+
+; Onboarding 3
+onboarding-screen3-title = Kirim dan terima pembayaran IXI.
+onboarding-screen3-text = Dengan menggunakan dompet, Anda dapat dengan cepat mengirim atau menerima pembayaran IXI. Semudah mengirim pesan.
+
+; Onboarding send and receive payments
+onboarding-screen4-title = Kirim dan Terima Pembayaran
+onboarding-screen4-text = Gunakan dompet terintegrasi untuk mengirim dan menerima pembayaran IXI dengan cepat. Anda dapat melakukannya di dompet atau di chat semudah mengirim pesan!
+onboarding-skip = LEWATI
+onboarding-back = Kembali
+onboarding-next = Berikutnya
+onboarding-finish = Selesai
+
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi adalah aplikasi obrolan terdesentralisasi dengan dompet terintegrasi.
+empty-state-detail-2 = Semua pesan dienkripsi dengan metode enkripsi canggih dan dipertukarkan secara langsung antara Anda dan kontak milik Anda.
+
+
+; Ixinames
+ixinames-request-title = IXI Names Ingin Terhubung
+ixinames-request-details = Apakah Anda yakin ingin menghubungkan Spixi Anda ke IXI Names? Layanan akan menerima akses ke alamat Spixi milik Anda.
+ixinames-request-decline = Tolak
+ixinames-request-connect = Hubungkan
+ixinames-message-connected = Spixi Anda sekarang terhubung ke IXI Names.
+ixinames-message-error = Spixi tidak dapat terhubung ke IXI Names. Silakan coba lagi.
+
+; Rating
+rating-request-title = Apakah Anda menyukai Spixi?
+rating-request-details = Masukan Anda dapat membantu kami membuatnya lebih baik.
+rating-request-no = Tidak begitu...
+rating-request-yes = Ya, saya menyukainya
+
+; Global
+global-connecting-s2 = Menghubungkan ke dalam Ixian S2...
+global-connecting-dlt = Menghubungkan ke dalam Jaringan Ixian...
+global-received = DITERIMA
+global-sent = DIKIRIM
+global-app-accept = Terima
+global-app-reject = Tolak
+global-app-wants-to-use = {0} ingin menggunakan {1} dengan Anda.
+global-call-in-call = Sedang Menelepon
+global-call-dialing = Menelepon
+global-call-incoming = Panggilan Masuk
+
+global-dialog-error = Kesalahan
+global-dialog-ok = Oke
+global-dialog-cancel = BATAL
+global-invalid-address-title = Alamat tidak valid
+global-invalid-address-text = Harap masukkan alamat dompet yang valid.
+
+global-friend-request-accepted = {0} telah menerima permintaan pertemanan Anda.
+
+global-update-available = Versi baru Spixi ({0}) telah tersedia. Harap perbarui untuk pengalaman terbaik.
+global-modal-external-link-title = Anda akan mengunjungi tautan eksternal
+global-modal-external-link-body = Anda akan mengunjungi tautan eksternal {0}. Tautan eksternal berpotensi berbahaya, lanjutkan dengan risiko Anda sendiri.
+global-modal-external-link-button-visit = KUNJUNGI
+
+global-lock-auth-text = Autentikasi diperlukan
+global-lock-invalidpassword-title = Autentikasi gagal
+global-lock-invalidpassword-text = Ketik kata sandi dompet milik Anda untuk membuka kunci Spixi
+
+global-time-justnow = baru saja
+global-time-aminuteago = semenit yang lalu
+global-time-minutesago = beberapa menit yang lalu
+
+global-share-choose = Pilih tindakan
+global-share-savefile = Simpan File
+global-share-sharefile = Bagikan File
