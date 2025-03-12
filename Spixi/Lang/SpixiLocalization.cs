@@ -15,6 +15,7 @@ namespace SPIXI.Lang
             "en-us",
             "es-co",
             "de-de",
+            "id-id",
             "fr-fr",
             "it-it",
             "ja-jp",
