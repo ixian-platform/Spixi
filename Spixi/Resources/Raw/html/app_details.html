@@ -9,7 +9,8 @@
     <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+    <!-- TODO: change back to use dynamic file -->
+    <link rel="stylesheet" type="text/css" href="css/spixiui-light.css">
 
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
@@ -43,17 +44,61 @@
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
 
-        <div class="spixi-container spixi-toolbar">
-            <img id="AppIcon" class="spixi-avatar" style="float: left; margin-right: 15px;" />
-            <div class="text" id="AppPublisher"></div>
-            <div class="text" id="AppVersion"></div>
-            <div class="text" id="AppCapabilities"></div>
+        <section class="spixi-app-details">
+            <div class="spixi-app-details-header">
+                <img id="AppIcon" class="spixi-app-details-image" />
+                <div class="spixi-app-details-title">
+                    <span class="heading-xs s-text-01">App Name</span>
+                    <span class="label-sm s-text-02">creator</span>
+                </div>
+            </div>
+            <div class="spixi-app-details-properties">
+                <span class="label-sm s-text-02">Description</span>
+                <span class="body-sm s-text-01">Introducing...</span>
+            </div>
+            <div class="spixi-app-details-properties ">
+                <div class="spixi-app-details-properties-single-div">
+                    <span class="label-sm s-text-02">Capabilities</span>
+                    <div>Single User</div>
+                </div>
+                <div class="spixi-app-details-properties-single-div">
+                    <span class="label-sm s-text-02">Details</span>
+                    <div class="spixi-app-details-info">
+                        <span class="body-sm s-text-02">ID</span>
+                        <span class="label-sm s-text-01">8328842</span>
+                    </div>
+                    <div class="spixi-app-details-info">
+                        <span class="body-sm s-text-02">Version</span>
+                        <span class="label-sm s-text-01">v1.0.2</span>
+                    </div>
+                    <div class="spixi-app-details-info">
+                        <span class="body-sm s-text-02">Size</span>
+                        <span class="label-sm s-text-01">1.59MB</span>
+                    </div>
+                </div>
+                <div class="spixi-app-details-properties-single-div">
+                    <span class="label-sm s-text-02">Install URL</span>
+                    <span class="body-sm s-text-01">htpps://</span>
+                </div>
+            </div>
+            <div class="add-mini-app-buttons spixi-app-details-buttons">
+                <div class="spixi-flat-button label-sm">
+                    <i class="fas fa-download"></i>&nbsp; Download and Install
+                </div>
+                <div class="spixi-outline-button label-sm">
+                    <i class="fas fa-arrow-left"></i>&nbsp; Cancel
+                </div>
+            </div>
+        </section>
 
-            <div class="spixi-holder-20" style="clear:both;"></div>
-
-            <div class="spixi-button" onclick="location.href='ixian:uninstall';">*SL{app-details-uninstall}</div>
-            <div id="StartAppBtn" class="spixi-button" style="display: none;" onclick="location.href='ixian:startApp';">*SL{app-details-start}</div>
-        </div>
+<!--        <div class="spixi-container spixi-toolbar">-->
+<!--            <div class="text" id="AppPublisher"></div>-->
+<!--            <div class="text" id="AppVersion"></div>-->
+<!--            <div class="text" id="AppCapabilities"></div>-->
+<!--            <div class="spixi-holder-20" style="clear:both;"></div>-->
+<!--            <div class="spixi-button" onclick="location.href='ixian:uninstall';">*SL{app-details-uninstall}</div>-->
+<!--            <div id="StartAppBtn" class="spixi-button" style="display: none;" onclick="location.href='ixian:startApp';">*SL{app-details-start}</div>-->
+<!--        </div>-->
 
     </div>  <!-- Wrap -->
 

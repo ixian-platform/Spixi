@@ -9,7 +9,8 @@
     <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+    <!-- TODO: change back to use dynamic file -->
+    <link rel="stylesheet" type="text/css" href="css/spixiui-light.css">
 
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
@@ -22,6 +23,7 @@
     <script src="js/qrcode.min.js"></script>
     <script src="js/clipboard.min.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/spixi.js"></script>
 
 </head>
 <body onload="ixian:onload();">
@@ -86,7 +88,7 @@
                         <div class="row">
                             <div class="col-4"></div>
                             <div class="col-4 spixi-balancebar-subtitle">*SL{index-balance}</div>
-                            <div class="col-4 spixi-balancebar-hide" id="activity_balance_toggle">*SL{index-balance-hide} <i class="fa fa-eye"></i></div>
+                            <div class="col-4 spixi-balancebar-hide label-xs" id="activity_balance_toggle">*SL{index-balance-hide} <i class="fa fa-eye"></i></div>
                         </div>
 
                         <div class="row">
@@ -187,6 +189,73 @@
                 </div>
             </div>
 
+            <!-- SPIXI APPS -->
+            <div id="spixiApps" class="tab-pane ">
+                <div class="container spixi-mini-apps-container">
+                    <div>
+                        <input type="text" class="spixi-textfield search-mini-apps" id="searchMiniApps" oninput="contactSearch()" placeholder="Find installed mini apps" />
+                        <span class="fa fa-search spixi-textfield-holder-icon mini-apps-search-icon"></span>
+                    </div>
+                    <span class="heading-sm s-text-01">Apps</span>
+                    <section class="mini-apps-list">
+                            <div class="mini-apps-list-single-item">
+                                <div class="mini-apps-list-single-image-wrapper">
+                                    <img src="https://www.researchgate.net/publication/344327457/figure/fig1/AS:938123445932044@1600677467878/A-Sample-Chess-Board.jpg" alt="mini-app-name" />
+                                </div>
+                                <div class="mini-apps-single-item-info s-text-01">
+                                    <span class="label-sm">IXI Chess</span>
+                                    <span class="body-xs">IXI Labs</span>
+                                </div>
+                            </div>
+
+                        <div class="mini-apps-list-single-item">
+                            <div class="mini-apps-list-single-image-wrapper">
+                                <img src="https://www.researchgate.net/publication/344327457/figure/fig1/AS:938123445932044@1600677467878/A-Sample-Chess-Board.jpg" alt="mini-app-name" />
+                            </div>
+                            <div class="mini-apps-single-item-info">
+                                <span class="label-sm">IXI Chess</span>
+                                <span class="body-xs">IXI Labs</span>
+                            </div>
+                        </div>
+
+                        <div class="mini-apps-list-single-item">
+                            <div class="mini-apps-list-single-image-wrapper">
+                                <img src="https://www.researchgate.net/publication/344327457/figure/fig1/AS:938123445932044@1600677467878/A-Sample-Chess-Board.jpg" alt="mini-app-name" />
+                            </div>
+                            <div class="mini-apps-single-item-info">
+                                <span class="label-sm">IXI Chess</span>
+                                <span class="body-xs">IXI Labs</span>
+                            </div>
+                        </div>
+
+                        <div class="mini-apps-list-single-item">
+                            <div class="mini-apps-list-single-image-wrapper">
+                                <img src="https://www.researchgate.net/publication/344327457/figure/fig1/AS:938123445932044@1600677467878/A-Sample-Chess-Board.jpg" alt="mini-app-name" />
+                            </div>
+                            <div class="mini-apps-single-item-info">
+                                <span class="label-sm">IXI Chess</span>
+                                <span class="body-xs">IXI Labs</span>
+                            </div>
+                        </div>
+
+                        <div class="mini-apps-list-single-item">
+                            <div class="mini-apps-list-single-image-wrapper">
+                                <img src="https://www.researchgate.net/publication/344327457/figure/fig1/AS:938123445932044@1600677467878/A-Sample-Chess-Board.jpg" alt="mini-app-name" />
+                            </div>
+                            <div class="mini-apps-single-item-info">
+                                <span class="label-sm">IXI Chess</span>
+                                <span class="body-xs">IXI Labs</span>
+                            </div>
+                        </div>
+                    </section>
+                    <a href="ixian:newapp" class="action-button">
+                        <div class="spixi-button center round">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
 
@@ -197,22 +266,28 @@
     <div id="footer" class="fixed-bottom spixi-footer">
         <div class="" style="width:90%; margin: auto;">
             <ul class="nav nav-tabs row no-gutters spixi-footer-row">
-                <li id="tab1" class="col-4 spixi-tab">
+                <li id="tab1" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa-solid fa-message"></i><div id="unread-dot" class="spixi-footer-chat-unread-indicator"></div></div>
                         <div class="spixi-tab-text">*SL{index-tab-chats}</div>
                     </a>
                 </li>
-                <li id="tab2" class="col-4 spixi-tab">
+                <li id="tab2" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#wallet" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
                         <div class="spixi-tab-text">*SL{index-tab-wallet}</div>
                     </a>
                 </li>
-                <li id="tab3" class="col-4 spixi-tab">
+                <li id="tab3" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#myaddress" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa-solid fa-qrcode"></i></div>
                         <div class="spixi-tab-text">*SL{index-tab-address}</div>
+                    </a>
+                </li>
+                <li id="tab4" class="col-3 spixi-tab">
+                    <a data-toggle="tab" href="#spixiApps" class="spixi-tab-pad">
+                        <div class="spixi-tab-icon"><i class="fa-solid fa-rocket"></i></div>
+                        <div class="spixi-tab-text">Apps</div>
                     </a>
                 </li>
             </ul>

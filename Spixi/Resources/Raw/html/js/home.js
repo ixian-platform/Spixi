@@ -501,12 +501,13 @@ function setNotificationCount(notification_count) {
 // Function to toggle tab's active color
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Not very elegant, but it works
-    document.getElementById("tab1").className = "col-4 spixi-tab";
-    document.getElementById("tab2").className = "col-4 spixi-tab";
-    document.getElementById("tab3").className = "col-4 spixi-tab";
+    document.getElementById("tab1").className = "col-3 spixi-tab";
+    document.getElementById("tab2").className = "col-3 spixi-tab";
+    document.getElementById("tab3").className = "col-3 spixi-tab";
+    document.getElementById("tab4").className = "col-3 spixi-tab";
 
     var cl = "active";
-    e.target.parentElement.className = "col-4 spixi-tab " + cl;
+    e.target.parentElement.className = "col-3 spixi-tab " + cl;
 
     var tabid = e.target.parentElement.id;
     location.href = "ixian:tab:" + tabid;

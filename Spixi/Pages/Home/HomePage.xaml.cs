@@ -4,6 +4,7 @@ using IXICore.Network;
 using Spixi;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using SPIXI.MiniApps;
 using SPIXI.Storage;
 using System.IO.Compression;
 using System.Web;
@@ -196,6 +197,10 @@ namespace SPIXI
             else if (current_url.Equals("ixian:newcontact", StringComparison.Ordinal))
             {
                 Navigation.PushAsync(new ContactNewPage(), Config.defaultXamarinAnimations);
+            }
+            else if (current_url.Equals("ixian:newapp", StringComparison.Ordinal))
+            {
+                Navigation.PushAsync(new AppNewPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:sendixi", StringComparison.Ordinal))
             {
@@ -1212,6 +1217,28 @@ namespace SPIXI
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+
+        // Spixi Mini Apps logic
+
+        private void loadApps()
+        {
+            Utils.sendUiCommand(this, "clearApps");
+
+            var apps = Node.MiniAppManager.getInstalledApps();
+            lock (apps)
+            {
+                foreach (var app_arr in apps)
+                {
+                    MiniApp app = app_arr.Value;
+                    string icon = Node.MiniAppManager.getAppIconPath(app.id);
+                    if (icon == null)
+                    {
+                        icon = "";
+                    }
+                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon);
+                }
+            }
         }
 
     }
