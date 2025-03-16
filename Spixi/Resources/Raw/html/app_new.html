@@ -10,7 +10,8 @@
     <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+    <!-- TODO: change back to use dynamic file -->
+    <link rel="stylesheet" type="text/css" href="css/spixiui-light.css">
 
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
@@ -43,25 +44,22 @@
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
 
-        <!-- DescriptionBar -->
-        <div class="spixi-descriptionbar">
-            <div class="container">
-                <div class="row spixi-descriptionbar-row">
-                    <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
-                    <div class="col-10 spixi-descriptionbar-row-details">*SL{app-new-description}</div>
+        <section class="add-mini-app-container">
+            <span class="body-sm s-text-01">To add a new Spixi Mini App, paste or type the URL of the app or scan their QR Code.</span>
+            <textarea type="text" class="spixi-textfield add-mini-app-url-input" id="addressInput" oninput="checkAddress()" placeholder="Please enter the URL where the Mini App is located..."></textarea>
+            <div class="add-mini-app-buttons">
+                <div id="sendrequest" class="spixi-flat-button label-sm disabled">
+                    <i class="fas fa-arrow-right"></i>&nbsp; Add App with URL
+                </div>
+                <span class="body-sm">or</span>
+                <div class="spixi-outline-button label-sm">
+                    <i class="fas fa-qrcode"></i>&nbsp; Scan
                 </div>
             </div>
-        </div>
-        <!-- End DescriptionBar -->
-
-        <div class="spixi-textfield-holder">
-            <input type="text" class="spixi-textfield" id="addressInput" oninput="checkAddress()" placeholder="Paste / type address">
-        </div>
-
-        <hr class="spixi-separator-main" />
-
-        <div id="sendrequest" class="spixi-button large center disabled">
-            <i class="fas fa-check"></i>&nbsp; *SL{app-new-install}
+        </section>
+        <div class="important-notice">
+            <span class="important-notice-title label-sm"><i class="fa fa-exclamation-circle"></i>&nbsp;Important Notice:</span>
+            <span class="body-xs">Please make sure you trust the source of the Mini App before adding it to your Spixi Wallet.</span>
         </div>
     </div>
 
@@ -75,11 +73,11 @@
         }
 
         function checkAddress() {
-            sendrequest.className = "spixi-button large center disabled";
+            sendrequest.className = "spixi-flat-button label-sm disabled";
 
             var address = $("#addressInput").val();
             if (address.length > 5) {
-                sendrequest.className = "spixi-button large center";
+                sendrequest.className = "spixi-flat-button label-sm";
             }
         }
 

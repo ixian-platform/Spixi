@@ -105,6 +105,82 @@
   --colors-outline-inverse: #A4A6A8;
   --colors-outline-action-hover: #3898FA;
   --colors-outline-action-focus: #067FF9;
+
+    /* Typography Variables - Mobile */
+    --scale-0: 0rem;
+    --scale-100: 0.25rem;
+    --scale-200: 0.5rem;
+    --scale-300: 0.75rem;
+    --scale-400: 1rem;
+    --scale-500: 1.25rem;
+    --scale-600: 1.5rem;
+    --scale-700: 1.75rem;
+    --scale-800: 2rem;
+    --scale-1000: 2.5rem;
+    --scale-1600: 4rem;
+    --scale-2000: 5rem;
+    --scale-50: 0.125rem;
+    --scale-25: 0.0625rem;
+    --scale-20000: 50rem;
+    --scale-2500: 6.25rem;
+    --scale-3000: 7.5rem;
+
+    --font-size-display-display-lg: 2.25rem;
+    --font-size-display-display-md: 2.25rem;
+    --font-size-global-label-lg: 1.125rem;
+    --font-size-global-label-md: 1rem;
+    --font-size-global-label-sm: 0.875rem;
+    --font-size-global-label-xs: 0.75rem;
+    --font-size-global-body-lg: 1.125rem;
+    --font-size-global-body-md: 1rem;
+    --font-size-global-body-sm: 0.875rem;
+    --line-height-display-display-lg: 2.75rem;
+    --line-height-display-display-md: 3rem;
+    --spacing-none: var(--scale-0);
+    --spacing-3xs: var(--scale-50);
+    --spacing-xxs: var(--scale-100);
+    --spacing-xs: var(--scale-200);
+    --spacing-sm: var(--scale-300);
+    --spacing-md: var(--scale-400);
+    --spacing-lg: var(--scale-500);
+    --spacing-xl: var(--scale-600);
+    --spacing-xxl: var(--scale-800);
+    --spacing-3xl: var(--scale-1000);
+    --spacing-super: var(--scale-1600);
+    --spacing-super-lg: var(--scale-2000);
+    --font-size-global-body-xs: 0.75rem;
+    --line-height-global-label-lg: 1.5rem;
+    --line-height-global-label-md: 1.25rem;
+    --line-height-global-label-sm: 1rem;
+    --line-height-global-label-xs: 1rem;
+    --line-height-global-body-lg: 1.75rem;
+    --line-height-global-body-md: 1.5rem;
+    --line-height-global-body-sm: 1.25rem;
+    --line-height-global-body-xs: 1rem;
+    --font-size-heading-heading-lg: 2rem;
+    --font-size-heading-heading-md: 1.75rem;
+    --font-size-heading-heading-sm: 1.5rem;
+    --font-size-heading-heading-xs: 1.25rem;
+    --line-height-heading-heading-lg: 2.25rem;
+    --line-height-heading-heading-md: 2rem;
+    --line-height-heading-heading-sm: 1.75rem;
+    --line-height-heading-heading-xs: 1.25rem;
+    --tracking-display-display-lg: -0.15rem;
+    --tracking-display-display-md: -0.125rem;
+    --tracking-heading-heading-lg: -0.125rem;
+    --tracking-heading-heading-md: -0.0625rem;
+    --tracking-heading-heading-sm: 0rem;
+    --tracking-heading-heading-xs: 0rem;
+    --tracking-global-label-lg: 0rem;
+    --tracking-global-label-md: 0rem;
+    --tracking-global-label-sm: 0rem;
+    --tracking-global-label-xs: 0rem;
+    --tracking-global-body-lg: 0rem;
+    --tracking-global-body-md: 0rem;
+    --tracking-global-body-sm: 0rem;
+    --tracking-global-body-xs: 0rem;
+    --spacing-super-xl: var(--scale-2500);
+    --spacing-super-xxl: var(--scale-3000);
 }
 
 /* Self-hosted Inter Fonts */
@@ -2023,7 +2099,7 @@ img.emoji {
 }
 
 .spixi-list-placeholder-chat-image {
-    background-image: url("../img/chats_es_dark.svg");
+    background-image: url("../img/chats_es.svg");
     background-repeat: no-repeat;
     margin: auto;
     margin-top: 120px;
@@ -2035,7 +2111,7 @@ img.emoji {
 }
 
 .spixi-list-placeholder-contacts-image {
-    background-image: url("../img/contacts_es_dark.svg");
+    background-image: url("../img/contacts_es.svg");
     background-repeat: no-repeat;
     margin: auto;
     margin-top: 120px;
@@ -2047,7 +2123,7 @@ img.emoji {
 }
 
 .spixi-list-placeholder-transactions-image {
-    background-image: url("../img/transactions_es_dark.svg");
+    background-image: url("../img/transactions_es.svg");
     background-repeat: no-repeat;
     margin: auto;
     margin-top: 64px;
@@ -3605,4 +3681,318 @@ img.emoji {
     from {transform: scaleY(0);}
     to {transform: scaleY(1);}
 }
+
+/* COLOR CLASSES */
+.s-text-01 {
+    color: var(--colors-text-01);
+}
+
+.s-text-02 {
+    color: var(--colors-text-02);
+}
+
+/* TYPOGRAPHY CLASSES */
+/* Display classes */
+.display-lg {
+    font-size: var(--font-size-display-display-lg);
+    line-height: var(--line-height-display-display-lg);
+    letter-spacing: var(--tracking-display-display-lg);
+    font-weight: 700;
+}
+
+.display-md {
+    font-size: var(--font-size-display-display-md);
+    line-height: var(--line-height-display-display-md);
+    letter-spacing: var(--tracking-display-display-md);
+    font-weight: 700;
+}
+
+/* Heading classes */
+.heading-lg {
+    font-size: var(--font-size-heading-heading-lg);
+    line-height: var(--line-height-heading-heading-lg);
+    letter-spacing: var(--tracking-heading-heading-lg);
+    font-weight: 700;
+}
+
+.heading-md {
+    font-size: var(--font-size-heading-heading-md);
+    line-height: var(--line-height-heading-heading-md);
+    letter-spacing: var(--tracking-heading-heading-md);
+    font-weight: 700;
+}
+
+.heading-sm {
+    font-size: var(--font-size-heading-heading-sm);
+    line-height: var(--line-height-heading-heading-sm);
+    letter-spacing: var(--tracking-heading-heading-sm);
+    font-weight: 700;
+}
+
+.heading-xs {
+    font-size: var(--font-size-heading-heading-xs);
+    line-height: var(--line-height-heading-heading-xs);
+    letter-spacing: var(--tracking-heading-heading-xs);
+    font-weight: 700;
+}
+
+/* Label classes */
+.label-lg {
+    font-size: var(--font-size-global-label-lg);
+    line-height: var(--line-height-global-label-lg);
+    letter-spacing: var(--tracking-global-label-lg);
+    font-weight: 700;
+}
+
+.label-md {
+    font-size: var(--font-size-global-label-md);
+    line-height: var(--line-height-global-label-md);
+    letter-spacing: var(--tracking-global-label-md);
+    font-weight: 700;
+}
+
+.label-sm {
+    font-size: var(--font-size-global-label-sm);
+    line-height: var(--line-height-global-label-sm);
+    letter-spacing: var(--tracking-global-label-sm);
+    font-weight: 700;
+}
+
+.label-xs {
+    font-size: var(--font-size-global-label-xs);
+    line-height: var(--line-height-global-label-xs);
+    letter-spacing: var(--tracking-global-label-xs);
+    font-weight: 700;
+}
+
+/* Body classes */
+.body-lg {
+    font-size: var(--font-size-global-body-lg);
+    line-height: var(--line-height-global-body-lg);
+    letter-spacing: var(--tracking-global-body-lg);
+    font-weight: 400;
+}
+
+.body-md {
+    font-size: var(--font-size-global-body-md);
+    line-height: var(--line-height-global-body-md);
+    letter-spacing: var(--tracking-global-body-md);
+    font-weight: 400;
+}
+
+.body-sm {
+    font-size: var(--font-size-global-body-sm);
+    line-height: var(--line-height-global-body-sm);
+    letter-spacing: var(--tracking-global-body-sm);
+    font-weight: 400;
+}
+
+.body-xs {
+    font-size: var(--font-size-global-body-xs);
+    line-height: var(--line-height-global-body-xs);
+    letter-spacing: var(--tracking-global-body-xs);
+    font-weight: 400;
+}
+
+/* SPIXI MINI APPS STYLING */
+.spixi-mini-apps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 16px;
+    padding-bottom: 40px;
+    position: relative;
+}
+
+.search-mini-apps {
+    background: var(--colors-surface-03);
+    min-height: 48px;
+    border-radius: 12px;
+}
+
+.search-mini-apps::placeholder{
+    color: var(--colors-text-02);
+}
+
+.mini-apps-search-icon {
+    height: 16px;
+    width: 16px;
+    font-size: unset;
+}
+
+.mini-apps-header {
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid #aaa;
+}
+
+.mini-apps-header p {
+    color: #848484;
+}
+
+.mini-apps-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    gap: 16px;
+    height: 100%;
+}
+
+.mini-apps-list-items {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.mini-apps-list-single-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    background: var(--colors-surface-02);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.mini-apps-list-single-image-wrapper {
+    width: 100%;
+    max-width: 147px;
+    height: 100%;
+    max-height: 147px;
+    border: 1px solid var(--colors-outline-03);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mini-apps-list-single-image-wrapper img {
+    object-fit: contain;
+    max-width: 147px;
+    max-height: 147px;
+}
+
+.mini-apps-single-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mini-apps-single-item-info {
+    width: 100%;
+    max-width: 147px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mini-apps-single-item-info span {
+    font-size: 14px;
+}
+
+/* ADD MINI APP PAGE */
+.add-mini-app-container {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.add-mini-app-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.add-mini-app-buttons > div {
+    width: 100%;
+    margin: 0;
+    height: 40px;
+}
+
+.add-mini-app-url-input {
+    min-height: 88px;
+    padding: 12px;
+}
+
+.add-mini-app-url-input::placeholder{
+    color: var(--colors-text-02);
+}
+
+.important-notice {
+    background: var(--colors-surface-error);
+    padding: 14px 12px;
+    border-radius: 16px;
+    color: var(--colors-text-error);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 24px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.important-notice-title {
+    color: #B32318;
+}
+
+.spixi-app-details {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.spixi-app-details-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.spixi-app-details-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    object-fit: contain;
+}
+
+.spixi-app-details-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.spixi-app-details-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spixi-app-details-properties-single-div {
+    background: var(--colors-surface-02);
+    padding: 16px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spixi-app-details-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.spixi-app-details-buttons {
+    margin-top: 24px;
+}
+
 

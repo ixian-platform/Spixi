@@ -33,102 +33,179 @@
  */
 
 :root {
-  /* Text Colors */
-  --colors-text-01: #0e0f0f;
-  --colors-text-02: #434343;
-  --colors-text-action: #0456a9;
-  --colors-text-action-hover: #003d79;
-  --colors-text-action-focus: #0565c7;
-  --colors-text-link: #016EFD;
-  --colors-text-disabled: #6b6c6c;
-  --colors-text-accent: #ed5fe0;
-  --colors-text-success: #17b51f;
-  --colors-text-warning: #fec11b;
-  --colors-text-error: #c9211d;
-  --colors-text-on-action: #fafafa;
-  --colors-text-on-disabled: #818383;
-  --colors-text-inverse: #fafafa;
-   --colors-text-select: #0BFFF3;
+    /* Text Colors */
+    --colors-text-01: #0e0f0f;
+    --colors-text-02: #434343;
+    --colors-text-action: #0456a9;
+    --colors-text-action-hover: #003d79;
+    --colors-text-action-focus: #0565c7;
+    --colors-text-link: #016EFD;
+    --colors-text-disabled: #6b6c6c;
+    --colors-text-accent: #ed5fe0;
+    --colors-text-success: #17b51f;
+    --colors-text-warning: #fec11b;
+    --colors-text-error: #c9211d;
+    --colors-text-on-action: #fafafa;
+    --colors-text-on-disabled: #818383;
+    --colors-text-inverse: #fafafa;
+    --colors-text-select: #0BFFF3;
 
-  /* Surface Colors */
-  --colors-surface-01: #fafafa;
-  --colors-surface-02: #F5F5F5;
-  --colors-surface-03: #EAEBEB; 
-  --colors-surface-04: #E3E3E3;
-  --colors-surface-05: #C5E0FC;
-  --colors-surface-bubble: #D3D7FD;
-  --colors-surface-action: #0456a9;
-  --colors-surface-action-hover: #003d79;
-  --colors-surface-action-focused: #0565c7;
-  --colors-surface-disabled: #DEDEDE;
-  --colors-surface-accent: #f18ce4;
-  --colors-surface-success: #dbfadc;
-  --colors-surface-warning: #fff7e1;
-  --colors-surface-error: #f9d6ce;
-  --colors-surface-brand-primary: #223766;
-  --colors-surface-brand-primary2: #003D79;
-  --colors-surface-brand-dark: #011E3C;
-  --colors-surface-brand-light: #F0FAFF;
-  --colors-surface-brand-secondary: #eafaf9;
-  --colors-surface-inverse: #303030;
-  --colors-surface-accent-inverse: #892681;
-  --colors-surface-success-inverse: #149b1b;
-  --colors-surface-warning-inverse: #e2a601;
-  --colors-surface-error-inverse: #ab100c;
+    /* Surface Colors */
+    --colors-surface-01: #fafafa;
+    --colors-surface-02: #F5F5F5;
+    --colors-surface-03: #EAEBEB;
+    --colors-surface-04: #E3E3E3;
+    --colors-surface-05: #C5E0FC;
+    --colors-surface-bubble: #D3D7FD;
+    --colors-surface-action: #0456a9;
+    --colors-surface-action-hover: #003d79;
+    --colors-surface-action-focused: #0565c7;
+    --colors-surface-disabled: #DEDEDE;
+    --colors-surface-accent: #f18ce4;
+    --colors-surface-success: #dbfadc;
+    --colors-surface-warning: #fff7e1;
+    --colors-surface-error: #f9d6ce;
+    --colors-surface-brand-primary: #223766;
+    --colors-surface-brand-primary2: #003D79;
+    --colors-surface-brand-dark: #011E3C;
+    --colors-surface-brand-light: #F0FAFF;
+    --colors-surface-brand-secondary: #eafaf9;
+    --colors-surface-inverse: #303030;
+    --colors-surface-accent-inverse: #892681;
+    --colors-surface-success-inverse: #149b1b;
+    --colors-surface-warning-inverse: #e2a601;
+    --colors-surface-error-inverse: #ab100c;
 
-  /* Icon Colors */
-  --colors-icon-01: #1e1f1f;
-  --colors-icon-action: #0456a9;
-  --colors-icon-accent: #b334a9;
-  --colors-icon-accent-dark: #731E6C;
-  --colors-icon-disabled: #6b6c6c;
-  --colors-icon-success: #17b51f;
-  --colors-icon-warning: #fec11b;
-  --colors-icon-error: #c9211d;
-  --colors-icon-inverse: #f2f2f2;
-  --colors-icon-action-hover: #003d79;
-  --colors-icon-action-focus: #0565c7;
-  --colors-icon-on-action: #fafafa;
-  --colors-icon-on-disabled: #818383;
+    /* Icon Colors */
+    --colors-icon-01: #1e1f1f;
+    --colors-icon-action: #0456a9;
+    --colors-icon-accent: #b334a9;
+    --colors-icon-accent-dark: #731E6C;
+    --colors-icon-disabled: #6b6c6c;
+    --colors-icon-success: #17b51f;
+    --colors-icon-warning: #fec11b;
+    --colors-icon-error: #c9211d;
+    --colors-icon-inverse: #f2f2f2;
+    --colors-icon-action-hover: #003d79;
+    --colors-icon-action-focus: #0565c7;
+    --colors-icon-on-action: #fafafa;
+    --colors-icon-on-disabled: #818383;
 
-  /* Outline Colors */
-  --colors-outline-01: #f2f2f2;
-  --colors-outline-02: #e5e6e6;
-  --colors-outline-03: #a4a6a8;
-  --colors-outline-action: #0456a9;
-  --colors-outline-accent: #b334a9;
-  --colors-outline-disabled: #6b6c6c;
-  --colors-outline-success: #17b51f;
-  --colors-outline-warning: #fec11b;
-  --colors-outline-error: #c9211d;
-  --colors-outline-inverse: #575757;
-  --colors-outline-action-hover: #003d79;
-  --colors-outline-action-focus: #0565c7;
+    /* Outline Colors */
+    --colors-outline-01: #f2f2f2;
+    --colors-outline-02: #e5e6e6;
+    --colors-outline-03: #a4a6a8;
+    --colors-outline-action: #0456a9;
+    --colors-outline-accent: #b334a9;
+    --colors-outline-disabled: #6b6c6c;
+    --colors-outline-success: #17b51f;
+    --colors-outline-warning: #fec11b;
+    --colors-outline-error: #c9211d;
+    --colors-outline-inverse: #575757;
+    --colors-outline-action-hover: #003d79;
+    --colors-outline-action-focus: #0565c7;
+
+    /* Typography Variables - Mobile */
+    --scale-0: 0rem;
+    --scale-100: 0.25rem;
+    --scale-200: 0.5rem;
+    --scale-300: 0.75rem;
+    --scale-400: 1rem;
+    --scale-500: 1.25rem;
+    --scale-600: 1.5rem;
+    --scale-700: 1.75rem;
+    --scale-800: 2rem;
+    --scale-1000: 2.5rem;
+    --scale-1600: 4rem;
+    --scale-2000: 5rem;
+    --scale-50: 0.125rem;
+    --scale-25: 0.0625rem;
+    --scale-20000: 50rem;
+    --scale-2500: 6.25rem;
+    --scale-3000: 7.5rem;
+
+    --font-size-display-display-lg: 2.25rem;
+    --font-size-display-display-md: 2.25rem;
+    --font-size-global-label-lg: 1.125rem;
+    --font-size-global-label-md: 1rem;
+    --font-size-global-label-sm: 0.875rem;
+    --font-size-global-label-xs: 0.75rem;
+    --font-size-global-body-lg: 1.125rem;
+    --font-size-global-body-md: 1rem;
+    --font-size-global-body-sm: 0.875rem;
+    --line-height-display-display-lg: 2.75rem;
+    --line-height-display-display-md: 3rem;
+    --spacing-none: var(--scale-0);
+    --spacing-3xs: var(--scale-50);
+    --spacing-xxs: var(--scale-100);
+    --spacing-xs: var(--scale-200);
+    --spacing-sm: var(--scale-300);
+    --spacing-md: var(--scale-400);
+    --spacing-lg: var(--scale-500);
+    --spacing-xl: var(--scale-600);
+    --spacing-xxl: var(--scale-800);
+    --spacing-3xl: var(--scale-1000);
+    --spacing-super: var(--scale-1600);
+    --spacing-super-lg: var(--scale-2000);
+    --font-size-global-body-xs: 0.75rem;
+    --line-height-global-label-lg: 1.5rem;
+    --line-height-global-label-md: 1.25rem;
+    --line-height-global-label-sm: 1rem;
+    --line-height-global-label-xs: 1rem;
+    --line-height-global-body-lg: 1.75rem;
+    --line-height-global-body-md: 1.5rem;
+    --line-height-global-body-sm: 1.25rem;
+    --line-height-global-body-xs: 1rem;
+    --font-size-heading-heading-lg: 2rem;
+    --font-size-heading-heading-md: 1.75rem;
+    --font-size-heading-heading-sm: 1.5rem;
+    --font-size-heading-heading-xs: 1.25rem;
+    --line-height-heading-heading-lg: 2.25rem;
+    --line-height-heading-heading-md: 2rem;
+    --line-height-heading-heading-sm: 1.75rem;
+    --line-height-heading-heading-xs: 1.25rem;
+    --tracking-display-display-lg: -0.15rem;
+    --tracking-display-display-md: -0.125rem;
+    --tracking-heading-heading-lg: -0.125rem;
+    --tracking-heading-heading-md: -0.0625rem;
+    --tracking-heading-heading-sm: 0rem;
+    --tracking-heading-heading-xs: 0rem;
+    --tracking-global-label-lg: 0rem;
+    --tracking-global-label-md: 0rem;
+    --tracking-global-label-sm: 0rem;
+    --tracking-global-label-xs: 0rem;
+    --tracking-global-body-lg: 0rem;
+    --tracking-global-body-md: 0rem;
+    --tracking-global-body-sm: 0rem;
+    --tracking-global-body-xs: 0rem;
+    --spacing-super-xl: var(--scale-2500);
+    --spacing-super-xxl: var(--scale-3000);
 }
 
 /* Self-hosted Inter Fonts */
 @font-face {
-  font-family: 'Inter';
-  src: url('../fonts/Inter-Regular.woff2') format('woff2'),
-       url('../fonts/Inter-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Inter';
-  src: url('../fonts/InterDisplay-SemiBold.woff2') format('woff2'),
-       url('../fonts/InterDisplay-SemiBold.woff') format('woff');
-  font-weight: semibold;
-  font-weight: 500;
-  font-style: normal;
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.woff2') format('woff2'),
+    url('../fonts/Inter-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('../fonts/Inter-Bold.woff2') format('woff2'),
-       url('../fonts/Inter-Bold.woff') format('woff');
-  font-weight: bold;
-  font-style: normal;
+    font-family: 'Inter';
+    src: url('../fonts/InterDisplay-SemiBold.woff2') format('woff2'),
+    url('../fonts/InterDisplay-SemiBold.woff') format('woff');
+    font-weight: semibold;
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Bold.woff2') format('woff2'),
+    url('../fonts/Inter-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
 }
 
 /* Global Font Family */
@@ -161,9 +238,9 @@ a:active {
 }
 
 #wrap {
-   
+
     padding: 0 0;
-    
+
     /* Prevent overscroll bounce  */
     -webkit-overflow-scrolling: touch;
 
@@ -226,6 +303,7 @@ img.emoji {
     width: 100%;
     height: 20px;
 }
+
 .spixi-holder-40 {
     width: 100%;
     height: 40px;
@@ -257,7 +335,7 @@ img.emoji {
 }
 
 .spixi-toolbar.shadow {
-    box-shadow:0px 0px 0px #777;
+    box-shadow: 0px 0px 0px #777;
 }
 
 .spixi-toolbar-row {
@@ -312,9 +390,10 @@ img.emoji {
     padding-top: 12px;
     font-size: 14pt;
 }
+
 .spixi-toolbar-row-details {
     padding-right: 15pt;
-    font-size:9pt;
+    font-size: 9pt;
 }
 
 .spixi-toolbar-row-unread-indicator {
@@ -342,13 +421,16 @@ img.emoji {
     width: 100%;
     height: 56px;
 }
+
 .spixi-toolbar-holder.bot {
     width: 100%;
     height: 88px;
 }
+
 .spixi-toolbar-holder.extended {
     height: 128px;
 }
+
 .spixi-toolbar-holder.extended-main {
     height: 166px;
 }
@@ -384,8 +466,7 @@ img.emoji {
     transform: translateY(-50%);
 }
 
-.spixi-toolbar-option:hover
-{
+.spixi-toolbar-option:hover {
     background: rgba(11, 11, 11, 0.5);
     cursor: pointer;
 }
@@ -427,6 +508,7 @@ img.emoji {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .spixi-toolbar-contact-status {
     font-size: 9pt;
 }
@@ -450,12 +532,11 @@ img.emoji {
     display: block;
     top: 88px;
     overflow: auto;
-    height:auto;
+    height: auto;
     max-height: 50%;
 }
 
-.spixi-channel-bar-row
-{
+.spixi-channel-bar-row {
     display: table-row;
     height: 40px;
 }
@@ -507,8 +588,7 @@ img.emoji {
     height: 0px;
 }
 
-.spixi-channel-bar .unread-indicator
-{
+.spixi-channel-bar .unread-indicator {
     display: none;
 }
 
@@ -530,10 +610,12 @@ img.emoji {
     background: radial-gradient(111.45% 100% at 48.35% 0%, #206DB4 0%, #152337 99%);
     border-radius: 16px;
 }
+
 .spixi-balancebar-label {
     font-size: 14pt;
     padding-left: 20px;
 }
+
 .spixi-balancebar-subtitle {
     margin-bottom: 4px;
     margin-top: 18px;
@@ -580,15 +662,13 @@ img.emoji {
     color: var(--colors-text-inverse);
 }
 
-.spixi-balancebar-balance img
-{
+.spixi-balancebar-balance img {
     height: 14pt;
     margin-right: 5px;
     display: none;
 }
 
-.spixi-balancebar-balance span
-{
+.spixi-balancebar-balance span {
     vertical-align: middle;
 }
 
@@ -599,6 +679,7 @@ img.emoji {
     height: 2px;
     background-color: #1692d9;
 }
+
 .spixi-balancebar-info {
     font-style: normal;
     font-weight: 500;
@@ -608,6 +689,7 @@ img.emoji {
     margin-bottom: 16px;
     color: var(--colors-text-inverse);
 }
+
 .spixi-balancebar-quickscan {
     float: right;
     margin-top: -80px;
@@ -620,13 +702,16 @@ img.emoji {
     color: var(--colors-text-01);
     background: var(--colors-surface-01);
 }
+
 .spixi-optionbar-contact-details {
     background: var(--colors-surface-01);
 }
+
 .spixi-optionbar-frame {
     width: 100%;
     margin: auto;
 }
+
 .spixi-optionbar-tab {
     text-align: center;
     font-size: 11pt;
@@ -635,24 +720,30 @@ img.emoji {
     padding: 12px 0px;
     text-transform: capitalize;
 }
+
 .spixi-optionbar-tab:hover {
     background: var(--colors-surface-03);
 }
+
 .spixi-optionbar-tab:active {
     color: var(--colors-text-02);
     background: var(--colors-surface-04);
 }
+
 .spixi-optionbar-tab:active a {
     color: var(--colors-text-02);
 }
+
 .spixi-optionbar-tab a {
     color: var(--colors-text-inverse); 
 }
+
 .spixi-optionbar-tab-icon {
     font-size: 20px;
     height: 26px;
     color: var(--colors-text-01);
 }
+
 .spixi-optionbar-label {
     margin-top: 4px;
     color: var(--colors-text-01);
@@ -685,6 +776,7 @@ img.emoji {
     color: var(--colors-text-01);
     text-transform: capitalize;
 }
+
 .spixi-activity-filterbutton.active {
     background: var(--colors-surface-05);
     color: var(--colors-text-01);
@@ -709,6 +801,7 @@ img.emoji {
     color: var(--colors-text-inverse);
 
 }
+
 .spixi-descriptionbar-row {
     padding: 16px;
     max-width: 640px;
@@ -721,6 +814,7 @@ img.emoji {
     align-items: center;
     justify-content: space-between;
 }
+
 .spixi-descriptionbar-row.warning {
     background: rgba(231, 158, 48, 0.15);
     border: 1.5px solid #E79E30;
@@ -729,6 +823,7 @@ img.emoji {
     align-items: center;
     justify-content: space-between;
 }
+
 .spixi-descriptionbar-row.maxwarning {
     background: #CE483F;
     border-radius: 12px;
@@ -753,6 +848,7 @@ img.emoji {
     width: calc(100% - 34px); 
     max-width: 640px;
 }
+
 .spixi-descriptionbar-row-icon {
     text-align: center;
     width: 16px;
@@ -763,6 +859,7 @@ img.emoji {
     padding-right: 30px;
     font-size: 14px;
 }
+
 .spixi-descriptionbar.chat {
     background-color: #19293C;
     word-wrap: break-word;
@@ -869,9 +966,11 @@ img.emoji {
 .spixi-tab-pad {
     padding-top: 12px;
 }
+
 .spixi-tab.active {
     color: var(--colors-text-on-action);
 }
+
 .spixi-tab.active a {
     color: var(--colors-text-inverse);
     font-weight: bold;
@@ -889,6 +988,7 @@ img.emoji {
 .spixi-tab:hover {
     cursor: pointer;
 }
+
 .spixi-tab a {
     color: var(--colors-text-on-action);
 }
@@ -899,9 +999,10 @@ img.emoji {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-/*    line-height: 26px;
-    max-height: 26px;
-*/
+
+    /*    line-height: 26px;
+        max-height: 26px;
+    */
 }
 .spixi-tab-icon:active {
     font-size: 16px;
@@ -933,7 +1034,6 @@ img.emoji {
 }
 
 
-
 /* ToastBar */
 .spixi-toastbar {
     visibility: hidden;
@@ -951,10 +1051,11 @@ img.emoji {
     font-size: 11pt;
     font-weight: bold;
 }
+
 .spixi-toastbar.show {
-  visibility: visible;
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
 .spixi-toastbar-ixinames {
@@ -991,15 +1092,17 @@ img.emoji {
     font-size: 12pt;
     padding-top: 4px;
 }
-.spixi-errorbar.chat
-{
-    position:fixed;
+
+.spixi-errorbar.chat {
+    position: fixed;
     z-index: 10;
 }
+
 .spixi-errorbar-icon {
     float:left;
     margin-left: 16px;
 }
+
 .spixi-errorbar-message {
     margin-left: 60px;
 }
@@ -1029,6 +1132,20 @@ img.emoji {
 //    font-size: 12pt;
 //}
 
+/
+/
+.spixi-callbar {
+/ / width: 100 %;
+/ / position: fixed;
+/ / z-index: 101;
+/ / font-size: 16 pt;
+/ / background-color: #345279;
+/ / color: #FFFFFF;
+/ / padding-top: 3 px;
+/ / font-size: 12 pt;
+/ /
+}
+
 .spixi-callbar-placeholder {
     width: 90%;
 }
@@ -1048,8 +1165,7 @@ img.emoji {
     margin: 20px auto 10px auto;
 }
 
-.spixi-callbar-actions
-{
+.spixi-callbar-actions {
     width: 90%;
     font-size: 18pt;
     margin: 0 auto;
@@ -1063,20 +1179,20 @@ img.emoji {
 
 /* Buttons */
 .spixi-button {
-    
+
     width: 200px;
-    
+
     text-align: center;
     font-size: 18px;
     font-weight: 400;
-    
+
     padding: 11px 4px;
     margin: 0px;
 
     color: var(--colors-text-on-action);
     background: var(--colors-surface-action);
     border-radius: 50px;
-    box-shadow:0px 0px 0px #BBB;
+    box-shadow: 0px 0px 0px #BBB;
 
     box-sizing: border-box;
 }
@@ -1085,10 +1201,12 @@ img.emoji {
     background: var(--colors-surface-action-hover);
     cursor: pointer;
 }
+
 .spixi-button:active {
     background: var(--colors-surface-action-focused);
     box-shadow: 0px 0px;
 }
+
 .spixi-button.disabled {
     background: var(--colors-surface-disabled);
     color: var(--colors-text-on-disabled);
@@ -1102,6 +1220,7 @@ img.emoji {
 .spixi-button.padding-left {
     margin-left: 16px;
 }
+
 .spixi-button.padding-top {
     margin-top: 20px;
 }
@@ -1111,14 +1230,17 @@ img.emoji {
     font-size: 14px;
     padding: 8px 4px;
 }
+
 .spixi-button.smallwidth {
     width: 160px;
 }
+
 .spixi-button.extrasmallwidth {
     width: 140px;
 }
+
 .spixi-button.darkshadow {
-    box-shadow:0px 0px 0px #333;
+    box-shadow: 0px 0px 0px #333;
 }
 
 .spixi-button.ghost {
@@ -1127,9 +1249,11 @@ img.emoji {
     border: 2px solid var(--colors-outline-action);
     padding: 6px 4px;
 }
+
 .spixi-button.ghost:hover {
     background-color: var(--colors-surface-03);
 }
+
 .spixi-button.ghost:active {
     background-color: var(--colors-surface-04);
     box-shadow: 0px 0px;
@@ -1175,6 +1299,7 @@ img.emoji {
 .spixi-button.round:hover {
     background: var(--colors-surface-action-hover);
 }
+
 .spixi-button.round:active {
     background: var(--colors-surface-action-focused);
 }
@@ -1195,9 +1320,11 @@ img.emoji {
     vertical-align: middle;
     text-align: center;
 }
+
 .spixi-button.smallround:hover {
     background: var(--colors-surface-action-hover);
 }
+
 .spixi-button.smallround:active {
     background: var(--colors-surface-action-focused);
 }
@@ -1275,13 +1402,15 @@ img.emoji {
     max-width: 640px;
     
 }
+
 .spixi-flat-button.modal-left {
-    margin-left:0px; 
-    margin-right:4px;
+    margin-left: 0px;
+    margin-right: 4px;
 }
+
 .spixi-flat-button.modal-right {
-    margin-left:4px; 
-    margin-right:0px;
+    margin-left: 4px;
+    margin-right: 0px;
 }
 
 .spixi-flat-button.disabled {
@@ -1291,7 +1420,7 @@ img.emoji {
 
 .action-button {
     display: block;
-    z-index: 10;  
+    z-index: 10;
     position: fixed;
     right: 20px;  
     bottom: 96px;
@@ -1343,10 +1472,12 @@ img.emoji {
     padding-left: 12px;
     padding-right: 12px;
 }
+
 .spixi-textfield.multiline {
     height: 96px;
     padding: 12px;
 }
+
 .spixi-textfield:focus {
     border: 2px solid var(--colors-outline-action);
 }
@@ -1358,6 +1489,7 @@ img.emoji {
     padding-top: 8px;
     padding-bottom: 24px;
 }
+
 .spixi-textfield-holder.multiline {
     margin: 16px auto;
     max-width: 640px;
@@ -1365,10 +1497,12 @@ img.emoji {
     padding-top: 0px;
     padding-bottom: 6px;
 }
+
 .spixi-textfield-holder.smallpadding {
     padding-top: 0px;
     padding-bottom: 0px;
 }
+
 .spixi-textfield-holder-icon {
     float: right;
     font-size: 14pt;
@@ -1378,6 +1512,7 @@ img.emoji {
     z-index: 2;
     color: var(--colors-surface-brand-primary);
 }
+
 .spixi-textfield-holder-text {
     float: right;
     font-size: 14pt;
@@ -1517,10 +1652,12 @@ img.emoji {
     margin-left: 12px;
     margin-right: 12px;
 }
+
 .spixi-separator.noheightmargins {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
 .spixi-separator.fullwidth {
     width: 100%;
 }
@@ -1547,6 +1684,7 @@ img.emoji {
     border-bottom: 0px solid var(--colors-outline-02);
     cursor: pointer;
 }
+
 .spixi-expanion.active {
     background-color: var(--colors-surface-01);
 }
@@ -1565,6 +1703,7 @@ img.emoji {
 .spixi-expansion-left.active {
     background-color: #17334F;
 }
+
 .spixi-expansion-icon {
     color: var(--colors-icon-01);
     float:left;
@@ -1575,16 +1714,17 @@ img.emoji {
 }
 
 .spixi-expansion-text {
-    float:left;
+    float: left;
     font-size: 12pt;
     margin-top: 12px;
     margin-left: 8px;
 }
+
 .spixi-expansion-right {
     color: var(--colors-icon-action);
     float:right;
     font-size: 10pt;
-    margin-top:12px;
+    margin-top: 12px;
     margin-right: 15px;
 }
 
@@ -1604,12 +1744,13 @@ img.emoji {
     border-radius: 12px;
     box-shadow:0px 0px 0px #777;
 }
+
 .spixi-expansion-box.expanded {
     height: 150px;
 }
 
 .spixi-expansion-box-left {
-    float:left;
+    float: left;
     margin-left: 16px;
     margin-top: -2px;
     font-size: 18px;
@@ -1617,7 +1758,7 @@ img.emoji {
 }
 
 .spixi-expansion-box-middle {
-    float:left;
+    float: left;
     margin-left: 18px;
     font-size: 12pt;
     font-weight: bold;
@@ -1625,7 +1766,7 @@ img.emoji {
 }
 
 .spixi-expansion-box-right {
-    float:right;
+    float: right;
     margin-right: 18px;
     color: #17334F;
 }
@@ -1640,6 +1781,7 @@ img.emoji {
     top: 0;
     bottom: 0px;
 }
+
 .spixi-sidebar-content {
     width: 100%;
     height: 100%;
@@ -1680,10 +1822,12 @@ img.emoji {
     object-fit: cover;
     border: 1px solid var(--colors-outline-03);
 }
+
 .spixi-sidebar-avatar-holder {
     text-align: left;
     margin-top: 36px;
 }
+
 .spixi-sidebar-title {
     text-align: left;
     font-size: 14pt;
@@ -1696,6 +1840,7 @@ img.emoji {
     color: var(--colors-text-01);
     border-bottom: 1px solid var(--colors-outline-02);
 }
+
 .spixi-sidebar-item:hover {
     background-color: var(--colors-surface-02);
     cursor: pointer;
@@ -1712,6 +1857,7 @@ img.emoji {
     padding-top: 20px;
     padding-left: 45px;
 }
+
 .spixi-sidebar-item-icon {
     float: left;
     color: var(--colors-text-02);
@@ -1754,7 +1900,7 @@ img.emoji {
     position: relative;
 }
 
-@media(pointer:fine) {
+@media (pointer: fine) {
     .spixi-list-item:hover {
         background-color: var(--colors-surface-03);
         border-radius: 12px;
@@ -1810,6 +1956,7 @@ img.emoji {
     overflow: hidden;
     white-space: nowrap;
 }
+
 .spixi-list-item-from-status {
     font-size: 12px;
 }
@@ -1857,6 +2004,7 @@ img.emoji {
     padding-top: 12px;
     padding-bottom: 4px;
 }
+
 .spixi-list-item-second-row {
     margin-top: -10px;
     margin-left: 16px;
@@ -1889,19 +2037,21 @@ img.emoji {
     font-weight: 400;
     overflow: hidden;
     white-space: nowrap;
-	text-overflow: ellipsis;
+    text-overflow: ellipsis;
 }
+
 .spixi-list-item-title-center {
     color: var(--colors-text-01);
     font-size: 10pt;
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
-	text-overflow: ellipsis;
+    text-overflow: ellipsis;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
 }
+
 .spixi-list-item-title-center.selected {
     font-weight: bold;
 }
@@ -1946,7 +2096,7 @@ img.emoji {
     right: 12px;
 }
 
-.spixi-list-item-noborder{
+.spixi-list-item-noborder {
     border: 0;
 }
 
@@ -1965,6 +2115,7 @@ img.emoji {
     text-align: center;
     color: var(--colors-text-01);
 }
+
 .spixi-list-placeholder-title.topoffset {
     margin-top: 24px;
 }
@@ -2120,8 +2271,7 @@ img.emoji {
     box-shadow: 0px 1px 1px rgba(0, 0, 00, 0.22);
 }
 
-.spixi-bubble .text img
-{
+.spixi-bubble .text img {
     max-width: 100%;
     object-fit: contain;
 }
@@ -2137,8 +2287,7 @@ img.emoji {
 
 .spixi-bubble.sent,
 .spixi-bubble.confirmed,
-.spixi-bubble.read
-{
+.spixi-bubble.read {
     border: none;
 }
 
@@ -2156,6 +2305,7 @@ img.emoji {
     font-weight: 400;
     z-index: 4;
 }
+
 .spixi-bubble.myself .time {
     text-align: right;
     right: 13pt;
@@ -2204,8 +2354,7 @@ img.emoji {
     font-size: 10pt;
 }
 
-.spixi-bubble.file .text a
-{
+.spixi-bubble.file .text a {
     display: table;
     word-wrap: break-word;
 }
@@ -2233,7 +2382,7 @@ img.emoji {
     vertical-align: middle;
 }
 
-.spixi-bubble.file.myself .text .text{
+.spixi-bubble.file.myself .text .text {
     margin-left: 40px;
     margin-right: 10px;
 }
@@ -2278,13 +2427,11 @@ img.emoji {
     font-size: 9px;
 }
 
-.spixi-bubble.paid .statusIndicator
-{
+.spixi-bubble.paid .statusIndicator {
     display: none !important;
 }
 
-.spixi-bubble.paid .statusIndicator.paid
-{
+.spixi-bubble.paid .statusIndicator.paid {
     display: inherit !important;
 }
 
@@ -2406,13 +2553,11 @@ img.emoji {
     background: var(--colors-surface-bubble);
 }
 
-.spixi-bubble .reactions * 
-{
+.spixi-bubble .reactions * {
     vertical-align: middle;
 }
 
-.spixi-bubble .reactions .reaction
-{
+.spixi-bubble .reactions .reaction {
     display: inline-block;
     margin-right: 16px;
 }
@@ -2432,8 +2577,7 @@ img.emoji {
     color: var(--colors-icon-accent);
 }
 
-.spixi-callbubble
-{
+.spixi-callbubble {
     display: table;
     font-size: 10pt;
     position:relative;
@@ -2446,7 +2590,7 @@ img.emoji {
     margin-bottom: 12px;
     padding: 16px 32px;
     min-width: 80px;
-    
+
     animation-name: chat_animation;
     animation-duration: 0.3s;
 
@@ -2488,8 +2632,8 @@ img.emoji {
     -ms-transition: all 0.6s ease-in-out;
     -o-transition: all 0.6s ease-in-out;
     -webkit-transition: all 0.6s ease-in-out;
-    transition: all 0.6s;    
-    
+    transition: all 0.6s;
+
     width: 100%;
     height: 0px;
 }
@@ -2500,12 +2644,12 @@ img.emoji {
     -o-transition: all 0.6s ease-in-out;
     -webkit-transition: all 0.6s ease-in-out;
     transition: all 0.6s;
-    
+
     position: fixed;
     z-index: 1001;
-    
+
     width: 100%;
-    bottom: 0;   
+    bottom: 0;
     height: 64px;
     background-color: var(--colors-surface-01);
     border-top: 2px solid var(--colors-outline-01);
@@ -2597,9 +2741,9 @@ img.emoji {
     -o-transition: all 0.6s ease-in-out;
     -webkit-transition: all 0.6s ease-in-out;
     transition: all 0.6s;
-    
+
     position: fixed;
-    z-index: 99;    
+    z-index: 99;
     width: 100%;
     bottom: -100px;
     min-height: 64px;
@@ -2705,8 +2849,7 @@ img.emoji {
     transform: translateY(-50%);
 }
 
-#contactslist .spixi-chat-unread-indicator
-{
+#contactslist .spixi-chat-unread-indicator {
     right: 0px;
 }
 
@@ -2762,16 +2905,14 @@ img.emoji {
     transition: all 0.6s;
 }
 
-.spixi-chat-payable-bar span
-{
+.spixi-chat-payable-bar span {
     font-size: 20px;
     margin-right: 18px;
     line-height: 24px;
     vertical-align: middle;
 }
 
-#AppsMenu
-{
+#AppsMenu {
     z-index: 102;
     display: none;
     position: fixed;
@@ -2786,8 +2927,7 @@ img.emoji {
     padding: 20pt;
 }
 
-#AppsMenu .close
-{
+#AppsMenu .close {
     float: right;
     font-size: 16pt;
     color: black;
@@ -2797,16 +2937,14 @@ img.emoji {
     margin-top: -15pt;
 }
 
-.spixi-app
-{
+.spixi-app {
     display: inline-block;
     font-size: 12pt;
     width: 100px;
     height: 100px;
 }
 
-.spixi-app img
-{
+.spixi-app img {
     width: 64px;
     height: 64px;
 }
@@ -2824,18 +2962,15 @@ img.emoji {
     box-sizing: border-box;
 }
 
-.chat-contacts-box *
-{
+.chat-contacts-box * {
     box-sizing: border-box;
 }
 
-.chat-contacts-box .row
-{
+.chat-contacts-box .row {
     margin: 10px 0px;
 }
 
-.chat-contacts-box .nick
-{
+.chat-contacts-box .nick {
     font-size: 9pt;
     font-weight: bold;
     color: black;
@@ -2845,14 +2980,12 @@ img.emoji {
     text-overflow: ellipsis;
 }
 
-.chat-contacts-box .avatar
-{
+.chat-contacts-box .avatar {
     -ms-flex: 0 0 32px;
     flex: 0 0 32px;
 }
 
-.chat-contacts-box .avatar img
-{
+.chat-contacts-box .avatar img {
     width: 32px;
     height: 32px;
     border-radius: 32px;
@@ -2874,8 +3007,7 @@ img.emoji {
     color: var(--colors-text-02);
 }
 
-.chat-context-menu > div .icon
-{
+.chat-context-menu > div .icon {
     padding-right: 14px;
     color: var(--colors-text-02);
 }
@@ -2925,16 +3057,14 @@ img.emoji {
 }
 
 .spixi-bot-details .spixi-textsection-header2,
-.spixi-bot-user-details .spixi-textsection-header2
-{
+.spixi-bot-user-details .spixi-textsection-header2 {
     line-height: 30px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
 .spixi-bot-details .spixi-textsection-header2 > span > i,
-.spixi-bot-user-details .spixi-textsection-header2 > span > i
-{
+.spixi-bot-user-details .spixi-textsection-header2 > span > i {
     font-size: 16pt;
 }
 
@@ -2950,8 +3080,7 @@ img.emoji {
 }
 
 .spixi-bot-details .spixi-button,
-.spixi-bot-user-details .spixi-button
-{
+.spixi-bot-user-details .spixi-button {
     height: 30px;
     line-height: 30px;
     width: auto;
@@ -2972,12 +3101,11 @@ img.emoji {
 }
 
 /* Typing animation */
-#UserTyping
-{
+#UserTyping {
     position: fixed;
     bottom: 70px;
     left: 20px;
-    visibility:hidden;
+    visibility: hidden;
     z-index: 7;
 }
 
@@ -3108,8 +3236,7 @@ img.emoji {
     box-sizing: border-box;
 }
 
-.onboarding-title
-{
+.onboarding-title {
     font-weight: bold;
     margin: 10px 0px;
 }
@@ -3119,7 +3246,7 @@ img.emoji {
     position: fixed;
     height: 41pt;
     left: 0px;
-    bottom:0px;
+    bottom: 0px;
     vertical-align: top;
 }
 
@@ -3140,8 +3267,7 @@ img.emoji {
     z-index: 2002;
 }
 
-.onboarding-next
-{
+.onboarding-next {
     float: right;
 }
 
@@ -3157,8 +3283,7 @@ img.emoji {
     color: #C14C7F;
 }
 
-.onboarding-pager .fa-circle
-{
+.onboarding-pager .fa-circle {
     margin: 4pt;
     margin-bottom: 15pt;
 }
@@ -3167,8 +3292,7 @@ img.emoji {
     color: #FFC0DC;
 }
 
-.onboarding-skip
-{
+.onboarding-skip {
     color: white;
     font-weight: bold;
     font-size: 12pt;
@@ -3186,7 +3310,7 @@ img.emoji {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.75); /* Black w/ opacity */
+    background-color: rgba(0, 0, 0, 0.75); /* Black w/ opacity */
     backdrop-filter: blur(1px);
 }
 
@@ -3201,17 +3325,17 @@ img.emoji {
     overflow: auto; /* Enable scroll if needed */
 }
 
-    .spixi-modal-soft::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5); /* Dim the background. Adjust color/opacity as needed */
-        backdrop-filter: blur(5px); /* Apply the blur effect */
-        z-index: -1; /* Ensure it's behind the modal content */
-    }
+.spixi-modal-soft::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dim the background. Adjust color/opacity as needed */
+    backdrop-filter: blur(5px); /* Apply the blur effect */
+    z-index: -1; /* Ensure it's behind the modal content */
+}
 
 .modal-content {
     position: relative;
@@ -3254,6 +3378,7 @@ img.emoji {
     overflow-wrap: break-word;
     text-align: center;
 }
+
 .spixi-modal-header.warn {
     color: var(--colors-text-01);
 }
@@ -3267,7 +3392,8 @@ img.emoji {
     min-height: 100px;
     color: var(--colors-text-01);
     overflow: break-all;
-    overflow-wrap: anywhere;}
+    overflow-wrap: anywhere;
+}
 
 .spixi-modal-details {
     font-size: 12px;
@@ -3292,10 +3418,12 @@ img.emoji {
     padding-left: 15px;
     padding-top: 10px;
 }
+
 .spixi-modal-item:hover {
     color: #000;
     background-color: #dae2e9;
 }
+
 .spixi-modal-item:active {
     color: #000;
     background-color: #dae2e9;
@@ -3337,8 +3465,7 @@ img.emoji {
     color: var(--colors-text-action)
 }
 
-.spixi-modal-tip-item
-{
+.spixi-modal-tip-item {
     line-height: 34px;
     font-weight: bold;
     color: var(--colors-text-01);
@@ -3350,8 +3477,7 @@ img.emoji {
     color: var(--colors-text-action);
 }
 
-.spixi-modal-tip-item .fa-check
-{
+.spixi-modal-tip-item .fa-check {
     display: none;
 }
 
@@ -3359,14 +3485,12 @@ img.emoji {
     color: var(--colors-text-action);
 }
 
-.spixi-modal-tip-item.selected .fa-check
-{
+.spixi-modal-tip-item.selected .fa-check {
     display: inline-block;
     color: var(--colors-icon-action);
 }
 
-.spixi-modal-tip-item .spixi-textfield
-{
+.spixi-modal-tip-item .spixi-textfield {
     width: 50%;
     float: right;
     height: 32px;
@@ -3399,6 +3523,7 @@ img.emoji {
     cursor: pointer;
     color: var(--colors-text-01);
 }
+
 .spixi-modal-text-primary.disabled {
     color: var(--colors-text-disabled);
 }
@@ -3425,18 +3550,22 @@ img.emoji {
     -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome and Opera */
 }
+
 .selectable {
     -webkit-touch-callout: initial; /* iOS Safari */
     -webkit-user-select: auto; /* Safari */
     -khtml-user-select: auto; /* Konqueror HTML */
     -moz-user-select: all; /* Firefox */
     -ms-user-select: text; /* Internet Explorer/Edge */
-    user-select: text; /* Non-prefixed version, currently
-                    supported by Chrome and Opera */
+    user-select: text;
+    /* Non-prefixed version, currently
+                       supported by Chrome and Opera */
 }
+
 .address_qr {
     margin: auto;
     margin-top: 40px;
@@ -3450,8 +3579,7 @@ img.emoji {
     border: 1px solid var(--colors-outline-03);
 }
 
-.address_actionbuttons 
-{
+.address_actionbuttons {
     margin: 74px;
 }
 
@@ -3476,17 +3604,19 @@ img.emoji {
     margin-bottom: 20px;
     margin-right: 30px;
     border-radius: 10px;
-    box-shadow:0px 4px 2px #CCC;
+    box-shadow: 0px 4px 2px #CCC;
 
 }
+
 .spixi-popbutton.expanded {
     height: 100px;
 }
+
 .spixi-popbutton-right {
     color: #1693da;
-    float:right;
+    float: right;
     font-size: 12pt;
-    margin-top:7px;
+    margin-top: 7px;
     margin-right: 12px;
 }
 
@@ -3496,14 +3626,14 @@ img.emoji {
     margin-left: 52px;
     margin-top: 7px;
 }
+
 .spixi-popbutton-item.selected {
     font-weight: bold;
     color: #1693da;
     margin-left: 20px;
 }
 
-.spixi-container
-{
+.spixi-container {
     padding: 15px;
     box-sizing: border-box;
 }
@@ -3516,6 +3646,7 @@ img.emoji {
 .spixi-text-green {
     color: var(--colors-text-success);
 }
+
 .spixi-text-red {
     color: var(--colors-text-error);
 }
@@ -3542,48 +3673,411 @@ img.emoji {
 
 /* Animations */
 @-webkit-keyframes fadein {
-  from {opacity: 0;} 
-  to {opacity: 1;}
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes fadein {
-  from {opacity: 0;}
-  to {opacity: 1;}
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes fadeout {
-  from {opacity: 1;} 
-  to {opacity: 0;}
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
 
 @keyframes fadeout {
-  from {opacity: 1;}
-  to {opacity: 0;}
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
 
 /* Add Animation */
 @-webkit-keyframes animateleft {
-    from {left:-300px; opacity:1} 
-    to {left:0; opacity:1}
+    from {
+        left: -300px;
+        opacity: 1
+    }
+    to {
+        left: 0;
+        opacity: 1
+    }
 }
 
 @keyframes animateleft {
-    from {left:-300px; opacity:1}
-    to {left:0; opacity:1}
+    from {
+        left: -300px;
+        opacity: 1
+    }
+    to {
+        left: 0;
+        opacity: 1
+    }
 }
 
 @-webkit-keyframes animatetop {
-    from {bottom:-300px; opacity:0} 
-    to {bottom:0; opacity:1}
+    from {
+        bottom: -300px;
+        opacity: 0
+    }
+    to {
+        bottom: 0;
+        opacity: 1
+    }
 }
 
 @keyframes animatetop {
-    from {bottom:-300px; opacity:0}
-    to {bottom:0; opacity:1}
+    from {
+        bottom: -300px;
+        opacity: 0
+    }
+    to {
+        bottom: 0;
+        opacity: 1
+    }
 }
 
 @keyframes chat_animation {
-    from {transform: scaleY(0);}
-    to {transform: scaleY(1);}
+    from {
+        transform: scaleY(0);
+    }
+    to {
+        transform: scaleY(1);
+    }
+}
+
+/* COLOR CLASSES */
+.s-text-01 {
+    color: var(--colors-text-01);
+}
+
+.s-text-02 {
+    color: var(--colors-text-02);
+}
+
+/* TYPOGRAPHY CLASSES */
+/* Display classes */
+
+.display-lg {
+    font-size: var(--font-size-display-display-lg);
+    line-height: var(--line-height-display-display-lg);
+    letter-spacing: var(--tracking-display-display-lg);
+    font-weight: 700;
+}
+
+.display-md {
+    font-size: var(--font-size-display-display-md);
+    line-height: var(--line-height-display-display-md);
+    letter-spacing: var(--tracking-display-display-md);
+    font-weight: 700;
+}
+
+/* Heading classes */
+
+.heading-lg {
+    font-size: var(--font-size-heading-heading-lg);
+    line-height: var(--line-height-heading-heading-lg);
+    letter-spacing: var(--tracking-heading-heading-lg);
+    font-weight: 700;
+}
+
+.heading-md {
+    font-size: var(--font-size-heading-heading-md);
+    line-height: var(--line-height-heading-heading-md);
+    letter-spacing: var(--tracking-heading-heading-md);
+    font-weight: 700;
+}
+
+.heading-sm {
+    font-size: var(--font-size-heading-heading-sm);
+    line-height: var(--line-height-heading-heading-sm);
+    letter-spacing: var(--tracking-heading-heading-sm);
+    font-weight: 700;
+}
+
+.heading-xs {
+    font-size: var(--font-size-heading-heading-xs);
+    line-height: var(--line-height-heading-heading-xs);
+    letter-spacing: var(--tracking-heading-heading-xs);
+    font-weight: 700;
+}
+
+/* Label classes */
+
+.label-lg {
+    font-size: var(--font-size-global-label-lg);
+    line-height: var(--line-height-global-label-lg);
+    letter-spacing: var(--tracking-global-label-lg);
+    font-weight: 700;
+}
+
+.label-md {
+    font-size: var(--font-size-global-label-md);
+    line-height: var(--line-height-global-label-md);
+    letter-spacing: var(--tracking-global-label-md);
+    font-weight: 700;
+}
+
+.label-sm {
+    font-size: var(--font-size-global-label-sm);
+    line-height: var(--line-height-global-label-sm);
+    letter-spacing: var(--tracking-global-label-sm);
+    font-weight: 700;
+}
+
+.label-xs {
+    font-size: var(--font-size-global-label-xs);
+    line-height: var(--line-height-global-label-xs);
+    letter-spacing: var(--tracking-global-label-xs);
+    font-weight: 700;
+}
+
+/* Body classes */
+
+.body-lg {
+    font-size: var(--font-size-global-body-lg);
+    line-height: var(--line-height-global-body-lg);
+    letter-spacing: var(--tracking-global-body-lg);
+    font-weight: 400;
+}
+
+.body-md {
+    font-size: var(--font-size-global-body-md);
+    line-height: var(--line-height-global-body-md);
+    letter-spacing: var(--tracking-global-body-md);
+    font-weight: 400;
+}
+
+.body-sm {
+    font-size: var(--font-size-global-body-sm);
+    line-height: var(--line-height-global-body-sm);
+    letter-spacing: var(--tracking-global-body-sm);
+    font-weight: 400;
+}
+
+.body-xs {
+    font-size: var(--font-size-global-body-xs);
+    line-height: var(--line-height-global-body-xs);
+    letter-spacing: var(--tracking-global-body-xs);
+    font-weight: 400;
+}
+
+/* SPIXI MINI APPS STYLING */
+
+.spixi-mini-apps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 16px;
+    padding-bottom: 40px;
+    position: relative;
+}
+
+.search-mini-apps {
+    background: var(--colors-surface-03);
+    min-height: 48px;
+    border-radius: 12px;
+}
+
+.search-mini-apps::placeholder{
+    color: var(--colors-text-02);
+}
+
+.mini-apps-search-icon {
+    height: 16px;
+    width: 16px;
+    font-size: unset;
+}
+
+.mini-apps-header {
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid #aaa;
+}
+
+.mini-apps-header p {
+    color: #848484;
+}
+
+.mini-apps-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    gap: 16px;
+    height: 100%;
+}
+
+.mini-apps-list-items {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.mini-apps-list-single-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    background: var(--colors-surface-02);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.mini-apps-list-single-image-wrapper {
+    width: 100%;
+    max-width: 147px;
+    height: 100%;
+    max-height: 147px;
+    border: 1px solid var(--colors-outline-03);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mini-apps-list-single-image-wrapper img {
+    object-fit: contain;
+    max-width: 147px;
+    max-height: 147px;
+}
+
+.mini-apps-single-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mini-apps-single-item-info {
+    width: 100%;
+    max-width: 147px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mini-apps-single-item-info span {
+    font-size: 14px;
+}
+
+/* ADD MINI APP PAGE */
+
+.add-mini-app-container {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.add-mini-app-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.add-mini-app-buttons > div {
+    width: 100%;
+    margin: 0;
+    height: 40px;
+}
+
+.add-mini-app-url-input {
+    min-height: 88px;
+    padding: 12px;
+}
+
+.add-mini-app-url-input::placeholder{
+    color: var(--colors-text-02);
+}
+
+.important-notice {
+    background: var(--colors-surface-error);
+    padding: 14px 12px;
+    border-radius: 16px;
+    color: var(--colors-text-error);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 24px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.important-notice-title {
+    color: #B32318;
+}
+
+.spixi-app-details {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.spixi-app-details-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.spixi-app-details-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    object-fit: contain;
+}
+
+.spixi-app-details-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.spixi-app-details-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spixi-app-details-properties-single-div {
+    background: var(--colors-surface-02);
+    padding: 16px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.spixi-app-details-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.spixi-app-details-buttons {
+    margin-top: 24px;
 }
 
