@@ -192,13 +192,17 @@
             titleIcon.innerHTML = "<i class='fa-solid fa-spinner fa-spin spixi-status-yellow'></i>";
             document.getElementById("unconfirmed_warning").style.display = "inline-flex";
             if (confirmed == "true") {
+                document.getElementById("unconfirmed_warning").className = "";
                 document.getElementById("unconfirmed_warning").style.display = "none";
                 titleIcon.innerHTML = '<i class="fa fa-check-circle spixi-status-green"></i>';
 
 
             } else if (confirmed == "error") {
+                document.getElementById("unconfirmed_warning").className = "";
                 document.getElementById("unconfirmed_warning").style.display = "none";
                 titleIcon.innerHTML = '<i class="fa fa-exclamation-circle spixi-status-red"></i>';
+            } else {
+                document.getElementById("unconfirmed_warning").className = "row spixi-descriptionbar-row smallmargin warning";
             }
 
             document.getElementById('sent_fee').innerHTML = fee;

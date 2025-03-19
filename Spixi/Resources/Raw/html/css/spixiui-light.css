@@ -837,17 +837,18 @@ img.emoji {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding-bottom: 12px;
 }
-}
+
 .spixi-footer-row a {
     text-decoration: none;
     display: block;
     width: 100%;
     height: 100%;
 }
-//.spixi-footer-row a:hover {
+/*.spixi-footer-row a:hover {
     color:var(--colors-text-on-action);
-}
+}*/
 
 .spixi-tab {
     text-align: center;

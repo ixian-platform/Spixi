@@ -1158,6 +1158,7 @@ function clearMessages(showMore)
         loadMoreDiv.style.width = "200px";
         loadMoreDiv.style.height = "40px";
         loadMoreDiv.style.paddingTop = "8px";
+        loadMoreDiv.style.paddingBottom = "8px";
         loadMoreDiv.style.marginTop = "30px";
         loadMoreDiv.style.marginBottom = "30px";
         loadMoreDiv.style.marginLeft = "auto";
