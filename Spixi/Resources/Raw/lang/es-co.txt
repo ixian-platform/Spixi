@@ -2,199 +2,199 @@
 language = Español
 
 ; Address Screen
-address-title = Mi billetera Spixi
-address-description = Tu dirección Spixi está vinculada a tu cuenta Spixi.<br />Es tu identificación principal, con la que puedes interactuar con otros usuarios.
-address-copied = Dirección copiada al portapapeles
+address-title = Dirección Spixi
+address-description = Tu dirección Spixi es tu ID principal. Úsala para interactuar con otros usuarios.
+address-copied = Dirección copiada
 address-gen-1 = Generando
 address-gen-1b = Preparando
-address-gen-2 = su SPIXI
-address-gen-2b = dirección
-address-gen-3 = SPIXI
+address-gen-2 = Spixi
+address-gen-2b = Spixi
+address-gen-3 = dirección
 address-gen-4 = ...
-address-tooltip = toque para copiar al portapapeles
+address-tooltip = Toca para copiar al portapapeles
 address-copy = Copiar
 address-share = Compartir
 
 ; App Details Screen
-app-details-title = Spixi App
-app-details-publisher = Editor:
+app-details-title = Aplicación Spixi
+app-details-publisher = Publicado por:
 app-details-version = Versión:
-app-details-uninstall = Desinstalación
-app-details-dialog-title = Spixi App Manager
-app-details-dialog-removed-text = La aplicación fue eliminada con éxito.
-app-details-dialog-removefailed-text = Se produjo un error al eliminar la aplicación.
+app-details-uninstall = Desinstalar
+app-details-dialog-title = Administrador de aplicaciones Spixi
+app-details-dialog-removed-text = La aplicación se eliminó correctamente.
+app-details-dialog-removefailed-text = Ocurrió un error al eliminar la aplicación.
 
 ; New App Screen
 app-new-title = Nueva aplicación
-app-new-description = Añadir una nueva aplicación de Spixi pegando su URL. La aplicación será descargada e instalada.
-app-new-install = INSTALAR
-app-new-dialog-title = Spixi App Manager
-app-new-dialog-installed-text = La aplicación '{0}' fue instalada con éxito.
-app-new-dialog-installfailed-text = Se produjo un error al instalar la aplicación.
+app-new-description = Agrega una nueva aplicación de Spixi pegando la URL.
+app-new-install = Instalar
+app-new-dialog-title = Administrador de aplicaciones Spixi
+app-new-dialog-installed-text = La aplicación '{0}' se instaló correctamente.
+app-new-dialog-installfailed-text = Ocurrió un error al instalar la aplicación.
 
 ; Apps Screen
-apps-title = Spixi Apps
-apps-empty = No tienes ninguna aplicación instalada.
+apps-title = Aplicaciones de Spixi
+apps-empty = No tienes aplicaciones instaladas.
 
 ; Chat Screen
 chat-sent-contact-request = ha enviado una solicitud de contacto
-chat-accept = ACEPTAR
-chat-ignore = IGNORAR
-chat-type-placeholder = Escriba su mensaje...
+chat-accept = Aceptar
+chat-ignore = Ignorar
+chat-type-placeholder = Escribe un mensaje...
 chat-send-file = Enviar archivo
-chat-request-payment = Solicitud de pago
+chat-request-payment = Solicitar pago
 chat-send-payment = Enviar pago
 chat-status = Estado
-chat-amount = Cantidad
+chat-amount = Monto
 chat-view = Detalles
-chat-payment-request-sent = Solicitud de pago ENVIADA
-chat-payment-request-received = Solicitud de pago recibida
-chat-payment-sent = Pago ENVIADO
-chat-payment-received = Pago RECIBIDO
-chat-payment-status-waiting-confirmation = ESPERANDO CONFIRMACIÓN
-chat-payment-status-declined = DECLINADO
+chat-payment-request-sent = Solicitud de pago enviada
+chat-payment-request-received = Nueva solicitud de pago recibida
+chat-payment-sent = Pago enviado
+chat-payment-received = Pago recibido
+chat-payment-status-waiting-confirmation = Esperando confirmación
+chat-payment-status-declined = RECHAZADO
 chat-payment-status-pending = PENDIENTE
 chat-payment-status-confirmed = CONFIRMADO
 chat-call-outgoing = Llamada saliente
 chat-call-incoming = Llamada entrante
-chat-call-no-answer = No hay respuesta
+chat-call-no-answer = Sin respuesta
 chat-call-missed = Llamada perdida
-chat-call-ended = Terminado
-chat-online = Online
-chat-offline = Sin conexión
+chat-call-ended = Llamada finalizada
+chat-online = En línea
+chat-offline = Desconectado
 chat-waiting-for-response = Esperando respuesta
-chat-text-too-long = Texto demasiado largo.
+chat-text-too-long = El texto es demasiado largo.
 chat-member-count = {0} miembros
-chat-context-pin-message = Mensaje anclado
+chat-context-pin-message = Fijar mensaje
 chat-context-copy-message = Copiar mensaje
-chat-context-copy-selected = Copia seleccionada
-chat-context-tip-user = Propina usuario
-chat-context-like-message = Me gusta
-chat-context-user-info = Información de usuario
-chat-context-send-contact-request = Enviar solicitud de contacto
-chat-context-kick-user = Expulsar usuario
-chat-context-ban-user = Vetar usuario
-chat-context-delete-message = Borrar mensaje
-chat-message-cost-bar = El envío de mensajes cuesta {0} por kB
-chat-request-sent-title = Solicitud de amistad enviada
-chat-request-sent-details = Una vez que lo acepten, podrás chatear de forma segura con ellos
+chat-context-copy-selected = Copiar seleccionado
+chat-context-tip-user = Enviar propina
+chat-context-like-message = Me gusta el mensaje
+chat-context-user-info = Información del usuario
+chat-context-send-contact-request = Agregar contacto
+chat-context-kick-user = Expulsar
+chat-context-ban-user = Bloquear
+chat-context-delete-message = Eliminar mensaje
+chat-message-cost-bar = Enviar mensajes cuesta {0} por kB
+chat-request-sent-title = Solicitud de contacto enviada
+chat-request-sent-details = Podrás chatear de forma segura una vez que tu solicitud sea aceptada.
 chat-request-sent-undo = Deshacer
-chat-request-received-title = Solicitud de amistad recibida
-chat-request-received-details = ¡Alguien quiere conectarse contigo! Una vez que aceptes, podrás chatear de forma segura con ellos.
+chat-request-received-title = Solicitud de contacto recibida
+chat-request-received-details = ¡Alguien quiere conectarse contigo! Cuando aceptes, podrán chatear de forma segura.
 
-chat-modal-tip-title = Propina {0}?
-chat-modal-tip-body = Pulse sobre la cantidad que quiere dar una propina o establezca una propina personalizada.
-chat-modal-tip-custom = PERSONALIZAR
-chat-modal-tip-pay-button = PAGAR
-chat-modal-tip-confirmation-body = Estás a punto de dar una propina de '{0}' {1}. Esta cantidad será deducida de tu billetera.
-chat-modal-tip-confirmed-body = Acabas de dar una propina de '{0}' con {1}. La cantidad ha sido deducida de tu billetera.
-chat-modal-tip-error-body = Error desconocido ocurrido al intentar dar una propina al usuario.
+chat-modal-tip-title = ¿Enviar propina a {0}?
+chat-modal-tip-body = Elige o introduce un monto para enviar como propina.
+chat-modal-tip-custom = Personalizado
+chat-modal-tip-pay-button = Pagar
+chat-modal-tip-confirmation-body = Estás a punto de enviar una propina de {1} a '{0}'. El monto se descontará de tu monedero.
+chat-modal-tip-confirmed-body = Has enviado con éxito una propina de {1} a '{0}'. El monto se ha descontado de tu monedero.
+chat-modal-tip-error-body = Ocurrió un error desconocido al enviar la propina.
 
-chat-bot-details-info = Bot Info
-chat-bot-address = Dirección del Bot
-chat-bot-toggle-notifications = Notificaciones de cambios
-chat-bot-invite = Invitar un contacto a este robot
-chat-bot-leave = Abandonar Bot
+chat-bot-details-info = Información del grupo
+chat-bot-address = Dirección del grupo
+chat-bot-toggle-notifications = Activar/Desactivar notificaciones
+chat-bot-invite = Invitar contacto a este grupo
+chat-bot-leave = Salir del grupo
 
-chat-bot-user-address = Dirección de usuario
-chat-bot-user-send-contact-request = Enviar solicitud de contacto
+chat-bot-user-address = Dirección del usuario
+chat-bot-user-send-contact-request = Agregar contacto
 
-chat-modal-kick-title = Expulsar a {0}?
+chat-modal-kick-title = ¿Expulsar a {0}?
 chat-modal-kick-body = ¿Estás seguro de que quieres expulsar a '{0}' de este servidor?
 chat-modal-kick-kick-button = EXPULSAR USUARIO
-chat-modal-kicked-title = {0} expulsado
-chat-modal-kicked-body = Has expulsado a '{0}' de este servidor.
+chat-modal-kicked-title = {0} ha sido expulsado
+chat-modal-kicked-body = '{0}' ha sido expulsado de este servidor.
 
-chat-modal-ban-title = Vetar a {0}?
-chat-modal-ban-body = ¿Estás seguro de que quieres vetar a '{0}' de este servidor?
-chat-modal-ban-ban-button = VETAR USUARIO
-chat-modal-banned-title = {0} vetado
-chat-modal-banned-body = Has vetado a '{0}' de este servidor.
+chat-modal-ban-title = ¿Bloquear a {0}?
+chat-modal-ban-body = ¿Estás seguro de que quieres bloquear a '{0}' en este servidor?
+chat-modal-ban-ban-button = BLOQUEAR USUARIO
+chat-modal-banned-title = {0} ha sido bloqueado
+chat-modal-banned-body = '{0}' ha sido bloqueado en este servidor.
 
-chat-bot-not-ready-title = El bot no está listo
-chat-bot-not-ready-body = Bot no está listo todavía, por favor, inténtelo de nuevo en unos minutos.
+chat-bot-not-ready-title = El grupo aún no está listo
+chat-bot-not-ready-body = El grupo aún no está listo. Inténtalo de nuevo en unos minutos.
 
-chat-kicked = Has sido expulsado de este grupo de chat.
-chat-banned = Has sido vetado de este grupo de chat.
+chat-kicked = Has sido expulsado de este grupo.
+chat-banned = Has sido bloqueado en este grupo.
 
 ; Contact Details Screen
-contact-details-chat = chat
-contact-details-send = enviar
-contact-details-receive = recibir
+contact-details-chat = Chat
+contact-details-send = Enviar
+contact-details-receive = Recibir
 contact-details-notifications = Notificaciones
-contact-details-history = Historia
-contact-details-account-address = Dirección de Spixi
-contact-details-address-1 = Recuperando
-contact-details-address-2 = dirección
-contact-details-address-3 = SPIXI...
-contact-details-removecontact = ELIMINAR
+contact-details-history = Historial
+contact-details-account-address = Dirección Spixi
+contact-details-address-1 = Obteniendo
+contact-details-address-2 = Spixi
+contact-details-address-3 = dirección...
+contact-details-removecontact = Eliminar contacto
 contact-details-removedcontact-title = Eliminado
-contact-details-removedcontact-text = Contacto eliminado de la lista.
-contact-details-deletehistory = BORRAR HISTORIA
-contact-details-deletedhistory-title = Borrado
-contact-details-deletedhistory-text = Historial de mensajes borrados.
+contact-details-removedcontact-text = El contacto ha sido eliminado.
+contact-details-deletehistory = Borrar historial
+contact-details-deletedhistory-title = Eliminado
+contact-details-deletedhistory-text = El historial de mensajes ha sido eliminado.
 
-; New Contact Screen 
-contact-new-title = Nuevo Contacto
-contact-new-description = Añade un nuevo contacto de Spixi pegando su dirección o escaneando el código QR. El usuario recibirá una solicitud poco después.
-contact-new-placeholder = Pegar / escribir dirección
-contact-new-send-request = ENVIAR SOLICITUD DE CONTACTO
-contact-new-invalid-address-self-text = La dirección que ha introducido es su propia dirección.
-contact-new-invalid-address-exists-text = Este contacto ya está en su lista de contactos.
+; New Contact Screen
+contact-new-title = Agregar nuevo contacto
+contact-new-description = Para agregar un nuevo contacto, pega o introduce su dirección Spixi. También puedes escanear su código QR.
+contact-new-placeholder = Pega o introduce la dirección
+contact-new-send-request = Agregar contacto
+contact-new-invalid-address-self-text = La dirección introducida es tu propia dirección.
+contact-new-invalid-address-exists-text = Este contacto ya ha sido agregado.
 contact-new-scan = Escanear
-contact-new-scan-help = O escanear el código QR
+contact-new-scan-help = O escanea un código QR
 contact-new-send = Enviar
 contact-new-cancel = Cancelar
-contact-new-confirm-title = ¿Enviar una solicitud de amistad?
-contact-new-confirm-details = Estás a punto de enviar una solicitud de amistad a la siguiente dirección de Spixi:
+contact-new-confirm-title = ¿Agregar contacto?
+contact-new-confirm-details = Se enviará una solicitud de contacto a la siguiente dirección Spixi:
 
-; Downloads Screen 
+; Downloads Screen
 downloads-title = Descargas
 downloads-empty = No tienes archivos descargados.
 
-; Index Screen 
-index-balance = Mi balance de IXI
-index-balance-show = mostrar
-index-balance-hide = ocultar
-index-balance-info = Saldo oculto
+; Index Screen
+index-balance = Saldo IXI
+index-balance-show = Mostrar
+index-balance-hide = Ocultar
+index-balance-info = Oculto
 index-notifications = Notificaciones
 index-unread-chats = Chats no leídos
-index-no-conversations-title = No tienes conversaciones existentes.
-index-no-conversations = Inicie un nuevo chat con uno de sus contactos.<br/>Todos los chats aparecerán aquí.
-index-new-chat-button = Nuevo chat 
-index-no-transactions-title = Sin transacciones
-index-no-transactions = Sus transacciones aparecerán aquí, una vez que comience a usar su billetera IXI.
+index-no-conversations-title = No hay conversaciones
+index-no-conversations = Inicia una conversación con tus contactos.<br/>
+index-new-chat-button = Nuevo chat
+index-no-transactions-title = No hay transacciones
+index-no-transactions = Tus transacciones aparecerán aquí cuando comiences a usar tu monedero IXI.
 index-send = Enviar
 index-scan = Escanear
 index-receive = Recibir
-index-all = Todos
-index-sent = Enviado
-index-received = Recibido
+index-all = Todas
+index-sent = Enviadas
+index-received = Recibidas
 index-recent-activity = Actividad reciente
 index-contacts-placeholder = Buscar contactos
-index-tab-home = home
-index-tab-chats = chats
-index-tab-wallet = billetera
-index-tab-contacts = contactos
+index-tab-home = Inicio
+index-tab-chats = Chats
+index-tab-wallet = Monedero
+index-tab-contacts = Contactos
 index-tab-address = Mi dirección
-index-new-title = NUEVO
+index-new-title = Nuevo
 index-new-contact = Contacto
 index-new-chat = Chat
 index-new-send = Enviar IXI
-index-new-request = Solicitud IXI
-index-new-cancel = CANCELAR
+index-new-request = Solicitar IXI
+index-new-cancel = Cancelar
 index-side-title = Usuario de Spixi
 index-side-myaddress = Mi dirección Spixi
-index-side-apps = Apps
+index-side-apps = Aplicaciones
 index-side-downloads = Descargas
-index-side-settings = Ajustes
+index-side-settings = Configuración
 index-side-security = Seguridad
 index-side-backup = Copia de seguridad
 index-side-password = Contraseña
 index-side-about = Acerca de
 index-side-howtouse = Cómo usar Spixi
-index-side-sendlog = Enviar Log
-index-devmode = Modo de desarrollo activado
+index-side-sendlog = Enviar registro de la aplicación
+index-devmode = Modo desarrollador activado
 index-excerpt-payment-request-sent = Solicitud de pago enviada
 index-excerpt-payment-request-received = Solicitud de pago recibida
 index-excerpt-payment-sent = Pago enviado
@@ -203,352 +203,356 @@ index-excerpt-contact-accepted = Contacto aceptado
 index-excerpt-contact-request = Solicitud de contacto
 index-excerpt-file = Archivo
 index-excerpt-voice-call = Llamada de voz
-index-excerpt-self = Yo:
+index-excerpt-self = 
 index-excerpt-typing = Escribiendo...
 
-; Intro Screen 
+; Intro Screen
 intro-title = Bienvenido a Spixi,
-intro-subtitle = Bienvenido a una de las aplicaciones de chat más seguras del mundo.
-intro-headline = ¡Empecemos!
-intro-language-text = Por favor, seleccione un idioma
-intro-text = Por favor, cree o restaure su cuenta <br/>Spixi para proceder
-intro-create-account = NUEVA CUENTA
-intro-restore-account = ¿Ya tienes una cuenta de usuario?
-intro-restore-link = Haz clic aquí para restaurar.
-intro-tip-title = ¿Sabías?
-intro-tip-body = Spixi no utiliza servidores, todos los mensajes se envían directamente a tus pares, mientras están completamente encriptados.
+intro-subtitle = Bienvenido a una de las aplicaciones de mensajería más seguras del mundo.
+intro-headline = ¡Comencemos!
+intro-language-text = ¿Qué idioma hablas?
+intro-text = Crea o recupera tu cuenta de Spixi para continuar.
+intro-create-account = Crear cuenta
+intro-restore-account = ¿Ya tienes una cuenta?
+intro-restore-link = Haz clic aquí para restaurarla.
+intro-tip-title = ¿Sabías que...?
+intro-tip-body = Spixi no utiliza servidores. Todos los mensajes están completamente cifrados y se envían directamente a tus contactos.
 intro-continue = Continuar
 intro-step-1 = Paso 1 de 2
 intro-step-2 = Paso 2 de 2
 
-; Intro New Screen 
-intro-new-description-1 = Establece tu apodo y foto
-intro-new-description-2 = Su apodo y su imagen de perfil se mostrarán a sus contactos.
-intro-new-name-placeholder = Tu apodo
-intro-new-change-image = Pulse para cambiar su imagen
-intro-new-next = Continuar
+; Intro New Screen
+intro-new-description-1 = Elige un nombre y un avatar.
+intro-new-description-2 = Tu nombre y avatar serán visibles para tus contactos.
+intro-new-name-placeholder = Nombre
+intro-new-change-image = Toca el avatar para cambiarlo.
+intro-new-next = Siguiente
 intro-new-step-1 = Paso 1 de 2
 intro-new-step-2 = Paso 2 de 2
-intro-new-description-3 = Estás casi allí.
-intro-new-description-4 = Esta es tu contraseña principal. Si alguna vez necesitas recuperar el acceso a tu cuenta, necesitarás esta contraseña y usarla con el archivo de respaldo.
-intro-new-description-5 = Tu contraseña es muy importante ya que te permitirá iniciar sesión nuevamente en tu cuenta de Spixi en caso de que necesites restaurar el acceso a ella.
-intro-new-password = Escriba su contraseña...
-intro-new-password-2 = Vuelva a escribir su contraseña
-intro-new-finish = FINISH
+intro-new-description-3 = ¡Estás casi listo!
+intro-new-description-4 = Esta es tu contraseña principal. Si alguna vez necesitas recuperar el acceso a tu cuenta, necesitarás esta contraseña junto con tu copia de seguridad.
+intro-new-description-5 = Esta contraseña es importante. Será necesaria para restaurar el acceso a tu cuenta.
+intro-new-password = Introduce una contraseña...
+intro-new-password-2 = Vuelve a introducir la contraseña...
+intro-new-finish = FINALIZAR
 intro-new-create-title = Creando tu cuenta de Spixi...
-intro-new-create-description = Esto puede llevar un tiempo
-intro-new-password10 = La contraseña debe contener al menos 10 caracteres
-intro-new-passwordconf = Introducir contraseña de confirmación
+intro-new-create-description = Este proceso puede tardar un poco en dispositivos más lentos.
+intro-new-password10 = La contraseña debe tener al menos 10 caracteres.
+intro-new-passwordconf = Confirmar contraseña
 intro-new-passwordnomatch = Las contraseñas no coinciden
-intro-new-passwordmatch = Contraseñas que coinciden
-intro-new-emptynick-title = Apodo inválido
-intro-new-emptynick-text = Por favor, introduzca su apodo.
-intro-new-avatarerror-title = Error de avatar
+intro-new-passwordmatch = Las contraseñas coinciden
+intro-new-emptynick-title = Nombre inválido
+intro-new-emptynick-text = Por favor, introduce un nombre.
+intro-new-avatarerror-title = Error en el avatar
 intro-new-walleterror-title = Error
-intro-new-walleterror-text = No se puede generar la billetera. Por favor, inténtelo de nuevo.
+intro-new-walleterror-text = No se pudo crear la billetera. Inténtalo de nuevo.
 
-; Intro Restore Screen 
-intro-restore-description-1 = Restaurar el acceso a su cuenta Spixi
-intro-restore-description-2 = Necesitas el archivo de copia de seguridad y la contraseña de cifrado para restaurar tu cuenta de Spixi en este dispositivo.
-intro-restore-password = Introduzca su contraseña de cifrado
-intro-restore-selectfile = Seleccione el archivo de copia de seguridad
-intro-restore-backupdescription = Establecer el archivo de copia de seguridad que está asociado con la contraseña de cifrado
-intro-restore-action = RESTAURAR
-intro-restore-title = Restaurando el acceso a<br /> su cuenta de Spixi
-intro-restore-info = Esto puede tomar un tiempo
+; Intro Restore Screen
+intro-restore-description-1 = Recuperar tu cuenta de Spixi
+intro-restore-description-2 = Para continuar, necesitas el archivo de respaldo y la contraseña de tu cuenta de Spixi.
+intro-restore-password = Introduce la contraseña...
+intro-restore-selectfile = Agregar respaldo
+intro-restore-backupdescription = Agrega la copia de seguridad asociada con tu contraseña.
+intro-restore-action = Recuperar mi cuenta
+intro-restore-title = Restaurando acceso a tu cuenta de Spixi
+intro-restore-info = Esto puede tardar unos minutos
 intro-restore-file-error-title = Error de archivo
-intro-restore-file-selecterror-text = Se ha producido un error al seleccionar el archivo de restauración.
-intro-restore-file-readerror-text = Se produjo un error al leer el fichero de la billetera.
-intro-restore-file-writeerror-text = Se produjo un error al guardar la billetera.
+intro-restore-file-selecterror-text = Ocurrió un error al agregar el archivo de recuperación.
+intro-restore-file-readerror-text = Error al leer el archivo de la billetera.
+intro-restore-file-writeerror-text = Error al guardar el archivo de la billetera.
 intro-restore-file-invalidpassword-title = Contraseña inválida
-intro-restore-file-invalidpassword-text = No se puede desencriptar la billetera, por favor, inténtelo de nuevo.
+intro-restore-file-invalidpassword-text = No se pudo descifrar el archivo de la billetera. Inténtalo de nuevo.
 
-; Intro Retry Screen 
-intro-retry-description-1 = Vuelva a introducir su contraseña de cifrado
-intro-retry-description-2 = Parece que hay un problema para acceder a su cuenta. Por favor, introduzca su contraseña para continuar.
-intro-retry-placeholder = Introduzca su contraseña de cifrado
-intro-retry-proceed = PROCEDER
-intro-retry-title = Restaurando el acceso a<br /> su billetera
-intro-retry-info = Esto puede tomar un tiempo
+; Intro Retry Screen
+intro-retry-description-1 = Introduce tu contraseña nuevamente
+intro-retry-description-2 = Hubo un problema al acceder a tu cuenta. Ingresa tu contraseña nuevamente para continuar.
+intro-retry-placeholder = Introduce la contraseña
+intro-retry-proceed = Continuar
+intro-retry-title = Restaurando acceso<br />a tu billetera
+intro-retry-info = Esto puede tardar unos minutos
 intro-retry-invalidpassword-title = Contraseña inválida
-intro-retry-invalidpassword-text = No se puede desencriptar la billetera, por favor, inténtelo de nuevo.
+intro-retry-invalidpassword-text = No se pudo descifrar la billetera. Inténtalo de nuevo.
 
-; Lock Screen 
+; Lock Screen
 lock-description = Spixi está bloqueado
-lock-placeholder = Introduzca su CONTRASEÑA DE BLOQUEO
+lock-placeholder = Introduce la contraseña
 lock-error = Contraseña incorrecta
-lock-unlock = DESBLOQUEAR
+lock-unlock = Desbloquear
 lock-change = Cambiar billetera
 
-; Settings Screen 
-settings-title = Ajustes
-settings-save = GUARDAR
-settings-cancel = CANCELAR
-settings-confirm = CONFIRMAR
-settings-description = Cambiar los ajustes y gestionar los datos almacenados en este dispositivo.
-settings-account-information = Ajustes básicos
-settings-account-description = Cambiar el idioma predeterminado, tu foto y editar tu apodo.
+; Settings Screen
+settings-title = Configuración
+settings-save = Guardar
+settings-cancel = Cancelar
+settings-confirm = Confirmar
+settings-description = Administra tu cuenta de Spixi y los datos almacenados en este dispositivo.
+settings-account-information = Configuración básica
+settings-account-description = Cambia el idioma, el avatar y el nombre.
 settings-account-language-edit = Idioma
 settings-account-appearance-edit = Apariencia
 settings-account-appearance-automatic = Automático
 settings-account-appearance-light = Claro
 settings-account-appearance-dark = Oscuro
-settings-account-image-edit = Tu foto
-settings-account-nick-edit = Apodo
-settings-account-nick-placeholder = Escriba su nuevo apodo
-settings-account-deleteinfo = Puedes borrar esta cuenta Spixi y todo el contenido asociado a ella de este dispositivo, en cualquier momento. <br /><br />Aviso importante: Tendrás que crear una nueva cuenta o restaurar una existente para continuar usando Spixi en este dispositivo.
-settings-account-delete = BORRAR MI CUENTA
-settings-deletea-title = Borrar tu cuenta de Spixi?
-settings-deletea-text = ¿Estás seguro de que quieres borrar tu cuenta de Spixi?<br/><br/> ¡Esta acción no es reversible! Se recomienda que hagas una copia de seguridad de tu cuenta antes de borrarla. Necesitarás el archivo de copia de seguridad si alguna vez quieres restaurar el acceso a esta cuenta.
-settings-deleteda-title = Borrado
-settings-deleteda-text = La cuenta de Spixi ha sido borrada.
-settings-wallet-settings = Ajustes de la billetera
-settings-wallet-description = Tu billetera está asociada a tu cuenta de Spixi. Para eliminar su billetera, su cuenta y todo el historial de pagos de este dispositivo, pulse el botón &quot;Eliminar mi billetera&quot; que se encuentra más abajo.
-settings-wallet-delete = BORRAR MI BILLETERA
-settings-deletew-title = ¿Borrar esta billetera?
-settings-deletew-text = ¿Estás seguro de que quieres borrar tu billetera?<br/><br/> ¡Esta acción no es reversible! ¡Al borrar esta billetera perderá el acceso a los fondos que estén en ella! Para restaurar esta billetera necesitará el archivo de respaldo y la contraseña de cifrado!
+settings-account-image-edit = Avatar
+settings-account-nick-edit = Nombre
+settings-account-nick-placeholder = Introduce un nuevo nombre
+settings-account-deleteinfo = Puedes eliminar permanentemente esta cuenta de Spixi y todos sus datos relacionados de este dispositivo en cualquier momento.<br/><br/><b>Importante:</b> Después de eliminarla, tendrás que crear o restaurar una cuenta para seguir usando Spixi.
+settings-account-delete = Eliminar cuenta permanentemente
+settings-deletea-title = ¿Eliminar permanentemente esta cuenta de Spixi?
+settings-deletea-text = ¿Estás seguro de que deseas eliminar permanentemente esta cuenta de Spixi?<br/><br/>¡Esta acción no se puede deshacer! Recomendamos crear una copia de seguridad antes de eliminarla. Necesitarás el respaldo para restaurar tu cuenta.
+settings-deleteda-title = Eliminado
+settings-deleteda-text = La cuenta de Spixi ha sido eliminada.
+settings-wallet-settings = Configuración de la billetera
+settings-wallet-description = Esta billetera está vinculada a tu cuenta de Spixi. Para eliminar la billetera, la cuenta y todo el historial de transacciones de este dispositivo, toca el botón de abajo.
+settings-wallet-delete = Eliminar mi billetera
+settings-deletew-title = ¿Eliminar esta billetera?
+settings-deletew-text = ¿Estás seguro de que deseas eliminar esta billetera?<br/><br/>¡Esta acción no se puede deshacer! Perderás acceso a todos los fondos de la billetera. Para restaurarla, necesitarás una copia de seguridad y la contraseña.
 settings-deletew-error-title = Error
-settings-deletew-error-text = No se puede borrar el archivo de la billetera.
+settings-deletew-error-text = No se pudo eliminar el archivo de la billetera.
 settings-history = Historial de mensajes
-settings-history-description = Todo el historial de mensajes y todos los archivos que has descargado se almacenan en este dispositivo. Puedes borrar todo tu historial de mensajes o tus descargas en cualquier momento pulsando el botón correspondiente a continuación.
-settings-history-delete = BORRAR HISTORIAL DE MENSAJES
-settings-downloads-delete = BORRAR TODAS LAS DESCARGAS
-settings-deleteh-title = ¿Borrar el historial de mensajes?
-settings-deleteh-text = ¿Está seguro de que quiere borrar todo su historial de mensajes? ¡Esta acción no es reversible!
-settings-deletedh-title = Borrado
-settings-deletedh-text = El historial de mensajes ha sido borrado.
-settings-deleted-title = ¿Borrar todas las descargas?
-settings-deleted-text = ¿Está seguro de que quiere borrar TODAS sus descargas? ¡Todos los archivos que has descargado en Spixi serán borrados! Esta acción no es reversible!
-settings-deletedd-title = Borrado
-settings-deletedd-text = Borrado de {0} archivos descargados.
+settings-history-description = Todo el historial de mensajes y archivos descargados se almacenan en este dispositivo. Puedes eliminarlos en cualquier momento con los botones de abajo.
+settings-history-delete = Eliminar historial de mensajes
+settings-downloads-delete = Eliminar todas las descargas
+settings-deleteh-title = ¿Eliminar el historial de mensajes?
+settings-deleteh-text = ¿Estás seguro de que deseas eliminar TODO el historial de mensajes? ¡Esta acción no se puede deshacer!
+settings-deletedh-title = Eliminado
+settings-deletedh-text = El historial de mensajes ha sido eliminado.
+settings-deleted-title = ¿Eliminar todas las descargas?
+settings-deleted-text = ¿Estás seguro de que deseas eliminar TODOS los archivos descargados? ¡Esta acción no se puede deshacer!
+settings-deletedd-title = Eliminado
+settings-deletedd-text = {0} archivos descargados han sido eliminados.
 settings-deleted-error-title = Error
-settings-deleted-error-text = Ha ocurrido un error desconocido.
-settings-emptynick-title = Apodo inválido
-settings-emptynick-text = Por favor, introduzca su apodo.
+settings-deleted-error-text = Ocurrió un error desconocido.
+settings-emptynick-title = Nombre inválido
+settings-emptynick-text = Por favor, introduce un nombre.
 
-; Settings Backup Screen 
-settings-backup-title = Cuenta de respaldo
-settings-backup-description = Descarga un archivo especial que te permite restaurar tu cuenta de Spixi.
-settings-backup-save = GUARDAR ARCHIVO DE RESPALDO
-settings-backup-account-save = CUENTA DE RESPALDO
-settings-backup-notice = Esta copia de seguridad y la contraseña de cifrado asociada a ella serán necesarias para restaurar su acceso en los siguientes casos:
-settings-backup-notice2 = - perder este dispositivo<br />- desinstalar Spixi de su dispositivo<br />- borrar su cuenta de Spixi<br />- borrar su billetera
+; Settings Backup Screen
+settings-backup-title = Copia de seguridad de la cuenta
+settings-backup-description = Descarga el archivo de la cuenta o la billetera para poder restaurar tu cuenta de Spixi si es necesario.
+settings-backup-save = GUARDAR BILLETERA
+settings-backup-account-save = GUARDAR CUENTA
+settings-backup-notice = Necesitarás esta copia de seguridad y tu contraseña para restaurar tu cuenta si:
+settings-backup-notice2 = - Pierdes este dispositivo<br />- Desinstalas Spixi de este dispositivo<br />- Eliminas esta cuenta de Spixi<br />- Eliminas esta billetera
 settings-backup-invalidpassword-title = Contraseña inválida
-settings-backup-invalidpassword-text = Por favor, introduzca una contraseña válida.
+settings-backup-invalidpassword-text = Introduce una contraseña válida.
 
-; Settings Encryption Screen 
+; Settings Encryption Screen
 settings-encryption-title = Contraseña
-settings-encryption-description = La contraseña de cifrado es la contraseña más importante para su cuenta y su billetera. Necesitarás esta contraseña si alguna vez intentas restaurar el acceso a tu cuenta o billetera de Spixi.
-settings-encryption-edit = Editar tu contraseña de encriptación
-settings-encryption-type = Escriba su contraseña <b>ACTUAL</b>.
-settings-encryption-placeholder = Su contraseña de cifrado actual
-settings-encryption-typenew = Escriba su <b>NUEVA</b> contraseña.
-settings-encryption-placeholdernew = Su nueva contraseña de cifrado
-settings-encryption-placeholderretype = Vuelva a escribir su nueva contraseña de cifrado
-settings-encryption-change = CAMBIAR CONTRASEÑA
-settings-encryption-password10 = La contraseña debe contener al menos 10 caracteres
-settings-encryption-passwordconf = Ingrese la contraseña para confirmar
+settings-encryption-description = La contraseña está vinculada a esta cuenta y billetera. La necesitarás para restaurar el acceso a la cuenta o billetera de Spixi.
+settings-encryption-edit = Cambiar contraseña
+settings-encryption-type = Introduce la <b>CONTRASEÑA ACTUAL</b>.
+settings-encryption-placeholder = Contraseña actual
+settings-encryption-typenew = Introduce la <b>NUEVA</b> contraseña.
+settings-encryption-placeholdernew = Nueva contraseña
+settings-encryption-placeholderretype = Vuelve a introducir la nueva contraseña
+settings-encryption-change = Cambiar contraseña
+settings-encryption-password10 = La contraseña debe tener al menos 10 caracteres.
+settings-encryption-passwordconf = Confirmar contraseña
 settings-encryption-passwordnomatch = Las contraseñas no coinciden
-settings-encryption-passwordmatch = Contraseña valida
-settings-encryption-invalidpassword-title = Contraseña invalida
-settings-encryption-invalidpassword-text = Por favor, introduzca una contraseña válida.
-settings-encryption-passwordchanged-title = Contraseña de cifrado
-settings-encryption-passwordchanged-text = Contraseña cambiada con éxito.
-settings-encryption-invalidpassword-current-text = La contraseña actual es incorrecta, por favor inténtelo de nuevo.
+settings-encryption-passwordmatch = Las contraseñas coinciden
+settings-encryption-invalidpassword-title = Contraseña inválida
+settings-encryption-invalidpassword-text = Introduce una contraseña válida.
+settings-encryption-passwordchanged-title = Contraseña
+settings-encryption-passwordchanged-text = La contraseña se ha cambiado con éxito.
+settings-encryption-invalidpassword-current-text = La contraseña actual es incorrecta. Inténtalo de nuevo.
 
 ; Settings Lock Screen
 settings-lock-title = Bloquear mi Spixi
-settings-lock-description = Crear una contraseña de bloqueo para tu Spixi, para asegurarte de que eres el único que utiliza tu cuenta en este dispositivo.
+settings-lock-description = Configura una contraseña para garantizar que solo tú puedas acceder a Spixi en este dispositivo.
 settings-lock-status = Estado de seguridad:
 settings-lock-unlocked = DESBLOQUEADO
 settings-lock-locked = BLOQUEADO
-settings-lock-passwordinfo = Crear o editar la contraseña de bloqueo
-settings-lock-password = Escriba su contraseña de bloqueo <b>ACTUAL</b>.
-settings-lock-password-new = Escriba su <b>NUEVA</b> contraseña de bloqueo.
-settings-lock-placeholder-1 = Escriba su contraseña de bloqueo
-settings-lock-placeholder-2 = Escriba su nueva contraseña de bloqueo
-settings-lock-placeholder-3 = Vuelva a escribir su nueva contraseña de bloqueo
-settings-lock-info = Esta contraseña será requerida cada vez que abras Spixi.
-settings-lock-save = CONFIGURAR CONTRASEÑA DE BLOQUEO
-settings-lock-authinfo = Necesitará su autenticación biométrica o su contraseña de billetera para desbloquear Spixi.
-settings-lock-confirm-text = Para que surtan efecto, necesitará guardar su configuración.
+settings-lock-passwordinfo = Establecer o cambiar contraseña
+settings-lock-password = Introduce la <b>CONTRASEÑA ACTUAL</b>
+settings-lock-password-new = Introduce la <b>NUEVA CONTRASEÑA</b>
+settings-lock-placeholder-1 = Introduce la contraseña actual
+settings-lock-placeholder-2 = Introduce la nueva contraseña
+settings-lock-placeholder-3 = Vuelve a introducir la nueva contraseña
+settings-lock-info = Necesitarás esta contraseña cada vez que inicies Spixi.
+settings-lock-save = Establecer contraseña
+settings-lock-authinfo = Necesitas autenticación biométrica o una contraseña para desbloquear Spixi.
+settings-lock-confirm-text = Los cambios se aplicarán después de guardarlos.
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Solicitud de pago
 wallet-contact-request-subtitle = Solicitud de pago de:
-wallet-contact-request-amount = Cantidad solicitada
-wallet-contact-request-info = El usuario ha solicitado un pago por la siguiente cantidad
+wallet-contact-request-amount = Monto
+wallet-contact-request-info = El usuario ha solicitado el pago del siguiente monto
 wallet-contact-request-respond = Responder a la solicitud de pago
-wallet-contact-request-respondinfo = Puede responder a esta solicitud rechazando o enviando el pago. El usuario que envió la solicitud será notificado de su decisión.
-wallet-contact-request-decline = RECHAZAR
-wallet-contact-request-proceed = ENVIAR PAGO
+wallet-contact-request-respondinfo = Puedes rechazar o enviar el pago. El usuario que hizo la solicitud será notificado sobre tu decisión.
+wallet-contact-request-decline = Rechazar
+wallet-contact-request-proceed = Enviar pago
 
 ; Wallet Recipient Screen
-wallet-recipient-title = Seleccione destinatario
+wallet-recipient-title = Seleccionar destinatario
 wallet-recipient-search-placeholder = Buscar contactos
-wallet-recipient-empty = 0 Destinatario/-s seleccionado
-wallet-recipient-add = Añadir destinatario/-s
-wallet-recipient-selected = destinatario/-s seleccionado
-wallet-recipient-new-contact-button = Agregar un nuevo contacto
+wallet-recipient-empty = Ningún destinatario seleccionado
+wallet-recipient-add = Agregar destinatarios
+wallet-recipient-selected = Destinatarios seleccionados
+wallet-recipient-new-contact-button = Agregar nuevo contacto
 wallet-recipient-no-contact-button = Nuevo contacto
 
 ; Wallet Request Screen
-wallet-request-title = Solicitud de pago
-wallet-request-subtitle = Solicitud de Cantidad Específica
-wallet-request-amount-placeholder = Escriba una cantidad
-wallet-request-address = Dirección actual
-wallet-request-send-info = Enviar como solicitud a los destinatarios:
-wallet-request-add = Puede enviar esta solicitud por la misma cantidad a más de 1 usuario. <br/>Añadir usuarios/direcciones adicionales para enviar esta solicitud.
-wallet-request-placeholder = Pegar/escribir dirección
-wallet-request-send = ENVIAR PETICIÓN
+wallet-request-title = Solicitar pago
+wallet-request-subtitle = Solicita un monto específico
+wallet-request-amount-placeholder = Introduce el monto
+wallet-request-address = Dirección del destinatario
+wallet-request-send-info = Enviar solicitud a los siguientes destinatarios:
+wallet-request-add = Puedes enviar esta solicitud a varios usuarios por el mismo monto.<br/>Agrega usuarios o direcciones adicionales para enviar esta solicitud.
+wallet-request-placeholder = Pega o introduce una dirección
+wallet-request-send = Enviar solicitud
 wallet-request-error-title = Error
-wallet-request-error-text = Por favor, introduzca información válida en los campos de entrada.
+wallet-request-error-text = Introduce información válida en todos los campos obligatorios.
 
 ; Wallet Send Screen
-wallet-send-title = Enviar el pago
-wallet-send-details = Pegue o escriba la dirección a la que desea enviar el pago. Puede buscar en sus contactos o escanear un código QR.
+wallet-send-title = Enviar IXI
+wallet-send-details = Pega o introduce la dirección a la que deseas enviar el pago. También puedes seleccionar un contacto o escanear un código QR.
 wallet-send-subdetails = Enviar IXI a
-wallet-send-add = Agregar Destinatario/-s
-wallet-send-placeholder = Pegar/escribir dirección
-wallet-send-more = Puede añadir destinatarios adicionales para esta transacción. Estos destinatarios recibirán un pago con el mismo importe.
-wallet-send-recipients = Destinatario/-s
-wallet-send-norecipients = No se han seleccionado destinatarios
-wallet-send-next = SIGUIENTE
-wallet-send-max = Enviar cantidad máxima
+wallet-send-add = Agregar destinatarios
+wallet-send-placeholder = Pega o introduce una dirección
+wallet-send-more = Agrega destinatarios adicionales a esta transacción. Cada uno recibirá el mismo monto.
+wallet-send-recipients = Destinatarios
+wallet-send-norecipients = Ningún destinatario seleccionado
+wallet-send-next = Siguiente
+wallet-send-max = Enviar monto máximo
 wallet-send-select = Seleccionar contacto
 wallet-send-or = O
 
 ; Wallet Send 2 Screen
-wallet-send2-title = Confirmar el pago
-wallet-send2-policy = Política de tarifas de transacción
-wallet-send2-info = Los pagos de IXI no se pueden revertir.
-wallet-send2-feeinfo = La tarifa de red de IXI está incluida en el pago.
+wallet-send2-title = Confirmar pago
+wallet-send2-policy = Política de tarifas de red
+wallet-send2-info = Las transacciones IXI no pueden revertirse.
+wallet-send2-feeinfo = La tarifa de red (tarifa IXI) está incluida en el pago.
 wallet-send2-normal = Normal
-wallet-send2-high = Alto
-wallet-send2-custom = Personalizado
-wallet-send2-placeholder = ¿Cuánto le gustaría enviar?
-wallet-send2-amount = Cantidad a enviar
-wallet-send2-max-amount = Enviar la cantidad máxima
-wallet-send2-max-amount-warning = ¡Está a punto de enviar el saldo completo de su billetera!
-wallet-send2-fee = Total de la tasa de transacción
-wallet-send2-total = Cantidad total a pagar del saldo
+wallet-send2-high = Alta
+wallet-send2-custom = Personalizada
+wallet-send2-placeholder = ¿Cuánto deseas enviar?
+wallet-send2-amount = Monto
+wallet-send2-max-amount = Enviar monto máximo
+wallet-send2-max-amount-warning = ¡Enviarás todos los fondos disponibles en tu billetera!
+wallet-send2-fee = Tarifa total de la transacción
+wallet-send2-total = Total del pago
 wallet-send2-send = Enviar IXI
-wallet-send2-confirm-title = Está a punto de enviar
+wallet-send2-confirm-title = Confirmar envío
 wallet-send2-confirm = Confirmar
 wallet-send2-cancel = Cancelar
 wallet-send2-edit = Editar pago
 wallet-send2-remove-recipient = Eliminar destinatario
 wallet-send2-done = Hecho
-wallet-send2-yourbalance = Su saldo
+wallet-send2-yourbalance = Saldo actual
 
 ; Wallet Sent Screen
-wallet-sent-title = Pago enviado
+wallet-sent-title = Detalles del pago
 wallet-sent-subtitle = Pago enviado a:
-wallet-status-sent-pending =  ¡El pago se está enviando!
-wallet-status-receive-pending = Pago entrante
-wallet-status-sent = Pago enviado correctamente
+wallet-status-sent-pending = Pago en proceso
+wallet-status-receive-pending = Pago entrante en proceso
+wallet-status-sent = Pago enviado con éxito
 wallet-status-receive = Pago recibido
-wallet-status-failed = Pago fallido
-wallet-sent-amount = Cantidad enviada
-wallet-sent-status = Estado de pago
+wallet-status-failed = Error en el pago
+wallet-sent-amount = Monto
+wallet-sent-status = Estado del pago
 wallet-sent-confirmed = CONFIRMADO
 wallet-sent-unconfirmed = NO CONFIRMADO
-wallet-sent-details = La cantidad que enviaste se ha deducido de tu saldo.
-wallet-sent-fee = Cuota de pago
-wallet-sent-feeinfo = Cada pago enviado tiene una cierta tasa de pago que se deduce de la cantidad transferida.
-wallet-sent-txid = TXID
-wallet-sent-view-explorer = Ver en el explorador
-wallet-sent-dismiss = DESCARTAR
-wallet-sent-unconfirmed-details = El pago ha sido enviado, pero aún no ha sido confirmado por la red. Una vez confirmado, verá el ID de la transacción y un enlace para verlo en el explorador.
-wallet-sentrecv-title = Pago Recibido
-wallet-sentrecv-subtitle = Pago recibido de
-wallet-sentrecv-amount = Cantidad recibida
-wallet-sentrecv-details = La cantidad recibida se ha añadido al saldo de su billetera.
+wallet-sent-details = El monto enviado ha sido deducido de tu saldo.
+wallet-sent-fee = Tarifa de transacción
+wallet-sent-feeinfo = Esta transacción incluye una tarifa de red de
+wallet-sent-txid = ID de la transacción
+wallet-sent-view-explorer = Ver en el explorador de bloques
+wallet-sent-dismiss = Cerrar
+wallet-sent-unconfirmed-details = El pago ha sido enviado, pero aún no ha sido confirmado por la red. Una vez confirmado, verás el ID de la transacción y el enlace al explorador de bloques.
+wallet-sentrecv-title = Pago recibido
+wallet-sentrecv-subtitle = Pago recibido de:
+wallet-sentrecv-amount = Monto
+wallet-sentrecv-details = El monto ha sido agregado al saldo de tu billetera.
 
-; Global wallet errors
-wallet-error-amount-title = Cantidad inválida
-wallet-error-amount-text = Por favor, escriba una cantidad válida.
-wallet-error-amountdecimal-text = Por favor, introduzca la cantidad decimal correcta.
+; Global Wallet Errors
+wallet-error-amount-title = Monto inválido
+wallet-error-amount-text = Introduce un monto válido.
+wallet-error-amountdecimal-text = Introduce un monto decimal válido.
 wallet-error-balance-title = Saldo insuficiente
-wallet-error-balance-text = Su saldo es demasiado bajo para esta transacción. El costo total de la transacción es {0}, mientras que su saldo es {1}.
+wallet-error-balance-text = No tienes suficiente saldo para esta transacción. El costo total de la transacción es {0}, mientras que tu saldo actual es {1}.
 
 ; Onboarding join official bot
-onboarding-bot-title = ¿Te gustaría unirte al Bot Oficial de Ixian?
-onboarding-bot-text = Únete a nuestro bot oficial, donde podrás decirnos lo que piensas sobre Spixi, mantenerte al día con las actualizaciones y discutir las cosas directamente con los desarrolladores y otros usuarios.
-onboarding-bot-join-button = UNIRSE
-onboarding-bot-dont-join-button = NO, GRACIAS
+onboarding-bot-title = Únete a la comunidad oficial de Spixi
+onboarding-bot-text = Únete al chat grupal para compartir tus comentarios sobre Spixi y mantenerte informado sobre las últimas actualizaciones.
+onboarding-bot-join-button = Unirse ahora
+onboarding-bot-dont-join-button = Omitir
 
 ; Onboarding 1
-onboarding-screen1-title = Conéctate con confianza
-onboarding-screen1-text = Tome el control de su comunicación y finanzas con una de las aplicaciones de chat más seguras y privadas del mundo.
-onboarding-screen1-get-started = Empezar
-onboarding-screen1-skip = Saltar introducción
+onboarding-screen1-title = Conéctate de forma segura
+onboarding-screen1-text = Toma el control de tus comunicaciones y pagos con una de las aplicaciones de mensajería más seguras y privadas del mundo.
+onboarding-screen1-get-started = Comenzar
+onboarding-screen1-skip = Omitir introducción
 
 ; Onboarding 2
-onboarding-screen2-title = Su dirección es su única identificación
-onboarding-screen2-text = Spixi no necesita tu número de teléfono o correo electrónico. En cambio, crea tu dirección, que es tu única identificación en la aplicación. Puedes añadir contactos utilizando su dirección.
+onboarding-screen2-title = La dirección Spixi es tu único ID
+onboarding-screen2-text = Spixi no requiere tu número de teléfono ni correo electrónico. Utiliza tu dirección como único identificador. Puedes agregar contactos usando sus direcciones de Spixi.
 
 ; Onboarding 3
-onboarding-screen3-title = Enviar y recibir pagos IXI.
-onboarding-screen3-text = Al usar la billetera, puedes enviar o recibir pagos IXI rápidamente. Es tan simple como enviar un mensaje.
+onboarding-screen3-title = Envía y recibe pagos IXI
+onboarding-screen3-text = Con la billetera integrada, puedes enviar y recibir pagos IXI rápidamente, tan fácil como enviar un mensaje.
 
 ; Onboarding send and receive payments
-onboarding-screen4-title = Enviar y recibir pagos
-onboarding-screen4-text = Utilizar la billetera integrada para enviar y recibir rápidamente los pagos de IXI. Puedes hacer esto en tu billetera o en el chat tan fácil como enviar un mensaje!
-onboarding-skip = OMITIR
+onboarding-screen4-title = Envía y recibe pagos IXI
+onboarding-screen4-text = Usa la billetera para enviar y recibir pagos IXI de manera sencilla, igual que enviar mensajes.
+onboarding-skip = Omitir
 onboarding-back = Atrás
 onboarding-next = Siguiente
-onboarding-finish = FINALIZAR
+onboarding-finish = Finalizar
+
 ; Empty State
 empty-state-title = Spixi
-empty-state-detail-1 = Spixi es una aplicación de chat descentralizada con billetera integrada.
-empty-state-detail-2 = Todos los mensajes están encriptados con métodos de encriptación de última generación y se intercambian directamente entre usted y su contacto.
+empty-state-detail-1 = Spixi es una aplicación de mensajería descentralizada con una billetera integrada.
+empty-state-detail-2 = Todos los mensajes están protegidos con cifrado avanzado y se envían directamente entre tú y tus contactos.
+
 ; Ixinames
-ixinames-request-title = IXI Names Quiere Conectarse
-ixinames-request-details = ¿Estás seguro de que quieres conectar tu Spixi a IXI Names? El servicio recibirá acceso a tu dirección de Spixi.
+ixinames-request-title = IXI Names solicita conexión
+ixinames-request-details = ¿Deseas conectar esta cuenta de Spixi con el servicio IXI Names? Este servicio tendrá acceso a tu dirección.
 ixinames-request-decline = Rechazar
 ixinames-request-connect = Conectar
-ixinames-message-connected = Tu Spixi ahora está conectado a IXI Names.
-ixinames-message-error = Spixi no pudo conectarse a IXI Names. Por favor, inténtalo de nuevo.
+ixinames-message-connected = Tu cuenta de Spixi ahora está conectada con IXI Names.
+ixinames-message-error = No se pudo conectar Spixi con IXI Names. Inténtalo de nuevo.
 
 ; Rating
-rating-request-title = ¿Estás disfrutando Spixi?
-rating-request-details = Tus comentarios nos ayudan a mejorar.
+rating-request-title = ¿Te gusta Spixi?
+rating-request-details = Tu opinión nos ayuda a mejorar la aplicación.
 rating-request-no = No mucho...
-rating-request-yes = Sí, me encanta
+rating-request-yes = ¡Sí, me encanta!
 
 ; Global
-global-connecting-s2 = Conectando con Ixian S2...
+global-connecting-s2 = Conectando a Ixian S2...
 global-connecting-dlt = Conectando a la red Ixian...
 global-received = RECIBIDO
 global-sent = ENVIADO
 global-app-accept = Aceptar
 global-app-reject = Rechazar
-global-app-wants-to-use = {0} quiere usar {1}con usted.
-global-call-in-call = En una llamada
-global-call-dialing = Marcar
+global-app-wants-to-use = {0} quiere usar {1} contigo.
+global-call-in-call = En llamada
+global-call-dialing = Marcando...
 global-call-incoming = Llamada entrante
 
 global-dialog-error = Error
 global-dialog-ok = OK
-global-dialog-cancel = CANCELAR
+global-dialog-cancel = Cancelar
 global-invalid-address-title = Dirección inválida
-global-invalid-address-text = Por favor, introduzca una dirección de billetera válida.
+global-invalid-address-text = Introduce una dirección válida.
 
-global-friend-request-accepted = {0} ha aceptado su solicitud de amistad.
+global-friend-request-accepted = {0} ha aceptado tu solicitud de contacto.
 
-global-update-available = La nueva versión de Spixi ({0}) está disponible. Por favor, actualícela para una mejor experiencia.
-global-modal-external-link-title = Está a punto de visitar un enlace externo
-global-modal-external-link-body = Está a punto de visitar un enlace externo {0}. Los enlaces externos son potencialmente peligrosos, continúe bajo su propio riesgo.
-global-modal-external-link-button-visit = VISITA
+global-update-available = Hay una nueva versión de Spixi disponible ({0}). Actualiza para obtener la mejor experiencia.
+global-modal-external-link-title = Enlace externo
+global-modal-external-link-body = Estás a punto de visitar un enlace externo ({0}). Los enlaces externos pueden ser riesgosos, procede bajo tu propio riesgo.
+global-modal-external-link-button-visit = Continuar
 
 global-lock-auth-text = Autenticación requerida
-global-lock-invalidpassword-title = Autenticación fallida
-global-lock-invalidpassword-text = Escriba su contraseña de billetera para desbloquear Spixi
+global-lock-invalidpassword-title = Fallo en la autenticación
+global-lock-invalidpassword-text = Introduce tu contraseña para desbloquear Spixi.
 
-global-time-justnow = justo ahora
-global-time-aminuteago = hace un minuto
-global-time-minutesago = minutos
-global-share-choose = Elija acción
+global-time-justnow = ahora
+global-time-aminuteago = 1 min
+global-time-minutesago = min
+
+global-share-choose = Selecciona una acción
 global-share-savefile = Guardar archivo
 global-share-sharefile = Compartir archivo
+
