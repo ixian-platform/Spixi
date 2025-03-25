@@ -72,6 +72,7 @@ chat-context-tip-user = Tip User
 chat-context-like-message = Like Message
 chat-context-user-info = User Info
 chat-context-send-contact-request = Add Contact
+chat-context-report-message = Report Message
 chat-context-kick-user = Kick
 chat-context-ban-user = Ban
 chat-context-delete-message = Delete Message
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Group isn't ready yet, please try again in a few minut
 
 chat-kicked = You've been removed from this group chat.
 chat-banned = You've been banned from this group.
+
+chat-report-title = Report Content
+chat-report-details = Would you like to report this content?
+chat-report = Report
+chat-report-cancel = Cancel
 
 ; Contact Details Screen
 contact-details-chat = Chat
@@ -203,7 +209,7 @@ index-excerpt-contact-accepted = Contact Accepted
 index-excerpt-contact-request = Contact Request
 index-excerpt-file = File
 index-excerpt-voice-call = Voice Call
-index-excerpt-self = 
+index-excerpt-self =
 index-excerpt-typing = Typing...
 
 ; Intro Screen

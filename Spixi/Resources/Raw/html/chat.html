@@ -152,7 +152,41 @@
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div id="reportModal" class="spixi-modal-soft" style="display:none;">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header-icon">
+                    <i class="fa-solid fa-flag"></i>
+                </div>
 
+                <div class="spixi-modal-header">
+                    *SL{chat-report-title}
+                </div>
+
+                <div class="spixi-modal-details">
+                    *SL{chat-report-details}
+                </div>
+
+
+                <div class="spixi-modal-footer">
+                    <div class="row no-gutters" style="margin:16px;">
+                        <div class="col">
+                            <div id="report_cancel" class="spixi-flat-button outline modal-left" onclick="hideReportModal();">
+                                *SL{chat-report-cancel}
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div id="report_accept" class="spixi-flat-button modal-right" onclick="reportMessage();">
+                                *SL{chat-report}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <div id="UserTyping"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
 
         <div id="chatholder" class="chatholder"></div>
@@ -299,7 +333,8 @@
             "sendContactRequest": "*SL{chat-context-send-contact-request}",
             "kickUser": "*SL{chat-context-kick-user}",
             "banUser": "*SL{chat-context-ban-user}",
-            "deleteMessage": "*SL{chat-context-delete-message}"
+            "deleteMessage": "*SL{chat-context-delete-message}",
+            "reportMessage": "*SL{chat-context-report-message}"
         };
         var SL_Modals = {
             "cancel": "*SL{global-dialog-cancel}",

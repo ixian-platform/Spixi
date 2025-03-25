@@ -1917,6 +1917,29 @@ namespace SPIXI
             sendMessage(friend, message);
         }
 
+        public static void sendMsgReport(Friend friend, byte[] msg_id, int channel = 0)
+        {
+            // Prepare the message and send to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.msgReport, msg_id, channel);
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.data;
+            message.recipient = friend.walletAddress;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.data = spixi_message.getBytes();
+
+            if (friend.bot)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.none;
+                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+                sendMessage(friend, message);
+            }
+            else
+            {
+                Logging.warn("Message reported for non-bot user");
+            }
+        }
+
         public static void sendReaction(Friend friend, byte[] msg_id, string reaction, int channel = 0)
         {
             // Prepare the message and send to the S2 nodes

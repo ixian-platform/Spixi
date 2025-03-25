@@ -7,6 +7,8 @@ var attachMode = false;
 
 var requestReceivedModal = document.getElementById("requestReceivedModal");
 var requestSentModal = document.getElementById("requestSentModal");
+var reportModal = document.getElementById("reportModal");
+var reportMsgId = "";
 
 var userNick = "";
 var userAddress = "";
@@ -1209,7 +1211,9 @@ function displayContextMenu(e)
         if(isBot)
         {
             menuHtml += "<div onclick=\"contextAction('userInfo', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-info-circle\"></i></span> " + SL_ContextMenu["userInfo"] + "</div>";
-            menuHtml += "<div onclick=\"contextAction('sendContactRequest', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-plus\"></i></span> " + SL_ContextMenu["sendContactRequest"] + "</div>";
+            menuHtml += "<div onclick=\"contextAction('sendContactRequest', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-plus\"></i></span> " + SL_ContextMenu["sendContactRequest"] + "</div>";
+            menuHtml += "<div onclick=\"contextAction('report', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-flag\"></i></span> " + SL_ContextMenu["reportMessage"] + "</div>";
+
         }
     }
 
@@ -1341,7 +1345,9 @@ function contextAction(action, msgId)
         var address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
         var avatar = msgEl.getElementsByClassName("avatar")[0].outerHTML;
         showUserDetails(avatar + " " + nick, address);
-    }else
+    } else if (action == "report") {
+        showReportModal(msgId);
+    } else
     {
         location.href = "ixian:contextAction:" + action + ":" + msgId;
 	}
@@ -1630,6 +1636,24 @@ function showRequestSentModal(show) {
     }
 }
 
+function showReportModal(msgId) {
+    hideContextMenus();
+    reportModal.style.display = "block";
+    reportMsgId = msgId;
+    document.getElementById("chatbar").style.display = "none";
+    document.getElementById("chat_input").disabled = true;
+}
+
+function hideReportModal() {
+    reportModal.style.display = "none";
+    document.getElementById("chatbar").style.display = "block";
+    document.getElementById("chat_input").disabled = false;
+}
+
+function reportMessage() {
+    location.href = "ixian:contextAction:report:" + reportMsgId;
+    hideReportModal();
+}
 
 document.getElementById("request_bar_ignore").onclick = function () {
     location.href = "ixian:undorequest";

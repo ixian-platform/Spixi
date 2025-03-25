@@ -91,7 +91,7 @@ namespace SPIXI.Lang
 
                 last_key = line.Substring(0, sep_index).Trim();
                 string value = line.Substring(sep_index + 1).Trim();
-                if(last_key == "" || value == "")
+                if(last_key == "")
                 {
                     success = false;
                     break;

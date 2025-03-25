@@ -841,6 +841,14 @@ namespace SPIXI
                     onBanUser(friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
                     break;
 
+                case "report":
+                    if (friend.bot)
+                    {
+                        StreamProcessor.sendMsgReport(friend, msg_id, selectedChannel);
+                        friend.deleteMessage(msg_id, selectedChannel);
+                    }
+                    break;
+
                 case "deleteMessage":
                     StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);
                     if (!friend.bot)
