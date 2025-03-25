@@ -1,4 +1,4 @@
-﻿language-code = pt-br
+language-code = pt-br
 language = Português (Brasil)
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = Enviar gorjeta
 chat-context-like-message = Curtir mensagem
 chat-context-user-info = Informações do usuário
 chat-context-send-contact-request = Adicionar contato
+chat-context-report-message = Denunciar mensagem
 chat-context-kick-user = Remover
 chat-context-ban-user = Banir
 chat-context-delete-message = Excluir mensagem
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = O grupo ainda não está pronto. Tente novamente em al
 
 chat-kicked = Você foi removido deste grupo.
 chat-banned = Você foi banido deste grupo.
+
+chat-report-title = Denunciar conteúdo
+chat-report-details = Deseja denunciar este conteúdo?
+chat-report = Denunciar
+chat-report-cancel = Cancelar
 
 ; Contact Details Screen
 contact-details-chat = Conversa

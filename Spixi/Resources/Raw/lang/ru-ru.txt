@@ -1,4 +1,4 @@
-﻿language-code = ru-ru
+language-code = ru-ru
 language = Русский
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = Подарить пользователю
 chat-context-like-message = Оценить сообщение
 chat-context-user-info = О пользователе
 chat-context-send-contact-request = Добавить контакт
+chat-context-report-message = Пожаловаться на сообщение
 chat-context-kick-user = Выгнать
 chat-context-ban-user = Забанить
 chat-context-delete-message = Удалить сообщение
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Группа всё ещё не готова, повт
 
 chat-kicked = Вас выгнали из этого группового чата. 
 chat-banned = Вас забанили в этом групповом чате. 
+
+chat-report-title = Жалоба на контент
+chat-report-details = Вы хотите пожаловаться на этот контент?
+chat-report = Пожаловаться
+chat-report-cancel = Отмена
 
 ; Contact Details Screen
 contact-details-chat = Чат

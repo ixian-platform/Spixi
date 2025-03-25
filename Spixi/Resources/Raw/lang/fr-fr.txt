@@ -1,4 +1,4 @@
-﻿language-code = fr-fr
+language-code = fr-fr
 language = Français
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = Envoyer un pourboire
 chat-context-like-message = J'aime ce message
 chat-context-user-info = Informations sur l'utilisateur
 chat-context-send-contact-request = Ajouter aux contacts
+chat-context-report-message = Signaler le message
 chat-context-kick-user = Expulser
 chat-context-ban-user = Bloquer
 chat-context-delete-message = Supprimer le message
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Le groupe n'est pas encore prêt. Réessayez dans quel
 
 chat-kicked = Vous avez été expulsé de ce groupe.
 chat-banned = Vous avez été bloqué dans ce groupe.
+
+chat-report-title = Signaler le message
+chat-report-details = Souhaitez-vous signaler ce contenu ?
+chat-report = Signaler
+chat-report-cancel = Annuler
 
 ; Contact Details Screen
 contact-details-chat = Conversation

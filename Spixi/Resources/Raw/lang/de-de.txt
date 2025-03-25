@@ -72,6 +72,7 @@ chat-context-tip-user = Spende an Benutzer
 chat-context-like-message = Nachricht liken
 chat-context-user-info = Benutzer Info
 chat-context-send-contact-request = Kontakt hinzufügen
+chat-context-report-message = Nachricht melden
 chat-context-kick-user = Kicken
 chat-context-ban-user = Bannen
 chat-context-delete-message = Nachricht löschen
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Die Gruppe ist noch nicht bereit, bitte versuche es in
 
 chat-kicked = Du wurdest aus diesem Gruppenchat entfernt.
 chat-banned = Du wurdest aus dieser Gruppe gebannt.
+
+chat-report-title = Inhalt melden
+chat-report-details = Möchten Sie diesen Inhalt melden?
+chat-report = Melden
+chat-report-cancel = Abbrechen
 
 ; Contact Details Screen
 contact-details-chat = Chat

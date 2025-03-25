@@ -1,4 +1,4 @@
-﻿language-code = sl-si
+language-code = sl-si
 language = Slovenščina
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = Pošlji napitnino
 chat-context-like-message = Všečkaj sporočilo
 chat-context-user-info = Podatki o uporabniku
 chat-context-send-contact-request = Dodaj stik
+chat-context-report-message = Prijavi sporočilo
 chat-context-kick-user = Odstrani
 chat-context-ban-user = Blokiraj
 chat-context-delete-message = Izbriši sporočilo
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Skupina še ni pripravljena, prosim poskusite znova č
 
 chat-kicked = Odstranjeni ste bili iz te skupine.
 chat-banned = Blokirani ste bili v tej skupini.
+
+chat-report-title = Prijavi vsebino
+chat-report-details = Želite prijaviti to vsebino?
+chat-report = Prijavi
+chat-report-cancel = Prekliči
 
 ; Contact Details Screen
 contact-details-chat = Klepet

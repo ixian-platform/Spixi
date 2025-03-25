@@ -72,6 +72,7 @@ chat-context-tip-user = Tip pengguna
 chat-context-like-message = Sukai pesan
 chat-context-user-info = Info pengguna
 chat-context-send-contact-request = Kirim permintaan kontak
+chat-context-report-message = Laporkan Pesan
 chat-context-kick-user = Tendang pengguna
 chat-context-ban-user = Blokir pengguna
 chat-context-delete-message = Hapus pesan
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Bot belum siap, silakan coba lagi dalam beberapa menit
 
 chat-kicked = Anda telah diblokir dari obrolan grup ini.
 chat-banned = Anda telah diblokir dari obrolan grup ini.
+
+chat-report-title = Laporkan Konten
+chat-report-details = Apakah Anda ingin melaporkan konten ini?
+chat-report = Laporkan
+chat-report-cancel = Batal
 
 ; Contact Details Screen
 contact-details-chat = obrolan

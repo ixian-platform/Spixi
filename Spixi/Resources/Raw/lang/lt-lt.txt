@@ -1,4 +1,4 @@
-﻿language-code = lt-lt
+language-code = lt-lt
 language = Lietuvių
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = Apdovanok vartotoją
 chat-context-like-message = Pamėgti žinutę
 chat-context-user-info = Vartotojo informacija
 chat-context-send-contact-request = Pridėti kontaktą
+chat-context-report-message = Pranešti apie žinutę
 chat-context-kick-user = Išmesti
 chat-context-ban-user = Užblokuoti
 chat-context-delete-message = Ištrinti žinutę
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Grupė dar neparuošta, bandykite dar kartą po kelių
 
 chat-kicked = Jūs buvote pašalintas iš šios grupės pokalbio.
 chat-banned = Jūs buvote užblokuotas šioje grupėje.
+
+chat-report-title = Pranešti apie turinį
+chat-report-details = Ar norite pranešti apie šį turinį?
+chat-report = Pranešti
+chat-report-cancel = Atšaukti
 
 ; Contact Details Screen
 contact-details-chat = Pokalbis

@@ -1,4 +1,4 @@
-﻿language-code = ja-jp
+language-code = ja-jp
 language = 日本語
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = チップを送る
 chat-context-like-message = メッセージを「いいね」
 chat-context-user-info = ユーザー情報
 chat-context-send-contact-request = 連絡先を追加
+chat-context-report-message = メッセージを報告
 chat-context-kick-user = 退会させる
 chat-context-ban-user = ブロック
 chat-context-delete-message = メッセージを削除
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = グループがまだ準備できていません。数
 
 chat-kicked = あなたはこのグループから削除されました。
 chat-banned = あなたはこのグループでブロックされました。
+
+chat-report-title = コンテンツを報告
+chat-report-details = このコンテンツを報告しますか？
+chat-report = 報告する
+chat-report-cancel = キャンセル
 
 ; Contact Details Screen
 contact-details-chat = チャット

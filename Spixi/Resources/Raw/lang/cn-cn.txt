@@ -1,4 +1,4 @@
-﻿language-code = cn-cn
+language-code = cn-cn
 language = 中文
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = 发送打赏
 chat-context-like-message = 点赞消息
 chat-context-user-info = 用户信息
 chat-context-send-contact-request = 添加联系人
+chat-context-report-message = 举报消息
 chat-context-kick-user = 移除
 chat-context-ban-user = 封禁
 chat-context-delete-message = 删除消息
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = 该群组尚未准备好，请稍后再试。
 
 chat-kicked = 您已被移除该群组。
 chat-banned = 您已被封禁在该群组。
+
+chat-report-title = 举报内容
+chat-report-details = 您想举报此内容吗？
+chat-report = 举报
+chat-report-cancel = 取消
 
 ; Contact Details Screen
 contact-details-chat = 聊天

@@ -72,6 +72,7 @@ chat-context-tip-user = Pošalji IXI
 chat-context-like-message = Sviđa mi se poruka
 chat-context-user-info = Podaci korisnika
 chat-context-send-contact-request = Dodaj kontakt
+chat-context-report-message = Prijavi poruku
 chat-context-kick-user = Ukloni
 chat-context-ban-user = Blokiraj
 chat-context-delete-message = Izbriši poruku
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = Grupa još nije spremna, molimo pokušajte ponovo za n
 
 chat-kicked = Uklonjeni ste iz ove grupe.
 chat-banned = Blokirani ste u ovoj grupi.
+
+chat-report-title = Prijavi sadržaj
+chat-report-details = Da li želite da prijavite ovaj sadržaj?
+chat-report = Prijavi
+chat-report-cancel = Otkaži
 
 ; Contact Details Screen
 contact-details-chat = Razgovor

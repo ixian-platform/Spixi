@@ -1,4 +1,4 @@
-﻿language-code = es-co
+language-code = es-co
 language = Español
 
 ; Address Screen
@@ -72,6 +72,7 @@ chat-context-tip-user = Enviar propina
 chat-context-like-message = Me gusta el mensaje
 chat-context-user-info = Información del usuario
 chat-context-send-contact-request = Agregar contacto
+chat-context-report-message = Reportar mensaje
 chat-context-kick-user = Expulsar
 chat-context-ban-user = Bloquear
 chat-context-delete-message = Eliminar mensaje
@@ -116,6 +117,11 @@ chat-bot-not-ready-body = El grupo aún no está listo. Inténtalo de nuevo en u
 
 chat-kicked = Has sido expulsado de este grupo.
 chat-banned = Has sido bloqueado en este grupo.
+
+chat-report-title = Reportar contenido
+chat-report-details = ¿Deseas reportar este contenido?
+chat-report = Reportar
+chat-report-cancel = Cancelar
 
 ; Contact Details Screen
 contact-details-chat = Chat
