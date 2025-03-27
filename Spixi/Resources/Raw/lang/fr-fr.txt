@@ -421,7 +421,7 @@ wallet-send-recipients = Destinataires
 wallet-send-norecipients = Aucun destinataire sélectionné
 wallet-send-next = Suivant
 wallet-send-max = Envoyer le montant maximum
-wallet-send-select = Sélectionner un contact
+wallet-send-select = Sélectionner
 wallet-send-or = Ou
 
 ; Wallet Send 2 Screen

@@ -2288,7 +2288,7 @@ img.emoji {
     }
 
     .spixi-bubble.read .statusIndicator {
-        color: var(--colors-icon-01);
+        color: var(--colors-icon-success);
         display: inline-block;
     }
 
