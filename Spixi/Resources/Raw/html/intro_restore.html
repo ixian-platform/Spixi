@@ -42,7 +42,7 @@
                 </div>
             </section>
             <section class="bot-area wf-section">
-                <div id="restorebtn" class="restore-button button-small w-inline-block" style="display:flex;">
+                <div id="restorebtn" class="restore-button button-small w-inline-block" style="display:none;">
                     <div class="button-text">*SL{intro-restore-action}</div><img src="img/arrowright.svg" loading="lazy" alt="">
                 </div>
             </section>
@@ -79,11 +79,10 @@
 
             function checkPassword() {
                 var password = $("#password").val();
-                selectbtn.style.display = "none";
+                selectbtn.style.display = "flex";
 
                 if (password.length < 1)
                     return false;
-                selectbtn.style.display = "flex";
 
                 return true;
             }

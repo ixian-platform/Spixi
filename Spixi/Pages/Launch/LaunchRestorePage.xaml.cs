@@ -49,7 +49,11 @@ namespace SPIXI
                 }
 
                 string password = split[1]; // Todo: secure this
-                onRestore(password);
+                if(!onRestore(password))
+                {
+                    e.Cancel = true;
+                    Utils.sendUiCommand(this, "removeLoadingOverlay");
+                }
             }
             else
             {
@@ -109,7 +113,7 @@ namespace SPIXI
         }
 
         // Attempt to restore the wallet
-        private void onRestore(string pass)
+        private bool onRestore(string pass)
         {
             Preferences.Default.Set("walletpass", pass);
 
@@ -119,13 +123,14 @@ namespace SPIXI
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-selecterror-text"), SpixiLocalization._SL("global-dialog-ok"));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                return;
+                return false;
             }
             if (restoreAccountFile(source_path, pass))
             {
-                return;
+                return true;
             }
             restoreWalletFile(source_path, pass);
+            return true;
         }
 
         private bool restoreAccountFile(string source_path, string pass)
