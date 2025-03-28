@@ -2108,19 +2108,20 @@ img.emoji {
     background: transparent;
 }
 
-.spixi-bubble{
+.spixi-bubble {
     font-size: 10pt;
-    position:relative;
-    background:var(--colors-surface-02);
-    border-radius:16px;
+    position: relative;
+    background: var(--colors-surface-02);
+    border-radius: 16px;
     color: var(--colors-text-01);
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.20);
     margin-left: 56px;
+    margin-right: 12px;
     margin-bottom: 12px;
     min-width: 80px;
     word-wrap: break-word;
     word-break: break-word;
-    display: inline-block;   
+    display: inline-block;
 }
 
 .spixi-bubble > div
@@ -2880,8 +2881,7 @@ img.emoji {
 
 .chat-context-menu {
     position: fixed;
-    background: var(--colors-surface-02);
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    background: var(--colors-surface-03);
     border-radius: 12px;
     z-index: 10000;
     overflow: auto;

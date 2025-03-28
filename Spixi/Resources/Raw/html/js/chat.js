@@ -1255,7 +1255,7 @@ function displayContextMenu(e)
     {
         contextMenuEl.style.top = "auto";
         contextMenuEl.style.bottom = "0px";
-        contextMenuEl.style.maxHeight = "300px";
+        contextMenuEl.style.maxHeight = "350px";
 	}
 
     var menuWidth = contextMenuEl.offsetWidth;
