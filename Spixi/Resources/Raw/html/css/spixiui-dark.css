@@ -33,78 +33,78 @@
  */
 
 :root {
-  /* Text Colors */
-  --colors-text-01: #FAFAFA;
-  --colors-text-02: #A4A6A8;
-  --colors-text-action: #3898FA;
-  --colors-text-action-hover: #6AB2FB;
-  --colors-text-action-focus: #067FF9;
-  --colors-text-link: #4AE852;
-  --colors-text-link-hover: #17B51F;
-  --colors-text-disabled: #575757;
-  --colors-text-accent: #ED5FE0;
-  --colors-text-success: #4AE852;
-  --colors-text-warning: #FEDD80;
-  --colors-text-error: #F76A53;
-  --colors-text-on-action: #0E0F0F;
-  --colors-text-on-disabled: #A4A6A8;
-  --colors-text-inverse: #1E1F1F;
-  --colors-text-select: #0BFFF3;
+    /* Text Colors */
+    --colors-text-01: #FAFAFA;
+    --colors-text-02: #A4A6A8;
+    --colors-text-action: #3898FA;
+    --colors-text-action-hover: #6AB2FB;
+    --colors-text-action-focus: #067FF9;
+    --colors-text-link: #4AE852;
+    --colors-text-link-hover: #17B51F;
+    --colors-text-disabled: #575757;
+    --colors-text-accent: #ED5FE0;
+    --colors-text-success: #4AE852;
+    --colors-text-warning: #FEDD80;
+    --colors-text-error: #F76A53;
+    --colors-text-on-action: #0E0F0F;
+    --colors-text-on-disabled: #A4A6A8;
+    --colors-text-inverse: #1E1F1F;
+    --colors-text-select: #0BFFF3;
 
-  /* Surface Colors */
-  --colors-surface-01: #0E0F0F;
-  --colors-surface-02: #1E1F1F;
-  --colors-surface-03: #303030; 
-  --colors-surface-04: #434343;
-  --colors-surface-05: #022B55;
-  --colors-surface-bubble: #133460;
-  --colors-surface-action: #6AB2FB;
-  --colors-surface-action-hover: #3898FA;
-  --colors-surface-action-focused: #067FF9;
-  --colors-surface-disabled: #575757;
-  --colors-surface-accent: #731E6C;
-  --colors-surface-success: #09440C;
-  --colors-surface-warning: #705200;
-  --colors-surface-error: #84120F;
-  --colors-surface-brand-primary: #0B1219;
-  --colors-surface-brand-primary2: #003D79;
-  --colors-surface-brand-dark: #1E1F1F;
-  --colors-surface-brand-light: #223766;
-  --colors-surface-brand-secondary: #011E3C;
-  --colors-surface-inverse: #EAEBEB;
-  --colors-surface-accent-inverse: #ED5FE0;
-  --colors-surface-success-inverse: #9CF2A0;
-  --colors-surface-warning-inverse: #FEC11B;
-  --colors-surface-error-inverse: #F9927D;
+    /* Surface Colors */
+    --colors-surface-01: #0E0F0F;
+    --colors-surface-02: #1E1F1F;
+    --colors-surface-03: #303030;
+    --colors-surface-04: #434343;
+    --colors-surface-05: #022B55;
+    --colors-surface-bubble: #133460;
+    --colors-surface-action: #6AB2FB;
+    --colors-surface-action-hover: #3898FA;
+    --colors-surface-action-focused: #067FF9;
+    --colors-surface-disabled: #575757;
+    --colors-surface-accent: #731E6C;
+    --colors-surface-success: #09440C;
+    --colors-surface-warning: #705200;
+    --colors-surface-error: #84120F;
+    --colors-surface-brand-primary: #0B1219;
+    --colors-surface-brand-primary2: #003D79;
+    --colors-surface-brand-dark: #1E1F1F;
+    --colors-surface-brand-light: #223766;
+    --colors-surface-brand-secondary: #011E3C;
+    --colors-surface-inverse: #EAEBEB;
+    --colors-surface-accent-inverse: #ED5FE0;
+    --colors-surface-success-inverse: #9CF2A0;
+    --colors-surface-warning-inverse: #FEC11B;
+    --colors-surface-error-inverse: #F9927D;
 
-  /* Icon Colors */
-  --colors-icon-01: #EAEBEB;
-  --colors-icon-action: #6AB2FB;
-  --colors-icon-accent: #F18CE4;
-  --colors-icon-accent-dark: #ED5FE0;
-  --colors-icon-disabled: #575757;
-  --colors-icon-success: #9CF2A0;
-  --colors-icon-warning: #FEDD80;
-  --colors-icon-error: #F76A53;
-  --colors-icon-inverse: #434343;
-  --colors-icon-action-hover: #3898FA;
-  --colors-icon-action-focus: #067FF9;
-  --colors-icon-on-action: #0E0F0F;
-  --colors-icon-on-disabled: #A4A6A8;
+    /* Icon Colors */
+    --colors-icon-01: #EAEBEB;
+    --colors-icon-action: #6AB2FB;
+    --colors-icon-accent: #F18CE4;
+    --colors-icon-accent-dark: #ED5FE0;
+    --colors-icon-disabled: #575757;
+    --colors-icon-success: #9CF2A0;
+    --colors-icon-warning: #FEDD80;
+    --colors-icon-error: #F76A53;
+    --colors-icon-inverse: #434343;
+    --colors-icon-action-hover: #3898FA;
+    --colors-icon-action-focus: #067FF9;
+    --colors-icon-on-action: #0E0F0F;
+    --colors-icon-on-disabled: #A4A6A8;
 
-  /* Outline Colors */
-  --colors-outline-01: #1E1F1F;
-  --colors-outline-02: #303030;
-  --colors-outline-03: #434343;
-  --colors-outline-action: #6AB2FB;
-  --colors-outline-accent: #ED5FE0;
-  --colors-outline-disabled: #575757;
-  --colors-outline-success: #4AE852;
-  --colors-outline-warning: #FEDD80;
-  --colors-outline-error: #F76A53;
-  --colors-outline-inverse: #A4A6A8;
-  --colors-outline-action-hover: #3898FA;
-  --colors-outline-action-focus: #067FF9;
+    /* Outline Colors */
+    --colors-outline-01: #1E1F1F;
+    --colors-outline-02: #303030;
+    --colors-outline-03: #434343;
+    --colors-outline-action: #6AB2FB;
+    --colors-outline-accent: #ED5FE0;
+    --colors-outline-disabled: #575757;
+    --colors-outline-success: #4AE852;
+    --colors-outline-warning: #FEDD80;
+    --colors-outline-error: #F76A53;
+    --colors-outline-inverse: #A4A6A8;
+    --colors-outline-action-hover: #3898FA;
+    --colors-outline-action-focus: #067FF9;
 
     /* Typography Variables - Mobile */
     --scale-0: 0rem;
@@ -124,7 +124,6 @@
     --scale-20000: 50rem;
     --scale-2500: 6.25rem;
     --scale-3000: 7.5rem;
-
     --font-size-display-display-lg: 2.25rem;
     --font-size-display-display-md: 2.25rem;
     --font-size-global-label-lg: 1.125rem;
