@@ -23,6 +23,7 @@
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
 
 </head>
 <body onload="ixian:onload();">
@@ -34,7 +35,7 @@
                 <div id="backbtn" onclick="location.href = 'ixian:back';">
                     <i class="fas fa-arrow-left"></i>
                 </div>
-                <div id="AppName">
+                <div>
                     *SL{app-details-title}
                 </div>
                 <div>
@@ -45,76 +46,84 @@
         <!-- End Toolbar -->
 
         <section class="spixi-app-details">
+            <div id="toastbar" class="spixi-toastbar">*SL{address-copied}</div>
             <div class="spixi-app-details-header">
                 <img id="AppIcon" class="spixi-app-details-image" />
                 <div class="spixi-app-details-title">
-                    <span class="heading-xs s-text-01">App Name</span>
-                    <span class="label-sm s-text-02">creator</span>
+                    <span class="heading-xs s-text-01" id="AppName">App Name</span>
+                    <span class="label-sm s-text-02" id="AppPublisher">creator</span>
+<!--                    TODO: add display none if not verified-->
+                    <span class="label-xs s-text-success"><i class="fas fa-lock"></i> Verified</span>
                 </div>
             </div>
             <div class="spixi-app-details-properties">
                 <span class="label-sm s-text-02">Description</span>
-                <span class="body-sm s-text-01">Introducing...</span>
+                <span class="body-sm s-text-01" id="AppDescription">description goes here...</span>
             </div>
             <div class="spixi-app-details-properties ">
                 <div class="spixi-app-details-properties-single-div">
                     <span class="label-sm s-text-02">Capabilities</span>
-                    <div>Single User</div>
+                    <div class="app-capabilities-list" id="capabilitiesList"></div>
                 </div>
                 <div class="spixi-app-details-properties-single-div">
                     <span class="label-sm s-text-02">Details</span>
                     <div class="spixi-app-details-info">
                         <span class="body-sm s-text-02">ID</span>
-                        <span class="label-sm s-text-01">8328842</span>
+                        <span class="label-sm s-text-01" id="AppID">8328842</span>
                     </div>
                     <div class="spixi-app-details-info">
                         <span class="body-sm s-text-02">Version</span>
-                        <span class="label-sm s-text-01">v1.0.2</span>
+                        <span class="label-sm s-text-01" id="AppVersion">v1.0.2</span>
                     </div>
                     <div class="spixi-app-details-info">
                         <span class="body-sm s-text-02">Size</span>
-                        <span class="label-sm s-text-01">1.59MB</span>
+                        <span class="label-sm s-text-01" id="AppSize">1.59MB</span>
                     </div>
                 </div>
                 <div class="spixi-app-details-properties-single-div">
                     <span class="label-sm s-text-02">Install URL</span>
-                    <span class="body-sm s-text-01">htpps://</span>
+                    <div class="urlContainer">
+                        <span class="body-sm s-text-01" id="installUrlValue">htpps://app.com</span>
+                        <i class="fas fa-copy" id="copyUrlIcon"></i>
+                    </div>
                 </div>
             </div>
             <div class="add-mini-app-buttons spixi-app-details-buttons">
                 <div class="spixi-flat-button label-sm">
-                    <i class="fas fa-download"></i>&nbsp; Download and Install
+                    <i class="fas fa-arrows-down-to-line"></i>&nbsp; Download and Install
                 </div>
-                <div class="spixi-outline-button label-sm">
-                    <i class="fas fa-arrow-left"></i>&nbsp; Cancel
-                </div>
+                <span class="label-xs s-text-02" style="max-width: 244px;text-align: center">The app will be securely installed in Spixi’s sandbox environment.</span>
             </div>
         </section>
-
-<!--        <div class="spixi-container spixi-toolbar">-->
-<!--            <div class="text" id="AppPublisher"></div>-->
-<!--            <div class="text" id="AppVersion"></div>-->
-<!--            <div class="text" id="AppCapabilities"></div>-->
-<!--            <div class="spixi-holder-20" style="clear:both;"></div>-->
-<!--            <div class="spixi-button" onclick="location.href='ixian:uninstall';">*SL{app-details-uninstall}</div>-->
-<!--            <div id="StartAppBtn" class="spixi-button" style="display: none;" onclick="location.href='ixian:startApp';">*SL{app-details-start}</div>-->
-<!--        </div>-->
-
     </div>  <!-- Wrap -->
 
     <script type="text/javascript">
-        function init(name, icon, publisher, version, capabilities, singleUserMode) {
+        function init(name, icon, publisher, version, capabilities, appId) {
             icon = icon.replace(/&#92;/g, '\\');
 
-            document.getElementById("AppName").innerHTML = name;
+            document.getElementById("AppName").textContent = name;
             document.getElementById("AppIcon").src = icon;
-            document.getElementById("AppPublisher").innerHTML = "*SL{app-details-publisher} " + publisher;
-            document.getElementById("AppVersion").innerHTML = "*SL{app-details-version} " + version;
-            document.getElementById("AppCapabilities").innerHTML = "*SL{app-details-capabilities} " + capabilities;
-            if (singleUserMode == "True") {
-                document.getElementById("StartAppBtn").style.display = "block";
-            }
+            document.getElementById("AppPublisher").textContent = publisher;
+            document.getElementById("AppVersion").textContent = version;
+            document.getElementById("AppID").textContent = appId;
+            document.getElementById("capabilitiesList").innerHTML = capabilities?.map( cap => `<span class="label-xs s-text-inverse single-capability">${cap}</span>`).join('');
         }
+
+        const clipboard = new ClipboardJS('#copyUrlIcon', {
+            text: function() {
+                return document.getElementById("installUrlValue")?.textContent;
+            }
+        });
+
+        clipboard.on('success', function(e) {
+            e.clearSelection();
+            const toast = document.getElementById("toastbar");
+            toast.className = "spixi-toastbar show";
+            setTimeout(() => {
+                toast.className = toast.className.replace("show", "");
+            }, 3000);
+        });
+
     </script>
 
 </body>

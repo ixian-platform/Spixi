@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using System.Linq;
 
 namespace SPIXI.MiniApps
 {
@@ -120,23 +121,14 @@ namespace SPIXI.MiniApps
             return false;
         }
 
-        public string getCapabilitiesAsString()
+        public string[] getCapabilitiesAsArray()
         {
-            string str = "";
-            if (capabilities == null)
+           if (capabilities == null || !capabilities.Any())
             {
-                return "";
+                return new string[0];
             }
 
-            foreach (var cap in capabilities)
-            {
-                if (str != "")
-                {
-                    str += ", ";
-                }
-                str += cap.Key.ToString();
-            }
-            return str;
+           return capabilities.Select(cap => cap.Key.ToString()).ToArray();
         }
     }
 }

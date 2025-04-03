@@ -45,11 +45,14 @@
         <!-- End Toolbar -->
 
         <section class="add-mini-app-container">
-            <span class="body-sm s-text-01">To add a new Spixi Mini App, paste or type the URL of the app or scan their QR Code.</span>
-            <textarea type="text" class="spixi-textfield add-mini-app-url-input" id="addressInput" oninput="checkAddress()" placeholder="Please enter the URL where the Mini App is located..."></textarea>
+            <span class="body-sm s-text-01">Want to try a new Mini App? Just enter its URL or scan a QR code to install it.</span>
+            <div>
+                <textarea type="text" class="spixi-textfield add-mini-app-url-input" id="addressInput" placeholder="Please enter the URL where the Mini App is located..."></textarea>
+                <p class="label-xs s-text-01" id="app-url-input-err-label" style="display: none">Please enter a valid URL before continuing.</p>
+            </div>
             <div class="add-mini-app-buttons">
-                <div id="sendrequest" class="spixi-flat-button label-sm disabled">
-                    <i class="fas fa-arrow-right"></i>&nbsp; Add App with URL
+                <div id="sendrequest" class="spixi-flat-button label-sm">
+                    <i class="fas fa-globe"></i>&nbsp;Get App From URL
                 </div>
                 <span class="body-sm">or</span>
                 <div class="spixi-outline-button label-sm">
@@ -57,9 +60,13 @@
                 </div>
             </div>
         </section>
-        <div class="important-notice">
-            <span class="important-notice-title label-sm"><i class="fa fa-exclamation-circle"></i>&nbsp;Important Notice:</span>
-            <span class="body-xs">Please make sure you trust the source of the Mini App before adding it to your Spixi Wallet.</span>
+        <div class="important-notice-container">
+                <i class="fa fa-lock"></i>
+            <div class="important-notice-text">
+                <span class="label-sm">Mini Apps are lightweight JavaScript apps that run securely inside Spixi.</span>
+                <span class="body-xs">Install only from sources you trust. You’re always in control.</span>
+                <span class="label-xs s-text-link" onclick="redirectToSpixi()">Learn more <i class="fa fa-arrow-right"></i></span>
+            </div>
         </div>
     </div>
 
@@ -68,20 +75,24 @@
         var sendrequest = document.getElementById("sendrequest");
 
         sendrequest.onclick = function () {
-            var url = document.getElementById("addressInput").value;
-            location.href = "ixian:install:" + url;
-        }
+            const addressInput = document.getElementById("addressInput");
+            const url = addressInput?.value;
+            const errLabel = document.getElementById("app-url-input-err-label");
 
-        function checkAddress() {
-            sendrequest.className = "spixi-flat-button label-sm disabled";
-
-            var address = $("#addressInput").val();
-            if (address.length > 5) {
-                sendrequest.className = "spixi-flat-button label-sm";
+            if (url?.length > 0) {
+                addressInput.className = "spixi-textfield add-mini-app-url-input"
+                errLabel.style.display = 'none';
+                location.href = "ixian:install:" + url;
+            } else{
+                addressInput.className = "spixi-textfield add-mini-app-url-input add-mini-app-url-input-error"
+                errLabel.style.display = 'block';
             }
         }
 
-
+        // TODO: check how this behaves in android/ios + change url with correct one
+        const redirectToSpixi = () => {
+            window.open("https://www.spixi.io/");
+        }
     </script>
 
 </body>

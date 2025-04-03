@@ -3770,6 +3770,22 @@ img.emoji {
     color: var(--colors-text-02);
 }
 
+.s-text-link {
+    color: var(--colors-text-link);
+}
+
+.s-text-success {
+    color: var(--colors-text-success);
+}
+
+.s-text-inverse {
+    color: var(--colors-text-inverse);
+}
+
+.s-text-action {
+    color: var(--colors-text-action);
+}
+
 /* TYPOGRAPHY CLASSES */
 /* Display classes */
 
@@ -3974,6 +3990,21 @@ img.emoji {
     gap: 8px;
 }
 
+.launchBtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    background: var(--colors-surface-05);
+    max-height: 32px;
+    border-radius: 8px;
+
+    &:hover{
+        opacity: 0.8;
+        cursor: pointer;
+    }
+}
+
 .mini-apps-single-item-info span {
     font-size: 14px;
 }
@@ -4005,17 +4036,20 @@ img.emoji {
     padding: 12px;
 }
 
+.add-mini-app-url-input-error {
+    border: 1px solid var(--colors-outline-error);
+}
+
 .add-mini-app-url-input::placeholder{
     color: var(--colors-text-02);
 }
 
-.important-notice {
-    background: var(--colors-surface-error);
+.important-notice-container {
+    background: var(--colors-surface-05);
     padding: 14px 12px;
     border-radius: 16px;
-    color: var(--colors-text-error);
+    color: var(--colors-text-01);
     display: flex;
-    flex-direction: column;
     gap: 14px;
     margin: 24px;
     position: absolute;
@@ -4024,8 +4058,10 @@ img.emoji {
     right: 0;
 }
 
-.important-notice-title {
-    color: #B32318;
+.important-notice-text{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .spixi-app-details {
@@ -4071,6 +4107,40 @@ img.emoji {
     gap: 8px;
 }
 
+.urlContainer{
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.urlContainer > span{
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.urlContainer > i{
+    color: var(--colors-icon-action);
+    max-width: 14px;
+    max-height: 16px;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+.app-capabilities-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.single-capability{
+    background: var(--colors-surface-accent-inverse);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
 .spixi-app-details-info {
     display: flex;
     justify-content: space-between;
@@ -4078,5 +4148,25 @@ img.emoji {
 
 .spixi-app-details-buttons {
     margin-top: 24px;
+}
+
+.primary-guide-container{
+    background: var(--colors-surface-05);
+    padding: 12px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.add-new-app-floating-btn{
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    padding: 8px 16px;
+    background: var(--colors-surface-action);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 

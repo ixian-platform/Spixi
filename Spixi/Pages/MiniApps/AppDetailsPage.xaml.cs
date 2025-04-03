@@ -90,7 +90,7 @@ namespace SPIXI
                 icon = "";
             }
 
-            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsString(), app.hasCapability(MiniAppCapabilities.SingleUser).ToString());
+            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsArray(), app.hasCapability(MiniAppCapabilities.SingleUser).ToString(), appId);
 
             // Execute timer-related functionality immediately
             updateScreen();
