@@ -277,10 +277,6 @@ namespace SPIXI
             {
                 currentTab = current_url.Split(new string[] { "ixian:tab:" }, StringSplitOptions.None)[1];
             }
-            else if (current_url.Equals("ixian:apps", StringComparison.Ordinal))
-            {
-                Navigation.PushAsync(new AppsPage(), Config.defaultXamarinAnimations);
-            }
             else if (current_url.Equals("ixian:downloads", StringComparison.Ordinal))
             {
                 Navigation.PushModalAsync(new DownloadsPage());
@@ -560,7 +556,6 @@ namespace SPIXI
             }
 
             webView.FadeTo(1, 250);
-
             checkForRating();
         }
 
@@ -1019,6 +1014,7 @@ namespace SPIXI
         {
             base.updateScreen();
 
+            loadApps();
             loadChats();
             loadContacts();
             Node.shouldRefreshContacts = false;

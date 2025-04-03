@@ -121,14 +121,23 @@ namespace SPIXI.MiniApps
             return false;
         }
 
-        public string[] getCapabilitiesAsArray()
+        public string getCapabilitiesAsString()
         {
-           if (capabilities == null || !capabilities.Any())
+            string str = "";
+            if (capabilities == null)
             {
-                return new string[0];
+                return "";
             }
 
-           return capabilities.Select(cap => cap.Key.ToString()).ToArray();
+            foreach (var cap in capabilities)
+            {
+                if (str != "")
+                {
+                    str += ", ";
+                }
+                str += cap.Key.ToString();
+            }
+            return str;
         }
     }
 }

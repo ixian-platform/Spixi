@@ -101,6 +101,7 @@
         function init(name, icon, publisher, version, capabilities, appId) {
             icon = icon.replace(/&#92;/g, '\\');
 
+            console.log(capabilities);
             document.getElementById("AppName").textContent = name;
             document.getElementById("AppIcon").src = icon;
             document.getElementById("AppPublisher").textContent = publisher;
