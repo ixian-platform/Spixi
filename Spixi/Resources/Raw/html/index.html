@@ -225,6 +225,28 @@
     <div class="spixi-holder-64"></div>
 
 </div>  <!-- Wrap -->
+
+<!--NOTE: multi-user app modal...we need to think how to send appID in here to launch it from here...because here in index we map APPS, and CREATE new app-items and add them in DOM to list-->
+<!--so in that case we also need to create as many modals as there are apps haha, but this is very bad solution...-->
+<div class="new-modal-wrapper" id="multiUserAppModal" style="display: none;">
+    <div class="new-modal-container">
+        <img src="img/people-arrows-icon.png" alt="people-arrows-icon" width="32" height="32"/>
+        <div class="new-modal-texts">
+            <span class="label-lg">Multi-user App</span>
+            <span class="body-sm">This app supports more than one user. Would you like to invite one of your contacts?</span>
+        </div>
+        <div class="new-modal-buttons">
+            <div class="spixi-flat-button label-sm">
+                <i class="fas fa-user-plus"></i>Invite Contact
+            </div>
+            <div class="spixi-flat-button label-sm button outline"
+                 onclick="window.location.href=`ixian:startApp:${this.getAttribute('data-app-id')}`">
+                <i class="fas fa-person"></i>Launch Solo Mode
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Tabbar -->
 <div id="footer" class="fixed-bottom spixi-footer">
     <div class="" style="width:90%; margin: auto;">
@@ -511,15 +533,13 @@
     // MINI APPS FUNCTIONS
 
     function clearApps() {
-        console.log("clear apps run")
         const appsNode = document.getElementById("AppList");
         appsNode.innerHTML = "";
 
         appsNode.style.display = 'none';
     }
 
-    function addApp(id, name, icon, publisher) {
-        console.log("addApp run");
+    function addApp(id, name, icon, publisher, isMultiuser) {
         const mappedIcon = icon.replace(/&#92;/g, '\\');
 
         const singleApp = `<div class="mini-apps-list-single-item">
@@ -529,8 +549,7 @@
         <div class="mini-apps-single-item-info s-text-01">
             <span class="label-sm">${name}</span>
             <span class="body-xs">${publisher}</span>
-<!--            TODO: this wont work for now...move startapp function to home file and function should recieve appId-->
-            <div class="launchBtn" onclick="window.location.href='ixian:startApp:${id}'">
+            <div class="launchBtn" data-app-id="${id}" data-multi-user="${isMultiuser}">
                 <span class="label-xs s-text-action">Launch <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
@@ -538,6 +557,30 @@
 
         const appListElement = document.getElementById("AppList");
         appListElement.insertAdjacentHTML("beforeend", singleApp);
+    }
+
+    document.getElementById("AppList").addEventListener("click", function (event) {
+            if (event.target.closest(".launchBtn")) {
+                const launchBtn = event.target.closest(".launchBtn");
+                onLaunchHandler(launchBtn);
+            }
+        }
+    )
+
+    function onLaunchHandler(element) {
+        const appId = element.getAttribute('data-app-id');
+        const isMultiuser = element.getAttribute('data-multi-user') === "true";
+
+        //show multi-user modal if true
+        if (isMultiuser) {
+            const multiUserModal = document.getElementById("multiUserAppModal");
+            multiUserModal.style.display = "flex";
+            multiUserModal.setAttribute("data-app-id", appId);
+        }
+        //else just start the app in solo mode
+        else {
+            window.location.href = `ixian:startApp:${appId}`;
+        }
     }
 
 </script>

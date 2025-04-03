@@ -4071,6 +4071,17 @@ img.emoji {
     gap: 16px;
 }
 
+.blurredContent::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(4, 4, 4, 0.6); /* Grayish overlay */
+    backdrop-filter: blur(2px); /* Blurring effect */
+    opacity: 1; /* Initially hidden */
+    pointer-events: none; /* Allows interaction with elements below */
+    transition: opacity 0.3s ease;
+}
+
 .spixi-app-details-header {
     display: flex;
     gap: 12px;
@@ -4168,5 +4179,67 @@ img.emoji {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.action-slide-up-container{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    background: var(--colors-surface-01);
+    border-radius: 32px 32px 0 0;
+    padding: 24px 16px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    transform: translateY(100%);
+    transition: max-height 0.5s ease-in-out, transform 0.5s ease-in-out;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.action-slide-up-container.active {
+    transform: translateY(0);
+    max-height: 500px;
+}
+
+.new-modal-wrapper{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: rgba(4, 4, 4, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 2000;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.new-modal-container{
+    background: var(--colors-surface-01);
+    width: 100%;
+    max-width: 326px;
+    border-radius: 16px;
+    padding: 40px 16px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+}
+
+.new-modal-buttons{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.new-modal-texts{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
 }
 

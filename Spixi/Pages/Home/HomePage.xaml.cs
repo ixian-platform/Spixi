@@ -1232,7 +1232,7 @@ namespace SPIXI
                     {
                         icon = "";
                     }
-                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher);
+                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
                 }
             }
         }
