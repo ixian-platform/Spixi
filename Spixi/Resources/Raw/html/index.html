@@ -536,14 +536,14 @@
         const appsNode = document.getElementById("AppList");
         appsNode.innerHTML = "";
 
-        appsNode.style.display = 'none';
+        appsNode.style.display = 'block';
     }
 
     function addApp(id, name, icon, publisher, isMultiuser) {
         const mappedIcon = icon.replace(/&#92;/g, '\\');
 
         const singleApp = `<div class="mini-apps-list-single-item">
-        <div class="mini-apps-list-single-image-wrapper" onclick="window.location.href='ixian:details:${id}'">
+        <div class="mini-apps-list-single-image-wrapper" onclick="window.location.href='ixian:appDetails:${id}'">
             <img src="${mappedIcon}" alt="mini-app-name"/>
         </div>
         <div class="mini-apps-single-item-info s-text-01">

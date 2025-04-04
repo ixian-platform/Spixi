@@ -38,6 +38,7 @@ namespace SPIXI.Meta
         public static int startCounter = 0;
 
         public static bool shouldRefreshContacts = true;
+        public static bool shouldRefreshApps = true;
 
         public static bool refreshAppRequests = true;
 

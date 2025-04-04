@@ -361,6 +361,16 @@ namespace SPIXI
             {
                 joinBot();
             }
+            else if (current_url.StartsWith("ixian:startApp"))
+            {
+                string appId = current_url.Substring("ixian:startApp:".Length);
+                onStartApp(appId);
+            }
+            else if (current_url.StartsWith("ixian:appDetails"))
+            {
+                string appId = current_url.Substring("ixian:appDetails:".Length);
+                onAppDetails(appId);
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -1219,6 +1229,12 @@ namespace SPIXI
 
         private void loadApps()
         {
+            if(!Node.shouldRefreshApps)
+            {
+                return;
+            }
+            Node.shouldRefreshApps = false;
+
             Utils.sendUiCommand(this, "clearApps");
 
             var apps = Node.MiniAppManager.getInstalledApps();
@@ -1235,6 +1251,25 @@ namespace SPIXI
                     Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
                 }
             }
+
+
+        }
+
+        private void onStartApp(string appId)
+        {
+            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.MiniAppManager.getAppEntryPoint(appId));
+            miniAppPage.accepted = true;
+            Node.MiniAppManager.addAppPage(miniAppPage);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+            });
+        }
+
+        private void onAppDetails(string appId)
+        {
+            Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);
         }
 
     }

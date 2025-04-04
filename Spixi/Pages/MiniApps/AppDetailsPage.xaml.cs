@@ -105,6 +105,7 @@ namespace SPIXI
             {
                 displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removefailed-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
+            Node.shouldRefreshApps = true;
             Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
 
