@@ -55,19 +55,21 @@
                     <i class="fas fa-globe"></i>&nbsp;Get App From URL
                 </div>
                 <span class="body-sm">or</span>
-                <div class="spixi-outline-button label-sm">
+                <div class="spixi-outline-button label-sm" onclick="scanAppCode()">
                     <i class="fas fa-qrcode"></i>&nbsp; Scan
                 </div>
             </div>
-        </section>
-        <div class="important-notice-container">
+
+            <div class="important-notice-container">
                 <i class="fa fa-lock"></i>
-            <div class="important-notice-text">
-                <span class="label-sm">Mini Apps are lightweight JavaScript apps that run securely inside Spixi.</span>
-                <span class="body-xs">Install only from sources you trust. You’re always in control.</span>
-                <span class="label-xs s-text-link" onclick="redirectToSpixi()">Learn more <i class="fa fa-arrow-right"></i></span>
+                <div class="important-notice-text">
+                    <span class="label-sm">Mini Apps are lightweight JavaScript apps that run securely inside Spixi.</span>
+                    <span class="body-xs">Install only from sources you trust. You’re always in control.</span>
+                    <span class="label-xs s-text-link" onclick="redirectToSpixi()">Learn more <i class="fa fa-arrow-right"></i></span>
+                </div>
             </div>
-        </div>
+        </section>
+        
     </div>
 
 
@@ -88,6 +90,15 @@
                 addressInput.className = "spixi-textfield add-mini-app-url-input add-mini-app-url-input-error"
                 errLabel.style.display = 'block';
             }
+        }
+
+        function scanAppCode() {
+            location.href = "ixian:quickscan";
+        }
+
+        function setScannedData(appCode) {
+            const addressInput = document.getElementById("addressInput");
+            addressInput.value = appCode;
         }
 
         // TODO: check how this behaves in android/ios + change url with correct one

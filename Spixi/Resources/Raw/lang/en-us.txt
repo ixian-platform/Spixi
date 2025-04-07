@@ -16,7 +16,7 @@ address-copy = Copy
 address-share = Share
 
 ; App Details Screen
-app-details-title = Spixi App
+app-details-title = App Details
 app-details-publisher = Publisher:
 app-details-version = Version:
 app-details-uninstall = Uninstall
@@ -26,7 +26,7 @@ app-details-dialog-removed-text = The app was successfully removed.
 app-details-dialog-removefailed-text = An error occurred while removing the application.
 
 ; New App Screen
-app-new-title = New App
+app-new-title = Add Mini App
 app-new-description = Add a new Spixi App by pasting the URL.
 app-new-install = Install
 app-new-dialog-title = Spixi App Manager

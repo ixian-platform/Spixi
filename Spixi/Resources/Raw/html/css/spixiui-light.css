@@ -3968,6 +3968,10 @@ img.emoji {
     border: 1px solid var(--colors-outline-03);
     border-radius: 8px;
     overflow: hidden;
+
+    &:hover{
+        cursor: pointer;
+    }
 }
 
 .mini-apps-list-single-image-wrapper img {
@@ -4016,6 +4020,10 @@ img.emoji {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    height: calc(100% - 56px);
+    position: relative;
+    max-width: 640px;
+    margin: 0 auto;
 }
 
 .add-mini-app-buttons {
@@ -4069,6 +4077,8 @@ img.emoji {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    max-width: 640px;
+    margin: 0 auto;
 }
 
 .blurredContent::before {

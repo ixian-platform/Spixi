@@ -318,3 +318,7 @@ function hideModalDialog()
         document.body.removeChild(modalEl);
 	}
 }
+
+function parseBoolean(value) {
+    return String(value).toLowerCase() === "true";
+}

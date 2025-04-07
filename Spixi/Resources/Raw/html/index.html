@@ -203,13 +203,13 @@
         <!-- SPIXI APPS -->
         <div id="spixiApps" class="tab-pane" onload="ixian:loadApps();">
             <div class="container spixi-mini-apps-container">
-                <div class="primary-guide-container">
+                <div class="primary-guide-container" id="miniAppsStartNote" style="display: none">
                     <span class="body-xs s-text-01">Not sure where to start? Try one of our featured apps bellow.</span>
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-times" onclick="hideMiniAppsStartNote()" style="cursor: pointer"></i>
                 </div>
                 <div>
                     <input type="text" class="spixi-textfield search-mini-apps" id="searchMiniApps"
-                           oninput="contactSearch()" placeholder="Find installed mini apps"/>
+                           oninput="searchMiniApps()" placeholder="Find installed mini apps"/>
                     <span class="fa fa-search spixi-textfield-holder-icon mini-apps-search-icon"></span>
                 </div>
                 <span class="heading-sm s-text-01">Apps</span>
@@ -226,8 +226,6 @@
 
 </div>  <!-- Wrap -->
 
-<!--NOTE: multi-user app modal...we need to think how to send appID in here to launch it from here...because here in index we map APPS, and CREATE new app-items and add them in DOM to list-->
-<!--so in that case we also need to create as many modals as there are apps haha, but this is very bad solution...-->
 <div class="new-modal-wrapper" id="multiUserAppModal" style="display: none;">
     <div class="new-modal-container">
         <img src="img/people-arrows-icon.png" alt="people-arrows-icon" width="32" height="32"/>
@@ -240,7 +238,7 @@
                 <i class="fas fa-user-plus"></i>Invite Contact
             </div>
             <div class="spixi-flat-button label-sm button outline"
-                 onclick="window.location.href=`ixian:startApp:${this.getAttribute('data-app-id')}`">
+                 onclick="launchSoloMode(this)">
                 <i class="fas fa-person"></i>Launch Solo Mode
             </div>
         </div>
@@ -528,15 +526,27 @@
         setTimeout(function () {
             x.className = x.className.replace("show", "");
         }, 3000);
-    };
+    }
 
     // MINI APPS FUNCTIONS
+    const isMiniAppsStartNoteHidden = localStorage.getItem("miniAppsStartNoteHidden");
+    if (isMiniAppsStartNoteHidden) {
+        document.getElementById("miniAppsStartNote").style.display = "none";
+    } else {
+        document.getElementById("miniAppsStartNote").style.display = "flex";
+    }
+
+    function hideMiniAppsStartNote() {
+        const startNote = document.getElementById("miniAppsStartNote");
+        startNote.style.display = "none";
+        localStorage.setItem("miniAppsStartNoteHidden", true);
+    }
 
     function clearApps() {
         const appsNode = document.getElementById("AppList");
         appsNode.innerHTML = "";
 
-        appsNode.style.display = 'block';
+        appsNode.style.display = 'grid';
     }
 
     function addApp(id, name, icon, publisher, isMultiuser) {
@@ -544,12 +554,12 @@
 
         const singleApp = `<div class="mini-apps-list-single-item">
         <div class="mini-apps-list-single-image-wrapper" onclick="window.location.href='ixian:appDetails:${id}'">
-            <img src="${mappedIcon}" alt="mini-app-name"/>
+            <img src="${mappedIcon}" alt="mini-app-${name}"/>
         </div>
         <div class="mini-apps-single-item-info s-text-01">
-            <span class="label-sm">${name}</span>
+            <span class="label-sm appNameItem">${name}</span>
             <span class="body-xs">${publisher}</span>
-            <div class="launchBtn" data-app-id="${id}" data-multi-user="${isMultiuser}">
+            <div class="launchBtn" data-app-id="${id}" data-multi-user="${parseBoolean(isMultiuser)}">
                 <span class="label-xs s-text-action">Launch <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
@@ -568,6 +578,9 @@
     )
 
     function onLaunchHandler(element) {
+        const multiUserModal = document.getElementById("multiUserAppModal");
+        multiUserModal.setAttribute("data-app-id", null);
+
         const appId = element.getAttribute('data-app-id');
         const isMultiuser = element.getAttribute('data-multi-user') === "true";
 
@@ -575,12 +588,39 @@
         if (isMultiuser) {
             const multiUserModal = document.getElementById("multiUserAppModal");
             multiUserModal.style.display = "flex";
+            console.log(appId);
             multiUserModal.setAttribute("data-app-id", appId);
         }
         //else just start the app in solo mode
         else {
             window.location.href = `ixian:startApp:${appId}`;
         }
+    }
+
+    function launchSoloMode(buttonElement) {
+        const appId = buttonElement.closest('#multiUserAppModal')?.getAttribute('data-app-id');
+
+        if (appId) {
+            window.location.href = `ixian:startApp:${appId}`;
+        } else {
+            console.error("App ID not found.");
+        }
+    }
+
+    function searchMiniApps(){
+        const searchValue = document.getElementById("searchMiniApps")?.value.toLowerCase();
+        const appItems = document.querySelectorAll("#AppList .mini-apps-list-single-item");
+
+        appItems.forEach(item => {
+            const nameElement = item.querySelector(".appNameItem");
+            const appName = nameElement ? nameElement.textContent.toLowerCase() : "";
+
+            if (appName.includes(searchValue)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        });
     }
 
 </script>

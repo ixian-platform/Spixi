@@ -55,6 +55,18 @@ namespace SPIXI
             {
                 onBack();
             }
+            else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
+            {
+                quickScan();
+            }
+            else if (current_url.Contains("ixian:qrresult:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:qrresult:" }, StringSplitOptions.None);
+                string result = split[1];
+                processQRResult(result);
+                e.Cancel = true;
+                return;
+            }
             else if (current_url.StartsWith("ixian:install:"))
             {
                 string url = current_url.Substring("ixian:install:".Length);
@@ -83,6 +95,39 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
+
+        }
+
+        public async void quickScan()
+        {
+            var scanPage = new ScanPage();
+            scanPage.scanSucceeded += HandleScanSucceeded;
+            await Navigation.PushAsync(scanPage, Config.defaultXamarinAnimations);
+        }
+
+        private void HandleScanSucceeded(object sender, SPIXI.EventArgs<string> e)
+        {
+            string mini_app_install_url = e.Value;
+            processQRResult(mini_app_install_url);
+        }
+
+        public void processQRResult(string result)
+        {
+            if (result.Contains(":ixi"))
+            {
+                string[] split = result.Split(new string[] { ":ixi" }, StringSplitOptions.None);
+                if (split.Count() < 1)
+                    return;
+                string appUrl = split[0];
+                Utils.sendUiCommand(this, "setScannedData", appUrl);
+            }
+            else
+            {
+                string appUrl = result;
+                // TODO: enter exact Ixian address length
+                if (appUrl.Length > 20 && appUrl.Length < 128)
+                    Utils.sendUiCommand(this, "setScannedData", appUrl);
+            }
 
         }
 

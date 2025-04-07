@@ -64,7 +64,8 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:startApp", StringComparison.Ordinal))
             {
-                onStartApp();
+                string appId = current_url.Substring("ixian:startApp:".Length);
+                onStartApp(appId);
             }
             else
             {
@@ -90,7 +91,10 @@ namespace SPIXI
                 icon = "";
             }
 
-            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsString(), app.hasCapability(MiniAppCapabilities.SingleUser).ToString(), appId);
+            var appList = Node.MiniAppManager.getInstalledApps();
+            bool isAppInstalled = appList.ContainsKey(appId);
+
+            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsString(), appId, app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), isAppInstalled.ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -127,7 +131,7 @@ namespace SPIXI
             return true;
         }
 
-        public void onStartApp()
+        public void onStartApp(string appId)
         {
             MiniAppPage MiniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.MiniAppManager.getAppEntryPoint(appId));
             MiniAppPage.accepted = true;

@@ -361,7 +361,7 @@ namespace SPIXI
             {
                 joinBot();
             }
-            else if (current_url.StartsWith("ixian:startApp"))
+            else if (current_url.StartsWith("ixian:startApp", StringComparison.Ordinal))
             {
                 string appId = current_url.Substring("ixian:startApp:".Length);
                 onStartApp(appId);
@@ -1251,8 +1251,6 @@ namespace SPIXI
                     Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
                 }
             }
-
-
         }
 
         private void onStartApp(string appId)
