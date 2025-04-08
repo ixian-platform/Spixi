@@ -538,6 +538,7 @@ namespace SPIXI
 
             Node.shouldRefreshContacts = true;
             Node.refreshAppRequests = true;
+            Node.shouldRefreshApps = true;
             lastTransactionChange = 0;
 
             Utils.sendUiCommand(this, "selectTab", currentTab);
