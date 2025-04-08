@@ -1887,6 +1887,38 @@ img.emoji {
 }
 
 /* ListItems */
+
+.single-payment-container{
+    width: 100%;
+    display: flex;
+    padding: 0 12px;
+    gap: 4px;
+}
+
+.single-payment-arrow{
+    display: flex;
+    place-items: center;
+}
+
+.single-payment-info{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.single-payment-info-left{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.single-payment-info-right{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: right;
+}
+
 .spixi-list-item {
     width: 100%;
     max-width: 640px;
@@ -1994,7 +2026,6 @@ img.emoji {
     line-height: 12px;
     text-align: right;
     color: var(--colors-text-02);
-    margin-right: 24px;
 }
 
 .spixi-list-item-first-row {

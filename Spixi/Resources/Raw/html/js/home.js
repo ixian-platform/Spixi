@@ -290,22 +290,21 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
     }
     paymentEntry.innerHTML = `
         <a href="ixian:txdetails:${txid}">
-            <div class="row no-gutters spixi-list-item-first-row flex-nowrap">
-                <div class="col">
-                    <div class="spixi-list-item-from"><i class="spixi-list-item-from-status ${iconClass} ${icon}"></i> ${text}</div>
-                </div>
-                <div class="col spixi-list-item-right">
-                    <div class="spixi-list-item-amount">${signedAmount} ${arrow}</div>
-                </div>
-            </div>
-            <div class="row no-gutters spixi-list-item-second-row flex-nowrap">
-                <div class="col">
-                    <div class="spixi-list-item-timestamp">${timestamp}</div>
-                </div>
-                <div class="col spixi-list-item-right">
-                    <div class="spixi-list-item-amount-fiat">${fiatAmountText}</div>
-                </div>
-            </div>
+        <div class="single-payment-container">
+                            <div class="single-payment-arrow">
+                                ${arrow}
+                            </div>
+                            <div class="single-payment-info">
+                                <div class="single-payment-info-left">
+                                    <span class="label-sm s-text-01">${text}</span>
+                                    <span class="body-xs s-text-02">${timestamp}</span>
+                                </div>
+                                <div class="single-payment-info-right">
+                                    <span class="label-sm s-text-01">${signedAmount}</span>
+                                    <span class="body-xs s-text-02">${fiatAmountText}</span>
+                                </div>
+                            </div>
+                        </div>                      
         </a>`;
 
 
