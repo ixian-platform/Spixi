@@ -3,8 +3,6 @@ var isBot = false;
 var isAdmin = false;
 var messageCost = "";
 
-var attachMode = false;
-
 var requestReceivedModal = document.getElementById("requestReceivedModal");
 var requestSentModal = document.getElementById("requestSentModal");
 var reportModal = document.getElementById("reportModal");
@@ -41,6 +39,13 @@ function onChatScreenLoad()
 
 
     messagesEl.addEventListener("click", function (e) {
+        const attachBar = document.getElementById("attach-bar");
+
+        if (attachBar) {
+            attachBar.classList.remove("show");
+            attachBar.classList.add("hide");
+        }
+
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
             var nick = nickEl.getAttribute("nick");
@@ -112,12 +117,6 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
         else {
             document.getElementById("messages").style.height = "calc(100vh - 150px)";
         }
-        var chatAttach = document.getElementById("chat_attach");
-        var placeholder = document.createElement("div");
-        placeholder.style.width = "12px";
-        placeholder.style.minWidth = "12px";
-        placeholder.style.display = "table-cell";
-        chatAttach.parentNode.replaceChild(placeholder, chatAttach);
 
 	}else
     {
@@ -151,7 +150,6 @@ function setSelectedChannel(id, icon, name)
 
 function onChatScreenLoaded()
 {
-    document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
     document.getElementById("chat_input").focus();
     updateChatInputPlaceholder();
 }
@@ -225,14 +223,6 @@ document.getElementById("ca_app").onclick = function () {
 }
 
 document.getElementById("ca_sendfile").onclick = function () {
-    var chatInput = document.getElementById("chat_input");
-    chatInput.click();
-    chatInput.focus();
-    if (attachMode == true) {
-        attachMode = false;
-        hideAttach();
-    }
-
     location.href = "ixian:sendfile";
 }
 
@@ -316,6 +306,13 @@ function scrollToBottom() {
 }
 
 $("#chat_input").focus(function (event) {
+    const attachBar = document.getElementById("attach-bar");
+
+    if (attachBar) {
+        attachBar.classList.remove("show");
+        attachBar.classList.add("hide");
+    }
+
     scrollToBottom();
     /*
     if (shouldScroll()) {
@@ -925,51 +922,6 @@ function setNickname(nick) {
 
 document.getElementById("undorequest").onclick = function () {
     location.href = "ixian:undorequest";
-}
-
-// Handle 'attach' bar, allowing to send and request IXI
-document.getElementById("chat_attach").onclick = function (event) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    if (attachMode == true) {
-        attachMode = false;
-        hideAttach();
-    }
-    else {
-        attachMode = true;
-        showAttach();
-    }
-
-    document.getElementById("chat_input").focus();
-}
-
-function hideAttach() {
-    document.getElementById("chatbar").style.bottom = "0px";
-    document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
-    var payBar = document.getElementById("SpixiPayableBar");
-    if(payBar != null)
-    {
-        payBar.style.bottom = "60px";
-	}
-}
-
-function showAttach() {
-    if(isBot)
-    {
-        return;
-	}
-    var attachBarHeight = document.getElementById("chatattachbar").offsetHeight;
-    document.getElementById("chatbar").style.bottom = attachBarHeight + "px";
-    document.getElementById("chatattachbar").style.bottom = "0px";
-    var payBar = document.getElementById("SpixiPayableBar");
-    if(payBar != null)
-    {
-        payBar.style.bottom = (attachBarHeight + 60) + "px";
-	}
-    setTimeout(function () {
-                document.getElementById("chatholder").scrollIntoView(false);
-    }, 400);
 }
 
 function setOnlineStatus(status) {

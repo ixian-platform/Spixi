@@ -2765,24 +2765,7 @@ img.emoji {
 }
 
 
-#chatattachbar {
-    -moz-transition: all 0.6s ease-in-out;
-    -ms-transition: all 0.6s ease-in-out;
-    -o-transition: all 0.6s ease-in-out;
-    -webkit-transition: all 0.6s ease-in-out;
-    transition: all 0.6s;
-
-    position: fixed;
-    z-index: 99;
-    width: 100%;
-    bottom: -100px;
-    min-height: 64px;
-    background-color: var(--colors-surface-01);
-    border-top: 1px solid var(--colors-outline-01);
-    color: #BABABA;
-}
-
-#chat_attach {
+.chat_attach {
     display: table-cell;
     width: 36px;
     font-size: 18pt;
@@ -2794,7 +2777,7 @@ img.emoji {
     padding-right: 8px;
 }
 
-#chat_attach:hover {
+.chat_attach:hover {
     display: table-cell;
     width: 36px;
     font-size: 18pt;
@@ -2804,43 +2787,6 @@ img.emoji {
     padding-top: 6px;
     padding-left: 16px;
     padding-right: 8px;
-    cursor: pointer;
-}
-
-.chatattachsymbol {
-    color: var(--colors-icon-action);
-    font-size: 16pt;
-    padding-top: 12px;
-    padding-bottom: 6px;
-}
-
-.chatattachsymbol:hover {
-    color: var(--colors-icon-action);
-    font-size: 16pt;
-    padding-top: 12px;
-    padding-bottom: 6px;
-    cursor: pointer;
-}
-
-.chat_attach_tab {
-    width: 120px;
-    font-size: 10pt;
-    text-align: center;
-    vertical-align: center;
-    font-weight: regular;
-    white-space: nowrap;
-    overflow: visible;
-    color: var(--colors-text-01);
-}
-.chat_attach_tab:hover {
-    width: 120px;
-    font-size: 10pt;
-    text-align: center;
-    vertical-align: center;
-    font-weight: regular;
-    white-space: nowrap;
-    overflow: visible;
-    color: var(--colors-text-action);
     cursor: pointer;
 }
 
@@ -4284,3 +4230,87 @@ img.emoji {
     text-align: center;
 }
 
+.new-attach-bar{
+    background: var(--colors-surface-01);
+    border: 1px solid var(--colors-outline-02);
+    width: calc(100% - 24px);
+    position: fixed;
+    bottom: -80px;
+    min-height: 80px;
+    border-radius: 16px;
+    margin: 0 12px;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: bottom 0.4s ease, opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.new-attach-bar.show {
+    animation: slideUpAttachBar 0.4s ease forwards;
+    pointer-events: auto;
+}
+
+.new-attach-bar.hide {
+    animation: slideDownAttachBar 0.4s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes slideUpAttachBar {
+    from {
+        bottom: -80px;
+        opacity: 0;
+    }
+    to {
+        bottom: calc(64px + 8px);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDownAttachBar {
+    from {
+        bottom: calc(64px + 8px);
+        opacity: 1;
+    }
+    to {
+        bottom: -80px;
+        opacity: 0;
+    }
+}
+
+.single-attach-bar-item{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    width: 100%;
+    max-width: 90px;
+}
+
+.single-attach-bar-item > i{
+    padding: 8px 10px;
+    border-radius: 12px;
+    color: var(--colors-icon-on-action);
+    cursor: pointer;
+}
+
+.iconApp{
+    background: var(--colors-surface-warning-inverse);
+}
+.iconFile{
+    background: var(--colors-surface-accent-inverse);
+}
+.iconPay{
+    background: var(--colors-surface-action);
+}
+.iconRequest{
+    background: var(--colors-surface-success-inverse);
+}
+
+.payment-list-container{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}

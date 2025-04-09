@@ -10,7 +10,8 @@
 
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+    <!-- TODO: change back to use dynamic file -->
+    <link rel="stylesheet" type="text/css" href="css/spixiui-light.css">
 
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
@@ -192,7 +193,7 @@
         <div id="chatholder" class="chatholder"></div>
         <div id="chatbar">
             <div class="chatbar-container">
-                <div id="chat_attach">
+                <div class="chat_attach" onclick="toggleAttachBar()">
                     <i class="fa fa-plus-circle"></i>
                 </div>
                 <div class="chatbar-input-wrapper">
@@ -201,24 +202,22 @@
                 <div class="chatbar-sendbutton-wrapper"><div id="chat_send" class="chatbar-sendbutton"><i class="fa-solid fa-arrow-right"></i></div></div>
             </div>
         </div>
-        <div id="chatattachbar">
-            <div class="row ">
-                <div class="col-4 chat_attach_tab" id="ca_sendfile">
-                    <i class="fa-solid fa-file-export chatattachsymbol"></i><br />
-                    *SL{chat-send-file}
-                </div>
-                <div class="col-4 chat_attach_tab" id="ca_request">
-                    <i class="fa-solid fa-arrow-down chatattachsymbol"></i><br />
-                    *SL{chat-request-payment}
-                </div>
-                <div class="col-4 chat_attach_tab" id="ca_send">
-                    <i class="fa-solid fa-arrow-up chatattachsymbol"></i><br />
-                    *SL{chat-send-payment}
-                </div>
-                <div class="col-3 chat_attach_tab" id="ca_app">
-                    <i class="fa fa-code chatattachsymbol"></i><br />
-                    Use App
-                </div>
+        <div class="new-attach-bar" id="attach-bar">
+            <div class="single-attach-bar-item" id="ca_sendfile">
+                <i class="fa fa-file-arrow-up iconFile"></i>
+                <span class="body-sm">*SL{chat-send-file}</span>
+            </div>
+            <div class="single-attach-bar-item" id="ca_send">
+                <i class="fa fa-arrow-up iconPay"></i>
+                <span class="body-sm">*SL{chat-send-payment}</span>
+            </div>
+            <div class="single-attach-bar-item" id="ca_request">
+                <i class="fa fa-arrow-down iconRequest"></i>
+                <span class="body-sm">*SL{chat-request-payment}</span>
+            </div>
+            <div class="single-attach-bar-item" id="ca_app">
+                <i class="fa fa-rocket iconApp"></i>
+                <span class="body-sm">*SL{chat-app}</span>
             </div>
         </div>
         <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>
@@ -360,6 +359,23 @@
         var SL_TimeJustNow = "*SL{global-time-justnow}";
         var SL_AMinuteAgo = "*SL{global-time-aminuteago}";
         var SL_MinutesAgo = "*SL{global-time-minutesago}";
+
+        function toggleAttachBar(){
+            const attachBar = document.getElementById("attach-bar");
+
+            if (!attachBar) return;
+
+            const isVisible = attachBar.classList.contains("show");
+
+            if(isVisible){
+                attachBar.classList.remove("show");
+                attachBar.classList.add("hide");
+            }else{
+                attachBar.classList.remove("hide");
+                attachBar.classList.add("show");
+            }
+        }
+
     </script>
     <script src="js/spixi.js"></script>
     <script src="js/chat.js"></script>
