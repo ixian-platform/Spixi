@@ -85,7 +85,7 @@
                 <div class="spixi-app-details-properties-single-div">
                     <span class="label-sm s-text-02">Install URL</span>
                     <div class="urlContainer">
-                        <!-- missing app URL data -->
+                        <!--TODO: missing app URL data -->
                         <span class="body-sm s-text-01" id="installUrlValue"></span>
                         <i class="fas fa-copy" id="copyUrlIcon" style="cursor: pointer"></i>
                     </div>
@@ -120,11 +120,33 @@
             </div>
         </div>
         <div class="add-mini-app-buttons spixi-app-details-buttons">
-            <div class="spixi-flat-button label-sm">
+            <div class="spixi-flat-button label-sm" onclick="confirmInstallCall()">
                 <i class="fas fa-check"></i>&nbsp; Confirm Install
             </div>
             <div class="spixi-flat-button label-sm button outline" onclick="toggleInstallActionSlideUp()">
                 Cancel
+            </div>
+        </div>
+    </div>
+
+    <!--TODO: change display type to show installing loader-->
+    <div class="loading-modal-wrapper" id="installingAppLoadingModal" style="display: none;">
+        <div class="loading-modal-container">
+            <span class="spixi-loader"></span>
+            <div class="new-modal-texts">
+                <span class="label-lg">Installing App...</span>
+                <span class="body-sm">Downloading and verifying source</span>
+            </div>
+        </div>
+    </div>
+
+    <!--TODO: change display type to show removing app loader-->
+    <div class="loading-modal-wrapper" id="removingAppLoader" style="display: none;">
+        <div class="loading-modal-container">
+            <span class="spixi-loader"></span>
+            <div class="new-modal-texts">
+                <span class="label-lg">Removing App...</span>
+                <span class="body-sm">App data is being removed.</span>
             </div>
         </div>
     </div>
@@ -141,7 +163,7 @@
                 <div class="spixi-flat-button label-sm">
                     Retry
                 </div>
-                <div class="spixi-flat-button label-sm button outline">
+                <div class="spixi-flat-button label-sm button outline" onclick="document.getElementById('appFailedToInstallModal').style.display = 'none'">
                     Cancel
                 </div>
             </div>
@@ -176,7 +198,7 @@
                 <div class="spixi-flat-button label-sm">
                     Remove App
                 </div>
-                <div class="spixi-flat-button label-sm button outline">
+                <div class="spixi-flat-button label-sm button outline" onclick="document.getElementById('removeAppModal').style.display = 'none'">
                     Cancel
                 </div>
             </div>
@@ -192,8 +214,8 @@
                 <span class="body-sm">App and app data have been removed from this device.</span>
             </div>
             <div class="new-modal-buttons">
-                <div class="spixi-flat-button label-sm">
-                    <i class="fas fa-arrow-right"></i>Continue
+                <div class="spixi-flat-button label-sm" onclick="location.href='ixian:back'">
+                    <i class="fas fa-arrow-right"></i> Continue
                 </div>
             </div>
         </div>
@@ -303,6 +325,15 @@
         function removeAppHandler() {
             const removeAppModal = document.getElementById("removeAppModal");
             removeAppModal.style.display = "flex";
+        }
+
+        function confirmInstallCall(){
+            //TODO: this url will now be empty because it's missing from the app details structure
+            const url = document.getElementById("installUrlValue")?.textContent;
+            if(url){
+                location.href = `ixian:install:${url}`;
+                toggleInstallActionSlideUp();
+            }
         }
 
     </script>
