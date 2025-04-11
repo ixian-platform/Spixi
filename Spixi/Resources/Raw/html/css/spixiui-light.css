@@ -4036,18 +4036,48 @@ img.emoji {
     color: var(--colors-text-01);
     display: flex;
     gap: 14px;
-    margin: 24px;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
+    max-height: 40px;
+    overflow: hidden;
+    align-items: center;
+    transition: max-height 0.1s ease-in-out;
+    margin: 24px 12px;
+}
+
+.important-notice-container.extended{
+    max-height: 100%;
+    align-items: flex-start;
+
+    .important-notice-text{
+        padding-top: unset;
+
+        & > span:nth-child(2),
+        span:nth-child(3){
+            opacity: 1;
+            max-height: 100px;
+            transition: opacity 0.1s ease, max-height 0.1s ease;
+        }
+    }
 }
 
 .important-notice-text{
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding-top: 14px;
+
+    & > span:nth-child(2),
+    span:nth-child(3){
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.1s ease, max-height 0.1s ease;
+    }
 }
+
 
 .spixi-app-details {
     padding: 16px;
@@ -4312,5 +4342,14 @@ img.emoji {
 .payment-list-container{
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 24px;
+    padding-bottom: 80px;
+}
+
+#wallet{
+    height: 100%;
+}
+
+#section_transactions{
+    height: calc(100% - 234px);
 }
