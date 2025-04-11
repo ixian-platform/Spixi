@@ -41,7 +41,7 @@ function onChatScreenLoad()
     messagesEl.addEventListener("click", function (e) {
         const attachBar = document.getElementById("attach-bar");
 
-        if (attachBar) {
+        if (attachBar && attachBar.classList.contains("show")) {
             attachBar.classList.remove("show");
             attachBar.classList.add("hide");
         }
@@ -218,10 +218,6 @@ document.getElementById("ca_send").onclick = function () {
     location.href = "ixian:send";
 }
 
-document.getElementById("ca_app").onclick = function () {
-    document.getElementById("AppsMenu").style.display = "block";
-}
-
 document.getElementById("ca_sendfile").onclick = function () {
     location.href = "ixian:sendfile";
 }
@@ -308,7 +304,7 @@ function scrollToBottom() {
 $("#chat_input").focus(function (event) {
     const attachBar = document.getElementById("attach-bar");
 
-    if (attachBar) {
+    if (attachBar && attachBar.classList.contains("show")) {
         attachBar.classList.remove("show");
         attachBar.classList.add("hide");
     }
@@ -940,14 +936,27 @@ function updateGroupChatNicks(address, nick) {
 
 function addApp(id, name, icon)
 {
-    var appsEl = document.getElementById("AppsMenu");
+    console.log("add app called");
+    console.info(id, name, icon);
+    const appsContainer = document.getElementById("AppsMenu");
+    const itemsContainer = appsContainer.querySelector(".choose-apps-items-container");
 
-    var el = document.createElement("div");
-    el.onclick = function() { appsEl.style.display = "none"; location.href = "ixian:app:" + id; };
-    el.className = "spixi-app";
-    el.innerHTML = "<img src='" + icon + "'/><br/>" + name;
+    const appBlock = document.createElement("div");
+    appBlock.className = "spixi-app-details-header";
+    appBlock.onclick = function () {
+        appsContainer.style.display = "none";
+        location.href = "ixian:app:" + id;
+    };
+    appBlock.innerHTML = `
+        <img data-role="AppIcon" class="spixi-app-details-image" src="${icon}" alt="app-icon" />
+        <div class="spixi-app-details-title">
+            <span class="heading-xs s-text-01" data-role="AppName">${name}</span>
+            <span class="label-sm s-text-02" data-role="AppPublisher">Unknown creator</span>
+            <span class="label-xs s-text-success"><i class="fas fa-lock"></i> Verified</span>
+        </div>
+    `;
 
-    appsEl.appendChild(el);
+    itemsContainer.appendChild(appBlock);
 }
 
 function showCallButton()

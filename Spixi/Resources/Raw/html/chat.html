@@ -215,12 +215,26 @@
                 <i class="fa fa-arrow-down iconRequest"></i>
                 <span class="body-sm">*SL{chat-request-payment}</span>
             </div>
-            <div class="single-attach-bar-item" id="ca_app">
+            <div class="single-attach-bar-item" onclick="toggleChooseMiniApp()">
                 <i class="fa fa-rocket iconApp"></i>
                 <span class="body-sm">*SL{chat-app}</span>
             </div>
         </div>
-        <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>
+        <div class="action-slide-up-container" id="AppsMenu">
+            <p class="label-md s-text-01 text-center">Choose App</p>
+            <div>
+                <input type="text" class="spixi-textfield search-mini-apps" id="searchMiniApps"
+                       oninput="searchMiniApps()" placeholder="Find installed mini apps"/>
+                <span class="fa fa-search spixi-textfield-holder-icon mini-apps-search-icon"></span>
+            </div>
+            <div class="choose-apps-items-container">
+            </div>
+            <div class="add-mini-app-buttons spixi-app-details-buttons">
+                <div class="spixi-flat-button label-sm button outline" onclick="toggleChooseMiniApp()">
+                    Cancel
+                </div>
+            </div>
+        </div>
     </div>
     <div id="BotDetails" class="spixi-bot-details">
         <div class="spixi-textsection-holder spixi-textsection-header2">
@@ -367,12 +381,27 @@
 
             const isVisible = attachBar.classList.contains("show");
 
-            if(isVisible){
-                attachBar.classList.remove("show");
-                attachBar.classList.add("hide");
-            }else{
-                attachBar.classList.remove("hide");
-                attachBar.classList.add("show");
+            attachBar.classList.remove("show", "hide");
+
+            requestAnimationFrame(() => {
+                if (isVisible) {
+                    attachBar.classList.add("hide");
+                } else {
+                    attachBar.classList.add("show");
+                }
+            })
+        }
+
+        function toggleChooseMiniApp() {
+            const slideUpContainer = document.querySelector('.action-slide-up-container');
+
+            if (slideUpContainer.classList.contains('active')) {
+                slideUpContainer.classList.remove('active');
+                document.getElementById("wrap").classList.remove("blurredContent");
+            } else {
+                toggleAttachBar();
+                slideUpContainer.classList.add('active');
+                document.getElementById("wrap").classList.add("blurredContent");
             }
         }
 
