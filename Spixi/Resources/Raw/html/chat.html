@@ -88,8 +88,26 @@
         </div>
         <!-- End ErrorBar-->
 
+        <div class="new-modal-wrapper" id="endAppSessionModal" style="display: none;height: calc(100% - 56px)">
+            <div class="new-modal-container">
+                <div class="new-modal-texts">
+                    <span class="label-lg">End App Session</span>
+                    <span class="body-sm">Do you want to end this app session?</span>
+                </div>
+                <div class="new-modal-buttons">
+                    <div class="spixi-flat-button label-sm">
+                        End Session
+                    </div>
+                    <div class="spixi-flat-button label-sm button outline" onclick="document.getElementById('endAppSessionModal').style.display = 'none'">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="messages" class="scrollable-div">
         </div>
+
 
         <!-- Modal -->
         <div id="requestReceivedModal" class="spixi-modal-soft" style="display:none;">

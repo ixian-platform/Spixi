@@ -147,7 +147,7 @@ function onChatScreenLoaded() {
                     <span class="body-sm">You're in session with USERNAME</span>
                     <span class="label-sm">Tap to return <i class="fas fa-arrow-right"></i></span>
                 </div>
-                <div class="spixi-flat-button label-sm button outline">Leave</div>
+                <div class="spixi-flat-button label-sm button outline" onclick="showEndAppSessionModal()">Leave</div>
             </section>`;
         messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
     } else if(isInviteSent){
@@ -157,6 +157,11 @@ function onChatScreenLoaded() {
             </section>`;
         messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
     }
+}
+
+function showEndAppSessionModal(){
+    const modal = document.getElementById("endAppSessionModal");
+    modal.style.display = "flex";
 }
 
 function onChatScreenReady(address) {
