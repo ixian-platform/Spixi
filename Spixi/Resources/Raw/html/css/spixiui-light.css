@@ -603,7 +603,7 @@ img.emoji {
 
 /* BalanceBar */
 .spixi-balancebar {
-    margin: 8px 8px 32px 8px;
+    margin: 8px 8px 12px 8px;
     padding-bottom: 16px;
     color: var(--colors-text-on-action);
     background: radial-gradient(111.45% 100% at 48.35% 0%, #206DB4 0%, #152337 99%);
@@ -4011,19 +4011,15 @@ img.emoji {
     color: var(--colors-text-01);
     display: flex;
     gap: 14px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     max-height: 40px;
     overflow: hidden;
     align-items: center;
     transition: max-height 0.1s ease-in-out;
-    margin: 24px 12px;
+    margin: 12px;
 }
 
 .important-notice-container.extended{
-    max-height: 100%;
+    max-height: 124px;
     align-items: flex-start;
 
     .important-notice-text{
@@ -4318,15 +4314,7 @@ img.emoji {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding-bottom: 80px;
-}
-
-#wallet{
-    height: 100%;
-}
-
-#section_transactions{
-    height: calc(100% - 234px);
+    padding-bottom: 24px;
 }
 
 .loading-modal-wrapper {
@@ -4422,4 +4410,24 @@ img.emoji {
     height: 100%;
     max-height: 200px;
     overflow: auto;
+}
+
+.session-banner{
+    background: white;
+    padding: 8px 12px;
+    width: 100%;
+    position: fixed;
+    top: 56px;
+    z-index: 100;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--colors-outline-02);
+}
+
+.spixi-session-banner-content{
+    display: flex;
+    gap: 4px;
+    flex-direction: column;
 }

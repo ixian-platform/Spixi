@@ -116,17 +116,24 @@
                             *SL{index-scan}</a></div>
                     </div>
                 </div>
-
+            </div>
+            <div class="important-notice-container" id="importantNotice">
+                <i class="fa fa-money-bill-transfer"></i>
+                <div class="important-notice-text">
+                    <span class="label-sm">Missing some transactions?</span>
+                    <span class="body-xs">ISpixi reads directly from the blockchain, not centralized servers, so syncing may take a bit longer.</span>
+                    <span class="label-xs s-text-link" onclick="window.open('https://explorer.ixian.io/')">View all transactions on explorer <i class="fa fa-arrow-right"></i></span>
+                </div>
+                <i class="fa fa-chevron-down toggle-chevron" style="cursor: pointer" onclick="toggleImportantNotice(this)"></i>
             </div>
             <!-- End BalanceBar -->
             <div id="section_no_transactions" class="container">
                 <div class="spixi-list-placeholder-transactions-image"></div>
                 <div class="spixi-list-placeholder-title">*SL{index-no-transactions-title}</div>
                 <div class="spixi-list-placeholder-subtitle">*SL{index-no-transactions}</div>
-
             </div>
 
-            <div id="section_transactions" style="display:block;">
+            <div id="section_transactions" style="display:none;">
                 <div class="spixi-activity-title">
                     *SL{index-activity}
                 </div>
@@ -140,18 +147,7 @@
                     <div id="paymentlist" class="payment-list-container">
 
                     </div>
-                    <div class="important-notice-container" id="importantNotice">
-                        <i class="fa fa-money-bill-transfer"></i>
-                        <div class="important-notice-text">
-                            <span class="label-sm">Missing some transactions?</span>
-                            <span class="body-xs">ISpixi reads directly from the blockchain, not centralized servers, so syncing may take a bit longer.</span>
-                            <span class="label-xs s-text-link" onclick="window.open('https://explorer.ixian.io/')">View all transactions on explorer <i class="fa fa-arrow-right"></i></span>
-                        </div>
-                        <i class="fa fa-chevron-down toggle-chevron" style="cursor: pointer" onclick="toggleImportantNotice(this)"></i>
-                    </div>
                 </div>
-
-
             </div>
         </div>
 
@@ -238,7 +234,7 @@
 </div>  <!-- Wrap -->
 
 <div class="new-modal-wrapper" id="multiUserAppModal" style="display: none;">
-    <div class="new-modal-container">
+    <div class="new-modal-container" id="multiUserModalContent">
         <img src="img/people-arrows-icon.png" alt="people-arrows-icon" width="32" height="32"/>
         <div class="new-modal-texts">
             <span class="label-lg">Multi-user App</span>
@@ -590,6 +586,8 @@
 
     function onLaunchHandler(element) {
         const multiUserModal = document.getElementById("multiUserAppModal");
+        const modalContent = document.getElementById("multiUserModalContent");
+
         multiUserModal.setAttribute("data-app-id", null);
 
         const appId = element.getAttribute('data-app-id');
@@ -597,9 +595,22 @@
 
         //show multi-user modal if true
         if (isMultiuser) {
-            const multiUserModal = document.getElementById("multiUserAppModal");
             multiUserModal.style.display = "flex";
             multiUserModal.setAttribute("data-app-id", appId);
+
+            setTimeout(() => {
+                function handleClickOutside(event) {
+                    const clickedInsideModal = modalContent.contains(event.target);
+                    const clickedInsideWrapper = multiUserModal.contains(event.target);
+
+                    if (clickedInsideWrapper && !clickedInsideModal) {
+                        multiUserModal.style.display = "none";
+                        document.removeEventListener("click", handleClickOutside);
+                    }
+                }
+
+                document.addEventListener("click", handleClickOutside);
+            }, 10);
         }
         //else just start the app in solo mode
         else {
@@ -608,9 +619,11 @@
     }
 
     function launchSoloMode(buttonElement) {
+        const multiUserModal = document.getElementById("multiUserAppModal");
         const appId = buttonElement.closest('#multiUserAppModal')?.getAttribute('data-app-id');
 
         if (appId) {
+            multiUserModal.style.display = "none";
             window.location.href = `ixian:startApp:${appId}`;
         } else {
             console.error("App ID not found.");
@@ -635,16 +648,12 @@
 
     function toggleImportantNotice(iconElement) {
         const container = document.getElementById("importantNotice");
-        const isExtended = container.classList.contains("extended");
+        const isExtended = container.classList.toggle("extended");
 
         if (isExtended) {
-            container.classList.remove("extended");
-            iconElement.classList.add("fa-chevron-up");
-            iconElement.classList.remove("fa-chevron-down");
+            iconElement.classList.replace("fa-chevron-down", "fa-chevron-up");
         } else {
-            container.classList.add("extended");
-            iconElement.classList.add("fa-chevron-down");
-            iconElement.classList.remove("fa-chevron-up");
+            iconElement.classList.replace("fa-chevron-up", "fa-chevron-down");
         }
     }
 

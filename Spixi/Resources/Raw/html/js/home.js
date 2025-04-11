@@ -300,7 +300,7 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
                                     <span class="body-xs s-text-02">${timestamp}</span>
                                 </div>
                                 <div class="single-payment-info-right">
-                                    <span class="label-sm s-text-01">${signedAmount}</span>
+                                    <span class="label-sm s-text-01">${limitToTwoDecimals(signedAmount)}</span>
                                     <span class="body-xs s-text-02">${fiatAmountText}</span>
                                 </div>
                             </div>
@@ -309,6 +309,13 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
 
 
     document.getElementById("paymentlist").appendChild(paymentEntry);
+}
+
+function limitToTwoDecimals(inputAsString) {
+    const cleaned = inputAsString.trim().replace(/^([+-])\s*/, '$1');
+    const parsedNum = parseFloat(cleaned);
+    if (isNaN(parsedNum)) return parsedNum;
+    return parsedNum.toFixed(2);
 }
 
 

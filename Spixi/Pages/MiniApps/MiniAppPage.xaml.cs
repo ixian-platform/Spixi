@@ -30,7 +30,7 @@ namespace SPIXI
         public MiniAppPage(string app_id, Address host_user_address, Address[] user_addresses, string app_entry_point)
         {
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);
+            NavigationPage.SetHasNavigationBar(this, true);
 
             sessionId = Guid.NewGuid().ToByteArray();
 
