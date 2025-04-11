@@ -4431,3 +4431,71 @@ img.emoji {
     gap: 4px;
     flex-direction: column;
 }
+
+.payment-data-container{
+    background: var(--colors-surface-02);
+    margin: 16px;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.payment-data-row{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.payment-data-middle-border{
+    border-top: 1px solid var(--colors-outline-02);
+    border-bottom: 1px solid var(--colors-outline-02);
+    padding: 16px 0;
+}
+
+.payment-data-row-amount{
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.payment-data-fee-details{
+    width: 100%;
+    background: var(--colors-surface-03);
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    max-height: 40px;
+}
+
+.payment-data-user-info{
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.payment-data-user-info img {
+    width: 48px;
+    height: 48px;
+    border-radius: 800px;
+}
+
+.payment-data-hash-copy{
+    background: var(--colors-surface-03);
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.payment-data-hash-text{
+    max-width: 232px;
+    word-break: break-all;
+}

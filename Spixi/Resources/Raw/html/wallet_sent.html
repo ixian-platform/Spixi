@@ -10,7 +10,8 @@
     <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+    <!-- TODO: change back to use dynamic file -->
+    <link rel="stylesheet" type="text/css" href="css/spixiui-light.css">
 
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
@@ -80,40 +81,47 @@
             <div class="col spixi-descriptionbar-row-details">*SL{wallet-sent-unconfirmed-details}</div>
         </div>
 
-        <div class="spixi-sectionbar">
-            <div>
-                <div id="subtitle-type" class="spixi-sectionbar-subtitle">
-                    *SL{wallet-sent-subtitle}
+        <section class="payment-data-container">
+            <div class="payment-data-row">
+                <span class="label-xs s-text-02" id="timestamp"></span>
+                <div class="payment-data-row-amount">
+                    <span class="heading-sm" id="amount"></span>
+                    <span class="body-sm s-text-02" id="fiat-amount"></span>
                 </div>
-
-                <div id="address_container">
-                </div>
-
-                <div class="row spixi-descriptionbar-row nomargin">
-                    <div class="spixi-descriptionbar-row-icon"><i class="fa fa-info-circle"></i></div>
-                    <div class="col spixi-descriptionbar-row-details">*SL{wallet-sent-feeinfo} <span id="sent_fee"></span> IXI.</div>
-                </div>
-
-                <hr class="spixi-separator fullwidth" />
-
-                <div class="spixi-sectionbar-subtitle">
-                    *SL{wallet-sent-txid}
-                </div>
-                <div class="spixi-sectionbar-txid" id="sent_txid">
-
-                </div>
-                <hr class="spixi-separator fullwidth" />
-                <div id="viewexplorer" class="spixi-flat-button">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> *SL{wallet-sent-view-explorer}
+                <div class="payment-data-fee-details label-xs">
+                    *SL{wallet-sent-feeinfo} <span id="sent_fee"></span> IXI.
                 </div>
             </div>
-        </div>
-
+            <div class="payment-data-row payment-data-middle-border">
+                <div id="subtitle-type" class="label-xs s-text-02">*SL{wallet-sent-subtitle}</div>
+                <div class="payment-data-user-info">
+<!--                    TODO: missing user image-->
+<!--                    <img src="" alt="usr_img" class="payment-data-avatar"> -->
+                    <span class="label-lg" id="user"></span>
+                </div>
+                <div class="payment-data-hash-copy">
+<!--                    TODO: missing user address here-->
+                    <div class="body-xs s-text-02 payment-data-hash-text">213213213213</div>
+                    <i class="fas fa-copy"></i>
+                </div>
+            </div>
+            <div class="payment-data-row">
+                <span class="label-xs s-text-02">*SL{wallet-sent-txid}</span>
+                <div class="payment-data-hash-copy">
+                    <div class="body-xs s-text-02 payment-data-hash-text" id="sent_txid"></div>
+                    <i class="fas fa-copy"></i>
+                </div>
+            </div>
+            <div class="payment-data-row">
+                <div id="viewexplorer" class="spixi-flat-button" style="width: 100%;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> View in Explorer
+                </div>
+            </div>
+        </section>
     </div>
 
 
     <script type="text/javascript">
-        var address_container = document.getElementById('address_container');
         var titleIcon = document.getElementById("titleicon");
         var received = false;
 
@@ -140,12 +148,11 @@
         }
 
         function clearEntries() {
-            address_container.innerHTML = "";
+            //
         }
 
         function addEntry(address, amount, fiat_amount, time, type, confirmed)
         {
-            var icon = '<i class="spixi-list-tx-icon fa fa-spinner spixi-status-yellow"></i>';
             if (received == true) {
                 document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive-pending}";
             }
@@ -153,38 +160,12 @@
                 document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent-pending}";
             }
 
-            if (confirmed == "true") {
-                iconClass = "spixi-text-green";
-                icon = '<i class="spixi-list-tx-icon fa fa-check-circle spixi-status-green"></i>';
-                if (received == true) {
-                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive}";
-                }
-                else {
-                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent}";
-                }
-
-            } else if (confirmed == "error") {
-                iconClass = "spixi-text-red";
-                icon = '<i class="spixi-list-tx-icon fa fa-exclamation-circle spixi-status-red"></i>';
-                document.getElementById('subtitle').innerHTML = "*SL{wallet-status-failed}";
-            }
-
-            var arrow = '<i class="spixi-list-tx-icon spixi-tx-green fa fa-arrow-down"></i>';
             amount = amountWithCommas(amount);
-            var amountText = "+ " + amount;
-            if (type == "send") {
-                arrow = '<i class="spixi-list-tx-icon spixi-tx-red fa fa-arrow-up"></i>';
-                amountText = "- " + amount;
-            }
 
-
-            var address_html = document.getElementById("templates").getElementsByClassName("address")[0].outerHTML;
-            address_container.innerHTML += address_html;
-
-            address_container.lastElementChild.getElementsByClassName("spixi-list-item-from")[0].innerHTML = icon + " " + address;
-            address_container.lastElementChild.getElementsByClassName("spixi-list-item-amount")[0].innerHTML = amountText + " " + arrow;
-            address_container.lastElementChild.getElementsByClassName("spixi-list-item-amount-fiat")[0].innerHTML = "$" + fiat_amount;
-            address_container.lastElementChild.getElementsByClassName("spixi-list-item-timestamp")[0].innerHTML = time;
+            document.getElementById("timestamp").innerHTML = time;
+            document.getElementById("amount").innerHTML = amount;
+            document.getElementById("fiat-amount").innerHTML = "$" + fiat_amount;
+            document.getElementById("user").innerHTML = address;
         }
 
         function setData(amount, fee, time, txid, confirmed) {
