@@ -195,7 +195,7 @@
                 <span class="body-sm"> This will delete the app from your device. No data will be lost unless the app stores it locally.</span>
             </div>
             <div class="new-modal-buttons">
-                <div class="spixi-flat-button label-sm">
+                <div class="spixi-flat-button label-sm" onclick="confirmRemoveApp()">
                     Remove App
                 </div>
                 <div class="spixi-flat-button label-sm button outline" onclick="document.getElementById('removeAppModal').style.display = 'none'">
@@ -334,6 +334,12 @@
                 location.href = `ixian:install:${url}`;
                 toggleInstallActionSlideUp();
             }
+        }
+
+        function confirmRemoveApp() {
+            document.getElementById('removeAppModal').style.display = 'none';
+            document.getElementById("removingAppLoader").style.display = "flex";
+            location.href = `ixian:uninstall`;           
         }
 
     </script>

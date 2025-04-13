@@ -95,13 +95,11 @@
             <div class="payment-data-row payment-data-middle-border">
                 <div id="subtitle-type" class="label-xs s-text-02">*SL{wallet-sent-subtitle}</div>
                 <div class="payment-data-user-info">
-<!--                    TODO: missing user image-->
-<!--                    <img src="" alt="usr_img" class="payment-data-avatar"> -->
+                    <img src="" alt="usr_img" class="payment-data-avatar" id="avatar"> 
                     <span class="label-lg" id="user"></span>
                 </div>
                 <div class="payment-data-hash-copy">
-<!--                    TODO: missing user address here-->
-                    <div class="body-xs s-text-02 payment-data-hash-text">213213213213</div>
+                    <div class="body-xs s-text-02 payment-data-hash-text" id="address"></div>
                     <i class="fas fa-copy"></i>
                 </div>
             </div>
@@ -151,7 +149,7 @@
             //
         }
 
-        function addEntry(address, amount, fiat_amount, time, type, confirmed)
+        function addEntry(address, username, avatar, amount, fiat_amount, time, type, confirmed)
         {
             if (received == true) {
                 document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive-pending}";
@@ -165,7 +163,9 @@
             document.getElementById("timestamp").innerHTML = time;
             document.getElementById("amount").innerHTML = amount;
             document.getElementById("fiat-amount").innerHTML = "$" + fiat_amount;
-            document.getElementById("user").innerHTML = address;
+            document.getElementById("address").innerHTML = address;
+            document.getElementById("user").innerHTML = username;
+            document.getElementById("avatar").src = avatar;
         }
 
         function setData(amount, fee, time, txid, confirmed) {
