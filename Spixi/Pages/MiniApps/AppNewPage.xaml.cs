@@ -1,6 +1,7 @@
 ﻿using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using SPIXI.MiniApps;
 using System;
 using System.Linq;
 using System.Text;
@@ -67,6 +68,11 @@ namespace SPIXI
                 e.Cancel = true;
                 return;
             }
+            else if (current_url.StartsWith("ixian:fetch:"))
+            {
+                string url = current_url.Substring("ixian:fetch:".Length);
+                onFetch(url);
+            }
             else if (current_url.StartsWith("ixian:install:"))
             {
                 string url = current_url.Substring("ixian:install:".Length);
@@ -129,6 +135,21 @@ namespace SPIXI
                     Utils.sendUiCommand(this, "setScannedData", appUrl);
             }
 
+        }
+
+        private void onFetch(string path)
+        {
+            MiniApp? app = Node.MiniAppManager.fetch(path);
+            if(app == null)
+            {
+                Utils.sendUiCommand(this, "showUrlError");
+                return;
+            }
+
+            app.url = path;
+            
+            Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+            Navigation.RemovePage(this);
         }
 
         private void onInstall(string path)

@@ -84,8 +84,7 @@
             if (url?.length > 0) {
                 addressInput.className = "spixi-textfield add-mini-app-url-input"
                 errLabel.style.display = 'none';
-                // TODO: instead of installing here we should redirect to details page, but still we need to fetch app ID first from the URL, then redirect from there to ixian:details:id
-                location.href = "ixian:install:" + url;
+                location.href = "ixian:fetch:" + url;
             } else{
                 addressInput.className = "spixi-textfield add-mini-app-url-input add-mini-app-url-input-error"
                 errLabel.style.display = 'block';
@@ -99,6 +98,13 @@
         function setScannedData(appCode) {
             const addressInput = document.getElementById("addressInput");
             addressInput.value = appCode;
+        }
+
+        function showUrlError() {
+            const addressInput = document.getElementById("addressInput");
+            const errLabel = document.getElementById("app-url-input-err-label");
+            addressInput.className = "spixi-textfield add-mini-app-url-input add-mini-app-url-input-error"
+            errLabel.style.display = 'block';
         }
 
         // TODO: check how this behaves in android/ios + change url with correct one

@@ -85,7 +85,6 @@
                 <div class="spixi-app-details-properties-single-div">
                     <span class="label-sm s-text-02">Install URL</span>
                     <div class="urlContainer">
-                        <!--TODO: missing app URL data -->
                         <span class="body-sm s-text-01" id="installUrlValue"></span>
                         <i class="fas fa-copy" id="copyUrlIcon" style="cursor: pointer"></i>
                     </div>
@@ -113,8 +112,7 @@
                 <div class="spixi-app-details-properties-single-div">
                     <span class="label-sm s-text-02">Source</span>
                     <div class="urlContainer">
-                        <!--                    TODO: missing source data-->
-                        <span class="body-sm s-text-01" id="source">source link</span>
+                        <span class="body-sm s-text-01" id="source"></span>
                     </div>
                 </div>
             </div>
@@ -129,7 +127,6 @@
         </div>
     </div>
 
-    <!--TODO: change display type to show installing loader-->
     <div class="loading-modal-wrapper" id="installingAppLoadingModal" style="display: none;">
         <div class="loading-modal-container">
             <span class="spixi-loader"></span>
@@ -140,7 +137,6 @@
         </div>
     </div>
 
-    <!--TODO: change display type to show removing app loader-->
     <div class="loading-modal-wrapper" id="removingAppLoader" style="display: none;">
         <div class="loading-modal-container">
             <span class="spixi-loader"></span>
@@ -151,7 +147,6 @@
         </div>
     </div>
 
-    <!--TODO: change display type to show install err modal-->
     <div class="new-modal-wrapper" id="appFailedToInstallModal" style="display: none;">
         <div class="new-modal-container">
             <img src="img/err-modal-icon.png" alt="err-img" width="32" height="32" />
@@ -170,7 +165,6 @@
         </div>
     </div>
 
-    <!--TODO: change display type to show install success modal-->
     <div class="new-modal-wrapper" id="appSuccessfullyInstalledModal" style="display: none;">
         <div class="new-modal-container">
             <img src="img/app-success-modal-icon.png" alt="success-img" width="32" height="32" />
@@ -179,7 +173,6 @@
                 <span class="body-sm">App installed in your Mini Apps library.</span>
             </div>
             <div class="new-modal-buttons">
-                <!--            TODO: missing appId here-->
                 <div class="spixi-flat-button label-sm" onclick="viewAppDetails()">
                     <i class="fas fa-arrow-right"></i>View App Details
                 </div>
@@ -205,7 +198,6 @@
         </div>
     </div>
 
-    <!--TODO: change display type to show app removed modal-->
     <div class="new-modal-wrapper" id="appRemovedModal" style="display: none;">
         <div class="new-modal-container">
             <img src="img/check-icon.png" alt="check-icon" width="32" height="32" />
@@ -222,7 +214,7 @@
     </div>
    
     <script type="text/javascript">
-        function init(name, icon, publisher, version, capabilities, appId, isMultiuser, isAppInstalled) {
+        function init(name, icon, publisher, description, version, url, capabilities, appId, isMultiuser, isAppInstalled) {
             icon = icon.replace(/&#92;/g, '\\');
 
             const mappedCapsToArray = capabilities?.split(',').map(cap => cap.trim()) || [];
@@ -236,7 +228,13 @@
             document.querySelectorAll('[data-role="AppPublisher"]').forEach(item => {
                 item.textContent = publisher;
             });
+
+            document.getElementById("AppDescription").textContent = description;
             document.getElementById("AppVersion").textContent = version;
+            document.getElementById("installUrlValue").textContent = url;
+
+            document.getElementById("source").textContent = url;
+
             document.querySelectorAll('[data-role="capabilitiesList"]').forEach(item => {
                 item.innerHTML = mappedCapsToArray?.map(cap => `<span class="label-xs s-text-inverse single-capability">${cap}</span>`).join('');
             });
@@ -303,11 +301,7 @@
         }
 
         function viewAppDetails() {
-            const appId = document.getElementById("AppID").textContent;
-
-            if (appId) {
-                window.location.href = `ixian:details:${appId}`;
-            }
+            window.location.href = 'ixian:details';          
         }
 
         function launchAppHandler() {
@@ -327,19 +321,35 @@
             removeAppModal.style.display = "flex";
         }
 
+        function showInstalling() {
+            document.getElementById("installingAppLoadingModal").style.display = "flex";
+        }
+
+        function showInstallSuccess() {
+            document.getElementById("installingAppLoadingModal").style.display = "none";
+            document.getElementById("appSuccessfullyInstalledModal").style.display = "flex";
+        }
+
+        function showInstallFailed() {
+            document.getElementById("installingAppLoadingModal").style.display = "none";
+            document.getElementById("appFailedToInstallModal").style.display = "flex";
+        }
+
+
         function confirmInstallCall(){
-            //TODO: this url will now be empty because it's missing from the app details structure
-            const url = document.getElementById("installUrlValue")?.textContent;
-            if(url){
-                location.href = `ixian:install:${url}`;
-                toggleInstallActionSlideUp();
-            }
+            location.href = 'ixian:install';
+            toggleInstallActionSlideUp();
         }
 
         function confirmRemoveApp() {
             document.getElementById('removeAppModal').style.display = 'none';
             document.getElementById("removingAppLoader").style.display = "flex";
-            location.href = `ixian:uninstall`;           
+            location.href = 'ixian:uninstall';           
+        }
+
+        function showAppRemoved() {
+            document.getElementById("removingAppLoader").style.display = "none";
+            document.getElementById("appRemovedModal").style.display = "flex";
         }
 
     </script>

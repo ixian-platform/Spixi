@@ -12,11 +12,24 @@ namespace SPIXI
     {
         string appId = null;
 
+        MiniApp fetchedApp = null;
+
         public AppDetailsPage(string app_id)
         {
             InitializeComponent();
 
             appId = app_id;
+
+            NavigationPage.SetHasNavigationBar(this, false);
+
+            loadPage(webView, "app_details.html");
+        }
+
+        public AppDetailsPage(MiniApp app)
+        {
+            InitializeComponent();
+
+            fetchedApp = app;
 
             NavigationPage.SetHasNavigationBar(this, false);
 
@@ -58,9 +71,17 @@ namespace SPIXI
             {
                 onBack();
             }
+            else if (current_url.StartsWith("ixian:install", StringComparison.Ordinal))
+            {
+                onInstall();
+            }
             else if (current_url.StartsWith("ixian:uninstall", StringComparison.Ordinal))
             {
                 onUninstall();
+            }
+            else if (current_url.StartsWith("ixian:details", StringComparison.Ordinal))
+            {
+                onDetails();
             }
             else if (current_url.StartsWith("ixian:startApp", StringComparison.Ordinal))
             {
@@ -83,9 +104,20 @@ namespace SPIXI
 
         private void onLoad()
         {
-            MiniApp app = Node.MiniAppManager.getApp(appId);
+            MiniApp app = fetchedApp;
+            string icon = null;
+            if (app == null)
+            {
+                app = Node.MiniAppManager.getApp(appId);
+                icon = Node.MiniAppManager.getAppIconPath(appId);
+            }
+            else
+            {
+                appId = app.id;
+                icon = app.image;
+            }
 
-            string icon = Node.MiniAppManager.getAppIconPath(appId);
+
             if(icon == null)
             {
                 icon = "";
@@ -94,23 +126,59 @@ namespace SPIXI
             var appList = Node.MiniAppManager.getInstalledApps();
             bool isAppInstalled = appList.ContainsKey(appId);
 
-            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version, app.getCapabilitiesAsString(), appId, app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), isAppInstalled.ToString());
+            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.description, app.version, app.url, app.getCapabilitiesAsString(), appId, app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), isAppInstalled.ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
+        }
+
+        private void onInstall()
+        {
+            if(fetchedApp == null)
+            {
+                return;
+            }
+
+            Utils.sendUiCommand(this, "showInstalling");
+
+            string app_name = Node.MiniAppManager.install(fetchedApp);
+            if (app_name != null)
+            {
+                Node.shouldRefreshApps = true;
+                Utils.sendUiCommand(this, "showInstallSuccess");
+                
+            }
+            else
+            {               
+                Utils.sendUiCommand(this, "showInstallFailed");
+            }
+
         }
 
         private void onUninstall()
         {
             if(Node.MiniAppManager.remove(appId))
             {
-                displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removed-text"), SpixiLocalization._SL("global-dialog-ok"));
-            }else
+                Utils.sendUiCommand(this, "showAppRemoved");
+            }
+            else
             {
                 displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removefailed-text"), SpixiLocalization._SL("global-dialog-ok"));
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             Node.shouldRefreshApps = true;
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+        }
+
+        private void onDetails()
+        {
+            MiniApp app = Node.MiniAppManager.getApp(appId);
+            if (app == null)
+            {
+                return;
+            }
+
+            Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+            Navigation.RemovePage(this);
         }
 
         // Executed every second
