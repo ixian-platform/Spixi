@@ -361,10 +361,15 @@ namespace SPIXI
             {
                 joinBot();
             }
-            else if (current_url.StartsWith("ixian:startApp", StringComparison.Ordinal))
+            else if (current_url.StartsWith("ixian:startApp:", StringComparison.Ordinal))
             {
                 string appId = current_url.Substring("ixian:startApp:".Length);
                 onStartApp(appId);
+            }
+            else if (current_url.StartsWith("ixian:startAppMulti", StringComparison.Ordinal))
+            {
+                string appId = current_url.Substring("ixian:startAppMulti:".Length);
+                onStartAppMulti(appId);
             }
             else if (current_url.StartsWith("ixian:appDetails"))
             {
@@ -1264,6 +1269,46 @@ namespace SPIXI
             {
                 Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
             });
+        }
+
+        private void onStartAppMulti(string appId)
+        {
+            var recipientPage = new WalletRecipientPage();
+            recipientPage.pickSucceeded += (sender, e) =>
+            {
+                HandlePickAppMultiUserSucceeded(sender, e, appId);
+            };
+            Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
+        }
+
+        private async void HandlePickAppMultiUserSucceeded(object sender, SPIXI.EventArgs<string> e, string appId)
+        {
+            string id = e.Value;
+            Address id_bytes = new Address(id);
+            Friend friend = FriendList.getFriend(id_bytes);
+
+            if (friend == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                
+                MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), new Address[] { id_bytes }, Node.MiniAppManager.getAppEntryPoint(appId));
+                miniAppPage.accepted = true;
+                Node.MiniAppManager.addAppPage(miniAppPage);
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+                });
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Navigation failed: " + ex.Message);
+            }
         }
 
         private void onAppDetails(string appId)

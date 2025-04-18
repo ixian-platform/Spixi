@@ -233,7 +233,8 @@
 
 </div>  <!-- Wrap -->
 
-<div class="new-modal-wrapper" id="multiUserAppModal" style="display: none;">
+<!-- Multi user app modal -->
+<div id="multiUserAppModal" class="new-modal-wrapper" style="display: none;">
     <div class="new-modal-container" id="multiUserModalContent">
         <img src="img/people-arrows-icon.png" alt="people-arrows-icon" width="32" height="32"/>
         <div class="new-modal-texts">
@@ -241,7 +242,8 @@
             <span class="body-sm">This app supports more than one user. Would you like to invite one of your contacts?</span>
         </div>
         <div class="new-modal-buttons">
-            <div class="spixi-flat-button label-sm">
+            <div class="spixi-flat-button label-sm"
+                 onclick="launchMultiUserMode(this)">
                 <i class="fas fa-user-plus"></i>Invite Contact
             </div>
             <div class="spixi-flat-button label-sm button outline"
@@ -630,6 +632,18 @@
         }
     }
 
+    function launchMultiUserMode(buttonElement) {
+        const multiUserModal = document.getElementById("multiUserAppModal");
+        const appId = buttonElement.closest('#multiUserAppModal')?.getAttribute('data-app-id');
+
+        if (appId) {
+            multiUserModal.style.display = "none";
+            window.location.href = `ixian:startAppMulti:${appId}`;
+        } else {
+            console.error("App ID not found.");
+        }
+    }
+    
     function searchMiniApps(){
         const searchValue = document.getElementById("searchMiniApps")?.value.toLowerCase();
         const appItems = document.querySelectorAll("#AppList .mini-apps-list-single-item");
