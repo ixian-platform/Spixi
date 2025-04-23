@@ -92,7 +92,7 @@
             </div>
         </section>
     </div>  <!-- Wrap -->
-    <div class="action-slide-up-container">
+    <div class="action-slide-up-container" id="install-mini-app-prompt">
         <p class="label-md s-text-01 text-center">Install Mini App</p>
         <div>
             <div class="spixi-app-details-header">
@@ -121,7 +121,7 @@
             <div class="spixi-flat-button label-sm" onclick="confirmInstallCall()">
                 <i class="fas fa-check"></i>&nbsp; Confirm Install
             </div>
-            <div class="spixi-flat-button label-sm button outline" onclick="toggleInstallActionSlideUp()">
+            <div class="spixi-flat-button label-sm button outline" onclick="toggleAnimatedSlider('install-mini-app-prompt')">
                 Cancel
             </div>
         </div>
@@ -258,7 +258,7 @@
             } else {
                 const installAppItem = `
                 <div class="add-mini-app-buttons spixi-app-details-buttons">
-                    <div class="spixi-flat-button label-sm" onclick="toggleInstallActionSlideUp()">
+                    <div class="spixi-flat-button label-sm" onclick="toggleAnimatedSlider('install-mini-app-prompt')">
                         <i class="fas fa-arrows-down-to-line"></i>&nbsp; Download and Install
                     </div>
                     <span class="label-xs s-text-02" style="max-width: 244px;text-align: center">
@@ -285,20 +285,6 @@
                 toast.className = toast.className.replace("show", "");
             }, 3000);
         });
-
-        function toggleInstallActionSlideUp() {
-            const slideUpContainer = document.querySelector('.action-slide-up-container');
-
-            if (slideUpContainer.classList.contains('active')) {
-                slideUpContainer.classList.remove('active');
-                document.getElementById("wrap").classList.remove("blurredContent");
-                document.getElementById("toolbar").classList.remove("blurredContent");
-            } else {
-                slideUpContainer.classList.add('active');
-                document.getElementById("wrap").classList.add("blurredContent");
-                document.getElementById("toolbar").classList.add("blurredContent");
-            }
-        }
 
         function viewAppDetails() {
             window.location.href = 'ixian:details';          
@@ -338,7 +324,7 @@
 
         function confirmInstallCall(){
             location.href = 'ixian:install';
-            toggleInstallActionSlideUp();
+            toggleAnimatedSlider('install-mini-app-prompt');
         }
 
         function confirmRemoveApp() {

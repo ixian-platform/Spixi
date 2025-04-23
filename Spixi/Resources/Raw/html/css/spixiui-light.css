@@ -4499,3 +4499,15 @@ img.emoji {
     max-width: 232px;
     word-break: break-all;
 }
+
+.backup-prompt-icon-container{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    > i{
+        color: var(--colors-icon-accent-dark);
+        font-size: 2rem;
+    }
+}
+

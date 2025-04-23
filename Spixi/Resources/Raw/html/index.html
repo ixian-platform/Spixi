@@ -233,6 +233,29 @@
 
 </div>  <!-- Wrap -->
 
+<!--TODO: needs proper logic when to show -->
+<div class="action-slide-up-container" id="backup-prompt">
+    <div class="backup-prompt-icon-container">
+        <i class="fas fa-folder-closed backupIcon"></i>
+    </div>
+    <div class="text-center">
+        <p class="label-md s-text-01">Don’t forget to back up </p>
+        <span class="body-sm s-text-01">Spixi is fully decentralized - your data stays on your device only.
+To keep your contacts safe and restore everything later, create a backup now.</span>
+    </div>
+    <div class="add-mini-app-buttons">
+        <div class="spixi-flat-button label-sm" onclick="confirmInstallCall()">
+            Yes Create Backup
+        </div>
+        <div class="spixi-flat-button label-sm button outline" onclick="toggleAnimatedSlider('backup-prompt')">
+            Not Now
+        </div>
+        <div class="body-xs s-text-02 text-center" style="width: 100%;max-width: 200px">
+            It’s recommended to backup every time you add a new contact.
+        </div>
+    </div>
+</div>
+
 <!-- Multi user app modal -->
 <div id="multiUserAppModal" class="new-modal-wrapper" style="display: none;">
     <div class="new-modal-container" id="multiUserModalContent">

@@ -322,3 +322,17 @@ function hideModalDialog()
 function parseBoolean(value) {
     return String(value).toLowerCase() === "true";
 }
+
+function toggleAnimatedSlider(elementId) {
+    const slideUpContainer = document.getElementById(elementId);
+
+    if (slideUpContainer.classList.contains('active')) {
+        slideUpContainer.classList.remove('active');
+        document.getElementById("wrap").classList.remove("blurredContent");
+        document.getElementById("toolbar").classList.remove("blurredContent");
+    } else {
+        slideUpContainer.classList.add('active');
+        document.getElementById("wrap").classList.add("blurredContent");
+        document.getElementById("toolbar").classList.add("blurredContent");
+    }
+}
