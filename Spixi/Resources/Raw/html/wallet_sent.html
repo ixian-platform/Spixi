@@ -22,6 +22,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
+    <script src="js/clipboard.min.js"></script>
 
 </head>
 <body onload="onload()">
@@ -67,7 +68,7 @@
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
-
+        <div id="toastbar" class="spixi-toastbar">*SL{address-copied}</div>
         <div id="titleicon" class="spixi-payment-header-icon">
             <i class="fa-solid fa-spinner"></i>
         </div>
@@ -100,14 +101,14 @@
                 </div>
                 <div class="payment-data-hash-copy">
                     <div class="body-xs s-text-02 payment-data-hash-text" id="address"></div>
-                    <i class="fas fa-copy"></i>
+                    <i class="fas fa-copy copy-icon" id="copy-recipient"></i>
                 </div>
             </div>
             <div class="payment-data-row">
                 <span class="label-xs s-text-02">*SL{wallet-sent-txid}</span>
                 <div class="payment-data-hash-copy">
                     <div class="body-xs s-text-02 payment-data-hash-text" id="sent_txid"></div>
-                    <i class="fas fa-copy"></i>
+                    <i class="fas fa-copy copy-icon" id="copy-tx-id"></i>
                 </div>
             </div>
             <div class="payment-data-row">
@@ -189,6 +190,31 @@
             document.getElementById('sent_fee').innerHTML = fee;
             document.getElementById("sent_txid").innerHTML = txid;
         }
+
+        const clipboard = new ClipboardJS('#copy-tx-id', {
+            text: function () {
+                return document.getElementById("sent_txid")?.textContent;
+            }
+        });
+
+        const clipboardAddress = new ClipboardJS('#copy-recipient', {
+            text: function () {
+                return document.getElementById("address")?.textContent;
+            }
+        });
+
+        [clipboard, clipboardAddress].forEach(instance => {
+            instance.on('success', function (e) {
+                e.clearSelection();
+                const toast = document.getElementById("toastbar");
+                toast.className = "spixi-toastbar show";
+                setTimeout(() => {
+                    toast.className = toast.className.replace("show", "");
+                }, 3000);
+            });
+        });
+
+
     </script>
 </body>
 </html>

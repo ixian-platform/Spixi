@@ -4511,3 +4511,16 @@ img.emoji {
     }
 }
 
+.send-ixi-buttons{
+    margin: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+    text-align: center;
+}
+
+.copy-icon:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}
