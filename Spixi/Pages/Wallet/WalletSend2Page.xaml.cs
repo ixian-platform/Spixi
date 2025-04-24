@@ -1,9 +1,10 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Storage;
+using IXICore.Streaming;
 using IXICore.Utils;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Storage;
 using System.Web;
 using static IXICore.Transaction;
 
@@ -192,7 +193,7 @@ namespace SPIXI
                     message.data = spixi_message.getBytes();
                     message.id = friend_message.id;
 
-                    StreamProcessor.sendMessage(friend, message);
+                    CoreStreamProcessor.sendMessage(friend, message);
                 }
             }
 

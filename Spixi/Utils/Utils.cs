@@ -1,5 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
+using Spixi;
 using System.Text;
 
 namespace SPIXI
@@ -63,6 +65,21 @@ namespace SPIXI
             {
                 Logging.error("Exception occured in sendUiCommand " + e);
             }
+        }
+
+        public static SingleChatPage getChatPage(Friend friend)
+        {
+            foreach (var item in App.appWindow.Navigation.NavigationStack)
+            {
+                if (item is SingleChatPage)
+                {
+                    if (((SingleChatPage)item).friend == friend)
+                    {
+                        return (SingleChatPage)item;
+                    }
+                }
+            }
+            return null;
         }
     }
 }

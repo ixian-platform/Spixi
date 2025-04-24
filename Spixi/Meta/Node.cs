@@ -2,42 +2,26 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.RegNames;
+using IXICore.Storage;
+using IXICore.Streaming;
 using IXICore.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Spixi;
 using SPIXI.CustomApps;
 using SPIXI.Network;
-using SPIXI.Storage;
 using System.Text;
 
 namespace SPIXI.Meta
 {
-    class Balance
-    {
-        public Address address = null;
-        public IxiNumber balance = 0;
-        public ulong blockHeight = 0;
-        public byte[] blockChecksum = null;
-        public bool verified = false;
-        public long lastUpdate = 0;
-    }
-
     class Node : IxianNode
     {
-        // Used for all local data storage
-        public static LocalStorage localStorage;
-
         // Used to force reloading of some homescreen elements
         public static bool changedSettings = false;
-
-        public static Balance balance = new();  // Stores the last known balance for this node
 
         public static IxiNumber fiatPrice = 0;  // Stores the last known ixi fiat value
 
         public static int startCounter = 0;
-
-        public static bool shouldRefreshContacts = true;
 
         public static bool refreshAppRequests = true;
 
@@ -84,14 +68,14 @@ namespace SPIXI.Meta
             Logging.info("Initing local storage");
 
             // Prepare the local storage
-            localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
+            IxianHandler.localStorage = new LocalStorage(Config.spixiUserFolder);
 
             customAppManager = new CustomAppManager(Config.spixiUserFolder);
 
             FriendList.init(Config.spixiUserFolder);
 
             // Prepare the stream processor
-            StreamProcessor.initialize(Config.spixiUserFolder);
+            CoreStreamProcessor.initialize(Config.spixiUserFolder, Config.enablePushNotifications);
 
             Logging.info("Node init done");
 
@@ -105,7 +89,7 @@ namespace SPIXI.Meta
         static public void preStart()
         {
             // Start local storage
-            localStorage.start();
+            IxianHandler.localStorage.start();
 
             FriendList.loadContacts();
         }
@@ -241,6 +225,22 @@ namespace SPIXI.Meta
             StreamClientManager.start();
         }
 
+        private static void connectToBotNodes()
+        {
+            List<Friend> bot_list = null;
+            lock (FriendList.friends)
+            {
+                bot_list = FriendList.friends.FindAll(x => x.bot);
+            }
+            foreach (var bot_entry in bot_list)
+            {
+                if (bot_entry.relayIP != null)
+                {
+                    StreamClientManager.connectTo(bot_entry.searchForRelay(), bot_entry.walletAddress);
+                }
+            }
+        }
+
         // Handle timer routines
         static public void mainLoop()
         {
@@ -273,6 +273,7 @@ namespace SPIXI.Meta
                     // TODO: optimize this by using a different thread perhaps
                     PresenceList.performCleanup();
 
+                    Balance balance = IxianHandler.balances.First();
                     // Request initial wallet balance
                     if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
                     {
@@ -284,6 +285,8 @@ namespace SPIXI.Meta
                     {
                         checkPrice();
                     }
+
+                    connectToBotNodes();
                 }
                 catch (Exception e)
                 {
@@ -306,9 +309,9 @@ namespace SPIXI.Meta
             running = false;
 
             // Stop the stream processor
-            StreamProcessor.uninitialize();
+            CoreStreamProcessor.uninitialize();
 
-            localStorage.stop();
+            IxianHandler.localStorage.stop();
 
             customAppManager.stop();
 
@@ -388,6 +391,7 @@ namespace SPIXI.Meta
 
         public override void receivedBlockHeader(Block block_header, bool verified)
         {
+            Balance balance = IxianHandler.balances.First();
             if (balance.blockChecksum != null && balance.blockChecksum.SequenceEqual(block_header.blockChecksum))
             {
                 balance.verified = true;
@@ -425,11 +429,12 @@ namespace SPIXI.Meta
             return tiv.getLastBlockHeader().version;
         }
 
-        public override bool addTransaction(Transaction tx, bool force_broadcast)
+        public override bool addTransaction(Transaction tx, List<Address> relayNodeAddresses, bool force_broadcast)
         {
             // TODO Send to peer if directly connectable
-            CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
-            PendingTransactions.addPendingLocalTransaction(tx);
+            NetworkClientManager.sendToClient(relayNodeAddresses, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
+            //CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
+            PendingTransactions.addPendingLocalTransaction(tx, relayNodeAddresses);
             return true;
         }
 
@@ -441,6 +446,7 @@ namespace SPIXI.Meta
         public override Wallet getWallet(Address id)
         {
             // TODO Properly implement this for multiple addresses
+            Balance balance = IxianHandler.balances.First();
             if (balance.address != null && id.SequenceEqual(balance.address))
             {
                 return new Wallet(balance.address, balance.balance);
@@ -451,6 +457,7 @@ namespace SPIXI.Meta
         public override IxiNumber getWalletBalance(Address id)
         {
             // TODO Properly implement this for multiple addresses
+            Balance balance = IxianHandler.balances.First();
             if (balance.address != null && id.SequenceEqual(balance.address))
             {
                 return balance.balance;
@@ -461,7 +468,8 @@ namespace SPIXI.Meta
         // Returns the current wallet's usable balance
         public static IxiNumber getAvailableBalance()
         {
-            IxiNumber currentBalance = Node.balance.balance;
+            Balance balance = IxianHandler.balances.First();
+            IxiNumber currentBalance = balance.balance;
             currentBalance -= TransactionCache.getPendingSentTransactionsAmount();
 
             return currentBalance;
@@ -566,6 +574,101 @@ namespace SPIXI.Meta
         }
 
         public override byte[] getBlockHash(ulong blockNum)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void processFriendMessage(FriendMessage msg)
+        {
+            if (msg.filePath != "")
+            {
+                string t_file_name = Path.GetFileName(msg.filePath);
+                try
+                {
+                    if (msg.type == FriendMessageType.fileHeader && msg.completed == false)
+                    {
+                        if (msg.localSender)
+                        {
+                            // TODO may not work on Android/iOS due to unauthorized access
+                            FileStream fs = new FileStream(msg.filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                            TransferManager.prepareFileTransfer(t_file_name, fs, msg.filePath, msg.transferId);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Error occured while trying to prepare file transfer for file '{0}' - friend '{1}', message contents '{2}' full path '{3}': {4}", t_file_name, msg.filePath, msg.message, msg.filePath, e);
+                }
+            }
+        }
+
+        public override bool receivedNewTransaction(Transaction tx)
+        {
+            return tiv.receivedNewTransaction(tx);
+        }
+
+        public override FriendMessage addMessageWithType(byte[] id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)
+        {
+            FriendMessage friend_message = FriendList.addMessageWithType(id, type, wallet_address, channel, message, local_sender, sender_address, timestamp, fire_local_notification, payable_data_len);
+            if (friend_message != null)
+            {
+                bool oldMessage = false;
+
+                Friend friend = FriendList.getFriend(wallet_address);
+
+                // Check if the message was sent before the friend was added to the contact list
+                if (friend.addedTimestamp > friend_message.timestamp)
+                {
+                    oldMessage = true;
+                }
+
+                // Only send alerts if this is a new message
+                if (oldMessage == false)
+                {
+                    // Send a local push notification if Spixi is not in the foreground
+                    if (fire_local_notification && !local_sender)
+                    {
+                        if (App.isInForeground == false || Utils.getChatPage(friend) == null)
+                        {
+                            // don't fire notification for nickname and avatar
+                            if (!friend_message.id.SequenceEqual(new byte[] { 4 }) && !friend_message.id.SequenceEqual(new byte[] { 5 }))
+                            {
+                                if (friend.bot == false
+                                    || (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification))
+                                {
+                                    SPushService.showLocalNotification("Spixi", "New Message", friend.walletAddress.ToString());
+                                }
+                            }
+                        }
+                    }
+
+                    SSystemAlert.flash();
+                }
+            }
+            return friend_message;
+        }
+
+        public override byte[] resizeImage(byte[] imageData, int width, int height, int quality)
+        {
+            return SFilePicker.ResizeImage(imageData, width, height, quality);
+        }
+
+        public override void resubscribeEvents()
+        {
+            ProtocolMessage.resubscribeEvents();
+        }
+
+        public override void receiveStreamData(byte[] data, RemoteEndpoint endpoint, bool fireLocalNotification)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override long getTimeSinceLastBlock()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void triggerSignerPowSolutionFound()
         {
             throw new NotImplementedException();
         }

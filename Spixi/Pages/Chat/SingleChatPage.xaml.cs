@@ -4,7 +4,6 @@ using IXICore.Network;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
-using SPIXI.Storage;
 using SPIXI.VoIP;
 using System.Text;
 using System.Web;
@@ -12,13 +11,14 @@ using SPIXI.Lang;
 using IXICore.SpixiBot;
 using Spixi;
 using System.Net;
+using IXICore.Streaming;
 
 namespace SPIXI
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SingleChatPage : SpixiContentPage
     {
-        private Friend friend = null;
+        public Friend friend = null;
 
         private uint messagesToShow = Config.messagesToLoad;
 
@@ -42,7 +42,6 @@ namespace SPIXI
             Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
             friend = fr;
-            friend.chat_page = this;
             Title = friend.nickname;
             selectedChannel = friend.metaData.lastMessageChannel;
 
@@ -58,10 +57,6 @@ namespace SPIXI
 
         protected override void OnAppearing()
         {
-            if (friend != null)
-            {
-                friend.chat_page = this;
-            }
             base.OnAppearing();
         }
 
@@ -87,8 +82,6 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                friend.chat_page = null;
-
                 if (Navigation.NavigationStack.Count > 1)
                 {
                     try
@@ -1348,7 +1341,6 @@ namespace SPIXI
             if (homePage != null)
             {
                 Navigation.PopToRootAsync();
-                friend.chat_page = null;
                 homePage.removeDetailContent();
                 homePage.onChat(friend.walletAddress.ToString(), null);
             }
@@ -1425,8 +1417,6 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            friend.chat_page = null;
-
             Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             return true;

@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
@@ -365,11 +366,12 @@ namespace SPIXI
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
-                StreamProcessor.sendMessage(friend, message, false, false, false);
+                CoreStreamProcessor.sendMessage(friend, message, false, false, false);
 
             }
 
-            if (friend.chat_page != null)
+            var chat_page = Utils.getChatPage(friend);
+            if (chat_page != null)
             {
                 ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
                 ulong fp = 0;
@@ -383,7 +385,7 @@ namespace SPIXI
                     fp = packet_number * 100 / totalPackets;
                 }
 
-                friend.chat_page.updateFile(uid, fp.ToString(), complete);
+                chat_page.updateFile(uid, fp.ToString(), complete);
             }
 
             return true;
@@ -533,7 +535,7 @@ namespace SPIXI
             fm.completed = true;
             fm.filePath = transfer.filePath;
 
-            Node.localStorage.requestWriteMessages(friend.walletAddress, transfer.channel);
+            IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, transfer.channel);
 
             if(incoming)
             {
@@ -549,9 +551,10 @@ namespace SPIXI
                 }
             }
 
-            if (friend.chat_page != null)
+            var chat_page = Utils.getChatPage(friend);
+            if (chat_page != null)
             {
-                friend.chat_page.updateFile(uid, "100", true);
+                chat_page.updateFile(uid, "100", true);
             }
         }
 
@@ -569,7 +572,7 @@ namespace SPIXI
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_message.getBytes();
 
-            StreamProcessor.sendMessage(friend, message, true, true, false);
+            CoreStreamProcessor.sendMessage(friend, message, true, true, false);
         }
 
         public static void requestFileData(Address sender, string uid, ulong packet_number)
@@ -597,9 +600,10 @@ namespace SPIXI
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
-                StreamProcessor.sendMessage(friend, message, false, false, false);
+                CoreStreamProcessor.sendMessage(friend, message, false, false, false);
 
-                if (friend.chat_page != null)
+                var chat_page = Utils.getChatPage(friend);
+                if (chat_page != null)
                 {
                     FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
                     if (transfer == null)
@@ -607,7 +611,7 @@ namespace SPIXI
 
                     ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
                     ulong fp = (packet_number - 1) * 100 / totalPackets;
-                    friend.chat_page.updateFile(uid, fp.ToString(), false);
+                    chat_page.updateFile(uid, fp.ToString(), false);
                 }
             }
         }
@@ -642,7 +646,7 @@ namespace SPIXI
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
-                StreamProcessor.sendMessage(friend, message);
+                CoreStreamProcessor.sendMessage(friend, message);
             }
         }
 

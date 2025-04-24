@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System.Text;

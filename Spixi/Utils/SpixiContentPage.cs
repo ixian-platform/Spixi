@@ -5,6 +5,7 @@ using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.VoIP;
 using Spixi;
+using IXICore.Streaming;
 #if WINDOWS
 using Microsoft.Web.WebView2.Core;
 #endif

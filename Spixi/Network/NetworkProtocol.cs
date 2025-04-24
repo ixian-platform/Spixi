@@ -1,14 +1,11 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.Storage;
+using IXICore.Streaming;
 using IXICore.Utils;
 using SPIXI.Meta;
-using SPIXI.Storage;
-using System;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Threading;
 
 namespace SPIXI.Network
 {
@@ -133,7 +130,7 @@ namespace SPIXI.Network
                                     Friend f = FriendList.getFriend(endpoint.presence.wallet);
                                     if (f != null && f.bot)
                                     {
-                                        StreamProcessor.sendGetBotInfo(f);
+                                        CoreStreamProcessor.sendGetBotInfo(f);
                                     }
                                 }
 

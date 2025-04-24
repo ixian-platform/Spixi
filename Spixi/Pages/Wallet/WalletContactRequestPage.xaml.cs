@@ -1,11 +1,8 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using IXICore.Network;
-using SPIXI.Interfaces;
+using IXICore.Streaming;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Storage;
-using System;
 using System.Text;
 using System.Web;
 
@@ -100,13 +97,14 @@ namespace SPIXI
                     message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                     message.data = spixi_message.getBytes();
 
-                    StreamProcessor.sendMessage(friend, message);
+                    CoreStreamProcessor.sendMessage(friend, message);
 
-                    Node.localStorage.requestWriteMessages(friend.walletAddress, 0);
+                    IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, 0);
 
-                    if (friend.chat_page != null)
+                    var chat_page = Utils.getChatPage(friend);
+                    if (chat_page != null)
                     {
-                        friend.chat_page.updateRequestFundsStatus(requestMsg.id, null, SpixiLocalization._SL("chat-payment-status-declined"));
+                        chat_page.updateRequestFundsStatus(requestMsg.id, null, SpixiLocalization._SL("chat-payment-status-declined"));
                     }
                 }
             }
@@ -158,13 +156,14 @@ namespace SPIXI
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
-                StreamProcessor.sendMessage(friend, message);
+                CoreStreamProcessor.sendMessage(friend, message);
 
-                Node.localStorage.requestWriteMessages(friend.walletAddress, 0);
+                IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, 0);
 
-                if (friend.chat_page != null)
+                var chat_page = Utils.getChatPage(friend);
+                if (chat_page != null)
                 {
-                    friend.chat_page.updateRequestFundsStatus(requestMsg.id, transaction.id, SpixiLocalization._SL("chat-payment-status-pending"));
+                    chat_page.updateRequestFundsStatus(requestMsg.id, transaction.id, SpixiLocalization._SL("chat-payment-status-pending"));
                 }
             }
 
