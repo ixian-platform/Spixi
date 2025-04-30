@@ -171,6 +171,11 @@ contact-new-confirm-details = You are about to send a contact request to the fol
 downloads-title = Downloads
 downloads-empty = You have no downloaded files.
 
+; Contributors Screen
+contributors-title = Contributors
+contributors-thanks = Special thanks to our contributors
+contributors-special-thanks-title = Special thanks to our contributors
+
 ; Index Screen
 index-balance = IXI Balance
 index-balance-show = Show
@@ -211,6 +216,7 @@ index-side-security = Security
 index-side-backup = Backup
 index-side-password = Password
 index-side-about = About
+index-side-contributors = Contributors
 index-side-howtouse = How to Use Spixi
 index-side-sendlog = Send App Log
 index-devmode = Developer Mode Activated

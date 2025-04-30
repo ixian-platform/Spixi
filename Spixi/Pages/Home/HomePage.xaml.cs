@@ -281,6 +281,10 @@ namespace SPIXI
             {
                 Navigation.PushModalAsync(new DownloadsPage());
             }
+            else if (current_url.Equals("ixian:contributors", StringComparison.Ordinal))
+            {
+                Navigation.PushModalAsync(new ContributorsPage());
+            }
             else if (current_url.Equals("ixian:share", StringComparison.Ordinal))
             {
                 Share.RequestAsync(new ShareTextRequest

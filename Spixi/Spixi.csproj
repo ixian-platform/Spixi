@@ -245,6 +245,9 @@
 		<MauiXaml Update="Pages\Contacts\ContactNewPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Pages\Contributors\ContributorsPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Pages\MiniApps\AppDetailsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -324,6 +327,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<Compile Update="Pages\Contributors\ContributorsPage.xaml.cs">
+		  <DependentUpon>ContributorsPage.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Pages\MiniApps\MiniAppPage.xaml.cs">
 		  <DependentUpon>MiniAppPage.xaml</DependentUpon>
 		</Compile>
