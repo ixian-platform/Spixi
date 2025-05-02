@@ -130,6 +130,30 @@ function setSelectedChannel(id, icon, name) {
     channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = name + "<div class=\"unread-indicator\"></div>";
 }
 
+function isScrollable(el) {
+    return el.scrollHeight > el.clientHeight;
+}
+
+function setInitialStickyDate() {
+    const bubbles = document.querySelectorAll(".spixi-bubble");
+    if (bubbles.length === 0) return;
+
+    const firstVisibleBubble = bubbles[bubbles.length - 1];
+    const timestampEl = firstVisibleBubble.querySelector(".time[data-timestamp]");
+    if (!timestampEl) return;
+
+    const time = parseInt(timestampEl.getAttribute("data-timestamp"), 10);
+    const date = new Date(time * 1000);
+
+    const stickyHeader = document.getElementById("sticky-date");
+    if (stickyHeader && isScrollable(messagesEl)) {
+        stickyHeader.textContent = formatDateForStickyDate(date);
+        stickyHeader.style.display = "flex";
+    } else{
+        stickyHeader.style.display = "none";
+    }
+}
+
 function onChatScreenLoaded() {
     document.getElementById("chat_input").focus();
     updateChatInputPlaceholder();
@@ -375,6 +399,29 @@ function clearInput() {
 var messagesEl = document.getElementById("messages");
 var chatHolderEl = document.getElementById("chatholder");
 
+let scrollTimeout;
+
+messagesEl.addEventListener("scroll", () => {
+    const stickyDateEl = document.getElementById("sticky-date");
+
+    // Show sticky header while scrolling
+    if (stickyDateEl) {
+        stickyDateEl.style.display = "flex";
+    }
+
+    // Clear any existing timeout
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+
+    // Set timeout to hide sticky header after 1 second of no scroll
+    scrollTimeout = setTimeout(() => {
+        if (stickyDateEl) {
+            stickyDateEl.style.display = "none";
+        }
+    }, 1000);
+
+    updateStickyHeader();
+});
+
 function addReactions(id, reactions) {
     var msgEl = document.getElementById("msg_" + id);
     if (msgEl == null) {
@@ -458,6 +505,80 @@ function parseMessageText(text) {
     return text;
 }
 
+let lastInsertedDate = null;
+
+function formatDateForDateHeader(date) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(date).toLocaleDateString(undefined, options);
+}
+
+function formatDateForStickyDate(date){
+    const options = { day: '2-digit', month: 'short' };
+    return new Date(date).toLocaleDateString(undefined, options);
+}
+
+const observerOptions = {
+    root: document.getElementById('messages'),
+    rootMargin: '0px 0px -90% 0px',
+    threshold: 0
+};
+
+const stickyHeader = document.getElementById('sticky-date');
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting  && isScrollable(messagesEl)) {
+            const newDate = entry.target.getAttribute('data-date');
+            stickyHeader.innerText = formatDateForStickyDate(newDate);
+            stickyHeader.style.display = "flex";
+        }
+    });
+}, observerOptions);
+
+function observeDateHeaders() {
+    const headers = document.querySelectorAll(".date-header");
+    headers.forEach(header => observer.observe(header));
+}
+
+let dateObserverInitialized = false;
+
+function observeDateHeadersOnce() {
+    if (dateObserverInitialized) return;
+    dateObserverInitialized = true;
+
+    setTimeout(() => {
+        observeDateHeaders();
+        setInitialStickyDate();
+    }, 500);
+}
+
+function updateStickyHeader() {
+    const stickyDateEl = document.getElementById("sticky-date");
+    const dateHeaders = document.querySelectorAll(".date-header");
+
+    let currentStickyDate = "";
+
+    for (let i = dateHeaders.length - 1; i >= 0; i--) {
+        const header = dateHeaders[i];
+        const rect = header.getBoundingClientRect();
+
+        if (rect.top < 60) {
+            currentStickyDate = formatDateForStickyDate(header.getAttribute("data-date"));
+            stickyDateEl.innerText = currentStickyDate;
+            stickyDateEl.style.display = "flex";
+            break;
+        }
+    }
+
+    dateHeaders.forEach(header => {
+        if (header.dataset.date === currentStickyDate) {
+            header.style.visibility = "hidden";
+        } else {
+            header.style.visibility = "visible";
+        }
+    });
+}
+
 // TODO optimize this function
 function addText(id, address, nick, avatar, text, time, className) {
     text = text.replace(/\n/g, "<br>");
@@ -469,7 +590,22 @@ function addText(id, address, nick, avatar, text, time, className) {
     textEl.innerHTML = text;
 
     var timeClass = "spixi-timestamp";
-    var relativeTime = getRelativeTime(time);
+    const formattedTimestamp = getHoursMinutes(time);
+
+    // Insert date header if this message has a new day
+    const messageDate = new Date(time * 1000);
+    const messageDateString = formatDateForDateHeader(messageDate);
+
+    if (messageDateString !== lastInsertedDate) {
+        lastInsertedDate = messageDateString;
+
+        const dateHeaderEl = document.createElement("div");
+        dateHeaderEl.className = "date-header body-sm";
+        dateHeaderEl.setAttribute("data-date", messageDateString);
+        dateHeaderEl.innerText = messageDateString;
+
+        messagesEl.appendChild(dateHeaderEl);
+    }
 
     if (getTimeDifference(time) < 3600) {
         timeClass = "spixi-timestamp spixi-rel-ts-active";
@@ -478,7 +614,7 @@ function addText(id, address, nick, avatar, text, time, className) {
     var timeEl = document.createElement('div');
     timeEl.setAttribute("data-timestamp", time);
     timeEl.className = "time selectable " + timeClass;
-    timeEl.innerHTML = relativeTime;
+    timeEl.innerHTML = formattedTimestamp;
 
     var bubbleContentWrapEl = document.createElement('div');
 
@@ -542,6 +678,16 @@ function addText(id, address, nick, avatar, text, time, className) {
     messagesEl.appendChild(bubbleEl);
 
     adjustLastestBubbles();
+
+    observeDateHeadersOnce();
+
+    if (document.querySelectorAll(".spixi-bubble").length === 1) {
+        setInitialStickyDate();
+    }
+
+    setTimeout(() => {
+        updateStickyHeader();
+    }, 500);
 
     scrollToBottom();
 }

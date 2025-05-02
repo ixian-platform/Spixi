@@ -396,8 +396,8 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
 
     let indicator = online === "true" ? " online" : " offline";
 
-    var unreadIndicator = "";
-    var readIndicator = "";
+    let unreadIndicator = "";
+    let readIndicator = "";
 
     switch (type) {
         case "read":
@@ -419,14 +419,10 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
         readIndicator = "";
     }
     
-    var excerpt_style = type === "typing" ? "typing" : "";
+    const excerpt_style = type === "typing" ? "typing" : "";
 
-    var timeClass = "spixi-timestamp";
-    var relativeTime = getRelativeTime(timestamp);
-
-    if (getTimeDifference(timestamp) < 3600) {
-        timeClass = "spixi-timestamp spixi-rel-ts-active";
-    }
+    let timeClass = "spixi-timestamp";
+    const friendlyFormattedTimestamp = getUserFriendlyFormattedTimestamp(timestamp);
 
     var readmsg = document.createElement("div");
     readmsg.id = "ch_" + wallet;
@@ -437,24 +433,26 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
 
     readmsg.innerHTML = `
         <a href="ixian:chat:${wallet}">
-            <div class="row flex-nowrap">
-                <div class="col-2 spixi-list-item-left">
-                    <img class="spixi-list-item-avatar" src="${avatar}"/>
-                    <div class="spixi-friend-status-indicator"></div>
+            <div class="spixi-chat-item-container">
+                <div class="spixi-chat-item-left">
+                    <div class="spixi-chat-item-avatar-container">
+                        <img alt="avatar" class="spixi-chat-item-avatar-img" src="${avatar}"/>
+                        <div class="is-online-circle"></div>
+                    </div>
+                    <div class="spixi-chat-item-message-container">
+                        <span class="body-md s-text-01">${from}</span>
+                        <span class="body-sm s-text-02 ${excerpt_style} message-preview">${excerpt_msg}</span>
+                    </div>
                 </div>
-                <div class="col-6 spixi-list-item-center">
-                    <div class="spixi-list-item-title">${from}</div>
-                    <div class="spixi-list-item-subtitle ${excerpt_style}">${excerpt_msg}</div>
-                </div>
-                <div class="col-4 spixi-list-item-right">
+                <div class="spixi-chat-item-right">
+                    <div class="${timeClass} body-xs s-text-02" data-timestamp="${timestamp}">${friendlyFormattedTimestamp}</div>
                     <div class="spixi-chat-unread-indicator"></div>
                     ${readIndicator}
-                    <div class="${timeClass}" data-timestamp="${timestamp}">${relativeTime}</div>
                 </div>
             </div>
         </a>`;
 
-    var chatsNode = document.getElementById("chatlist");
+    const chatsNode = document.getElementById("chatlist");
     if(insertToTop)
     {
         chatsNode.insertBefore(readmsg, chatsNode.firstElementChild);
@@ -490,7 +488,6 @@ function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg,
     }
 
     var timeClass = "spixi-timestamp";
-    var relativeTime = getRelativeTime(timestamp);
 
     if (getTimeDifference(timestamp) < 3600) {
         timeClass = "spixi-timestamp spixi-rel-ts-active";
