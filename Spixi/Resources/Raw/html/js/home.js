@@ -585,7 +585,6 @@ document.getElementById("rating_yes").onclick = function () {
 
 
 function selectTab(tab) {
-    console.log(tab)
     $("#" + tab + " > a").tab('show');
 }
 
