@@ -457,8 +457,6 @@ function addReactions(id, reactions) {
     if (reactionsEl.innerHTML == "") {
         reactionsEl.parentNode.removeChild(reactionsEl);
     }
-
-    scrollToBottom();
 }
 
 function deleteMessage(id) {
@@ -1193,19 +1191,15 @@ function hideChannelSelector() {
 
 function clearMessages(showMore) {
     messagesEl.innerHTML = "";
+    const messagesSpacer = document.createElement('div');
+    messagesSpacer.className = "messages-spacer";
+    messagesEl.appendChild(messagesSpacer);
 
     if (showMore == "true") {
         const loadMoreDiv = document.createElement('div');
         loadMoreDiv.id = "load_more";
-        loadMoreDiv.className = "spixi-outline-button";
-        loadMoreDiv.style.width = "200px";
-        loadMoreDiv.style.height = "40px";
-        loadMoreDiv.style.paddingTop = "8px";
-        loadMoreDiv.style.paddingBottom = "8px";
-        loadMoreDiv.style.marginTop = "30px";
-        loadMoreDiv.style.marginBottom = "30px";
-        loadMoreDiv.style.marginLeft = "auto";
-        loadMoreDiv.style.marginRight = "auto";
+        loadMoreDiv.className = "spixi-flat-button label-sm button outline";
+        loadMoreDiv.style.margin = "12px auto";
         loadMoreDiv.innerHTML = "<i class='fa-solid fa-arrow-rotate-right'></i> Show older messages";
         messagesEl.appendChild(loadMoreDiv);
         document.getElementById("load_more").onclick = function () {

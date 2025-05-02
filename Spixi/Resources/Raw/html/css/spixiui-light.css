@@ -2235,17 +2235,27 @@ img.emoji {
 /* Chat */
 #messages {
     box-sizing: border-box;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: calc(100vh - 120px);
     position: relative;
     background-image: url('../img/pattern.svg');
     background-repeat: repeat;
     background-size: 324px 509px;
-    padding-top: 12px;
 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#messages::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.messages-spacer {
+    margin-top: auto;
 }
 
 .scrollable-div {
