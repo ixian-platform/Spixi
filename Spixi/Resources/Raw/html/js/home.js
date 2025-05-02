@@ -407,10 +407,10 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
             readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-confirmed fas fa-check"></i>';
             break;
         case "pending":
-            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-pending-indicator fas fa-clock"></i>';
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-pending-indicator fas fa-arrow-right"></i>';
             break;
         case "default":
-            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-default-indicator fas fa-comment-slash"></i>';
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-default-indicator fas fa-clock"></i>';
             break;
     }
 
@@ -446,7 +446,7 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
                 </div>
                 <div class="spixi-chat-item-right">
                     <div class="${timeClass} body-xs s-text-02" data-timestamp="${timestamp}">${friendlyFormattedTimestamp}</div>
-                    <div class="spixi-chat-unread-indicator"></div>
+                    <div class="spixi-chat-unread-indicator label-xs">${unread}</div>
                     ${readIndicator}
                 </div>
             </div>

@@ -632,9 +632,9 @@ function addText(id, address, nick, avatar, text, time, className) {
     bubbleContentWrapEl.appendChild(timeEl);
     if (className.includes("spixi-bubble myself")) {
         if (className.includes("sent")) {
-            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-clock\"></i>";
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-arrow-right\"></i>";
         } else if (className.includes("default")) {
-            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-comment-slash\"></i>";
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-clock\"></i>";
         } else if (className.includes("read")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check-double\"></i>";
         } else {
@@ -931,9 +931,9 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
 
             if (msgEl.className.includes("spixi-bubble myself")) {
                 if (additionalClasses.includes("sent")) {
-                    statusEl.className = "statusIndicator fas fa-clock";
+                    statusEl.className = "statusIndicator fas fa-arrow-right";
                 } else if (additionalClasses.includes("default")) {
-                    statusEl.className = "statusIndicator fas fa-comment-slash";
+                    statusEl.className = "statusIndicator fas fa-clock";
                 } else if (additionalClasses.includes("read")) {
                     statusEl.className = "statusIndicator fas fa-check-double";
                 } else {
@@ -1191,9 +1191,17 @@ function hideChannelSelector() {
 
 function clearMessages(showMore) {
     messagesEl.innerHTML = "";
+
+    // add spacer to push messaged to the bottom
     const messagesSpacer = document.createElement('div');
     messagesSpacer.className = "messages-spacer";
     messagesEl.appendChild(messagesSpacer);
+
+    // private messages note always visible as first the item
+    const privateMessagesNote = document.createElement('div');
+    privateMessagesNote.className = "private-messages-note";
+    privateMessagesNote.innerHTML = "<i style='font-size: 12px' class='fa-solid fa-lock'></i> <span class='label-xs s-text-01'>" + SL_ChatPrivate["title"] + "</span> <span class='body-xs s-text-01'>" + SL_ChatPrivate["message"] + "</span>";
+    messagesEl.appendChild(privateMessagesNote);
 
     if (showMore == "true") {
         const loadMoreDiv = document.createElement('div');

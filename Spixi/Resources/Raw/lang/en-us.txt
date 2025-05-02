@@ -136,6 +136,9 @@ chat-report-details = Would you like to report this content?
 chat-report = Report
 chat-report-cancel = Cancel
 
+chat-private-note-title = This chat is private.
+chat-private-note-message = Messages are stored only on your device and sent directly to your contact using state-of-the-art encryption.
+
 ; Contact Details Screen
 contact-details-chat = Chat
 contact-details-send = Send
