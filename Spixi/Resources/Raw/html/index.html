@@ -423,29 +423,85 @@ To keep your contacts safe and restore everything later, create a backup now.</s
     <!-- Modal content -->
     <div class="spixi-sidebar-content">
         <div class="spixi-sidebar-header">
-            <a id="sidebarclose" class="spixi-sidebar-closebutton" href="javascript: onMainMenuClose();">
+            <div class="spixi-sidebar-header-user-details">
+                <img id="avatar_image" class="spixi-sidebar-avatar" src="img/spixiavatar.png" alt="user-avatar" />
+                <div class="spixi-sidebar-header-user-details-text">
+                    <span id="menu_nickname" class="label-lg s-text-inverse">*SL{index-side-title}</span>
+                    <div  class="masked-user-address" onclick="onMaskWalletAddressHandler()">
+                        <img src="img/ixi-icon.svg" alt="ixi-icon" width="20" height="20" />
+                        <span id="user-address" class="label-xs s-text-inverse"></span>
+                    </div>
+                </div>
+            </div>
+            <a id="sidebarclose" class="spixi-sidebar-closebutton" href="javascript:onMainMenuClose();">
                 <i class="fa fa-arrow-left"></i>
             </a>
-
-            <div id="avatar" class="spixi-sidebar-avatar-holder">
-                <img id="avatar_image" class="spixi-sidebar-avatar" src="img/spixiavatar.png" />
+        </div>
+        <div class="spixi-sidebar-items-container">
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('downloads');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-folder-closed"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-downloads}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
             </div>
-            <p id="menu_nickname" class="spixi-sidebar-title">*SL{index-side-title}</p>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('settings');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-user-cog"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-settings}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-settings-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('encpass');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-lock"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-password}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-password-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('backup');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-save"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-backup}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-backup-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('guide');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-lightbulb"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-howtouse}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-how-to-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('contributors');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-user-astronaut"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-contributors}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('about');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-circle-info"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-about}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" id="SendLogMenuItem" onclick="selectMenuOption('viewLog');" style="display: none;">
+                <div class="spixi-sidebar-icon"><i class="fa fa-circle-info"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-sendlog}</span>
+                    <span class="body-xs s-text-02">Appeareance, nickname, and data</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
         </div>
+        <div class="footer-version body-sm" id="version">spixi</div>
 
-        <div class="spixi-sidebar-item">
-            <a href="javascript:selectMenuOption('downloads');">
-                <i class="fa fa-download spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-downloads}</div>
-            </a>
-        </div>
-
-        <div class="spixi-sidebar-item">
-            <a href="javascript:selectMenuOption('settings');">
-                <i class="fa fa-cog spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-settings}</div>
-            </a>
-        </div>
         <!-- Security Lock is not available in this version
     <div class="spixi-sidebar-item">
         <a href="javascript:selectMenuOption('lock');">
@@ -454,50 +510,6 @@ To keep your contacts safe and restore everything later, create a backup now.</s
         </a>
     </div>
     -->
-        <div class="spixi-sidebar-item">
-            <a href="javascript:selectMenuOption('backup');">
-                <i class="fa fa-save spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-backup}</div>
-            </a>
-        </div>
-
-        <div class="spixi-sidebar-item">
-            <a href="javascript:selectMenuOption('encpass');">
-                <i class="fa fa-fingerprint spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-password}</div>
-            </a>
-        </div>
-
-        <div class="spixi-sidebar-item">
-            <a href="javascript:selectMenuOption('guide');">
-                <i class="fa fa-lightbulb spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-howtouse}</div>
-            </a>
-        </div>
-
-        <div class="spixi-sidebar-item" id="SendLogMenuItem" style="display: none;">
-            <a href="javascript:selectMenuOption('viewLog');">
-                <i class="fa fa-clipboard-check spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-sendlog}</div>
-            </a>
-        </div>
-
-        <div class="spixi-sidebar-item">
-            <a href="javascript:selectMenuOption('contributors');">
-                <i class="fa fa-users spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-contributors}</div>
-            </a>
-        </div>
-
-        <div class="spixi-sidebar-item">
-            <a href="javascript:selectMenuOption('about');">
-                <i class="fa fa-info spixi-sidebar-item-icon"></i>
-                <div class="spixi-sidebar-item-text">*SL{index-side-about}</div>
-            </a>
-        </div>
-
-        <div class="spixi-version" id="version">
-        </div>
     </div>
 </div>
 <!-- End left sidebar and helper -->
@@ -553,6 +565,7 @@ To keep your contacts safe and restore everything later, create a backup now.</s
     function setAddress(addr) {
         wal_id = addr;
         var parts = addr.match(/.{1,34}/g) || [];
+        document.getElementById("user-address").innerHTML = maskWalletAddress(wal_id);
         document.getElementById("wal1").innerHTML = parts[0];
         document.getElementById("wal2").innerHTML = parts[1];
         generateQR();

@@ -233,6 +233,10 @@ index-excerpt-file = File
 index-excerpt-voice-call = Voice Call
 index-excerpt-self =
 index-excerpt-typing = Typing...
+index-side-settings-subtitle = Appearance, Nickname, and Data
+index-side-password-subtitle = Change Spixi Password
+index-side-backup-subtitle = Create a backup file
+index-side-how-to-subtitle = Learn how to use Spixi
 
 ; Intro Screen
 intro-title = Welcome to Spixi,

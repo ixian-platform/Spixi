@@ -356,3 +356,8 @@ function getUserFriendlyFormattedTimestamp(unixTimestamp) {
         return date.toLocaleString('en-US', { month: 'short', day: 'numeric', year: "numeric" });
     }
 }
+
+function maskWalletAddress(address) {
+    if (!address || address.length <= 8) return "";
+    return `${address.slice(0, 4)}...${address.slice(-4)}`;
+}

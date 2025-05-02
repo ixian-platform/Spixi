@@ -15,6 +15,11 @@ function onMainMenuClose() {
     leftSidebar.style.display = "none";
 }
 
+function onMaskWalletAddressHandler(){
+    selectTab("tab4");
+    onMainMenuClose()
+}
+
 function onHomeMenuAction()
 {
     homeModal.style.display = "block";
@@ -580,6 +585,7 @@ document.getElementById("rating_yes").onclick = function () {
 
 
 function selectTab(tab) {
+    console.log(tab)
     $("#" + tab + " > a").tab('show');
 }
 
