@@ -144,7 +144,7 @@ contact-details-chat = Chat
 contact-details-send = Send
 contact-details-receive = Receive
 contact-details-notifications = Notifications
-contact-details-history = History
+contact-details-history = Transactions
 contact-details-account-address = Spixi Address
 contact-details-address-1 = Retrieving
 contact-details-address-2 = Spixi
@@ -152,8 +152,8 @@ contact-details-address-3 = address...
 contact-details-removecontact = Delete Contact
 contact-details-removedcontact-title = Deleted
 contact-details-removedcontact-text = Contact deleted.
-contact-details-deletehistory = Delete History
-contact-details-deletedhistory-title = Deleted
+contact-details-deletehistory = Delete chat history
+contact-details-deletedhistory-title = Remove this contact
 contact-details-deletedhistory-text = Message history deleted.
 
 ; New Contact Screen
@@ -233,10 +233,11 @@ index-excerpt-file = File
 index-excerpt-voice-call = Voice Call
 index-excerpt-self =
 index-excerpt-typing = Typing...
-index-side-settings-subtitle = Appearance, Nickname, and Data
+index-side-settings-subtitle = Themes, language, nick, and data
 index-side-password-subtitle = Change Spixi Password
 index-side-backup-subtitle = Create a backup file
 index-side-how-to-subtitle = Learn how to use Spixi
+index-side-about-subtitle = Information, help, contact us, privacy policy
 
 ; Intro Screen
 intro-title = Welcome to Spixi,

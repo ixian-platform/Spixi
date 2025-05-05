@@ -281,11 +281,6 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
 
     const isReceived = receive === "1";
     const arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;
-    const signedAmount = `${isReceived ? '+' : '-'} ${amountWithCommas(amount)}`;
-
-
-    const fiatAmountText = `$${amountWithCommas(fiatAmount)}`;
-
 
     const paymentEntry = document.createElement("div");
     paymentEntry.id = "tx_" + txid;
@@ -305,8 +300,8 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
                                     <span class="body-xs s-text-02">${timestamp}</span>
                                 </div>
                                 <div class="single-payment-info-right">
-                                    <span class="label-sm s-text-01">${limitToTwoDecimals(signedAmount)}</span>
-                                    <span class="body-xs s-text-02">${fiatAmountText}</span>
+                                    <span class="label-sm s-text-01">${isReceived ? '+' : '-'}${limitToTwoDecimals(amountWithCommas(amount))}</span>
+                                    <span class="body-xs s-text-02">${amountWithCommas(fiatAmount)}</span>
                                 </div>
                             </div>
                         </div>                      
@@ -315,14 +310,6 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
 
     document.getElementById("paymentlist").appendChild(paymentEntry);
 }
-
-function limitToTwoDecimals(inputAsString) {
-    const cleaned = inputAsString.trim().replace(/^([+-])\s*/, '$1');
-    const parsedNum = parseFloat(cleaned);
-    if (isNaN(parsedNum)) return parsedNum;
-    return parsedNum.toFixed(2);
-}
-
 
 function setupCloneNode(element) {
     if (element.id) {

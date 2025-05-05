@@ -1833,7 +1833,7 @@ img.emoji {
     width: 100%;
     height: 100%;
     background: var(--colors-surface-01);
-    padding: 32px 0;
+    padding: 12px 0;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -4518,7 +4518,9 @@ img.emoji {
 }
 
 .send-ixi-buttons{
-    margin: 16px;
+    width: 100%;
+    max-width: 640px;
+    margin: 16px auto;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -4663,4 +4665,187 @@ img.emoji {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 12px;
     padding: 12px;
+}
+
+/*New Contact Details style*/
+
+.spixi-contact-details-header{
+    padding: 40px 24px 12px 24px;
+    background: linear-gradient(180deg, #3070AC 0%, #223766 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    position: relative;
+}
+
+.spixi-contact-details-back-arrow{
+    font-size: 21px;
+    color: var(--colors-text-inverse);
+    position: absolute;
+    top: 24px;
+    left: 24px;
+}
+
+.spixi-contact-details-avatar{
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 50%;
+    border: 1px solid var(--colors-outline-01);
+}
+
+.spixi-contact-details-avatar-online{
+    border: 2px solid var(--colors-icon-success);
+    animation: onlinePulse 1.8s infinite ease-in-out;
+    transition: border-width 0.3s ease;
+}
+
+@keyframes onlinePulse {
+    0% {
+        border-width: 2px;
+        box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.5);
+    }
+    50% {
+        border-width: 4px;
+        box-shadow: 0 0 4px 2px rgba(0, 255, 0, 0.2);
+    }
+    100% {
+        border-width: 2px;
+        box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.5);
+    }
+}
+
+.spixi-contact-details-header-user{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+}
+
+.spixi-contact-details-username{
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--colors-text-inverse);
+
+    i {
+        cursor: pointer;
+        font-size: 12px;
+    }
+}
+
+.spixi-contact-details-header-actions{
+    display: flex;
+    gap: 68px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+;
+}
+
+.spixi-contact-details-single-action{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+}
+
+.single-action-icon-wrapper{
+    width: 48px;
+    height: 48px;
+    padding: 16px;
+    background: var(--colors-surface-brand-dark);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover{
+        opacity: 0.8;
+        cursor: pointer;
+    }
+
+    i {
+        color: var(--colors-icon-on-action);
+    }
+}
+
+.spixi-contact-details-body{
+    padding: 24px 16px;
+    background: var(--colors-surface-01);
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 556px;
+    margin: 0 auto;
+}
+
+.spixi-contact-details-body-address-container{
+    background: var(--colors-surface-02);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+.remove-contact{
+    i  {
+        color: var(--colors-icon-error);
+    }
+
+    div:first-child{
+        background: var(--colors-surface-error);
+
+
+    }
+
+    span{
+        color: var(--colors-icon-error);
+    }
+}
+
+.spixi-contact-details-body-actions{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-bottom: 1px solid var(--colors-outline-02);
+    padding-bottom: 8px;
+}
+
+.expanded-transactions-container{
+    height: 100%;
+    max-height: 290px;
+    overflow: auto;
+}
+
+.edit-username-icons-btn{
+    border-radius: 12px;
+}
+
+.spixi-contact-details-username-edit{
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
+.nickname-input{
+    background: var(--colors-surface-03);
+    border: unset;
+    border-radius: 12px;
+    padding: 12px;
+
+    &::selection,
+    &:active,
+    &:focus{
+        outline: none;
+        box-shadow: none;
+        border: 1px solid var(--colors-outline-action);
+    }
 }

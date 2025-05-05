@@ -361,3 +361,10 @@ function maskWalletAddress(address) {
     if (!address || address.length <= 8) return "";
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
 }
+
+function limitToTwoDecimals(inputAsString) {
+    const cleaned = inputAsString.trim().replace(/^([+-])\s*/, '$1');
+    const parsedNum = parseFloat(cleaned);
+    if (isNaN(parsedNum)) return parsedNum;
+    return parsedNum.toFixed(2);
+}
