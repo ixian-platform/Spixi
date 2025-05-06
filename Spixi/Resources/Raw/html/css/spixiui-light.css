@@ -1307,7 +1307,7 @@ img.emoji {
 .spixi-button.smallround {
     width: 54px;
     height: 54px;
-    border-radius: 64px;
+    border-radius: 54px;
     box-shadow: 0px 0px;
 
     font-size: 18pt;
@@ -2853,15 +2853,7 @@ img.emoji {
 }
 
 .spixi-chat-read-indicator{
-    width: 12pt;
-    height: 8pt;
     font-size: 12px;
-    vertical-align: middle;
-    right: 64pt;
-    margin-right: 16px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .spixi-chat-read-indicator-read {
