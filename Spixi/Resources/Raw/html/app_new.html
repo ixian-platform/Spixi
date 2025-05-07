@@ -44,27 +44,27 @@
         <!-- End Toolbar -->
 
         <section class="add-mini-app-container">
-            <span class="body-sm s-text-01">Want to try a new Mini App? Just enter its URL or scan a QR code to install it.</span>
+            <span class="body-sm s-text-01">*SL{apps-add-note}</span>
             <div>
-                <textarea type="text" class="spixi-textfield add-mini-app-url-input" id="addressInput" placeholder="Please enter the URL where the Mini App is located..."></textarea>
-                <p class="label-xs s-text-01" id="app-url-input-err-label" style="display: none">Please enter a valid URL before continuing.</p>
+                <textarea type="text" class="spixi-textfield add-mini-app-url-input" id="addressInput" placeholder="*SL{apps-add-url-placeholder}"></textarea>
+                <p class="label-xs s-text-01" id="app-url-input-err-label" style="display: none">*SL{apps-add-invalid-url}</p>
             </div>
             <div class="add-mini-app-buttons">
                 <div id="sendrequest" class="spixi-flat-button label-sm">
-                    <i class="fas fa-globe"></i>&nbsp;Get App From URL
+                    <i class="fas fa-globe"></i>&nbsp;*SL{apps-get-from-url}
                 </div>
                 <span class="body-sm">or</span>
                 <div class="spixi-outline-button label-sm" onclick="scanAppCode()">
-                    <i class="fas fa-qrcode"></i>&nbsp; Scan
+                    <i class="fas fa-qrcode"></i>&nbsp; *SL{apps-scan}
                 </div>
             </div>
 
             <div class="important-notice-container">
                 <i class="fa fa-lock"></i>
                 <div class="important-notice-text">
-                    <span class="label-sm">Mini Apps are lightweight JavaScript apps that run securely inside Spixi.</span>
-                    <span class="body-xs">Install only from sources you trust. You’re always in control.</span>
-                    <span class="label-xs s-text-link" onclick="redirectToSpixi()">Learn more <i class="fa fa-arrow-right"></i></span>
+                    <span class="label-sm">*SL{apps-what-is-title}</span>
+                    <span class="body-xs">*SL{apps-what-is-description}</span>
+                    <span class="label-xs s-text-link" onclick="redirectToSpixi()">*SL{apps-what-is-learn} <i class="fa fa-arrow-right"></i></span>
                 </div>
             </div>
         </section>

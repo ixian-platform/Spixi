@@ -119,9 +119,9 @@
             <div class="important-notice-container" id="importantNotice">
                 <i class="fa fa-money-bill-transfer"></i>
                 <div class="important-notice-text">
-                    <span class="label-sm">Missing some transactions?</span>
-                    <span class="body-xs">ISpixi reads directly from the blockchain, not centralized servers, so syncing may take a bit longer.</span>
-                    <span class="label-xs s-text-link" onclick="window.open('https://explorer.ixian.io/')">View all transactions on explorer <i class="fa fa-arrow-right"></i></span>
+                    <span class="label-sm">*SL{index-missing-tx-title}</span>
+                    <span class="body-xs">*SL{index-missing-tx-text}</span>
+                    <span class="label-xs s-text-link" onclick="window.open('https://explorer.ixian.io/')">*SL{index-missing-tx-view-all} <i class="fa fa-arrow-right"></i></span>
                 </div>
                 <i class="fa fa-chevron-down notice-toggle-chevron" style="cursor: pointer" onclick="toggleImportantNotice(this)"></i>
             </div>
@@ -210,15 +210,15 @@
         <div id="spixiApps" class="tab-pane" onload="ixian:loadApps();">
             <div class="container spixi-mini-apps-container">
                 <div class="primary-guide-container" id="miniAppsStartNote" style="display: none">
-                    <span class="body-xs s-text-01">Not sure where to start? Try one of our featured apps bellow.</span>
+                    <span class="body-xs s-text-01">*SL{apps-not-sure-text}</span>
                     <i class="fas fa-times" onclick="hideMiniAppsStartNote()" style="cursor: pointer"></i>
                 </div>
                 <div>
                     <input type="text" class="spixi-textfield search-mini-apps" id="searchMiniApps"
-                           oninput="searchMiniApps()" placeholder="Find installed mini apps"/>
+                           oninput="searchMiniApps()" placeholder="*SL{apps-find-installed-apps}"/>
                     <span class="fa fa-search spixi-textfield-holder-icon mini-apps-search-icon"></span>
                 </div>
-                <span class="heading-sm s-text-01">Apps</span>
+                <span class="heading-sm s-text-01">*SL{apps-apps-text}</span>
                 <section class="mini-apps-list" id="AppList"></section>
                 <a href="ixian:newapp" class="action-button add-new-app-floating-btn">
                     <i class="fas fa-plus s-text-inverse"></i>
@@ -238,19 +238,18 @@
         <i class="fas fa-folder-closed backupIcon"></i>
     </div>
     <div class="text-center">
-        <p class="label-md s-text-01">Don’t forget to back up </p>
-        <span class="body-sm s-text-01">Spixi is fully decentralized - your data stays on your device only.
-To keep your contacts safe and restore everything later, create a backup now.</span>
+        <p class="label-md s-text-01">*SL{index-backup-prompt-title}</p>
+        <span class="body-sm s-text-01">*SL{index-backup-prompt-desc}</span>
     </div>
     <div class="add-mini-app-buttons">
         <div class="spixi-flat-button label-sm" onclick="confirmInstallCall()">
-            Yes Create Backup
+            *SL{index-backup-prompt-create}
         </div>
         <div class="spixi-flat-button label-sm button outline" onclick="toggleAnimatedSlider('backup-prompt')">
-            Not Now
+            *SL{index-backup-prompt-not-now}
         </div>
         <div class="body-xs s-text-02 text-center" style="width: 100%;max-width: 200px">
-            It’s recommended to backup every time you add a new contact.
+            *SL{index-backup-prompt-note}
         </div>
     </div>
 </div>
@@ -612,7 +611,7 @@ To keep your contacts safe and restore everything later, create a backup now.</s
             <span class="label-sm appNameItem">${name}</span>
             <span class="body-xs">${publisher}</span>
             <div class="launchBtn" data-app-id="${id}" data-multi-user="${parseBoolean(isMultiuser)}">
-                <span class="label-xs s-text-action">Launch <i class="fas fa-arrow-right"></i></span>
+                <span class="label-xs s-text-action">*SL{apps-launch} <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
     </div>`;

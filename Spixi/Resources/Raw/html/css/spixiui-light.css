@@ -4296,6 +4296,7 @@ img.emoji {
 }
 
 .single-attach-bar-item{
+    text-align: center;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -4546,6 +4547,8 @@ img.emoji {
     flex-direction: column;
     align-items: center;
     gap: 12px;
+    text-align: center;
+    height: calc(100% - 112px);
 }
 
 .contributors-img{
@@ -4554,12 +4557,15 @@ img.emoji {
 }
 
 .contributors-list{
+    background: var(--colors-surface-02);
     display: flex;
     flex-direction: column;
     gap: 2px;
     width: 100%;
     align-items: center;
     padding: 16px;
+    border-radius: 16px;
+    height: 100%;
 }
 
 .floating-date {
@@ -4672,6 +4678,11 @@ img.emoji {
     background: rgba(255, 255, 255, 0.7);
     border-radius: 12px;
     padding: 12px;
+    color: var(--colors-text-01);
+
+    i {
+        color: var(--colors-text-01);
+    }
 }
 
 /*New Contact Details style*/

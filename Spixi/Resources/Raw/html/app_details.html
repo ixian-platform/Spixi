@@ -57,32 +57,32 @@
                 </div>
             </div>
             <div class="spixi-app-details-properties">
-                <span class="label-sm s-text-02">Description</span>
+                <span class="label-sm s-text-02">*SL{apps-details-description}</span>
                 <span class="body-sm s-text-01" id="AppDescription"></span>
             </div>
             <div class="spixi-app-details-properties ">
                 <div class="spixi-app-details-properties-single-div">
-                    <span class="label-sm s-text-02">Capabilities</span>
+                    <span class="label-sm s-text-02">*SL{apps-details-capabilities}</span>
                     <div class="app-capabilities-list" data-role="capabilitiesList"></div>
                 </div>
                 <div class="spixi-app-details-properties-single-div">
-                    <span class="label-sm s-text-02">Details</span>
+                    <span class="label-sm s-text-02">*SL{apps-details-details}</span>
                     <div class="spixi-app-details-info">
-                        <span class="body-sm s-text-02">ID</span>
+                        <span class="body-sm s-text-02">*SL{apps-details-id}</span>
                         <span class="label-sm s-text-01" id="AppID"></span>
                     </div>
                     <div class="spixi-app-details-info">
-                        <span class="body-sm s-text-02">Version</span>
+                        <span class="body-sm s-text-02">*SL{apps-details-version}</span>
                         <span class="label-sm s-text-01" id="AppVersion"></span>
                     </div>
                     <div class="spixi-app-details-info">
-                        <span class="body-sm s-text-02">Size</span>
+                        <span class="body-sm s-text-02">*SL{apps-details-size}</span>
                         <!--                    TODO: missing app size data-->
                         <span class="label-sm s-text-01" id="AppSize"></span>
                     </div>
                 </div>
                 <div class="spixi-app-details-properties-single-div">
-                    <span class="label-sm s-text-02">Install URL</span>
+                    <span class="label-sm s-text-02">*SL{apps-details-install-url}</span>
                     <div class="urlContainer">
                         <span class="body-sm s-text-01" id="installUrlValue"></span>
                         <i class="fas fa-copy" id="copyUrlIcon" style="cursor: pointer"></i>
@@ -92,7 +92,7 @@
         </section>
     </div>  <!-- Wrap -->
     <div class="action-slide-up-container" id="install-mini-app-prompt">
-        <p class="label-md s-text-01 text-center">Install Mini App</p>
+        <p class="label-md s-text-01 text-center">*SL{apps-install-title}</p>
         <div>
             <div class="spixi-app-details-header">
                 <img data-role="AppIcon" class="spixi-app-details-image" />
@@ -105,11 +105,11 @@
             </div>
             <div class="spixi-app-details-properties ">
                 <div class="spixi-app-details-properties-single-div">
-                    <span class="label-sm s-text-02">Capabilities</span>
+                    <span class="label-sm s-text-02">*SL{apps-details-capabilities}</span>
                     <div class="app-capabilities-list" data-role="capabilitiesList"></div>
                 </div>
                 <div class="spixi-app-details-properties-single-div">
-                    <span class="label-sm s-text-02">Source</span>
+                    <span class="label-sm s-text-02">*SL{apps-source}</span>
                     <div class="urlContainer">
                         <span class="body-sm s-text-01" id="source"></span>
                     </div>
@@ -118,10 +118,10 @@
         </div>
         <div class="add-mini-app-buttons spixi-app-details-buttons">
             <div class="spixi-flat-button label-sm" onclick="confirmInstallCall()">
-                <i class="fas fa-check"></i>&nbsp; Confirm Install
+                <i class="fas fa-check"></i>&nbsp; *SL{apps-install-confirm}
             </div>
             <div class="spixi-flat-button label-sm button outline" onclick="toggleAnimatedSlider('install-mini-app-prompt')">
-                Cancel
+                *SL{apps-install-cancel}
             </div>
         </div>
     </div>
@@ -130,8 +130,8 @@
         <div class="loading-modal-container">
             <span class="spixi-loader"></span>
             <div class="new-modal-texts">
-                <span class="label-lg">Installing App...</span>
-                <span class="body-sm">Downloading and verifying source</span>
+                <span class="label-lg">*SL{apps-installing-title}</span>
+                <span class="body-sm">*SL{apps-installing-description}</span>
             </div>
         </div>
     </div>
@@ -140,8 +140,8 @@
         <div class="loading-modal-container">
             <span class="spixi-loader"></span>
             <div class="new-modal-texts">
-                <span class="label-lg">Removing App...</span>
-                <span class="body-sm">App data is being removed.</span>
+                <span class="label-lg">*SL{apps-removing-app}</span>
+                <span class="body-sm">*SL{apps-removing-description}</span>
             </div>
         </div>
     </div>
@@ -150,15 +150,15 @@
         <div class="new-modal-container">
             <img src="img/err-modal-icon.png" alt="err-img" width="32" height="32" />
             <div class="new-modal-texts">
-                <span class="label-lg">App Failed to Install</span>
-                <span class="body-sm"> We couldn’t complete the install. Please check your connection or try again later.</span>
+                <span class="label-lg">*SL{apps-failed-install-title}</span>
+                <span class="body-sm">*SL{apps-failed-install-description}</span>
             </div>
             <div class="new-modal-buttons">
                 <div class="spixi-flat-button label-sm">
-                    Retry
+                    *SL{apps-failed-install-retry}
                 </div>
                 <div class="spixi-flat-button label-sm button outline" onclick="document.getElementById('appFailedToInstallModal').style.display = 'none'">
-                    Cancel
+                    *SL{apps-failed-install-cancel}
                 </div>
             </div>
         </div>
@@ -168,12 +168,12 @@
         <div class="new-modal-container">
             <img src="img/app-success-modal-icon.png" alt="success-img" width="32" height="32" />
             <div class="new-modal-texts">
-                <span class="label-lg">Installed Successfully</span>
-                <span class="body-sm">App installed in your Mini Apps library.</span>
+                <span class="label-lg">*SL{apps-success-install-title}</span>
+                <span class="body-sm">*SL{apps-success-install-description}</span>
             </div>
             <div class="new-modal-buttons">
                 <div class="spixi-flat-button label-sm" onclick="viewAppDetails()">
-                    <i class="fas fa-arrow-right"></i>View App Details
+                    <i class="fas fa-arrow-right"></i>*SL{apps-success-install-view}
                 </div>
             </div>
         </div>
@@ -183,15 +183,15 @@
         <div class="new-modal-container">
             <img src="img/trash-icon.png" alt="trash-icon" width="32" height="32" />
             <div class="new-modal-texts">
-                <span class="label-lg">Remove App?</span>
-                <span class="body-sm"> This will delete the app from your device. No data will be lost unless the app stores it locally.</span>
+                <span class="label-lg">*SL{apps-remove-title}</span>
+                <span class="body-sm">*SL{apps-remove-description}</span>
             </div>
             <div class="new-modal-buttons">
                 <div class="spixi-flat-button label-sm" onclick="confirmRemoveApp()">
-                    Remove App
+                    *SL{apps-remove-confirm}
                 </div>
                 <div class="spixi-flat-button label-sm button outline" onclick="document.getElementById('removeAppModal').style.display = 'none'">
-                    Cancel
+                    *SL{apps-remove-cancel}
                 </div>
             </div>
         </div>
@@ -201,12 +201,12 @@
         <div class="new-modal-container">
             <img src="img/check-icon.png" alt="check-icon" width="32" height="32" />
             <div class="new-modal-texts">
-                <span class="label-lg">App Removed</span>
-                <span class="body-sm">App and app data have been removed from this device.</span>
+                <span class="label-lg">*SL{apps-removing-app-success}</span>
+                <span class="body-sm">*SL{apps-removing-app-description-success}</span>
             </div>
             <div class="new-modal-buttons">
                 <div class="spixi-flat-button label-sm" onclick="location.href='ixian:back'">
-                    <i class="fas fa-arrow-right"></i> Continue
+                    <i class="fas fa-arrow-right"></i> *SL{apps-removing-app-continue}
                 </div>
             </div>
         </div>
@@ -245,10 +245,10 @@
                 const launchAppItem = `
                  <div id="launchButton" class="add-mini-app-buttons spixi-app-details-buttons" data-is-multiuser="${parseBoolean(isMultiuser)}">
                     <div class="spixi-flat-button label-sm" onclick="launchAppHandler()">
-                    <i class="fas fa-arrow-right"></i>&nbsp; Launch App
+                    <i class="fas fa-arrow-right"></i>&nbsp; *SL{apps-launch-app}
                 </div>
                 <div class="spixi-flat-button label-sm button outline" onclick="removeAppHandler()">
-                     Remove This App
+                     *SL{apps-remove-app}
                 </div>
                 </div>`;
 
@@ -258,10 +258,10 @@
                 const installAppItem = `
                 <div class="add-mini-app-buttons spixi-app-details-buttons">
                     <div class="spixi-flat-button label-sm" onclick="toggleAnimatedSlider('install-mini-app-prompt')">
-                        <i class="fas fa-arrows-down-to-line"></i>&nbsp; Download and Install
+                        <i class="fas fa-arrows-down-to-line"></i>&nbsp; *SL{apps-details-download}
                     </div>
                     <span class="label-xs s-text-02" style="max-width: 244px;text-align: center">
-                        The app will be securely installed in Spixi’s sandbox environment.
+                        *SL{apps-details-download-note}
                     </span>
                 </div>
                 `;

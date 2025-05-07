@@ -4311,6 +4311,7 @@ img.emoji {
 }
 
 .single-attach-bar-item {
+    text-align: center;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -4559,6 +4560,7 @@ img.emoji {
 }
 
 .contributors-page {
+    text-align: center;
     margin: 24px 16px;
     display: flex;
     flex-direction: column;
@@ -4687,9 +4689,14 @@ img.emoji {
     justify-content: center;
     text-align: center;
     gap: 4px;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.7);
     border-radius: 12px;
     padding: 12px;
+    color: var(--colors-text-warning);
+
+    i {
+        color: var(--colors-text-warning);
+    }
 }
 
 /*New Contact Details style*/

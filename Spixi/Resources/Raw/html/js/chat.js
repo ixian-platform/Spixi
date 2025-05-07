@@ -11,6 +11,8 @@ var reportMsgId = "";
 var userNick = "";
 var userAddress = "";
 
+const attachBar = document.getElementById("attach-bar");
+
 function onChatScreenLoad() {
     document.getElementById("chat_input").focus();
 
@@ -34,12 +36,7 @@ function onChatScreenLoad() {
 
 
     messagesEl.addEventListener("click", function (e) {
-        const attachBar = document.getElementById("attach-bar");
-
-        if (attachBar && attachBar.classList.contains("show")) {
-            attachBar.classList.remove("show");
-            attachBar.classList.add("hide");
-        }
+        hideAttachBar();
 
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
@@ -60,6 +57,13 @@ function onChatScreenLoad() {
     };
 
     onload();
+}
+
+function hideAttachBar(){
+    if (attachBar && attachBar.classList.contains("show")) {
+        attachBar.classList.remove("show");
+        attachBar.classList.add("hide");
+    }
 }
 
 function hideContextMenus() {
@@ -168,16 +172,16 @@ function onChatScreenLoaded() {
     if (isInSession) {
         const elementToAdd = `<section class="session-banner">
                 <div class="spixi-session-banner-content">
-                    <span class="body-sm">You're in session with USERNAME</span>
-                    <span class="label-sm">Tap to return <i class="fas fa-arrow-right"></i></span>
+                    <span class="body-sm">${SL_InSessionWith} USERNAME</span>
+                    <span class="label-sm">${SL_TapToReturn} <i class="fas fa-arrow-right"></i></span>
                 </div>
-                <div class="spixi-flat-button label-sm button outline" onclick="showEndAppSessionModal()">Leave</div>
+                <div class="spixi-flat-button label-sm button outline" onclick="showEndAppSessionModal()">${SL_Leave}</div>
             </section>`;
         messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
     } else if(isInviteSent){
         const elementToAdd = ` <section class="session-banner">
-                <span class="label-sm"><i class="fas fa-user-plus"></i>&nbsp;Invite sent to USERNAME</span>
-                <div class="spixi-flat-button label-sm button outline">Cancel Invite</div>
+                <span class="label-sm"><i class="fas fa-user-plus"></i>&nbsp;${SL_InviteSentTo} USERNAME</span>
+                <div class="spixi-flat-button label-sm button outline">${SL_CancelInvite}</div>
             </section>`;
         messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
     }
@@ -242,17 +246,21 @@ function test() {
 }
 
 document.getElementById("ca_request").onclick = function () {
+    hideAttachBar();
     location.href = "ixian:request";
 }
 document.getElementById("ca_send").onclick = function () {
+    hideAttachBar();
     location.href = "ixian:send";
 }
 
 document.getElementById("ca_sendfile").onclick = function () {
+    hideAttachBar();
     location.href = "ixian:sendfile";
 }
 
 document.getElementById("chat_send").onclick = function () {
+    hideAttachBar();
     var chatInput = document.getElementById("chat_input");
     chatInput.click();
     chatInput.focus();
@@ -326,12 +334,7 @@ function scrollToBottom() {
 }
 
 $("#chat_input").focus(function (event) {
-    const attachBar = document.getElementById("attach-bar");
-
-    if (attachBar && attachBar.classList.contains("show")) {
-        attachBar.classList.remove("show");
-        attachBar.classList.add("hide");
-    }
+    hideAttachBar();
 
     scrollToBottom();
     /*
@@ -1200,7 +1203,7 @@ function clearMessages(showMore) {
     // private messages note always visible as first the item
     const privateMessagesNote = document.createElement('div');
     privateMessagesNote.className = "private-messages-note";
-    privateMessagesNote.innerHTML = "<i style='font-size: 12px' class='fa-solid fa-lock'></i> <span class='label-xs s-text-01'>" + SL_ChatPrivate["title"] + "</span> <span class='body-xs s-text-01'>" + SL_ChatPrivate["message"] + "</span>";
+    privateMessagesNote.innerHTML = "<i style='font-size: 12px' class='fa-solid fa-lock'></i> <span class='label-xs'>" + SL_ChatPrivate["title"] + "</span> <span class='body-xs'>" + SL_ChatPrivate["message"] + "</span>";
     messagesEl.appendChild(privateMessagesNote);
 
     if (showMore == "true") {
