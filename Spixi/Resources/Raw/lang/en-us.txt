@@ -146,6 +146,12 @@ chat-request-sent-undo = Undo
 chat-request-received-title = Contact Request Received
 chat-request-received-details = Someone wants to connect! Once accepted, you'll be able to chat securely.
 
+chat-app-invite-sent = Invite Sent
+chat-app-invite-received = Invite Received
+chat-app-get = Get App
+chat-app-back = Back to App
+chat-app-launch = Launch App
+
 chat-modal-tip-title = Tip {0}?
 chat-modal-tip-body = Select or enter an amount you'd like to tip.
 chat-modal-tip-custom = Custom
