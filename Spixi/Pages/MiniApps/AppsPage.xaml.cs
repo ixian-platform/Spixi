@@ -1,4 +1,4 @@
-﻿using SPIXI.CustomApps;
+﻿using SPIXI.MiniApps;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
@@ -35,6 +35,7 @@ namespace SPIXI
 
         protected override void OnDisappearing()
         {
+            webView = null;
             base.OnDisappearing();
         }
 
@@ -95,13 +96,13 @@ namespace SPIXI
         {
             Utils.sendUiCommand(this, "clearApps");
 
-            var apps = Node.customAppManager.getInstalledApps();
+            var apps = Node.MiniAppManager.getInstalledApps();
             lock (apps)
             {
                 foreach (var app_arr in apps)
                 {
-                    CustomApp app = app_arr.Value;
-                    string icon = Node.customAppManager.getAppIconPath(app.id);
+                    MiniApp app = app_arr.Value;
+                    string icon = Node.MiniAppManager.getAppIconPath(app.id);
                     if(icon == null)
                     {
                         icon = "";

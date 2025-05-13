@@ -126,14 +126,15 @@ namespace SPIXI
                     IxiNumber entry_amount = entry.Value.amount;
                     IxiNumber fiat_amount = entry_amount * Node.fiatPrice;
 
+                    string username = SpixiLocalization._SL("wallet-unknown-recipient");
+                    string useravatar = "img/spixiavatar.png";
                     if (friend != null)
                     {
-                        Utils.sendUiCommand(this, "addEntry", friend.nickname, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
+                        username = friend.nickname;
+                        useravatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
                     }
-                    else
-                    {
-                        Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
-                    }
+
+                    Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), username, useravatar, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);                    
                 }
             }
             else
@@ -154,14 +155,17 @@ namespace SPIXI
                 Utils.sendUiCommand(this, "setReceivedMode");
                 Address sender_address = ctransaction.pubKey;
                 Friend friend = FriendList.getFriend(sender_address);
+
+                string username = SpixiLocalization._SL("wallet-unknown-sender");
+                string useravatar = "img/spixiavatar.png";
+
                 if (friend != null)
                 {
-                    Utils.sendUiCommand(this, "addEntry", friend.nickname, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
+                    username = friend.nickname;
+                    useravatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
                 }
-                else
-                {
-                    Utils.sendUiCommand(this, "addEntry", sender_address.ToString(), Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
-                }
+
+                Utils.sendUiCommand(this, "addEntry", sender_address.ToString(), username, useravatar, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);               
 
             }
 

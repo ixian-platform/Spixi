@@ -8,7 +8,7 @@ using IXICore.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Spixi;
-using SPIXI.CustomApps;
+using SPIXI.MiniApps;
 using SPIXI.Network;
 using System.Text;
 using static IXICore.Transaction;
@@ -28,7 +28,8 @@ namespace SPIXI.Meta
 
         public static TransactionInclusion tiv = null;
 
-        public static CustomAppManager customAppManager = null;
+        public static MiniAppManager MiniAppManager = null;
+        public static MiniAppStorage MiniAppStorage = null;
 
         public static StreamProcessor streamProcessor = null;
 
@@ -69,7 +70,8 @@ namespace SPIXI.Meta
             // Prepare the local storage
             IxianHandler.localStorage = new LocalStorage(Config.spixiUserFolder, new SpixiLocalStorageCallbacks());
 
-            customAppManager = new CustomAppManager(Config.spixiUserFolder);
+            MiniAppManager = new MiniAppManager(Config.spixiUserFolder);
+            MiniAppStorage = new MiniAppStorage(Config.spixiUserFolder);
 
             FriendList.init(Config.spixiUserFolder);
 
@@ -150,7 +152,7 @@ namespace SPIXI.Meta
             // Start the transfer manager
             TransferManager.start();
 
-            customAppManager.start();
+            MiniAppManager.start();
 
             startCounter++;
 
@@ -355,7 +357,7 @@ namespace SPIXI.Meta
 
             IxianHandler.localStorage.stop();
 
-            customAppManager.stop();
+            MiniAppManager.stop();
 
             // Stop TIV
             tiv.stop();

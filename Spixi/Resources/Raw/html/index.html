@@ -4,7 +4,8 @@
 <head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
 
     <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -25,446 +26,695 @@
 
 </head>
 <body onload="ixian:onload();">
-    <div id="wrap" class="container-fluid noselect">
+<div id="wrap" class="container-fluid noselect">
 
-        <!-- Toolbar Main-->
-        <div class="spixi-toolbar shadow">
-            <div class="spixi-toolbar-line"></div>
-            <div class="spixi-toolbar-row">
-                <div id="MainMenu">
-                    <i class="fas fa-bars"></i>
+    <!-- Toolbar Main-->
+    <div class="spixi-toolbar shadow">
+        <div class="spixi-toolbar-line"></div>
+        <div class="spixi-toolbar-row">
+            <div id="MainMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="spixi-toolbar-title">
+                <div class="spixi-toolbar-logo" onclick="countLogoClick();">Spixi</div>
+            </div>
+            <div>
+            </div>
+        </div>
+
+    </div>
+    <div class="spixi-toolbar-holder"></div>
+    <!-- End Toolbar -->
+    <!-- ErrorBar -->
+    <div id="warning_bar" class="spixi-errorbar" style="display:none">
+        <div class="spixi-errorbar-icon"><i class="fa fa-info-circle"></i></div>
+        <div class="spixi-errorbar-message"></div>
+    </div>
+    <!-- End ErrorBar-->
+
+    <div id="tabholder" class="tab-content scrollable-div maintabholder">
+        <!-- CHATS -->
+        <div id="chats" class="tab-pane in active">
+            <div id="chat_no_activity" class="container">
+                <div class="spixi-list-placeholder-chat-image"></div>
+                <div class="spixi-list-placeholder-title">*SL{index-no-conversations-title}</div>
+                <div class="spixi-list-placeholder-subtitle">*SL{index-no-conversations}</div>
+
+                <div class="d-flex justify-content-center spixi-list-placeholder-margintop">
+                    <a href="ixian:newchat" class="">
+                        <div class="spixi-list-placeholder-button">*SL{index-new-chat-button}</div>
+                    </a>
                 </div>
-                <div class="spixi-toolbar-title">
-                    <div class="spixi-toolbar-logo" onclick="countLogoClick();">Spixi</div>
+            </div>
+
+
+            <div id="chatlist" style="display: block;">
+            </div>
+
+            <a id="chat_action_button" href="ixian:newchat" class="action-button" style="display: none;">
+                <div class="spixi-button center round">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                </div>
+            </a>
+        </div>
+
+        <!-- WALLET -->
+        <div id="wallet" class="tab-pane ">
+            <!-- BalanceBar -->
+            <div id="status_balance" class="spixi-balancebar">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-4"></div>
+                        <div class="col-4 spixi-balancebar-subtitle">*SL{index-balance}</div>
+                        <div class="col-4 spixi-balancebar-hide label-xs" id="activity_balance_toggle">
+                            *SL{index-balance-hide} <i class="fa fa-eye"></i></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col text-center">
+                            <div class="spixi-balancebar-balance" id="activity_balance_number"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col text-center">
+                            <div class="spixi-balancebar-info" id="activity_balance_info">$0.00</div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-4 text-center" style="padding-left: 16px; padding-right: 4px;"><a
+                                href="ixian:sendixi" class="spixi-flat-button"><i class="fa fa-arrow-up"></i>
+                            *SL{index-send}</a></div>
+                        <div class="col-4 text-center" style="padding-left: 4px; padding-right: 4px;"><a
+                                href="ixian:receiveixi" class="spixi-flat-button"><i class="fa fa-arrow-down"></i>
+                            *SL{index-receive}</a></div>
+                        <div class="col-4 text-center" style="padding-left: 4px; padding-right: 16px;"><a
+                                href="ixian:quickscan" class="spixi-flat-button"><i class="fa fa-qrcode"></i>
+                            *SL{index-scan}</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="important-notice-container" id="importantNotice">
+                <i class="fa fa-money-bill-transfer"></i>
+                <div class="important-notice-text">
+                    <span class="label-sm">*SL{index-missing-tx-title}</span>
+                    <span class="body-xs">*SL{index-missing-tx-text}</span>
+                    <span class="label-xs s-text-link" onclick="window.open('https://explorer.ixian.io/')">*SL{index-missing-tx-view-all} <i class="fa fa-arrow-right"></i></span>
+                </div>
+                <i class="fa fa-chevron-down notice-toggle-chevron" style="cursor: pointer" onclick="toggleImportantNotice(this)"></i>
+            </div>
+            <!-- End BalanceBar -->
+            <div id="section_no_transactions" class="container">
+                <div class="spixi-list-placeholder-transactions-image"></div>
+                <div class="spixi-list-placeholder-title">*SL{index-no-transactions-title}</div>
+                <div class="spixi-list-placeholder-subtitle">*SL{index-no-transactions}</div>
+            </div>
+
+            <div id="section_transactions" style="display:none;">
+                <div class="spixi-activity-title">
+                    *SL{index-activity}
+                </div>
+                <div class="spixi-activity-filterbar">
+                    <div id="filter-all" class="spixi-activity-filterbutton active">*SL{index-all}</div>
+                    <div id="filter-sent" class="spixi-activity-filterbutton">*SL{index-sent}</div>
+                    <div id="filter-received" class="spixi-activity-filterbutton">*SL{index-received}</div>
+                </div>
+
+                <div id="exp3-contents" style="display: block;position: relative;height: calc(100% - 40px);">
+                    <div id="paymentlist" class="payment-list-container">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- CONTACTS -->
+        <div id="contacts" class="tab-pane ">
+            <div class="spixi-textfield-holder">
+                <input type="text" class="spixi-textfield" id="contactInput" oninput="contactSearch()"
+                       placeholder="*SL{index-contacts-placeholder}">
+                <span class="fa fa-search spixi-textfield-holder-icon"></span>
+            </div>
+            <hr class="spixi-separator-full"/>
+
+            <div id="contactslist">
+
+            </div>
+
+            <a href="ixian:newcontact" class="action-button">
+                <div class="spixi-button center round">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- MYADDRESS -->
+        <div id="myaddress" class="tab-pane ">
+            <div class="container">
+                <div class="spixi-list-placeholder-title topoffset">*SL{address-title}</div>
+                <div class="spixi-list-placeholder-subtitle">*SL{address-description}</div>
+
+                <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
+                    <div class="address_qr" id="qrcode"></div>
+                </div>
+                <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
+
+                <div id="wal1" class="spixi-text-address">*SL{address-gen-1}</div>
+                <div id="wal2" class="spixi-text-address">*SL{address-gen-2}</div>
+
+                <div class="row address_actionbuttons">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <a href="ixian:copy" class="">
+                                <div id="copyaddressbutton" class="spixi-list-placeholder-button d-inline-block"><i
+                                        class="fas fa-copy"></i> *SL{address-copy}
+                                </div>
+                            </a>
+                            &nbsp;
+                            <a href="ixian:share" class="">
+                                <div class="spixi-list-placeholder-button d-inline-block"><i
+                                        class="fa-solid fa-share-nodes"></i> *SL{address-share}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SPIXI APPS -->
+        <div id="spixiApps" class="tab-pane" onload="ixian:loadApps();">
+            <div class="container spixi-mini-apps-container">
+                <div class="primary-guide-container" id="miniAppsStartNote" style="display: none">
+                    <span class="body-xs s-text-01">*SL{apps-not-sure-text}</span>
+                    <i class="fas fa-times" onclick="hideMiniAppsStartNote()" style="cursor: pointer"></i>
                 </div>
                 <div>
+                    <input type="text" class="spixi-textfield search-mini-apps" id="searchMiniApps"
+                           oninput="searchMiniApps()" placeholder="*SL{apps-find-installed-apps}"/>
+                    <span class="fa fa-search spixi-textfield-holder-icon mini-apps-search-icon"></span>
                 </div>
-            </div>
-
-        </div>
-        <div class="spixi-toolbar-holder"></div>
-        <!-- End Toolbar -->
-        <!-- ErrorBar -->
-        <div id="warning_bar" class="spixi-errorbar" style="display:none">
-            <div class="spixi-errorbar-icon"><i class="fa fa-info-circle"></i></div>
-            <div class="spixi-errorbar-message"></div>
-        </div>
-        <!-- End ErrorBar-->
-
-        <div id="tabholder" class="tab-content scrollable-div maintabholder">
-            <!-- CHATS -->
-            <div id="chats" class="tab-pane in active">
-                <div id="chat_no_activity" class="container">
-                    <div class="spixi-list-placeholder-chat-image"></div>
-                    <div class="spixi-list-placeholder-title">*SL{index-no-conversations-title}</div>
-                    <div class="spixi-list-placeholder-subtitle">*SL{index-no-conversations}</div>
-
-                    <div class="d-flex justify-content-center spixi-list-placeholder-margintop">
-                        <a href="ixian:newchat" class="">
-                            <div class="spixi-list-placeholder-button">*SL{index-new-chat-button}</div>
-                        </a>
-                    </div>
-                </div>
-
-
-
-                <div id="chatlist" style="display: block;">
-                </div>
-
-                <a id="chat_action_button" href="ixian:newchat" class="action-button" style="display: none;">
-                    <div class="spixi-button center round">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </div>
+                <span class="heading-sm s-text-01">*SL{apps-apps-text}</span>
+                <section class="mini-apps-list" id="AppList"></section>
+                <a href="ixian:newapp" class="action-button add-new-app-floating-btn">
+                    <i class="fas fa-plus s-text-inverse"></i>
                 </a>
             </div>
-
-            <!-- WALLET -->
-            <div id="wallet" class="tab-pane ">
-                <!-- BalanceBar -->
-                <div id="status_balance" class="spixi-balancebar">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-4"></div>
-                            <div class="col-4 spixi-balancebar-subtitle">*SL{index-balance}</div>
-                            <div class="col-4 spixi-balancebar-hide" id="activity_balance_toggle">*SL{index-balance-hide} <i class="fa fa-eye"></i></div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col text-center">
-                                <div class="spixi-balancebar-balance" id="activity_balance_number"></div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col text-center">
-                                <div class="spixi-balancebar-info" id="activity_balance_info">$0.00</div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-4 text-center" style="padding-left: 16px; padding-right: 4px;"><a href="ixian:sendixi" class="spixi-flat-button"><i class="fa fa-arrow-up"></i> *SL{index-send}</a></div>
-                            <div class="col-4 text-center" style="padding-left: 4px; padding-right: 4px;"><a href="ixian:receiveixi" class="spixi-flat-button"><i class="fa fa-arrow-down"></i> *SL{index-receive}</a></div>
-                            <div class="col-4 text-center" style="padding-left: 4px; padding-right: 16px;"><a href="ixian:quickscan" class="spixi-flat-button"><i class="fa fa-qrcode"></i> *SL{index-scan}</a></div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- End BalanceBar -->
-                <div id="section_no_transactions" class="container">
-                    <div class="spixi-list-placeholder-transactions-image"></div>
-                    <div class="spixi-list-placeholder-title">*SL{index-no-transactions-title}</div>
-                    <div class="spixi-list-placeholder-subtitle">*SL{index-no-transactions}</div>
-
-                </div>
-
-                <div id="section_transactions" style="display:none;">
-                    <div class="spixi-activity-title">
-                        *SL{index-activity}
-                    </div>
-                    <div class="spixi-activity-filterbar">
-                        <div id="filter-all" class="spixi-activity-filterbutton active">*SL{index-all}</div>
-                        <div id="filter-sent" class="spixi-activity-filterbutton">*SL{index-sent}</div>
-                        <div id="filter-received" class="spixi-activity-filterbutton">*SL{index-received}</div>
-                    </div>
-
-                    <div id="exp3-contents" style="display: block;">
-                        <div id="paymentlist">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- CONTACTS -->
-            <div id="contacts" class="tab-pane ">
-                <div class="spixi-textfield-holder">
-                    <input type="text" class="spixi-textfield" id="contactInput" oninput="contactSearch()" placeholder="*SL{index-contacts-placeholder}">
-                    <span class="fa fa-search spixi-textfield-holder-icon"></span>
-                </div>
-                <hr class="spixi-separator-full" />
-
-                <div id="contactslist">
-
-                </div>
-
-                <a href="ixian:newcontact" class="action-button">
-                    <div class="spixi-button center round">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                </a>
-
-            </div>
-
-            <!-- MYADDRESS -->
-            <div id="myaddress" class="tab-pane ">
-                <div class="container">
-                    <div class="spixi-list-placeholder-title topoffset">*SL{address-title}</div>
-                    <div class="spixi-list-placeholder-subtitle">*SL{address-description}</div>
-
-                    <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
-                        <div class="address_qr" id="qrcode"></div>
-                    </div>
-                    <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
-
-                    <div id="wal1" class="spixi-text-address">*SL{address-gen-1}</div>
-                    <div id="wal2" class="spixi-text-address">*SL{address-gen-2}</div>
-
-                    <div class="row address_actionbuttons">
-                        <div class="col">
-                            <div class="d-flex justify-content-center">
-                                <a href="ixian:copy" class="">
-                                    <div id="copyaddressbutton" class="spixi-list-placeholder-button d-inline-block"><i class="fas fa-copy"></i> *SL{address-copy}</div>
-                                </a>
-                                &nbsp;
-                                <a href="ixian:share" class="">
-                                    <div class="spixi-list-placeholder-button d-inline-block"><i class="fa-solid fa-share-nodes"></i> *SL{address-share}</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-
-        <div class="spixi-holder-64"></div>
-
-    </div>  <!-- Wrap -->
-    <!-- Tabbar -->
-    <div id="footer" class="fixed-bottom spixi-footer">
-        <div class="" style="width:90%; margin: auto;">
-            <ul class="nav nav-tabs row no-gutters spixi-footer-row">
-                <li id="tab1" class="col-4 spixi-tab">
-                    <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
-                        <div class="spixi-tab-icon"><i class="fa-solid fa-message"></i><div id="unread-dot" class="spixi-footer-chat-unread-indicator"></div></div>
-                        <div class="spixi-tab-text">*SL{index-tab-chats}</div>
-                    </a>
-                </li>
-                <li id="tab2" class="col-4 spixi-tab">
-                    <a data-toggle="tab" href="#wallet" class="spixi-tab-pad">
-                        <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
-                        <div class="spixi-tab-text">*SL{index-tab-wallet}</div>
-                    </a>
-                </li>
-                <li id="tab3" class="col-4 spixi-tab">
-                    <a data-toggle="tab" href="#myaddress" class="spixi-tab-pad">
-                        <div class="spixi-tab-icon"><i class="fa-solid fa-qrcode"></i></div>
-                        <div class="spixi-tab-text">*SL{index-tab-address}</div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Ixinames modal -->
-    <div id="ixinamesModal" class="spixi-modal-soft" style="display:none;">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <div class="spixi-modal-header-icon">
-                <i class="fa-solid fa-user-plus"></i>
-            </div>
-
-            <div class="spixi-modal-header">
-                *SL{ixinames-request-title}
-            </div>
-
-            <div class="spixi-modal-details">
-                *SL{ixinames-request-details}
-
-            </div>
-
-            <div class="spixi-modal-footer">
-                <div class="row no-gutters" style="margin:16px;">
-                    <div class="col">
-                        <div id="request_bar_ignore" class="spixi-flat-button outline modal-left">
-                            *SL{ixinames-request-decline}
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div id="request_bar_accept" class="spixi-flat-button modal-right">
-                            *SL{ixinames-request-connect}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <div id="ixinamestoastbar" class="spixi-toastbar-ixinames"></div>
-
-    <!-- Rating modal -->
-    <div id="ratingModal" class="spixi-modal-soft" style="display:none;">
-        <!-- Modal content -->
-        <div class="modal-content wide">
-            <div class="spixi-modal-header-icon">
-                <img src="img/spixirounded.svg" style="width: 48px" />
-            </div>
-
-            <div class="spixi-modal-header">
-                *SL{rating-request-title}
-            </div>
-
-            <div class="spixi-modal-details">
-                *SL{rating-request-details}
-
-            </div>
-
-            <div class="spixi-modal-footer">
-                <div class="row no-gutters" style="margin:16px;">
-                    <div class="col">
-                        <div id="rating_no" class="spixi-flat-button outline modal-left">
-                            *SL{rating-request-no}
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div id="rating_yes" class="spixi-flat-button modal-right">
-                            *SL{rating-request-yes}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Modal menu -->
-    <div id="homeMenuModal" class="spixi-modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <div class="spixi-modal-header">
-                *SL{index-new-title}
-            </div>
-            <hr class="spixi-separator noheightmargins" />
-            <a href="javascript:selectFABOption('newcontact');"><div class="spixi-modal-item">*SL{index-new-contact}</div></a>
-            <a href="javascript:selectFABOption('newchat');"><div class="spixi-modal-item">*SL{index-new-chat}</div></a>
-            <a href="javascript:selectFABOption('sendixi');"><div class="spixi-modal-item">*SL{index-new-send}</div></a>
-            <a href="javascript:selectFABOption('receiveixi');"><div class="spixi-modal-item">*SL{index-new-request}</div></a>
-            <hr class="spixi-separator noheightmargins fullwidth" />
-            <div class="spixi-modal-footer">
-                <a href="javascript:onHomeMenuClose();">
-                    <div class="spixi-modal-close">*SL{index-new-cancel}</div>
-                </a>
-            </div>
-
         </div>
     </div>
 
 
-    <!-- Left sidebar and helper -->
-    <div id="leftSidebarHelper" class="spixi-leftswipe-helper">
+    <div class="spixi-holder-64"></div>
+
+</div>  <!-- Wrap -->
+
+<!--TODO: needs proper logic when to show -->
+<div class="action-slide-up-container" id="backup-prompt">
+    <div class="backup-prompt-icon-container">
+        <i class="fas fa-folder-closed backupIcon"></i>
     </div>
+    <div class="text-center">
+        <p class="label-md s-text-01">*SL{index-backup-prompt-title}</p>
+        <span class="body-sm s-text-01">*SL{index-backup-prompt-desc}</span>
+    </div>
+    <div class="add-mini-app-buttons">
+        <div class="spixi-flat-button label-sm" onclick="confirmInstallCall()">
+            *SL{index-backup-prompt-create}
+        </div>
+        <div class="spixi-flat-button label-sm button outline" onclick="toggleAnimatedSlider('backup-prompt')">
+            *SL{index-backup-prompt-not-now}
+        </div>
+        <div class="body-xs s-text-02 text-center" style="width: 100%;max-width: 200px">
+            *SL{index-backup-prompt-note}
+        </div>
+    </div>
+</div>
 
-    <div id="leftSidebar" class="spixi-sidebar">
-        <!-- Modal content -->
-        <div class="spixi-sidebar-content">
-            <div class="spixi-sidebar-header">
-                <a id="sidebarclose" class="spixi-sidebar-closebutton" href="javascript: onMainMenuClose();">
-                    <i class="fa fa-arrow-left"></i>
-                </a>
-
-                <div id="avatar" class="spixi-sidebar-avatar-holder">
-                    <img id="avatar_image" class="spixi-sidebar-avatar" src="img/spixiavatar.png" />
-                </div>
-                <p id="menu_nickname" class="spixi-sidebar-title">*SL{index-side-title}</p>
+<!-- Multi user app modal -->
+<div id="multiUserAppModal" class="new-modal-wrapper" style="display: none;">
+    <div class="new-modal-container" id="multiUserModalContent">
+        <img src="img/people-arrows-icon.png" alt="people-arrows-icon" width="32" height="32"/>
+        <div class="new-modal-texts">
+            <span class="label-lg">Multi-user App</span>
+            <span class="body-sm">This app supports more than one user. Would you like to invite one of your contacts?</span>
+        </div>
+        <div class="new-modal-buttons">
+            <div class="spixi-flat-button label-sm"
+                 onclick="launchMultiUserMode(this)">
+                <i class="fas fa-user-plus"></i>Invite Contact
             </div>
-
-            <!--<div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('apps');">
-                    <i class="fa fa-code spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-apps}</div>
-                </a>
-            </div>-->
-
-            <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('downloads');">
-                    <i class="fa fa-download spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-downloads}</div>
-                </a>
-            </div>
-
-            <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('settings');">
-                    <i class="fa fa-cog spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-settings}</div>
-                </a>
-            </div>
-            <!-- Security Lock is not available in this version
-            <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('lock');">
-                    <i class="fa fa-lock spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-security}</div>
-                </a>
-            </div>
-            -->
-            <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('backup');">
-                    <i class="fa fa-save spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-backup}</div>
-                </a>
-            </div>
-
-            <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('encpass');">
-                    <i class="fa fa-fingerprint spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-password}</div>
-                </a>
-            </div>
-
-            <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('guide');">
-                    <i class="fa fa-lightbulb spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-howtouse}</div>
-                </a>
-            </div>
-
-            <div class="spixi-sidebar-item" id="SendLogMenuItem" style="display: none;">
-                <a href="javascript:selectMenuOption('viewLog');">
-                    <i class="fa fa-clipboard-check spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-sendlog}</div>
-                </a>
-            </div>
-
-            <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('about');">
-                    <i class="fa fa-info spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">*SL{index-side-about}</div>
-                </a>
-            </div>
-
-            <div class="spixi-version" id="version">
+            <div class="spixi-flat-button label-sm button outline"
+                 onclick="launchSoloMode(this)">
+                <i class="fas fa-person"></i>Launch Solo Mode
             </div>
         </div>
     </div>
-    <!-- End left sidebar and helper -->
+</div>
+
+<!-- Tabbar -->
+<div id="footer" class="fixed-bottom spixi-footer">
+    <div class="" style="width:90%; margin: auto;">
+        <ul class="nav nav-tabs row no-gutters spixi-footer-row">
+            <li id="tab1" class="col-3 spixi-tab">
+                <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
+                    <div class="spixi-tab-icon"><i class="fa-solid fa-message"></i>
+                        <div id="unread-dot" class="spixi-footer-chat-unread-indicator"></div>
+                    </div>
+                    <div class="spixi-tab-text">*SL{index-tab-chats}</div>
+                </a>
+            </li>
+            <li id="tab2" class="col-3 spixi-tab">
+                <a data-toggle="tab" href="#wallet" class="spixi-tab-pad">
+                    <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
+                    <div class="spixi-tab-text">*SL{index-tab-wallet}</div>
+                </a>
+            </li>
+            <li id="tab3" class="col-3 spixi-tab">
+                <a data-toggle="tab" href="#spixiApps" class="spixi-tab-pad">
+                    <div class="spixi-tab-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <div class="spixi-tab-text">Apps</div>
+                </a>
+            </li>
+            <li id="tab4" class="col-3 spixi-tab">
+                <a data-toggle="tab" href="#myaddress" class="spixi-tab-pad">
+                    <div class="spixi-tab-icon"><i class="fa-solid fa-qrcode"></i></div>
+                    <div class="spixi-tab-text">*SL{index-tab-address}</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Ixinames modal -->
+<div id="ixinamesModal" class="spixi-modal-soft" style="display:none;">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="spixi-modal-header-icon">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+
+        <div class="spixi-modal-header">
+            *SL{ixinames-request-title}
+        </div>
+
+        <div class="spixi-modal-details">
+            *SL{ixinames-request-details}
+
+        </div>
+
+        <div class="spixi-modal-footer">
+            <div class="row no-gutters" style="margin:16px;">
+                <div class="col">
+                    <div id="request_bar_ignore" class="spixi-flat-button outline modal-left">
+                        *SL{ixinames-request-decline}
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div id="request_bar_accept" class="spixi-flat-button modal-right">
+                        *SL{ixinames-request-connect}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="ixinamestoastbar" class="spixi-toastbar-ixinames"></div>
+
+<!-- Rating modal -->
+<div id="ratingModal" class="spixi-modal-soft" style="display:none;">
+    <!-- Modal content -->
+    <div class="modal-content wide">
+        <div class="spixi-modal-header-icon">
+            <img src="img/spixirounded.svg" style="width: 48px"/>
+        </div>
+
+        <div class="spixi-modal-header">
+            *SL{rating-request-title}
+        </div>
+
+        <div class="spixi-modal-details">
+            *SL{rating-request-details}
+
+        </div>
+
+        <div class="spixi-modal-footer">
+            <div class="row no-gutters" style="margin:16px;">
+                <div class="col">
+                    <div id="rating_no" class="spixi-flat-button outline modal-left">
+                        *SL{rating-request-no}
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div id="rating_yes" class="spixi-flat-button modal-right">
+                        *SL{rating-request-yes}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal menu -->
+<div id="homeMenuModal" class="spixi-modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="spixi-modal-header">
+            *SL{index-new-title}
+        </div>
+        <hr class="spixi-separator noheightmargins"/>
+        <a href="javascript:selectFABOption('newcontact');">
+            <div class="spixi-modal-item">*SL{index-new-contact}</div>
+        </a>
+        <a href="javascript:selectFABOption('newchat');">
+            <div class="spixi-modal-item">*SL{index-new-chat}</div>
+        </a>
+        <a href="javascript:selectFABOption('sendixi');">
+            <div class="spixi-modal-item">*SL{index-new-send}</div>
+        </a>
+        <a href="javascript:selectFABOption('receiveixi');">
+            <div class="spixi-modal-item">*SL{index-new-request}</div>
+        </a>
+        <hr class="spixi-separator noheightmargins fullwidth"/>
+        <div class="spixi-modal-footer">
+            <a href="javascript:onHomeMenuClose();">
+                <div class="spixi-modal-close">*SL{index-new-cancel}</div>
+            </a>
+        </div>
+
+    </div>
+</div>
 
 
-    <script type="text/javascript">
-        var SL_IndexBalanceInfo = "*SL{index-balance-info}";
-        var SL_IndexBalanceShow = "*SL{index-balance-show}";
-        var SL_IndexBalanceHide = "*SL{index-balance-hide}";
-        var SL_TimeJustNow = "*SL{global-time-justnow}";
-        var SL_AMinuteAgo = "*SL{global-time-aminuteago}";
-        var SL_MinutesAgo = "*SL{global-time-minutesago}";
+<!-- Left sidebar and helper -->
+<div id="leftSidebarHelper" class="spixi-leftswipe-helper">
+</div>
 
-        var SL_DevMode = "*SL{index-devmode}";
+<div id="leftSidebar" class="spixi-sidebar">
+    <!-- Modal content -->
+    <div class="spixi-sidebar-content">
+        <div class="spixi-sidebar-header">
+            <div class="spixi-sidebar-header-user-details">
+                <img id="avatar_image" class="spixi-sidebar-avatar" src="img/spixiavatar.png" alt="user-avatar" />
+                <div class="spixi-sidebar-header-user-details-text">
+                    <span id="menu_nickname" class="label-lg s-text-inverse">*SL{index-side-title}</span>
+                    <div  class="masked-user-address" onclick="onMaskWalletAddressHandler()">
+                        <img src="img/ixi-icon.svg" alt="ixi-icon" width="20" height="20" />
+                        <span id="user-address" class="label-xs s-text-inverse"></span>
+                    </div>
+                </div>
+            </div>
+            <a id="sidebarclose" class="spixi-sidebar-closebutton" href="javascript:onMainMenuClose();">
+                <i class="fa fa-arrow-left"></i>
+            </a>
+        </div>
+        <div class="spixi-sidebar-items-container">
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('downloads');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-folder-closed"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-downloads}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('settings');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-user-cog"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-settings}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-settings-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('encpass');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-lock"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-password}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-password-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('backup');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-save"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-backup}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-backup-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('guide');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-lightbulb"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-howtouse}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-how-to-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('contributors');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-user-astronaut"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-contributors}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" onclick="selectMenuOption('about');">
+                <div class="spixi-sidebar-icon"><i class="fa fa-circle-info"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-about}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-about-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" id="SendLogMenuItem" onclick="selectMenuOption('viewLog');" style="display: none;">
+                <div class="spixi-sidebar-icon"><i class="fa fa-circle-info"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-sendlog}</span>
+                    <span class="body-xs s-text-02">Appeareance, nickname, and data</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+        </div>
+        <div class="footer-version body-sm" id="version">spixi</div>
 
-        var wal_id = "";
+        <!-- Security Lock is not available in this version
+    <div class="spixi-sidebar-item">
+        <a href="javascript:selectMenuOption('lock');">
+            <i class="fa fa-lock spixi-sidebar-item-icon"></i>
+            <div class="spixi-sidebar-item-text">*SL{index-side-security}</div>
+        </a>
+    </div>
+    -->
+    </div>
+</div>
+<!-- End left sidebar and helper -->
 
-        var clipboard = new ClipboardJS('#copyaddressbutton', {
-            text: function () {
-                return wal_id;
+
+<script type="text/javascript">
+    var SL_IndexBalanceInfo = "*SL{index-balance-info}";
+    var SL_IndexBalanceShow = "*SL{index-balance-show}";
+    var SL_IndexBalanceHide = "*SL{index-balance-hide}";
+    var SL_TimeJustNow = "*SL{global-time-justnow}";
+    var SL_AMinuteAgo = "*SL{global-time-aminuteago}";
+    var SL_MinutesAgo = "*SL{global-time-minutesago}";
+
+    var SL_DevMode = "*SL{index-devmode}";
+
+    var wal_id = "";
+
+    var clipboard = new ClipboardJS('#copyaddressbutton', {
+        text: function () {
+            return wal_id;
+        }
+    });
+
+    clipboard.on('success', function (e) {
+        e.clearSelection();
+
+        var x = document.getElementById("toastbar");
+        x.className = "spixi-toastbar show";
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 3000);
+
+    });
+
+    clipboard.on('error', function (e) {
+
+    });
+
+    var qrcode = new QRCode("qrcode", {
+        text: "",
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    function generateQR() {
+        qrcode.clear();
+        qrcode.makeCode(wal_id);
+    }
+
+    function setAddress(addr) {
+        wal_id = addr;
+        var parts = addr.match(/.{1,34}/g) || [];
+        document.getElementById("user-address").innerHTML = maskWalletAddress(wal_id);
+        document.getElementById("wal1").innerHTML = parts[0];
+        document.getElementById("wal2").innerHTML = parts[1];
+        generateQR();
+    }
+
+    function showIxiNamesMessage(message) {
+        var x = document.getElementById("ixinamestoastbar");
+        x.className = "spixi-toastbar-ixinames show";
+        x.innerText = message;
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 3000);
+    }
+
+    // MINI APPS FUNCTIONS
+    const isMiniAppsStartNoteHidden = localStorage.getItem("miniAppsStartNoteHidden");
+    if (isMiniAppsStartNoteHidden) {
+        document.getElementById("miniAppsStartNote").style.display = "none";
+    } else {
+        document.getElementById("miniAppsStartNote").style.display = "flex";
+    }
+
+    function hideMiniAppsStartNote() {
+        const startNote = document.getElementById("miniAppsStartNote");
+        startNote.style.display = "none";
+        localStorage.setItem("miniAppsStartNoteHidden", true);
+    }
+
+    function clearApps() {
+        const appsNode = document.getElementById("AppList");
+        appsNode.innerHTML = "";
+
+        appsNode.style.display = 'grid';
+    }
+
+    function addApp(id, name, icon, publisher, isMultiuser) {
+        const mappedIcon = icon.replace(/&#92;/g, '\\');
+
+        const singleApp = `<div class="mini-apps-list-single-item">
+        <div class="mini-apps-list-single-image-wrapper" onclick="window.location.href='ixian:appDetails:${id}'">
+            <img src="${mappedIcon}" alt="mini-app-${name}"/>
+        </div>
+        <div class="mini-apps-single-item-info s-text-01">
+            <span class="label-sm appNameItem">${name}</span>
+            <span class="body-xs">${publisher}</span>
+            <div class="launchBtn" data-app-id="${id}" data-multi-user="${parseBoolean(isMultiuser)}">
+                <span class="label-xs s-text-action">*SL{apps-launch} <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </div>
+    </div>`;
+
+        const appListElement = document.getElementById("AppList");
+        appListElement.insertAdjacentHTML("beforeend", singleApp);
+    }
+
+    document.getElementById("AppList").addEventListener("click", function (event) {
+            if (event.target.closest(".launchBtn")) {
+                const launchBtn = event.target.closest(".launchBtn");
+                onLaunchHandler(launchBtn);
+            }
+        }
+    )
+
+    function onLaunchHandler(element) {
+        const multiUserModal = document.getElementById("multiUserAppModal");
+        const modalContent = document.getElementById("multiUserModalContent");
+
+        multiUserModal.setAttribute("data-app-id", null);
+
+        const appId = element.getAttribute('data-app-id');
+        const isMultiuser = element.getAttribute('data-multi-user') === "true";
+
+        //show multi-user modal if true
+        if (isMultiuser) {
+            multiUserModal.style.display = "flex";
+            multiUserModal.setAttribute("data-app-id", appId);
+
+            setTimeout(() => {
+                function handleClickOutside(event) {
+                    const clickedInsideModal = modalContent.contains(event.target);
+                    const clickedInsideWrapper = multiUserModal.contains(event.target);
+
+                    if (clickedInsideWrapper && !clickedInsideModal) {
+                        multiUserModal.style.display = "none";
+                        document.removeEventListener("click", handleClickOutside);
+                    }
+                }
+
+                document.addEventListener("click", handleClickOutside);
+            }, 10);
+        }
+        //else just start the app in solo mode
+        else {
+            window.location.href = `ixian:startApp:${appId}`;
+        }
+    }
+
+    function launchSoloMode(buttonElement) {
+        const multiUserModal = document.getElementById("multiUserAppModal");
+        const appId = buttonElement.closest('#multiUserAppModal')?.getAttribute('data-app-id');
+
+        if (appId) {
+            multiUserModal.style.display = "none";
+            window.location.href = `ixian:startApp:${appId}`;
+        } else {
+            console.error("App ID not found.");
+        }
+    }
+
+    function launchMultiUserMode(buttonElement) {
+        const multiUserModal = document.getElementById("multiUserAppModal");
+        const appId = buttonElement.closest('#multiUserAppModal')?.getAttribute('data-app-id');
+
+        if (appId) {
+            multiUserModal.style.display = "none";
+            window.location.href = `ixian:startAppMulti:${appId}`;
+        } else {
+            console.error("App ID not found.");
+        }
+    }
+    
+    function searchMiniApps(){
+        const searchValue = document.getElementById("searchMiniApps")?.value.toLowerCase();
+        const appItems = document.querySelectorAll("#AppList .mini-apps-list-single-item");
+
+        appItems.forEach(item => {
+            const nameElement = item.querySelector(".appNameItem");
+            const appName = nameElement ? nameElement.textContent.toLowerCase() : "";
+
+            if (appName.includes(searchValue)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
             }
         });
+    }
 
-        clipboard.on('success', function (e) {
-            e.clearSelection();
+    function toggleImportantNotice(iconElement) {
+        const container = document.getElementById("importantNotice");
+        const isExtended = container.classList.toggle("extended");
 
-            var x = document.getElementById("toastbar");
-            x.className = "spixi-toastbar show";
-            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-
-        });
-
-        clipboard.on('error', function (e) {
-
-        });
-
-        var qrcode = new QRCode("qrcode", {
-            text: "",
-            width: 200,
-            height: 200,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-
-        function generateQR() {
-            qrcode.clear();
-            qrcode.makeCode(wal_id);
+        if (isExtended) {
+            iconElement.classList.replace("fa-chevron-down", "fa-chevron-up");
+        } else {
+            iconElement.classList.replace("fa-chevron-up", "fa-chevron-down");
         }
+    }
 
-        function setAddress(addr) {
-            wal_id = addr;
-            var parts = addr.match(/.{1,34}/g) || [];
-            document.getElementById("wal1").innerHTML = parts[0];
-            document.getElementById("wal2").innerHTML = parts[1];
-            generateQR();
-        }
-
-        function showIxiNamesMessage(message) {
-            var x = document.getElementById("ixinamestoastbar");
-            x.className = "spixi-toastbar-ixinames show";
-            x.innerText = message;
-            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-        };
-
-    </script>
-    <script src="js/spixi.js"></script>
-    <script src="js/home.js"></script>
+</script>
+<script src="js/spixi.js"></script>
+<script src="js/home.js"></script>
 </body>
 </html>

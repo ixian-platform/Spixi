@@ -6,7 +6,8 @@ using IXICore.Streaming;
 using Spixi;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Network;
+using SPIXI.MiniApps;
+using SPIXI.Storage;
 using System.IO.Compression;
 using System.Web;
 
@@ -199,6 +200,10 @@ namespace SPIXI
             {
                 Navigation.PushAsync(new ContactNewPage(), Config.defaultXamarinAnimations);
             }
+            else if (current_url.Equals("ixian:newapp", StringComparison.Ordinal))
+            {
+                Navigation.PushAsync(new AppNewPage(), Config.defaultXamarinAnimations);
+            }
             else if (current_url.Equals("ixian:sendixi", StringComparison.Ordinal))
             {
                 onSendIxi(null);
@@ -274,13 +279,13 @@ namespace SPIXI
             {
                 currentTab = current_url.Split(new string[] { "ixian:tab:" }, StringSplitOptions.None)[1];
             }
-            else if (current_url.Equals("ixian:apps", StringComparison.Ordinal))
-            {
-                Navigation.PushAsync(new AppsPage(), Config.defaultXamarinAnimations);
-            }
             else if (current_url.Equals("ixian:downloads", StringComparison.Ordinal))
             {
                 Navigation.PushModalAsync(new DownloadsPage());
+            }
+            else if (current_url.Equals("ixian:contributors", StringComparison.Ordinal))
+            {
+                Navigation.PushModalAsync(new ContributorsPage());
             }
             else if (current_url.Equals("ixian:share", StringComparison.Ordinal))
             {
@@ -361,6 +366,21 @@ namespace SPIXI
             else if(current_url.StartsWith("ixian:joinBot"))
             {
                 joinBot();
+            }
+            else if (current_url.StartsWith("ixian:startApp:", StringComparison.Ordinal))
+            {
+                string appId = current_url.Substring("ixian:startApp:".Length);
+                onStartApp(appId);
+            }
+            else if (current_url.StartsWith("ixian:startAppMulti", StringComparison.Ordinal))
+            {
+                string appId = current_url.Substring("ixian:startAppMulti:".Length);
+                onStartAppMulti(appId);
+            }
+            else if (current_url.StartsWith("ixian:appDetails"))
+            {
+                string appId = current_url.Substring("ixian:appDetails:".Length);
+                onAppDetails(appId);
             }
             else
             {
@@ -536,6 +556,7 @@ namespace SPIXI
 
             UIHelpers.shouldRefreshContacts = true;
             Node.refreshAppRequests = true;
+            Node.shouldRefreshApps = true;
             lastTransactionChange = 0;
 
             Utils.sendUiCommand(this, "selectTab", currentTab);
@@ -564,7 +585,6 @@ namespace SPIXI
             }
 
             webView.FadeTo(1, 250);
-
             checkForRating();
         }
 
@@ -1020,6 +1040,7 @@ namespace SPIXI
         {
             base.updateScreen();
 
+            loadApps();
             loadChats();
             loadContacts();
             UIHelpers.shouldRefreshContacts = false;
@@ -1202,6 +1223,91 @@ namespace SPIXI
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+
+        // Spixi Mini Apps logic
+
+        private void loadApps()
+        {
+            if(!Node.shouldRefreshApps)
+            {
+                return;
+            }
+            Node.shouldRefreshApps = false;
+
+            Utils.sendUiCommand(this, "clearApps");
+
+            var apps = Node.MiniAppManager.getInstalledApps();
+            lock (apps)
+            {
+                foreach (var app_arr in apps)
+                {
+                    MiniApp app = app_arr.Value;
+                    string icon = Node.MiniAppManager.getAppIconPath(app.id);
+                    if (icon == null)
+                    {
+                        icon = "";
+                    }
+                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
+                }
+            }
+        }
+
+        private void onStartApp(string appId)
+        {
+            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.MiniAppManager.getAppEntryPoint(appId));
+            miniAppPage.accepted = true;
+            Node.MiniAppManager.addAppPage(miniAppPage);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+            });
+        }
+
+        private void onStartAppMulti(string appId)
+        {
+            var recipientPage = new WalletRecipientPage();
+            recipientPage.pickSucceeded += (sender, e) =>
+            {
+                HandlePickAppMultiUserSucceeded(sender, e, appId);
+            };
+            Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
+        }
+
+        private async void HandlePickAppMultiUserSucceeded(object sender, SPIXI.EventArgs<string> e, string appId)
+        {
+            string id = e.Value;
+            Address id_bytes = new Address(id);
+            Friend friend = FriendList.getFriend(id_bytes);
+
+            if (friend == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                
+                MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), new Address[] { id_bytes }, Node.MiniAppManager.getAppEntryPoint(appId));
+                miniAppPage.accepted = true;
+                Node.MiniAppManager.addAppPage(miniAppPage);
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+                });
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Navigation failed: " + ex.Message);
+            }
+        }
+
+        private void onAppDetails(string appId)
+        {
+            Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);
         }
 
     }
