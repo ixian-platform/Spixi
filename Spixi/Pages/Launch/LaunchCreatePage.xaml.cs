@@ -1,4 +1,5 @@
-﻿using Spixi;
+﻿using IXICore.Meta;
+using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -76,7 +77,7 @@ namespace SPIXI
                 return;
             }
 
-            var file_path = Node.localStorage.getOwnAvatarPath(false);
+            var file_path = IxianHandler.localStorage.getOwnAvatarPath(false);
             try
             {
                 byte[] image_bytes = null;
@@ -119,8 +120,8 @@ namespace SPIXI
 
                     Node.start();
 
-                    Node.localStorage.nickname = nick;
-                    Node.localStorage.writeAccountFile();
+                    IxianHandler.localStorage.nickname = nick;
+                    IxianHandler.localStorage.writeAccountFile();
 
                     // TODO: encrypt the password
                     Preferences.Default.Set("walletpass", pass);

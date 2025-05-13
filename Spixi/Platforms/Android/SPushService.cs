@@ -7,6 +7,7 @@ using IXICore.Meta;
 using SPIXI;
 using OneSignalSDK.DotNet;
 using OneSignalSDK.DotNet.Core.Debug;
+using IXICore.Streaming;
 
 namespace Spixi
 {

@@ -81,5 +81,18 @@ namespace SPIXI
             }
             return null;
         }
+
+        public static List<SingleChatPage> getChatPages()
+        {
+            List<SingleChatPage> chatPages = new();
+            foreach (var item in App.appWindow.Navigation.NavigationStack)
+            {
+                if (item is SingleChatPage)
+                {
+                    chatPages.Add((SingleChatPage)item);
+                }
+            }
+            return chatPages;
+        }
     }
 }

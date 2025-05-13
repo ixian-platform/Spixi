@@ -136,12 +136,8 @@ namespace SPIXI.Network
 
                                 if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
                                 {
-                                    Node.setNetworkBlock(last_block_num, block_checksum, block_version);
-
                                     // Get random presences
                                     endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
-                                    endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
-                                    endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'H' });
 
                                     subscribeToEvents(endpoint);
                                 }
@@ -151,7 +147,7 @@ namespace SPIXI.Network
 
                     case ProtocolMessageCode.s2data:
                         {
-                            StreamProcessor.receiveData(data, endpoint);
+                            Node.streamProcessor.receiveData(data, endpoint);
                         }
                         break;
 
@@ -176,7 +172,7 @@ namespace SPIXI.Network
                             Address address = null;
                             long last_seen = 0;
                             byte[] device_id = null;
-                            bool updated = PresenceList.receiveKeepAlive(data, out address, out last_seen, out device_id, endpoint);
+                            bool updated = PresenceList.receiveKeepAlive(data, out address, out last_seen, out device_id, out _, endpoint);
                             Presence p = PresenceList.getPresenceByAddress(address);
                             if (p == null)
                                 return;
@@ -229,25 +225,32 @@ namespace SPIXI.Network
                                     int address_length = (int)reader.ReadIxiVarUInt();
                                     Address address = new Address(reader.ReadBytes(address_length));
 
+                                    int balance_bytes_len = (int)reader.ReadIxiVarUInt();
+                                    byte[] balance_bytes = reader.ReadBytes(balance_bytes_len);
+
                                     // Retrieve the latest balance
-                                    IxiNumber balance = new IxiNumber(new BigInteger(reader.ReadBytes((int)reader.ReadIxiVarUInt())));
+                                    IxiNumber ixi_balance = new IxiNumber(new BigInteger(balance_bytes));
 
-                                    if (address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                                    foreach (Balance balance in IxianHandler.balances)
                                     {
-                                        // Retrieve the blockheight for the balance
-                                        ulong block_height = reader.ReadIxiVarUInt();
-
-                                        if (block_height > Node.balance.blockHeight && (Node.balance.balance != balance || Node.balance.blockHeight == 0))
+                                        if (address.addressNoChecksum.SequenceEqual(balance.address.addressNoChecksum))
                                         {
-                                            byte[] block_checksum = reader.ReadBytes((int)reader.ReadIxiVarUInt());
+                                            // Retrieve the blockheight for the balance
+                                            ulong block_height = reader.ReadIxiVarUInt();
 
-                                            Node.balance.address = address;
-                                            Node.balance.balance = balance;
-                                            Node.balance.blockHeight = block_height;
-                                            Node.balance.blockChecksum = block_checksum;
-                                            Node.balance.verified = false;
+                                            if (block_height > balance.blockHeight && (balance.balance != ixi_balance || balance.blockHeight == 0))
+                                            {
+                                                byte[] block_checksum = reader.ReadBytes((int)reader.ReadIxiVarUInt());
+
+                                                balance.address = address;
+                                                balance.balance = ixi_balance;
+                                                balance.blockHeight = block_height;
+                                                balance.blockChecksum = block_checksum;
+                                                balance.verified = false;
+                                            }
+
+                                            balance.lastUpdate = Clock.getTimestamp();
                                         }
-                                        Node.balance.lastUpdate = Clock.getTimestamp();
                                     }
                                 }
                             }
@@ -288,6 +291,7 @@ namespace SPIXI.Network
                         break;
 
                     default:
+                        Logging.warn("Unknown protocol message: {0}, from {1} ({2})", code, endpoint.getFullAddress(), endpoint.serverWalletAddress);
                         break;
 
                 }

@@ -6,6 +6,7 @@ using IXICore.Streaming;
 using Spixi;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using SPIXI.Network;
 using System.IO.Compression;
 using System.Web;
 
@@ -474,7 +475,14 @@ namespace SPIXI
             {
                 friend.save();
 
+                UIHelpers.shouldRefreshContacts = true;
+
                 CoreStreamProcessor.sendContactRequest(friend);
+
+                if (friend.approved)
+                {
+                    ProtocolMessage.resubscribeEvents();
+                }
             }
         }
 
@@ -526,7 +534,7 @@ namespace SPIXI
 
             setAsRoot();
 
-            UIInterfaceHandler.shouldRefreshContacts = true;
+            UIHelpers.shouldRefreshContacts = true;
             Node.refreshAppRequests = true;
             lastTransactionChange = 0;
 
@@ -675,7 +683,7 @@ namespace SPIXI
         // TODO: optimize this
         public void loadContacts()
         {
-            if (!UIInterfaceHandler.shouldRefreshContacts)
+            if (!UIHelpers.shouldRefreshContacts)
             {
                 //  No changes detected, stop here
                 return;
@@ -727,7 +735,7 @@ namespace SPIXI
                 Utils.sendUiCommand(this, "setUnreadIndicator", "0");
             }
 
-            if (!UIInterfaceHandler.shouldRefreshContacts)
+            if (!UIHelpers.shouldRefreshContacts)
             {
                 //  No changes detected, stop here
                 return;
@@ -974,7 +982,7 @@ namespace SPIXI
                 string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
 
                 string confirmed = "false";
-                if(Node.networkBlockHeight > tx.blockHeight + Config.txConfirmationBlocks)
+                if(IxianHandler.getHighestKnownNetworkBlockHeight() > tx.blockHeight + Config.txConfirmationBlocks)
                 {
                     tx.applied = tx.blockHeight + Config.txConfirmationBlocks;
                     confirmed = "true";
@@ -1014,7 +1022,7 @@ namespace SPIXI
 
             loadChats();
             loadContacts();
-            UIInterfaceHandler.shouldRefreshContacts = false;
+            UIHelpers.shouldRefreshContacts = false;
 
             updateContactStatus();
             loadTransactions();

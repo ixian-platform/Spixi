@@ -4,6 +4,7 @@ using IXICore.Streaming;
 using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
+using SPIXI.Meta;
 using System.Text;
 
 namespace SPIXI.VoIP
@@ -54,7 +55,7 @@ namespace SPIXI.VoIP
 
             string codecs = String.Join("|", SSpixiCodecInfo.getSupportedAudioCodecs());
 
-            FriendList.addMessageWithType(currentCallSessionId, FriendMessageType.voiceCall, friend.walletAddress, 0, "", true, null, 0, false);
+            Node.addMessageWithType(currentCallSessionId, FriendMessageType.voiceCall, friend.walletAddress, 0, "", true, null, 0, false);
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
             ((SpixiContentPage)Application.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-dialing") + " " + friend.nickname + "...", 0);
             
@@ -183,7 +184,32 @@ namespace SPIXI.VoIP
 
             if (currentCallContact != null)
             {
-                currentCallContact.endCall(currentCallSessionId, currentCallAccepted && currentCallCalleeAccepted, Clock.getTimestamp() - currentCallStartedTime, currentCallInitiator);
+                bool callAccepted = currentCallAccepted && currentCallCalleeAccepted;
+                long callDuration = Clock.getTimestamp() - currentCallStartedTime;
+                var fm = currentCallContact.endCall(currentCallSessionId, callAccepted, callDuration, currentCallInitiator);
+                if (fm == null)
+                {
+                    Logging.warn("Cannot end call, no message with session ID exists.");
+                } else
+                {
+                    var tmp_messages = currentCallContact.getMessages(0);
+                    if (callAccepted == true && tmp_messages.Last() != fm)
+                    {
+                        fm.message = callDuration.ToString();
+                        Node.addMessageWithType(null, FriendMessageType.voiceCallEnd, currentCallContact.walletAddress, 0, fm.message, currentCallInitiator, null, 0, false);
+                    }
+                    else
+                    {
+                        fm.type = FriendMessageType.voiceCallEnd;
+                        if (callAccepted)
+                        {
+                            fm.message = callDuration.ToString();
+                        }
+                        IxianHandler.localStorage.requestWriteMessages(currentCallContact.walletAddress, 0);
+                        UIHelpers.insertMessage(currentCallContact, 0, fm);
+                    }
+                }
+
             }
 
             currentCallSessionId = null;

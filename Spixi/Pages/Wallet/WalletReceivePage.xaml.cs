@@ -180,7 +180,7 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(recipient_address);
             if (friend != null && (new IxiNumber(amount)) > 0)
             {
-                FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.requestFunds, friend.walletAddress, 0, amount, true);
+                FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.requestFunds, friend.walletAddress, 0, amount, true);
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
 

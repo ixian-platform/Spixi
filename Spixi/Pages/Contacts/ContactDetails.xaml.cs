@@ -127,7 +127,7 @@ namespace SPIXI
             {
                 friend.pendingDeletion = true;
                 friend.save();
-                UIInterfaceHandler.shouldRefreshContacts = true;
+                UIHelpers.shouldRefreshContacts = true;
                 CoreStreamProcessor.sendLeave(friend, null);
                 displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
@@ -135,6 +135,7 @@ namespace SPIXI
             {
                 if (FriendList.removeFriend(friend) == true)
                 {
+                    UIHelpers.shouldRefreshContacts = true;
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }

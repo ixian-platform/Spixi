@@ -157,18 +157,20 @@ namespace SPIXI
             }
 
             to_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), _amount));
-            totalAmount += _amount;
 
 
             IxiNumber fee = ConsensusConfig.forceTransactionPrice;
             Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
             Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
-            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+            var txPrep = Node.prepareTransactionFrom(from, new Address(_address), amount);
+            transaction = txPrep.transaction;
+            var relayNodeAddresses = txPrep.relayNodeAddresses;
+            totalAmount = transaction.calculateTotalAmount() + transaction.fee;
 
             Logging.info("Preparing to send payment");
             Logging.info("Broadcasting tx");
-            IxianHandler.addTransaction(transaction, true);
+            IxianHandler.addTransaction(transaction, relayNodeAddresses, true);
             Logging.info("Adding to cache");
 
             // Add the unconfirmed transaction to the cache
@@ -182,7 +184,7 @@ namespace SPIXI
 
                 if (friend != null)
                 {
-                    FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, transaction.getTxIdString(), true);
+                    FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, transaction.getTxIdString(), true);
 
                     SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, transaction.id);
 

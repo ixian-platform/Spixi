@@ -114,6 +114,8 @@ namespace SPIXI
         private void onSend()
         {
             IxiNumber fee = ConsensusConfig.forceTransactionPrice;
+            IxiNumber relayFee = fee * 4;
+
             IxiNumber _amount = amount;
 
             if (_amount < (long)0)
@@ -123,7 +125,7 @@ namespace SPIXI
             }
 
             IxiNumber availableBalance = Node.getAvailableBalance();
-            if (_amount + fee > availableBalance)
+            if (_amount + fee + relayFee > availableBalance)
             {
                 string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), _amount + fee, availableBalance);
                 displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
@@ -140,11 +142,8 @@ namespace SPIXI
                 Address to = friend.walletAddress;
                 
                 Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
-                Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
-                Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
-
-                IxianHandler.addTransaction(transaction, true);
+                Transaction transaction = Node.sendTransactionFrom(from, to, amount);
                 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id + ":" + transaction.getTxIdString()));
 
