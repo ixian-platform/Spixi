@@ -100,27 +100,20 @@ function getRelativeTime(unixTimestamp)
 var relativeTimeUpdateinterval = null;
 
 function startRelativeTimeUpdate(className) {
-    if (relativeTimeUpdateinterval != null) {
-        return;
-    }
+    if (relativeTimeUpdateinterval != null) return;
 
     relativeTimeUpdateinterval = setInterval(function () {
         try {
-            var els = document.getElementsByClassName(className);
-            if(els.length == 0)
+            const els = document.getElementsByClassName(className);
+            if(els.length === 0)
             {
                 clearInterval(relativeTimeUpdateinterval);
                 relativeTimeUpdateinterval = null;
 			}
-            for (var i = 0; i < els.length; i++) {
-                var el = els[i];
-                var new_ts = getRelativeTime(el.getAttribute("data-timestamp"));
-                var match = new_ts.match(/[0-9]+$/);
-                if (match == "") {
-                    el.innerHTML = new_ts;
-                } else {
-                    el.innerHTML = new_ts;
-                    el.className == el.className.replace(className, "");
+            for (let el of els) {
+                const ts = parseInt(el.getAttribute("data-timestamp"), 10);
+                if (!isNaN(ts)) {
+                    el.innerHTML = getUserFriendlyFormattedTimestamp(ts);
                 }
             }
         } catch (e) {
@@ -317,4 +310,61 @@ function hideModalDialog()
     {
         document.body.removeChild(modalEl);
 	}
+}
+
+function parseBoolean(value) {
+    return String(value).toLowerCase() === "true";
+}
+
+function toggleAnimatedSlider(elementId) {
+    const slideUpContainer = document.getElementById(elementId);
+
+    if (slideUpContainer.classList.contains('active')) {
+        slideUpContainer.classList.remove('active');
+        document.getElementById("wrap").classList.remove("blurredContent");
+        document.getElementById("toolbar").classList.remove("blurredContent");
+    } else {
+        slideUpContainer.classList.add('active');
+        document.getElementById("wrap").classList.add("blurredContent");
+        document.getElementById("toolbar").classList.add("blurredContent");
+    }
+}
+
+function getHoursMinutes(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+}
+
+function getUserFriendlyFormattedTimestamp(unixTimestamp) {
+    const now = new Date();
+    const date = new Date(unixTimestamp * 1000);
+
+    const timeDiff = now.getTime() - date.getTime();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const sevenDays = 7 * oneDay;
+
+    const isSameYear = now.getFullYear() === date.getFullYear();
+
+    if (timeDiff < oneDay) {
+        return getHoursMinutes(unixTimestamp);
+    } else if (timeDiff < sevenDays || isSameYear) {
+        return date.toLocaleString('en-US', { month: 'short', day: 'numeric' });
+    } else {
+        return date.toLocaleString('en-US', { month: 'short', day: 'numeric', year: "numeric" });
+    }
+}
+
+function maskWalletAddress(address) {
+    if (!address || address.length <= 8) return "";
+    return `${address.slice(0, 4)}...${address.slice(-4)}`;
+}
+
+function limitToTwoDecimals(inputAsString) {
+    const cleaned = inputAsString.trim().replace(/^([+-])\s*/, '$1');
+    const parsedNum = parseFloat(cleaned);
+    if (isNaN(parsedNum)) return parsedNum;
+    return parsedNum.toFixed(2);
 }

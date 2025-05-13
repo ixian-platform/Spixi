@@ -1,18 +1,19 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.CustomApps;
+using SPIXI.MiniApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.VoIP;
 using Spixi;
+
 #if WINDOWS
 using Microsoft.Web.WebView2.Core;
 #endif
 
 namespace SPIXI
 {
-	public class SpixiContentPage : ContentPage
-	{
+    public class SpixiContentPage : ContentPage
+    {
         public bool CancelsTouchesInView = true;
         public bool pageLoaded = false;
         private Queue<string> messageQueue = new Queue<string>();
@@ -34,18 +35,18 @@ namespace SPIXI
             _webView.Navigating += webViewNavigating;
         }
 
-        private void webViewNavigating(object? sender, WebNavigatingEventArgs e)
+        protected void webViewNavigating(object? sender, WebNavigatingEventArgs e)
         {
 #if WINDOWS
             if (_webView == null) return;
             CoreWebView2 coreWebView2 = (_webView.Handler.PlatformView as Microsoft.Maui.Platform.MauiWebView).CoreWebView2;
             coreWebView2.Settings.IsStatusBarEnabled = false;
-            coreWebView2.Settings.AreDevToolsEnabled = false;
+            coreWebView2.Settings.AreDevToolsEnabled = true;
 
 #endif
         }
 
-        private async void webViewNavigated(object? sender, WebNavigatedEventArgs e)
+        protected async void webViewNavigated(object? sender, WebNavigatedEventArgs e)
         {
             if (pageLoaded = await checkIfPageLoaded())
             {
@@ -150,11 +151,54 @@ namespace SPIXI
 
         }
 
+        public Task<bool> displaySpixiAlert(string title, string message, string ok, string cancel)
+        {
+            try
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    try
+                    {
+                        var result = await DisplayAlert(title, message, ok, cancel);
+                        tcs.TrySetResult(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logging.error("Exception occured in displaySpixiAlert: " + ex);
+                        tcs.TrySetException(ex);
+                    }
+                });
+                return tcs.Task;
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured in displaySpixiAlert: " + e);
+            }
+            return null;
+        }
+
         public Task displaySpixiAlert(string title, string message, string cancel)
         {
-            try { 
-                return DisplayAlert(title, message, cancel);
-            }catch(Exception e)
+            try
+            {
+                var tcs = new TaskCompletionSource<Task>();
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    try
+                    {
+                        var result = DisplayAlert(title, message, cancel);
+                        tcs.TrySetResult(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logging.error("Exception occured in displaySpixiAlert: " + ex);
+                        tcs.TrySetException(ex);
+                    }
+                });
+                return tcs.Task;
+            }
+            catch (Exception e)
             {
                 Logging.error("Exception occured in displaySpixiAlert: " + e);
             }
@@ -181,33 +225,34 @@ namespace SPIXI
 
         public void displayAppRequests()
         {
-            if(_webView == null)
+            if (_webView == null)
             {
                 return;
             }
             Utils.sendUiCommand(this, "clearAppRequests");
-            var app_pages = Node.customAppManager.getAppPages();
+            var app_pages = Node.MiniAppManager.getAppPages();
             lock (app_pages)
             {
-                foreach (CustomAppPage page in app_pages.Values)
+                foreach (MiniAppPage page in app_pages.Values)
                 {
-                    if(page.accepted)
+                    if (page.accepted)
                     {
                         continue;
                     }
                     Friend f = FriendList.getFriend(page.hostUserAddress);
-                    CustomApp app = Node.customAppManager.getApp(page.appId);
+                    MiniApp app = Node.MiniAppManager.getApp(page.appId);
                     string text = string.Format(SpixiLocalization._SL("global-app-wants-to-use"), f.nickname, app.name);
                     Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(page.sessionId), text, SpixiLocalization._SL("global-app-accept"), SpixiLocalization._SL("global-app-reject"));
                 }
-                if(VoIPManager.isInitiated())
+                if (VoIPManager.isInitiated())
                 {
-                    if(VoIPManager.currentCallAccepted)
+                    if (VoIPManager.currentCallAccepted)
                     {
-                        if(VoIPManager.currentCallCalleeAccepted)
+                        if (VoIPManager.currentCallCalleeAccepted)
                         {
                             displayCallBar(VoIPManager.currentCallSessionId, SpixiLocalization._SL("global-call-in-call") + " - " + VoIPManager.currentCallContact.nickname, VoIPManager.currentCallStartedTime);
-                        }else
+                        }
+                        else
                         {
                             displayCallBar(VoIPManager.currentCallSessionId, SpixiLocalization._SL("global-call-dialing") + " " + VoIPManager.currentCallContact.nickname + "...", 0);
                         }
@@ -225,12 +270,12 @@ namespace SPIXI
         public void onAppAccept(string session_id)
         {
             byte[] b_session_id = Crypto.stringToHash(session_id);
-            if(VoIPManager.hasSession(b_session_id))
+            if (VoIPManager.hasSession(b_session_id))
             {
                 VoIPManager.acceptCall(b_session_id);
                 return;
             }
-            CustomAppPage app_page = Node.customAppManager.acceptAppRequest(b_session_id);
+            MiniAppPage app_page = Node.MiniAppManager.acceptAppRequest(b_session_id);
             if (app_page != null)
             {
                 Navigation.PushAsync(app_page, Config.defaultXamarinAnimations);
@@ -245,7 +290,7 @@ namespace SPIXI
                 VoIPManager.rejectCall(b_session_id);
                 return;
             }
-            Node.customAppManager.rejectAppRequest(b_session_id);
+            Node.MiniAppManager.rejectAppRequest(b_session_id);
         }
 
         public virtual void updateScreen()
@@ -281,10 +326,11 @@ namespace SPIXI
                 if (_webView != null)
                 {
                     _webView.Navigated -= webViewNavigated;
+                    _webView.Navigating -= webViewNavigating;
                     _webView = null;
                 }
             }
-            
+
             GC.Collect();
         }
 
@@ -304,11 +350,12 @@ namespace SPIXI
             {
                 string session_id = url.Substring("ixian:hangUp:".Length);
                 VoIPManager.hangupCall(Crypto.stringToHash(session_id));
-            }else
+            }
+            else
             {
                 return false;
             }
             return true;
         }
     }
-} 
+}

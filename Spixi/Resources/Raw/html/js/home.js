@@ -15,6 +15,11 @@ function onMainMenuClose() {
     leftSidebar.style.display = "none";
 }
 
+function onMaskWalletAddressHandler(){
+    selectTab("tab4");
+    onMainMenuClose()
+}
+
 function onHomeMenuAction()
 {
     homeModal.style.display = "block";
@@ -276,11 +281,6 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
 
     const isReceived = receive === "1";
     const arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;
-    const signedAmount = `${isReceived ? '+' : '-'} ${amountWithCommas(amount)}`;
-
-
-    const fiatAmountText = `$${amountWithCommas(fiatAmount)}`;
-
 
     const paymentEntry = document.createElement("div");
     paymentEntry.id = "tx_" + txid;
@@ -290,28 +290,26 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
     }
     paymentEntry.innerHTML = `
         <a href="ixian:txdetails:${txid}">
-            <div class="row no-gutters spixi-list-item-first-row flex-nowrap">
-                <div class="col">
-                    <div class="spixi-list-item-from"><i class="spixi-list-item-from-status ${iconClass} ${icon}"></i> ${text}</div>
-                </div>
-                <div class="col spixi-list-item-right">
-                    <div class="spixi-list-item-amount">${signedAmount} ${arrow}</div>
-                </div>
-            </div>
-            <div class="row no-gutters spixi-list-item-second-row flex-nowrap">
-                <div class="col">
-                    <div class="spixi-list-item-timestamp">${timestamp}</div>
-                </div>
-                <div class="col spixi-list-item-right">
-                    <div class="spixi-list-item-amount-fiat">${fiatAmountText}</div>
-                </div>
-            </div>
+        <div class="single-payment-container">
+                            <div class="single-payment-arrow">
+                                ${arrow}
+                            </div>
+                            <div class="single-payment-info">
+                                <div class="single-payment-info-left">
+                                    <span class="label-sm s-text-01">${text}</span>
+                                    <span class="body-xs s-text-02">${timestamp}</span>
+                                </div>
+                                <div class="single-payment-info-right">
+                                    <span class="label-sm s-text-01">${isReceived ? '+' : '-'}${limitToTwoDecimals(amountWithCommas(amount))}</span>
+                                    <span class="body-xs s-text-02">${amountWithCommas(fiatAmount)}</span>
+                                </div>
+                            </div>
+                        </div>                      
         </a>`;
 
 
     document.getElementById("paymentlist").appendChild(paymentEntry);
 }
-
 
 function setupCloneNode(element) {
     if (element.id) {
@@ -390,8 +388,8 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
 
     let indicator = online === "true" ? " online" : " offline";
 
-    var unreadIndicator = "";
-    var readIndicator = "";
+    let unreadIndicator = "";
+    let readIndicator = "";
 
     switch (type) {
         case "read":
@@ -401,10 +399,10 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
             readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-confirmed fas fa-check"></i>';
             break;
         case "pending":
-            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-pending-indicator fas fa-clock"></i>';
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-pending-indicator fas fa-arrow-right"></i>';
             break;
         case "default":
-            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-default-indicator fas fa-comment-slash"></i>';
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-default-indicator fas fa-clock"></i>';
             break;
     }
 
@@ -413,14 +411,10 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
         readIndicator = "";
     }
     
-    var excerpt_style = type === "typing" ? "typing" : "";
+    const excerpt_style = type === "typing" ? "typing" : "";
 
-    var timeClass = "spixi-timestamp";
-    var relativeTime = getRelativeTime(timestamp);
-
-    if (getTimeDifference(timestamp) < 3600) {
-        timeClass = "spixi-timestamp spixi-rel-ts-active";
-    }
+    let timeClass = "spixi-timestamp";
+    const friendlyFormattedTimestamp = getUserFriendlyFormattedTimestamp(timestamp);
 
     var readmsg = document.createElement("div");
     readmsg.id = "ch_" + wallet;
@@ -431,24 +425,26 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
 
     readmsg.innerHTML = `
         <a href="ixian:chat:${wallet}">
-            <div class="row flex-nowrap">
-                <div class="col-2 spixi-list-item-left">
-                    <img class="spixi-list-item-avatar" src="${avatar}"/>
-                    <div class="spixi-friend-status-indicator"></div>
+            <div class="spixi-chat-item-container">
+                <div class="spixi-chat-item-left">
+                    <div class="spixi-chat-item-avatar-container">
+                        <img alt="avatar" class="spixi-chat-item-avatar-img" src="${avatar}"/>
+                        <div class="is-online-circle"></div>
+                    </div>
+                    <div class="spixi-chat-item-message-container">
+                        <span class="body-md s-text-01">${from}</span>
+                        <span class="body-sm s-text-02 ${excerpt_style} message-preview">${excerpt_msg}</span>
+                    </div>
                 </div>
-                <div class="col-6 spixi-list-item-center">
-                    <div class="spixi-list-item-title">${from}</div>
-                    <div class="spixi-list-item-subtitle ${excerpt_style}">${excerpt_msg}</div>
-                </div>
-                <div class="col-4 spixi-list-item-right">
-                    <div class="spixi-chat-unread-indicator"></div>
+                <div class="spixi-chat-item-right">
+                    <div class="${timeClass} body-xs s-text-02" data-timestamp="${timestamp}">${friendlyFormattedTimestamp}</div>
+                    <div class="spixi-chat-unread-indicator label-xs">${unread}</div>
                     ${readIndicator}
-                    <div class="${timeClass}" data-timestamp="${timestamp}">${relativeTime}</div>
                 </div>
             </div>
         </a>`;
 
-    var chatsNode = document.getElementById("chatlist");
+    const chatsNode = document.getElementById("chatlist");
     if(insertToTop)
     {
         chatsNode.insertBefore(readmsg, chatsNode.firstElementChild);
@@ -484,7 +480,6 @@ function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg,
     }
 
     var timeClass = "spixi-timestamp";
-    var relativeTime = getRelativeTime(timestamp);
 
     if (getTimeDifference(timestamp) < 3600) {
         timeClass = "spixi-timestamp spixi-rel-ts-active";
@@ -501,12 +496,13 @@ function setNotificationCount(notification_count) {
 // Function to toggle tab's active color
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Not very elegant, but it works
-    document.getElementById("tab1").className = "col-4 spixi-tab";
-    document.getElementById("tab2").className = "col-4 spixi-tab";
-    document.getElementById("tab3").className = "col-4 spixi-tab";
+    document.getElementById("tab1").className = "col-3 spixi-tab";
+    document.getElementById("tab2").className = "col-3 spixi-tab";
+    document.getElementById("tab3").className = "col-3 spixi-tab";
+    document.getElementById("tab4").className = "col-3 spixi-tab";
 
     var cl = "active";
-    e.target.parentElement.className = "col-4 spixi-tab " + cl;
+    e.target.parentElement.className = "col-3 spixi-tab " + cl;
 
     var tabid = e.target.parentElement.id;
     location.href = "ixian:tab:" + tabid;

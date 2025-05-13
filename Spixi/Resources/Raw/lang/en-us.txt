@@ -16,16 +16,17 @@ address-copy = Copy
 address-share = Share
 
 ; App Details Screen
-app-details-title = Spixi App
+app-details-title = App Details
 app-details-publisher = Publisher:
 app-details-version = Version:
 app-details-uninstall = Uninstall
+app-details-start = Start
 app-details-dialog-title = Spixi App Manager
 app-details-dialog-removed-text = The app was successfully removed.
 app-details-dialog-removefailed-text = An error occurred while removing the application.
 
 ; New App Screen
-app-new-title = New App
+app-new-title = Add Mini App
 app-new-description = Add a new Spixi App by pasting the URL.
 app-new-install = Install
 app-new-dialog-title = Spixi App Manager
@@ -35,15 +36,77 @@ app-new-dialog-installfailed-text = An error occurred while installing the app.
 ; Apps Screen
 apps-title = Spixi Apps
 apps-empty = You don't have any apps installed.
+apps-apps-text = Apps
+apps-not-sure-text = Not sure where to start? Try one of our featured apps bellow.
+apps-launch = Launch
+apps-launch-app = Launch App
+apps-remove-app = Remove This App
+apps-find-installed-apps = Find installed mini apps
+apps-add-note = Want to try a new Mini App? Just enter its URL or scan a QR code to install it.
+apps-add-url-placeholder = Please enter the URL where the Mini App is located...
+apps-get-from-url = Get App From URL
+apps-scan = Scan
+apps-what-is-title = Mini Apps are lightweight JavaScript apps that run securely inside Spixi.
+apps-what-is-description = Install only from sources you trust. You’re always in control.
+apps-what-is-learn = Learn more
+apps-add-invalid-url = Please enter a valid URL before continuing.
+apps-details-description = Description
+apps-details-capabilities = Capabilities
+apps-details-details = Details
+apps-details-id = ID
+apps-details-version = Version
+apps-details-size = Size
+apps-details-install-url = Install URL
+apps-details-download = Download and Install
+apps-details-download-note = The app will be securely installed in Spixi’s sandbox environment.
+apps-install-title = Install Mini App
+apps-source = Source
+apps-install-confirm = Confirm Install
+apps-install-cancel = Cancel
+apps-installing-title = Installing App...
+apps-installing-description = Downloading and verifying source
+apps-failed-install-title = App Failed to Install
+apps-failed-install-description = We couldn’t complete the install. Please check your connection or try again later.
+apps-failed-install-retry = Retry
+apps-failed-install-cancel = Cancel
+apps-success-install-title = Installed Successfully
+apps-success-install-description = App installed in your Mini Apps library.
+apps-success-install-view = View App Details
+apps-remove-title = Remove App?
+apps-remove-description = This will delete the app from your device. No data will be lost unless the app stores it locally.
+apps-remove-confirm = Remove App
+apps-remove-cancel = Cancel
+apps-removing-app = Removing App...
+apps-removing-app-description = App data is being removed.
+apps-removing-app-success = App removed
+apps-removing-app-description-success = App and app data have been removed from this device.
+apps-removing-app-continue = Continue
+apps-session-title = You're in session with
+apps-session-return = Tap to return
+apps-session-leave = Leave
+apps-session-invite-sent-to = Invite sent to
+apps-session-invite-cancel = Cancel Invite
+
+; App Actions
+app-action-title = Service Action
+app-action-description = Service {0} wants to execute action {1}, are you sure you want to continue?
+app-action-unknown = Unknown action.
+app-action-error-processing-title = Error processing action
+app-action-error-processing = Error processing action {0}.
+app-action-error-sending-title = Error sending action response
+app-action-error-sending = Error sending action response to service{0}.
+app-action-sent = App action sent
+app-action-response-confirmation = Do you want to send the following data to the service? {0}
 
 ; Chat Screen
 chat-sent-contact-request = has sent a contact request
 chat-accept = Accept
 chat-ignore = Decline
 chat-type-placeholder = Type a message...
-chat-send-file = Send File
-chat-request-payment = Request Payment
-chat-send-payment = Send Payment
+chat-send-file = File
+chat-request-payment = Request
+chat-send-payment = Pay
+chat-app = App
 chat-status = Status
 chat-amount = Amount
 chat-view = Details
@@ -82,6 +145,12 @@ chat-request-sent-details = You'll be able to chat securely once your request is
 chat-request-sent-undo = Undo
 chat-request-received-title = Contact Request Received
 chat-request-received-details = Someone wants to connect! Once accepted, you'll be able to chat securely.
+
+chat-app-invite-sent = Invite Sent
+chat-app-invite-received = Invite Received
+chat-app-get = Get App
+chat-app-back = Back to App
+chat-app-launch = Launch App
 
 chat-modal-tip-title = Tip {0}?
 chat-modal-tip-body = Select or enter an amount you'd like to tip.
@@ -123,20 +192,23 @@ chat-report-details = Would you like to report this content?
 chat-report = Report
 chat-report-cancel = Cancel
 
+chat-private-note-title = This chat is private.
+chat-private-note-message = Messages are stored only on your device and sent directly to your contact using state-of-the-art encryption.
+
 ; Contact Details Screen
 contact-details-chat = Chat
 contact-details-send = Send
 contact-details-receive = Receive
 contact-details-notifications = Notifications
-contact-details-history = History
+contact-details-history = Transactions
 contact-details-account-address = Spixi Address
 contact-details-address-1 = Retrieving
 contact-details-address-2 = Spixi
 contact-details-address-3 = address...
-contact-details-removecontact = Delete Contact
+contact-details-removecontact = Remove this contact
 contact-details-removedcontact-title = Deleted
 contact-details-removedcontact-text = Contact deleted.
-contact-details-deletehistory = Delete History
+contact-details-deletehistory = Delete chat history
 contact-details-deletedhistory-title = Deleted
 contact-details-deletedhistory-text = Message history deleted.
 
@@ -157,6 +229,11 @@ contact-new-confirm-details = You are about to send a contact request to the fol
 ; Downloads Screen
 downloads-title = Downloads
 downloads-empty = You have no downloaded files.
+
+; Contributors Screen
+contributors-title = Contributors
+contributors-thanks = Special thanks to our contributors
+contributors-special-thanks-title = Special thanks to our contributors
 
 ; Index Screen
 index-balance = IXI Balance
@@ -198,6 +275,7 @@ index-side-security = Security
 index-side-backup = Backup
 index-side-password = Password
 index-side-about = About
+index-side-contributors = Contributors
 index-side-howtouse = How to Use Spixi
 index-side-sendlog = Send App Log
 index-devmode = Developer Mode Activated
@@ -211,6 +289,19 @@ index-excerpt-file = File
 index-excerpt-voice-call = Voice Call
 index-excerpt-self =
 index-excerpt-typing = Typing...
+index-side-settings-subtitle = Themes, language, nick, and data
+index-side-password-subtitle = Change Spixi Password
+index-side-backup-subtitle = Create a backup file
+index-side-how-to-subtitle = Learn how to use Spixi
+index-side-about-subtitle = Information, help, contact us, privacy policy
+index-missing-tx-title = Missing some transactions?
+index-missing-tx-text = Spixi reads directly from the blockchain, not centralized servers, so syncing may take a bit longer.
+index-missing-tx-view-all = View all transactions on explorer
+index-backup-prompt-title = Don’t forget to back up
+index-backup-prompt-desc = Spixi is fully decentralized - your data stays on your device only. To keep your contacts safe and restore everything later, create a backup now.
+index-backup-prompt-create = Yes Create Backup
+index-backup-prompt-not-now = Not Now
+index-backup-prompt-note = It’s recommended to backup every time you add a new contact.
 
 ; Intro Screen
 intro-title = Welcome to Spixi,
@@ -466,6 +557,8 @@ wallet-sent-txid = Transaction ID
 wallet-sent-view-explorer = View in Explorer
 wallet-sent-dismiss = Dismiss
 wallet-sent-unconfirmed-details = The payment has been sent, but is not yet confirmed by the network. Once confirmed, you will see the transaction ID and a link to view it on the explorer.
+wallet-unknown-sender = Unknown Sender
+wallet-unknown-recipient = Unknown Recipient
 wallet-sentrecv-title = Payment Received
 wallet-sentrecv-subtitle = Payment received from:
 wallet-sentrecv-amount = Amount

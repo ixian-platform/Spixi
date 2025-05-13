@@ -1,6 +1,5 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using System.IO;
 
 namespace SPIXI.Meta
 {

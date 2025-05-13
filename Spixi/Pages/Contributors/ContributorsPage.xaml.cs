@@ -1,7 +1,8 @@
-﻿using SPIXI.Interfaces;
-using SPIXI.Lang;
+﻿using Spixi;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -9,15 +10,15 @@ using System.Web;
 namespace SPIXI
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AppNewPage : SpixiContentPage
+    public partial class ContributorsPage : SpixiContentPage
     {
-        public AppNewPage()
+        public ContributorsPage()
         {
             InitializeComponent();
 
             NavigationPage.SetHasNavigationBar(this, false);
 
-            loadPage(webView, "app_new.html");
+            loadPage(webView, "contributors.html");
         }
 
         public override void recalculateLayout()
@@ -28,11 +29,14 @@ namespace SPIXI
         protected override void OnAppearing()
         {
             base.OnAppearing();
+
+            onLoad();
         }
 
 
         protected override void OnDisappearing()
         {
+            webView = null;
             base.OnDisappearing();
         }
 
@@ -53,11 +57,6 @@ namespace SPIXI
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
                 onBack();
-            }
-            else if (current_url.StartsWith("ixian:install:"))
-            {
-                string url = current_url.Substring("ixian:install:".Length);
-                onInstall(url);
             }
             else
             {
@@ -85,23 +84,9 @@ namespace SPIXI
 
         }
 
-        private void onInstall(string path)
-        {
-            string app_name = Node.customAppManager.install(path);
-            if (app_name != null)
-            {
-                displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), string.Format(SpixiLocalization._SL("app-new-dialog-installed-text"), app_name), SpixiLocalization._SL("global-dialog-ok"));
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
-            }
-            else
-            {
-                displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), SpixiLocalization._SL("app-new-dialog-installfailed-text"), SpixiLocalization._SL("global-dialog-ok"));
-            }
-        }
-
         private void onBack()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            Navigation.PopModalAsync();
         }
 
         protected override bool OnBackButtonPressed()

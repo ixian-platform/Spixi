@@ -3,8 +3,6 @@ var isBot = false;
 var isAdmin = false;
 var messageCost = "";
 
-var attachMode = false;
-
 var requestReceivedModal = document.getElementById("requestReceivedModal");
 var requestSentModal = document.getElementById("requestSentModal");
 var reportModal = document.getElementById("reportModal");
@@ -13,34 +11,33 @@ var reportMsgId = "";
 var userNick = "";
 var userAddress = "";
 
-function onChatScreenLoad()
-{
+const attachBar = document.getElementById("attach-bar");
+
+function onChatScreenLoad() {
     document.getElementById("chat_input").focus();
 
-    if(SL_Platform == "Xamarin-WPF")
-    {
-        messagesEl.oncontextmenu = function(e)
-        {
+    if (SL_Platform == "Xamarin-WPF") {
+        messagesEl.oncontextmenu = function (e) {
             hideContextMenus();
             displayContextMenu(e);
             e.stopPropagation();
             e.preventDefault();
             return false;
-	    };
-    } else
-    {
-        messagesEl.ondblclick = function(e)
-        {
+        };
+    } else {
+        messagesEl.ondblclick = function (e) {
             hideContextMenus();
             displayContextMenu(e);
             e.stopPropagation();
             e.preventDefault();
             return false;
-	    };
+        };
     }
 
 
     messagesEl.addEventListener("click", function (e) {
+        hideAttachBar();
+
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
             var nick = nickEl.getAttribute("nick");
@@ -55,42 +52,42 @@ function onChatScreenLoad()
         }
     });
 
-    document.body.oncontextmenu = function(e)
-    {
+    document.body.oncontextmenu = function (e) {
         hideContextMenus();
-	};
+    };
 
     onload();
 }
 
-function hideContextMenus()
-{
+function hideAttachBar(){
+    if (attachBar && attachBar.classList.contains("show")) {
+        attachBar.classList.remove("show");
+        attachBar.classList.add("hide");
+    }
+}
+
+function hideContextMenus() {
     hideChannelSelector();
     hideContextMenu();
 }
 
-function setBotMode(bot, cost, costText, admin, botDescription, notificationsString)
-{
+function setBotMode(bot, cost, costText, admin, botDescription, notificationsString) {
     var isPaid = false;
-    if(admin == "True")
-    {
-         isAdmin = true;
-         document.getElementsByClassName("spixi-bot-user-actions")[0].style.display = "block";
-	}else
-    {
-         isAdmin = false;
-         document.getElementsByClassName("spixi-bot-user-actions")[0].style.display = "none";
-	}
+    if (admin == "True") {
+        isAdmin = true;
+        document.getElementsByClassName("spixi-bot-user-actions")[0].style.display = "block";
+    } else {
+        isAdmin = false;
+        document.getElementsByClassName("spixi-bot-user-actions")[0].style.display = "none";
+    }
 
     messageCost = cost;
     var payBar = document.getElementById("SpixiPayableBar");
-    if(payBar != null)
-    {
+    if (payBar != null) {
         document.body.removeChild(payBar);
     }
 
-    if(messageCost != "0.00000000")
-    {
+    if (messageCost != "0.00000000") {
         var msgEl = document.createElement("div");
         msgEl.id = "SpixiPayableBar";
         msgEl.className = "spixi-chat-payable-bar";
@@ -100,64 +97,102 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
         isPaid = true;
     }
 
-    if(bot == "True")
-    {
+    if (bot == "True") {
         isBot = true;
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder bot";
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "table";
 
         if (isPaid) {
             document.getElementById("messages").style.height = "calc(100vh - 175px)";
-        }
-        else {
+        } else {
             document.getElementById("messages").style.height = "calc(100vh - 150px)";
         }
-        var chatAttach = document.getElementById("chat_attach");
-        var placeholder = document.createElement("div");
-        placeholder.style.width = "12px";
-        placeholder.style.minWidth = "12px";
-        placeholder.style.display = "table-cell";
-        chatAttach.parentNode.replaceChild(placeholder, chatAttach);
 
-	}else
-    {
+    } else {
         isBot = false;
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder";
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "none";
-	}
+    }
 
-    if(notificationsString == "True")
-    {
+    if (notificationsString == "True") {
         notifications = true;
         document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "spixi-switch spixi-bot-notifications-toggle";
-	}else
-    {
+    } else {
         notifications = false;
         document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "spixi-switch off spixi-bot-notifications-toggle";
-	}
+    }
 
     document.getElementsByClassName("spixi-bot-description")[0].innerHTML = botDescription;
 }
 
 var selectedChannel = 0;
 
-function setSelectedChannel(id, icon, name)
-{
+function setSelectedChannel(id, icon, name) {
     selectedChannel = id;
-    var channelBarEl = document.getElementsByClassName("spixi-channel-bar")[0]; 
+    var channelBarEl = document.getElementsByClassName("spixi-channel-bar")[0];
     channelBarEl.getElementsByClassName("channel-icon")[0].innerHTML = "<i class=\"fa " + icon + "\"></i>";
     channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = name + "<div class=\"unread-indicator\"></div>";
 }
 
-function onChatScreenLoaded()
-{
-    document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
-    document.getElementById("chat_input").focus();
-    updateChatInputPlaceholder();
+function isScrollable(el) {
+    return el.scrollHeight > el.clientHeight;
 }
 
-function onChatScreenReady(address)
-{
+function setInitialStickyDate() {
+    const bubbles = document.querySelectorAll(".spixi-bubble");
+    if (bubbles.length === 0) return;
+
+    const firstVisibleBubble = bubbles[bubbles.length - 1];
+    const timestampEl = firstVisibleBubble.querySelector(".time[data-timestamp]");
+    if (!timestampEl) return;
+
+    const time = parseInt(timestampEl.getAttribute("data-timestamp"), 10);
+    const date = new Date(time * 1000);
+
+    const stickyHeader = document.getElementById("sticky-date");
+    if (stickyHeader && isScrollable(messagesEl)) {
+        stickyHeader.textContent = formatDateForStickyDate(date);
+        stickyHeader.style.display = "flex";
+    } else{
+        stickyHeader.style.display = "none";
+    }
+}
+
+function onChatScreenLoaded() {
+    document.getElementById("chat_input").focus();
+    updateChatInputPlaceholder();
+
+    //TODO: this is just an example for adding session/invite banner in chat screen
+    // we should check if the user is in session or if an invite was sent
+    // set to TRUE to test it out
+
+    const isInviteSent = false;
+    const isInSession = false;
+
+    if (isInSession) {
+        const elementToAdd = `<section class="session-banner">
+                <div class="spixi-session-banner-content">
+                    <span class="body-sm">${SL_InSessionWith} USERNAME</span>
+                    <span class="label-sm">${SL_TapToReturn} <i class="fas fa-arrow-right"></i></span>
+                </div>
+                <div class="spixi-flat-button label-sm button outline" onclick="showEndAppSessionModal()">${SL_Leave}</div>
+            </section>`;
+        messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
+    } else if(isInviteSent){
+        const elementToAdd = ` <section class="session-banner">
+                <span class="label-sm"><i class="fas fa-user-plus"></i>&nbsp;${SL_InviteSentTo} USERNAME</span>
+                <div class="spixi-flat-button label-sm button outline">${SL_CancelInvite}</div>
+            </section>`;
+        messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
+    }
+}
+
+function showEndAppSessionModal(){
+    const modal = document.getElementById("endAppSessionModal");
+    modal.style.display = "flex";
+}
+
+function onChatScreenReady(address) {
     userAddress = address;
     userNick = address;
     setBotAddress(address);
@@ -173,16 +208,13 @@ function hideBackButton() {
 }
 
 document.getElementById("backbtn").onclick = function () {
-    if(document.getElementById("ContactsBox"))
-    {
+    if (document.getElementById("ContactsBox")) {
         hideContacts();
-	}else if(document.getElementById("BotDetails").style.display == "block")
-    {
+    } else if (document.getElementById("BotDetails").style.display == "block") {
         hideBotDetails();
-    }else
-    {
+    } else {
         location.href = "ixian:back";
-	}
+    }
 }
 
 function test() {
@@ -190,60 +222,51 @@ function test() {
     setOnlineStatus("Online");
     showCallButton();
     showContactRequest(true);
- /*   addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
-    addFile(10, 9090, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
-    setTimeout(function () { updateFile(9090, "25", "False"); }, 1000);
-    setTimeout(function () { updateFile(9090, "50", "False"); }, 2000);
-    setTimeout(function () { updateFile(9090, "75", "False"); }, 3000);
-    setTimeout(function () { updateFile(9090, "100", "False"); }, 4000);
+    /*   addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
+       addFile(10, 9090, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
+       setTimeout(function () { updateFile(9090, "25", "False"); }, 1000);
+       setTimeout(function () { updateFile(9090, "50", "False"); }, 2000);
+       setTimeout(function () { updateFile(9090, "75", "False"); }, 3000);
+       setTimeout(function () { updateFile(9090, "100", "False"); }, 4000);
 
-    setTimeout(function () { addCall(1000, "Incoming call", "Duration 15:32", "False", "11:23 AM"); }, 1000);
-    setTimeout(function () { addCall(1000, "Incoming call", "Declined", "True", "11:23 AM"); }, 2000);
+       setTimeout(function () { addCall(1000, "Incoming call", "Duration 15:32", "False", "11:23 AM"); }, 1000);
+       setTimeout(function () { addCall(1000, "Incoming call", "Declined", "True", "11:23 AM"); }, 2000);
 
-    setTimeout(function () { addMe(1, "aaa", "me", "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True", "False"); }, 1000);
-    setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
-    setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
-    setTimeout(function () { addThem(4, "img/spixiavatar.png", "And how are you?", "11:24 AM", "True", "True"); }, 1900);
-    setTimeout(function () { addFile(12, 12, "", "file.png", "10:27 AM", "True", "True", "True"); }, 2200);
-    setTimeout(function () { addMe(5, "", "Great! Just got back from the moon.", "11:24 AM", "True", "True"); }, 2200);
-    setTimeout(function () { addThem(6, "img/spixiavatar.png", "Ohh??? What were you doing there?", "11:25 AM", "True", "True"); }, 2500);
-    setTimeout(function () { addMe(7, "", "Was building my own Luna Park...", "11:25 AM", "True", "False"); }, 3000);
-    setTimeout(function () { addMe(8, "", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);
+       setTimeout(function () { addMe(1, "aaa", "me", "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True", "False"); }, 1000);
+       setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
+       setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
+       setTimeout(function () { addThem(4, "img/spixiavatar.png", "And how are you?", "11:24 AM", "True", "True"); }, 1900);
+       setTimeout(function () { addFile(12, 12, "", "file.png", "10:27 AM", "True", "True", "True"); }, 2200);
+       setTimeout(function () { addMe(5, "", "Great! Just got back from the moon.", "11:24 AM", "True", "True"); }, 2200);
+       setTimeout(function () { addThem(6, "img/spixiavatar.png", "Ohh??? What were you doing there?", "11:25 AM", "True", "True"); }, 2500);
+       setTimeout(function () { addMe(7, "", "Was building my own Luna Park...", "11:25 AM", "True", "False"); }, 3000);
+       setTimeout(function () { addMe(8, "", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);
 
-    setTimeout(function () { updateMessage(12, "50", "True", "True"); }, 5000);*/
+       setTimeout(function () { updateMessage(12, "50", "True", "True"); }, 5000);*/
 }
 
 document.getElementById("ca_request").onclick = function () {
+    hideAttachBar();
     location.href = "ixian:request";
 }
 document.getElementById("ca_send").onclick = function () {
+    hideAttachBar();
     location.href = "ixian:send";
 }
 
-/*document.getElementById("ca_app").onclick = function () {
-    document.getElementById("AppsMenu").style.display = "block";
-}*/
-
 document.getElementById("ca_sendfile").onclick = function () {
-    var chatInput = document.getElementById("chat_input");
-    chatInput.click();
-    chatInput.focus();
-    if (attachMode == true) {
-        attachMode = false;
-        hideAttach();
-    }
-
+    hideAttachBar();
     location.href = "ixian:sendfile";
 }
 
 document.getElementById("chat_send").onclick = function () {
+    hideAttachBar();
     var chatInput = document.getElementById("chat_input");
     chatInput.click();
     chatInput.focus();
     var chat_text = chatInput.innerText;
 
-    if(chat_text.length > 1000)
-    {
+    if (chat_text.length > 1000) {
         alert(SL_ChatTextTooLong);
         return false;
     }
@@ -257,34 +280,28 @@ var shiftPressed = false;
 var lastTypingSent = new Date().getTime();
 
 $("#chat_input").keydown(function (event) {
-    if(event.keyCode === 16)
-    {
+    if (event.keyCode === 16) {
         shiftPressed = true;
     }
-    if(isBot)
-    {
-         return;
-	}
-    if(new Date().getTime() - lastTypingSent > 1000)
-    {
+    if (isBot) {
+        return;
+    }
+    if (new Date().getTime() - lastTypingSent > 1000) {
         lastTypingSent = new Date().getTime();
         location.href = "ixian:typing";
     }
 });
 
 $("#chat_input").keypress(function (event) {
-    if(event.keyCode === 13)
-    {
-        if(!shiftPressed)
-        {
+    if (event.keyCode === 13) {
+        if (!shiftPressed) {
             return false;
         }
     }
 });
 
 $("#chat_input").keyup(function (event) {
-    if(event.keyCode === 16)
-    {
+    if (event.keyCode === 16) {
         shiftPressed = false;
     }
     if (event.keyCode === 13 && !shiftPressed) {
@@ -304,6 +321,7 @@ $("#chat_input").keyup(function (event) {
 function shouldScroll() {
     return true;
 }
+
 var chatInput = document.getElementById("chat_input");
 
 function scrollToBottom() {
@@ -316,6 +334,8 @@ function scrollToBottom() {
 }
 
 $("#chat_input").focus(function (event) {
+    hideAttachBar();
+
     scrollToBottom();
     /*
     if (shouldScroll()) {
@@ -335,6 +355,7 @@ $("#chat_input").focus(function (event) {
 chatInput.addEventListener("blur", function () {
     updateChatInputPlaceholder();
 });
+
 function updateChatInputPlaceholder() {
     if (chatInput.textContent.trim() === "") {
         chatInput.classList.add("placeholder");
@@ -344,6 +365,7 @@ function updateChatInputPlaceholder() {
         chatInput.removeAttribute("data-placeholder");
     }
 }
+
 chatInput.addEventListener("input", updateChatInputPlaceholder);
 
 $("#chat_input").on('paste', function (e) {
@@ -354,24 +376,19 @@ $("#chat_input").on('paste', function (e) {
     var inputElData = inputEl.innerHTML;
 
     var caret = null;
-    try
-    {
+    try {
         caret = getCaretPosition(inputEl);
-    }catch(e)
-    {
-        
-	}
+    } catch (e) {
 
-    if(caret)
-    {
+    }
+
+    if (caret) {
         inputEl.innerHTML = inputElData.substring(0, caret) + data.getData('Text') + inputElData.substring(caret);
-    }else if(caret === 0)
-    {
+    } else if (caret === 0) {
         inputEl.innerHTML = data.getData('Text') + inputElData.substring(caret);
-	}else
-    {
+    } else {
         inputEl.innerHTML = inputElData.substring(caret) + data.getData('Text');
-	}
+    }
 
     e.stopPropagation();
     e.preventDefault();
@@ -385,76 +402,83 @@ function clearInput() {
 var messagesEl = document.getElementById("messages");
 var chatHolderEl = document.getElementById("chatholder");
 
-function addReactions(id, reactions)
-{
+let scrollTimeout;
+
+messagesEl.addEventListener("scroll", () => {
+    const stickyDateEl = document.getElementById("sticky-date");
+
+    // Show sticky header while scrolling
+    if (stickyDateEl) {
+        stickyDateEl.style.display = "flex";
+    }
+
+    // Clear any existing timeout
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+
+    // Set timeout to hide sticky header after 1 second of no scroll
+    scrollTimeout = setTimeout(() => {
+        if (stickyDateEl) {
+            stickyDateEl.style.display = "none";
+        }
+    }, 1000);
+
+    updateStickyHeader();
+});
+
+function addReactions(id, reactions) {
     var msgEl = document.getElementById("msg_" + id);
-    if(msgEl == null)
-    {
+    if (msgEl == null) {
         return;
-	}
+    }
 
     var reactionsEls = msgEl.getElementsByClassName("reactions");
     var reactionsEl = null;
-    if(reactionsEls.length == 0)
-    {
-        if(reactions == "")
-        {
-            return;  
-		}
+    if (reactionsEls.length == 0) {
+        if (reactions == "") {
+            return;
+        }
         reactionsEl = document.createElement("div");
         reactionsEl.className = "reactions";
         msgEl.appendChild(reactionsEl);
-	}else
-    {
+    } else {
         reactionsEl = reactionsEls[0];
-	}
+    }
 
     reactionsEl.innerHTML = "";
     var reactionArr = reactions.split(";");
-    for(var i = 0; i < reactionArr.length; i++)
-    {
-        if(reactionArr[i] == "")
-        {
-            continue;  
-		}
-        if(reactionArr[i].indexOf("tip:") == 0)
-        {
+    for (var i = 0; i < reactionArr.length; i++) {
+        if (reactionArr[i] == "") {
+            continue;
+        }
+        if (reactionArr[i].indexOf("tip:") == 0) {
             reactionsEl.innerHTML += "<div class=\"reaction\"><img class=\"ixicash-icon\" src=\"img/ixicash.svg\"/>" + reactionArr[i].substring(4) + "</div>";
-        }else if(reactionArr[i].indexOf("like:") == 0)
-        {
+        } else if (reactionArr[i].indexOf("like:") == 0) {
             reactionsEl.innerHTML += "<div class=\"reaction\"><i class=\"fa fa-heart\"></i>" + reactionArr[i].substring(5) + "</div>";
         }
     }
 
-    if(reactionsEl.innerHTML == "")
-    {
+    if (reactionsEl.innerHTML == "") {
         reactionsEl.parentNode.removeChild(reactionsEl);
-	}
-
-    scrollToBottom();
+    }
 }
 
-function deleteMessage(id)
-{
+function deleteMessage(id) {
     var msgEl = document.getElementById("msg_" + id);
-    if(msgEl == null)
-    {
+    if (msgEl == null) {
         return;
-	}
+    }
     msgEl.parentNode.removeChild(msgEl);
 }
 
-function linkify(text)
-{
+function linkify(text) {
     text = text.replace(/((http:\/\/|https:\/\/|ftp:\/\/|www\.)[^'"\,\s]+[^\.])/g, function () {
-        if(text.match(/^https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+$/))
-        {
+        if (text.match(/^https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+$/)) {
             // Giphy/Tenor image
             return "<img src=\"" + escapeParameter(arguments[0]) + "\"/>";
         }
         var link = arguments[0].trim();
         return "<div class=\"spixi-external-link\" onclick=\"onExternalLink(event, '" + escapeParameter(link) + "')\">" + link + "</div> ";
-        });
+    });
     return text;
 }
 
@@ -463,8 +487,7 @@ function visitLink(url) {
     hideModalDialog();
 }
 
-function onExternalLink(e, url)
-{
+function onExternalLink(e, url) {
     var title = SL_Modals["externalLinkTitle"];
     var body = SL_Modals["externalLinkBody"];
     body = body.replace("{0}", "<b>" + url + "</b>");
@@ -475,19 +498,90 @@ function onExternalLink(e, url)
     return false;
 }
 
-function parseMessageText(text)
-{
-    try
-    {
+function parseMessageText(text) {
+    try {
         text = linkify(text);
-    }catch(e)
-    {
+    } catch (e) {
     }
     return text;
 }
 
+let lastInsertedDate = null;
+
+function formatDateForDateHeader(date) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(date).toLocaleDateString(undefined, options);
+}
+
+function formatDateForStickyDate(date){
+    const options = { day: '2-digit', month: 'short' };
+    return new Date(date).toLocaleDateString(undefined, options);
+}
+
+const observerOptions = {
+    root: document.getElementById('messages'),
+    rootMargin: '0px 0px -90% 0px',
+    threshold: 0
+};
+
+const stickyHeader = document.getElementById('sticky-date');
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting  && isScrollable(messagesEl)) {
+            const newDate = entry.target.getAttribute('data-date');
+            stickyHeader.innerText = formatDateForStickyDate(newDate);
+            stickyHeader.style.display = "flex";
+        }
+    });
+}, observerOptions);
+
+function observeDateHeaders() {
+    const headers = document.querySelectorAll(".date-header");
+    headers.forEach(header => observer.observe(header));
+}
+
+let dateObserverInitialized = false;
+
+function observeDateHeadersOnce() {
+    if (dateObserverInitialized) return;
+    dateObserverInitialized = true;
+
+    setTimeout(() => {
+        observeDateHeaders();
+        setInitialStickyDate();
+    }, 500);
+}
+
+function updateStickyHeader() {
+    const stickyDateEl = document.getElementById("sticky-date");
+    const dateHeaders = document.querySelectorAll(".date-header");
+
+    let currentStickyDate = "";
+
+    for (let i = dateHeaders.length - 1; i >= 0; i--) {
+        const header = dateHeaders[i];
+        const rect = header.getBoundingClientRect();
+
+        if (rect.top < 60) {
+            currentStickyDate = formatDateForStickyDate(header.getAttribute("data-date"));
+            stickyDateEl.innerText = currentStickyDate;
+            stickyDateEl.style.display = "flex";
+            break;
+        }
+    }
+
+    dateHeaders.forEach(header => {
+        if (header.dataset.date === currentStickyDate) {
+            header.style.visibility = "hidden";
+        } else {
+            header.style.visibility = "visible";
+        }
+    });
+}
+
 // TODO optimize this function
-function addText(id, address, nick, avatar, text, time, className) {    
+function addText(id, address, nick, avatar, text, time, className) {
     text = text.replace(/\n/g, "<br>");
 
     var textEl = document.createElement('div');
@@ -497,7 +591,22 @@ function addText(id, address, nick, avatar, text, time, className) {
     textEl.innerHTML = text;
 
     var timeClass = "spixi-timestamp";
-    var relativeTime = getRelativeTime(time);
+    const formattedTimestamp = getHoursMinutes(time);
+
+    // Insert date header if this message has a new day
+    const messageDate = new Date(time * 1000);
+    const messageDateString = formatDateForDateHeader(messageDate);
+
+    if (messageDateString !== lastInsertedDate) {
+        lastInsertedDate = messageDateString;
+
+        const dateHeaderEl = document.createElement("div");
+        dateHeaderEl.className = "date-header body-sm";
+        dateHeaderEl.setAttribute("data-date", messageDateString);
+        dateHeaderEl.innerText = messageDateString;
+
+        messagesEl.appendChild(dateHeaderEl);
+    }
 
     if (getTimeDifference(time) < 3600) {
         timeClass = "spixi-timestamp spixi-rel-ts-active";
@@ -506,7 +615,7 @@ function addText(id, address, nick, avatar, text, time, className) {
     var timeEl = document.createElement('div');
     timeEl.setAttribute("data-timestamp", time);
     timeEl.className = "time selectable " + timeClass;
-    timeEl.innerHTML = relativeTime;
+    timeEl.innerHTML = formattedTimestamp;
 
     var bubbleContentWrapEl = document.createElement('div');
 
@@ -526,15 +635,12 @@ function addText(id, address, nick, avatar, text, time, className) {
     bubbleContentWrapEl.appendChild(timeEl);
     if (className.includes("spixi-bubble myself")) {
         if (className.includes("sent")) {
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-arrow-right\"></i>";
+        } else if (className.includes("default")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-clock\"></i>";
-        }
-        else if (className.includes("default")) {
-            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-comment-slash\"></i>";
-        }
-        else if (className.includes("read")) {
+        } else if (className.includes("read")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check-double\"></i>";
-        }       
-        else {
+        } else {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
         }
     }
@@ -552,15 +658,12 @@ function addText(id, address, nick, avatar, text, time, className) {
         var avatarEl = document.createElement('img');
         avatarEl.className = "avatar";
         avatarEl.src = avatar;
-        if(nick == "")
-        {
+        if (nick == "") {
             avatarEl.alt = address;
         }
         var avatarHtml = avatarEl.outerHTML;
-        avatarEl.onclick = function(e)
-        {
-            if(nick == "")
-            {
+        avatarEl.onclick = function (e) {
+            if (nick == "") {
                 address = userAddress;
                 nick = userNick;
             }
@@ -576,6 +679,16 @@ function addText(id, address, nick, avatar, text, time, className) {
     messagesEl.appendChild(bubbleEl);
 
     adjustLastestBubbles();
+
+    observeDateHeadersOnce();
+
+    if (document.querySelectorAll(".spixi-bubble").length === 1) {
+        setInitialStickyDate();
+    }
+
+    setTimeout(() => {
+        updateStickyHeader();
+    }, 500);
 
     scrollToBottom();
 }
@@ -633,20 +746,17 @@ function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, pai
     var additionalClasses = "";
     if (confirmed == "True") {
         additionalClasses = " confirmed";
-    } 
-    else if (sent == "True") {
+    } else if (sent == "True") {
         additionalClasses = " sent";
-    }
-    else {
+    } else {
         additionalClasses = " default";
     }
     if (read == "True") {
         additionalClasses += " read";
     }
-    if(paid == "True")
-    {
-         additionalClasses += " paid";
-	}
+    if (paid == "True") {
+        additionalClasses += " paid";
+    }
     addText(id, address, nick, avatar, text, time, "spixi-bubble myself" + additionalClasses);
 }
 
@@ -688,17 +798,15 @@ function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, 
         icon.className = "fa fa-folder-open actionicon";
         linkEl.appendChild(iconWrap);
         linkEl.appendChild(textEl);
-    }
-    else {
+    } else {
         linkEl.href = "ixian:acceptfile:" + fileid;
         linkEl.appendChild(textEl);
         linkEl.appendChild(iconWrap);
     }
 
-    if(paid == "True")
-    {
-         additionalClasses += " paid";
-	}
+    if (paid == "True") {
+        additionalClasses += " paid";
+    }
 
     addText(id, address, nick, avatar, linkEl.outerHTML, time, "spixi-bubble file" + additionalClasses);
 
@@ -722,18 +830,16 @@ function addCall(id, message, declined, time) {
     timeEl.setAttribute("data-timestamp", time);
     timeEl.className = "time selectable " + timeClass;
     timeEl.innerHTML = relativeTime;
-        
+
     var icon = document.createElement('div');
     icon.className = "fa fa-phone icon";
 
     var bubbleEl = document.getElementById("call_" + id);
     var append = false;
-    if(bubbleEl == null)
-    {
+    if (bubbleEl == null) {
         bubbleEl = document.createElement('div');
         append = true;
-    }else
-    {
+    } else {
         bubbleEl.innerHTML = "";
     }
 
@@ -754,8 +860,7 @@ function addCall(id, message, declined, time) {
     bubbleEl.appendChild(dataEl);
 
 
-    if(append)
-    {
+    if (append) {
         document.getElementById("messages").appendChild(bubbleEl);
     }
 
@@ -767,8 +872,7 @@ function updateFile(id, progress, complete) {
     if (fileEl != null) {
         if (complete == "True") {
             fileEl.href = "ixian:openfile:" + id;
-        }
-        else {
+        } else {
             fileEl.href = "javascript:void(0)";
         }
 
@@ -781,8 +885,7 @@ function updateFile(id, progress, complete) {
             if (complete == "True") {
                 aEl.className = "fa fa-folder-open actionicon";
                 aEl.innerHTML = "";
-            }
-            else {
+            } else {
                 aEl.className = "actionprogress";
                 aEl.innerHTML = progress + "<span class='smaller'>%</span>";
             }
@@ -811,10 +914,9 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
             additionalClasses += " read";
         }
 
-        if(paid == "True")
-        {
+        if (paid == "True") {
             additionalClasses += " paid";
-    	}
+        }
 
         if (msgEl.className.indexOf("spixi-payment-request") > -1) {
             additionalClasses += " spixi-payment-request";
@@ -832,15 +934,12 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
 
             if (msgEl.className.includes("spixi-bubble myself")) {
                 if (additionalClasses.includes("sent")) {
+                    statusEl.className = "statusIndicator fas fa-arrow-right";
+                } else if (additionalClasses.includes("default")) {
                     statusEl.className = "statusIndicator fas fa-clock";
-                }
-                else if (additionalClasses.includes("default")) {
-                    statusEl.className = "statusIndicator fas fa-comment-slash";
-                }
-                else if (additionalClasses.includes("read")) {
+                } else if (additionalClasses.includes("read")) {
                     statusEl.className = "statusIndicator fas fa-check-double";
-                }
-                else {
+                } else {
                     statusEl.className = "statusIndicator fas fa-check";
                 }
             }
@@ -927,51 +1026,6 @@ document.getElementById("undorequest").onclick = function () {
     location.href = "ixian:undorequest";
 }
 
-// Handle 'attach' bar, allowing to send and request IXI
-document.getElementById("chat_attach").onclick = function (event) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    if (attachMode == true) {
-        attachMode = false;
-        hideAttach();
-    }
-    else {
-        attachMode = true;
-        showAttach();
-    }
-
-    document.getElementById("chat_input").focus();
-}
-
-function hideAttach() {
-    document.getElementById("chatbar").style.bottom = "0px";
-    document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
-    var payBar = document.getElementById("SpixiPayableBar");
-    if(payBar != null)
-    {
-        payBar.style.bottom = "60px";
-	}
-}
-
-function showAttach() {
-    if(isBot)
-    {
-        return;
-	}
-    var attachBarHeight = document.getElementById("chatattachbar").offsetHeight;
-    document.getElementById("chatbar").style.bottom = attachBarHeight + "px";
-    document.getElementById("chatattachbar").style.bottom = "0px";
-    var payBar = document.getElementById("SpixiPayableBar");
-    if(payBar != null)
-    {
-        payBar.style.bottom = (attachBarHeight + 60) + "px";
-	}
-    setTimeout(function () {
-                document.getElementById("chatholder").scrollIntoView(false);
-    }, 400);
-}
-
 function setOnlineStatus(status) {
     document.getElementById("status").innerHTML = status;
 }
@@ -986,33 +1040,39 @@ function updateGroupChatNicks(address, nick) {
     }
 }
 
-function addApp(id, name, icon)
-{
-    var appsEl = document.getElementById("AppsMenu");
+function addApp(id, name, icon) {
+    const appsContainer = document.getElementById("AppsMenu");
+    const itemsContainer = appsContainer.querySelector(".choose-apps-items-container");
 
-    var el = document.createElement("div");
-    el.onclick = function() { appsEl.style.display = "none"; location.href = "ixian:app:" + id; };
-    el.className = "spixi-app";
-    el.innerHTML = "<img src='" + icon + "'/><br/>" + name;
+    const appBlock = document.createElement("div");
+    appBlock.className = "spixi-app-details-header";
+    appBlock.onclick = function () {
+        appsContainer.style.display = "none";
+        location.href = "ixian:app:" + id;
+    };
+    appBlock.innerHTML = `
+        <img data-role="AppIcon" class="spixi-app-details-image" src="${icon}" alt="app-icon" />
+        <div class="spixi-app-details-title">
+            <span class="label-md s-text-01" data-role="AppName">${name}</span>
+            <span class="label-sm s-text-02" data-role="AppPublisher">Unknown creator</span>
+            <span class="label-xs s-text-success"><i class="fas fa-lock"></i> Verified</span>
+        </div>
+    `;
 
-    appsEl.appendChild(el);
+    itemsContainer.appendChild(appBlock);
 }
 
-function showCallButton()
-{
-    if(!isBot)
-    {
+function showCallButton() {
+    if (!isBot) {
         document.getElementById("CallButton").style.display = "block";
     }
 }
 
-function showContacts(e)
-{
+function showContacts(e) {
     var contactsBox = document.getElementById("ContactsBox");
-    if(contactsBox != null)
-    {
+    if (contactsBox != null) {
         document.body.removeChild(contactsBox);
-	}
+    }
     contactsBox = document.createElement("div");
     contactsBox.id = "ContactsBox";
     contactsBox.className = "container-fluid chat-contacts-box";
@@ -1026,54 +1086,49 @@ function showContacts(e)
     return false;
 }
 
-function hideContacts()
-{
+function hideContacts() {
     var contactsBox = document.getElementById("ContactsBox");
-    if(contactsBox != null)
-    {
+    if (contactsBox != null) {
         document.body.removeChild(contactsBox);
-	}
+    }
 }
 
-function addContact(address, nick, avatar, role)
-{
+function addContact(address, nick, avatar, role) {
     var contactsBox = document.getElementById("ContactsBox");
-    if(contactsBox == null)
-    {
+    if (contactsBox == null) {
         return;
-	}
+    }
 
     var userTemplate = document.getElementsByClassName("user")[0].innerHTML;
 
     var childEl = document.createElement("div");
     childEl.innerHTML = userTemplate;
-    childEl.onclick = function(){ showUserDetails(nick, address); };
+    childEl.onclick = function () {
+        showUserDetails(nick, address);
+    };
 
     childEl.getElementsByClassName("avatar")[0].innerHTML = "<img src='" + avatar + "'/>";
     childEl.getElementsByClassName("nick")[0].innerHTML = nick;
-    if(role == "")
-    {
+    if (role == "") {
         role = "[DEFAULT]";
-	}
-            
+    }
+
     contactsBox.appendChild(childEl);
 }
 
-function selectChannel(id)
-{
+function selectChannel(id) {
     location.href = "ixian:selectChannel:" + id;
 }
 
 var channelSelectorEl = null;
-function displayChannelSelector(e)
-{
-    if(channelSelectorEl != null)
-    {
+
+function displayChannelSelector(e) {
+    if (channelSelectorEl != null) {
         channelSelectorEl.parentNode.removeChild(channelSelectorEl);
         channelSelectorEl = null;
         e.stopPropagation();
         return false;
-	}
+    }
     channelSelectorEl = document.createElement("div");
     channelSelectorEl.className = "spixi-channel-selector";
     channelSelectorEl.innerHTML = "<div class='spixi-channel-selector-sep'></div>";
@@ -1087,84 +1142,75 @@ function displayChannelSelector(e)
     return false;
 }
 
-function setChannelSelectorStatus(read)
-{
-    if(read == "true")
-    {
+function setChannelSelectorStatus(read) {
+    if (read == "true") {
         document.getElementsByClassName("spixi-channel-bar")[0].className = "spixi-channel-bar";
-    }else
-    {
+    } else {
         document.getElementsByClassName("spixi-channel-bar")[0].className = "spixi-channel-bar unread";
     }
 }
 
-function addChannelToSelector(id, name, icon, unread)
-{
-    if(channelSelectorEl == null)
-    {
+function addChannelToSelector(id, name, icon, unread) {
+    if (channelSelectorEl == null) {
         return;
-	}
+    }
     var channelTemplate = document.getElementsByClassName("channel-selector-template")[0].innerHTML;
 
     var childEl = document.createElement("div");
     childEl.innerHTML = channelTemplate;
 
-    if(unread == "True")
-    {
+    if (unread == "True") {
         name = name + "<div class=\"unread-indicator\"></div>";
-	}
+    }
 
     childEl.getElementsByClassName("channel-icon")[0].innerHTML = "<i class='fa " + icon + "'></i>";
     childEl.getElementsByClassName("channel-name")[0].innerHTML = name;
-    if(id == selectedChannel)
-    {
+    if (id == selectedChannel) {
         childEl.getElementsByClassName("channel-name")[0].style.fontWeight = "bold";
-	}
-            
-    childEl.onclick = function(ev)
-    {
+    }
+
+    childEl.onclick = function (ev) {
         selectChannel(id);
         hideChannelSelector();
-	};
+    };
 
     channelSelectorEl.appendChild(childEl);
 
-    if(channelSelectorEl.getElementsByClassName("unread-indicator").length == 0)
-    {
+    if (channelSelectorEl.getElementsByClassName("unread-indicator").length == 0) {
         setChannelSelectorStatus("true");
-    }else
-    {
+    } else {
         setChannelSelectorStatus("");
     }
 }
 
-function hideChannelSelector()
-{
-    if(channelSelectorEl == null)
-    {
+function hideChannelSelector() {
+    if (channelSelectorEl == null) {
         return;
-	}
+    }
 
     channelSelectorEl.parentNode.removeChild(channelSelectorEl);
     channelSelectorEl = null;
 }
 
-function clearMessages(showMore)
-{
+function clearMessages(showMore) {
     messagesEl.innerHTML = "";
+
+    // add spacer to push messaged to the bottom
+    const messagesSpacer = document.createElement('div');
+    messagesSpacer.className = "messages-spacer";
+    messagesEl.appendChild(messagesSpacer);
+
+    // private messages note always visible as first the item
+    const privateMessagesNote = document.createElement('div');
+    privateMessagesNote.className = "private-messages-note";
+    privateMessagesNote.innerHTML = "<i style='font-size: 12px' class='fa-solid fa-lock'></i> <span class='label-xs'>" + SL_ChatPrivate["title"] + "</span> <span class='body-xs'>" + SL_ChatPrivate["message"] + "</span>";
+    messagesEl.appendChild(privateMessagesNote);
 
     if (showMore == "true") {
         const loadMoreDiv = document.createElement('div');
         loadMoreDiv.id = "load_more";
-        loadMoreDiv.className = "spixi-outline-button";
-        loadMoreDiv.style.width = "200px";
-        loadMoreDiv.style.height = "40px";
-        loadMoreDiv.style.paddingTop = "8px";
-        loadMoreDiv.style.paddingBottom = "8px";
-        loadMoreDiv.style.marginTop = "30px";
-        loadMoreDiv.style.marginBottom = "30px";
-        loadMoreDiv.style.marginLeft = "auto";
-        loadMoreDiv.style.marginRight = "auto";
+        loadMoreDiv.className = "spixi-flat-button label-sm button outline";
+        loadMoreDiv.style.margin = "12px auto";
         loadMoreDiv.innerHTML = "<i class='fa-solid fa-arrow-rotate-right'></i> Show older messages";
         messagesEl.appendChild(loadMoreDiv);
         document.getElementById("load_more").onclick = function () {
@@ -1174,73 +1220,62 @@ function clearMessages(showMore)
 }
 
 
-function displayContextMenu(e)
-{
+function displayContextMenu(e) {
     var contextMenuEl = document.getElementById("ContextMenu");
-    if(contextMenuEl != null)
-    {
+    if (contextMenuEl != null) {
         contextMenuEl.parentNode.removeChild(contextMenuEl);
-	}
+    }
 
 
     var msgEl = null;
-    for(var tmpEl = e.target; tmpEl != messagesEl; tmpEl = tmpEl.parentNode)
-    {
+    for (var tmpEl = e.target; tmpEl != messagesEl; tmpEl = tmpEl.parentNode) {
         msgEl = tmpEl;
-	}
+    }
 
-    if(msgEl == null)
-    {
-         return false;
-	}
+    if (msgEl == null) {
+        return false;
+    }
 
     var localMsg = false;
-    if(msgEl.className.indexOf("myself") != -1)
-    {
+    if (msgEl.className.indexOf("myself") != -1) {
         localMsg = true;
-	}
+    }
 
     var menuHtml = "";
     //menuHtml += "<div onclick=\"contextAction('pin', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-map-pin\"></i></span> " + SL_ContextMenu["pinMessage"] + "</div>";
-    menuHtml += "<div onclick=\"contextAction('copy', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-quote-right\"></i></span> " + SL_ContextMenu["copyMessage"] + "</div>";
-    menuHtml += "<div onclick=\"contextAction('copySelected', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-copy\"></i></span> " + SL_ContextMenu["copySelected"] + "</div>";
-    if(!localMsg)
-    {
-        menuHtml += "<div onclick=\"contextAction('tip', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-wallet\"></i></span> " + SL_ContextMenu["tipUser"] + "</div>";
-        menuHtml += "<div onclick=\"contextAction('like', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-heart\"></i></span> " + SL_ContextMenu["likeMessage"] + "</div>";
-        if(isBot)
-        {
-            menuHtml += "<div onclick=\"contextAction('userInfo', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-info-circle\"></i></span> " + SL_ContextMenu["userInfo"] + "</div>";
+    menuHtml += "<div onclick=\"contextAction('copy', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-quote-right\"></i></span> " + SL_ContextMenu["copyMessage"] + "</div>";
+    menuHtml += "<div onclick=\"contextAction('copySelected', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-copy\"></i></span> " + SL_ContextMenu["copySelected"] + "</div>";
+    if (!localMsg) {
+        menuHtml += "<div onclick=\"contextAction('tip', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-wallet\"></i></span> " + SL_ContextMenu["tipUser"] + "</div>";
+        menuHtml += "<div onclick=\"contextAction('like', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-heart\"></i></span> " + SL_ContextMenu["likeMessage"] + "</div>";
+        if (isBot) {
+            menuHtml += "<div onclick=\"contextAction('userInfo', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-info-circle\"></i></span> " + SL_ContextMenu["userInfo"] + "</div>";
             menuHtml += "<div onclick=\"contextAction('sendContactRequest', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-plus\"></i></span> " + SL_ContextMenu["sendContactRequest"] + "</div>";
             menuHtml += "<div onclick=\"contextAction('report', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-flag\"></i></span> " + SL_ContextMenu["reportMessage"] + "</div>";
 
         }
     }
 
-    if(isAdmin)
-    {
-        menuHtml += "<div onclick=\"contextAction('kickUser', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-times\"></i></span> " + SL_ContextMenu["kickUser"] + "</div>";
-        menuHtml += "<div onclick=\"contextAction('banUser', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-slash\"></i></span> " + SL_ContextMenu["banUser"] + "</div>";
+    if (isAdmin) {
+        menuHtml += "<div onclick=\"contextAction('kickUser', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-times\"></i></span> " + SL_ContextMenu["kickUser"] + "</div>";
+        menuHtml += "<div onclick=\"contextAction('banUser', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-slash\"></i></span> " + SL_ContextMenu["banUser"] + "</div>";
     }
-    if(isAdmin || localMsg || !isBot)
-    {
-        menuHtml += "<div onclick=\"contextAction('deleteMessage', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-trash-alt\"></i></span> " + SL_ContextMenu["deleteMessage"] + "</div>";
-	}
+    if (isAdmin || localMsg || !isBot) {
+        menuHtml += "<div onclick=\"contextAction('deleteMessage', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-trash-alt\"></i></span> " + SL_ContextMenu["deleteMessage"] + "</div>";
+    }
 
     contextMenuEl = document.createElement("div");
     contextMenuEl.id = "ContextMenu";
     contextMenuEl.className = "chat-context-menu";
-    contextMenuEl.onclick = function(e)
-    {
+    contextMenuEl.onclick = function (e) {
         e.stopPropagation();
         return false;
-	};
-    contextMenuEl.onmousedown = function(e)
-    {
+    };
+    contextMenuEl.onmousedown = function (e) {
         e.stopPropagation();
         e.preventDefault();
         return false;
-	};
+    };
 
     contextMenuEl.innerHTML = menuHtml;
     contextMenuEl.style.left = "0px";
@@ -1251,27 +1286,25 @@ function displayContextMenu(e)
     document.body.appendChild(contextMenuEl);
 
 
-    if(contextMenuEl.getBoundingClientRect().bottom > window.innerHeight)
-    {
+    if (contextMenuEl.getBoundingClientRect().bottom > window.innerHeight) {
         contextMenuEl.style.top = "auto";
         contextMenuEl.style.bottom = "0px";
         contextMenuEl.style.maxHeight = "350px";
-	}
+    }
 
     var menuWidth = contextMenuEl.offsetWidth;
 
-    if(e.clientX + menuWidth > window.innerWidth)
-    {
+    if (e.clientX + menuWidth > window.innerWidth) {
         contextMenuEl.style.left = "auto";
         contextMenuEl.style.right = "0px";
         contextMenuEl.style.minWidth = menuWidth + "px";
-	}else
-    {
+    } else {
         contextMenuEl.style.left = e.clientX + "px";
-	}
+    }
     document.addEventListener('click', handleContextMenuOutsideClick, true);
     return true;
 }
+
 function handleContextMenuOutsideClick(event) {
     const contextMenuEl = document.getElementById('ContextMenu');
     if (contextMenuEl && !contextMenuEl.contains(event.target)) {
@@ -1279,49 +1312,40 @@ function handleContextMenuOutsideClick(event) {
     }
 }
 
-function hideContextMenu()
-{
+function hideContextMenu() {
     var contextMenuEl = document.getElementById("ContextMenu");
-    if(contextMenuEl != null)
-    {
+    if (contextMenuEl != null) {
         document.removeEventListener('click', handleContextMenuOutsideClick, true);
         contextMenuEl.parentNode.removeChild(contextMenuEl);
-	}
+    }
 }
 
 var contextActionMsgId = null;
 var tipPrice = "0";
 
-function contextAction(action, msgId)
-{
+function contextAction(action, msgId) {
     msgId = msgId.substring(4);
     contextActionMsgId = msgId;
-    if(action == "copy")
-    {
+    if (action == "copy") {
         window.getSelection().selectAllChildren(document.getElementById("msg_" + msgId).getElementsByClassName("text")[0]);
         document.execCommand('copy');
         window.getSelection().removeAllRanges();
-	}else if(action == "copySelected")
-    {
+    } else if (action == "copySelected") {
         document.execCommand('copy');
-    }else if (action == "tip")
-    {
+    } else if (action == "tip") {
         var msgEl = document.getElementById("msg_" + msgId);
         var address = null;
         var nick = null;
-        if(msgEl.getElementsByClassName("nick").length > 0)
-        {
+        if (msgEl.getElementsByClassName("nick").length > 0) {
             address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
             nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
         }
-        if(address == null)
-        {
+        if (address == null) {
             address = userAddress;
-	    }
-        if(nick == null)
-        {
+        }
+        if (nick == null) {
             nick = userNick;
-	    }
+        }
 
         var title = SL_Modals["tipTitle"];
         title = title.replace("{0}", nick);
@@ -1338,8 +1362,7 @@ function contextAction(action, msgId)
         var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
 
         showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
-    }else if(action == "userInfo")
-    {
+    } else if (action == "userInfo") {
         var msgEl = document.getElementById("msg_" + msgId);
         var nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
         var address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
@@ -1347,72 +1370,59 @@ function contextAction(action, msgId)
         showUserDetails(avatar + " " + nick, address);
     } else if (action == "report") {
         showReportModal(msgId);
-    } else
-    {
+    } else {
         location.href = "ixian:contextAction:" + action + ":" + msgId;
-	}
+    }
     hideContextMenu();
 }
 
-function selectTip(amount)
-{
+function selectTip(amount) {
     var modalEl = document.getElementById("SpixiModalDialog");
 
     var tipItems = modalEl.getElementsByClassName("spixi-modal-tip-item");
 
     tipItems[0].className = tipItems[1].className = tipItems[2].className = tipItems[3].className = "spixi-modal-tip-item";
 
-    if(amount == "50")
-    {
+    if (amount == "50") {
         tipItems[0].className += " selected";
         tipPrice = amount;
         modalEl.getElementsByClassName("spixi-textfield")[0].value = "";
-	}else if(amount == "100")
-    {
+    } else if (amount == "100") {
         tipItems[1].className += " selected";
         tipPrice = amount;
         modalEl.getElementsByClassName("spixi-textfield")[0].value = "";
-	}else if(amount == "200")
-    {
+    } else if (amount == "200") {
         tipItems[2].className += " selected";
         tipPrice = amount;
         modalEl.getElementsByClassName("spixi-textfield")[0].value = "";
-	}else
-    {
+    } else {
         tipItems[3].className += " selected";
-        if(modalEl.getElementsByClassName("spixi-textfield")[0].value != "")
-        {
+        if (modalEl.getElementsByClassName("spixi-textfield")[0].value != "") {
             tipPrice = modalEl.getElementsByClassName("spixi-textfield")[0].value;
-		}else
-        {
-            tipPrice = "0";  
-		}
-	}
+        } else {
+            tipPrice = "0";
+        }
+    }
 }
 
-function payTipConfirmation(msgId)
-{
-    if(tipPrice == "0")
-    {
+function payTipConfirmation(msgId) {
+    if (tipPrice == "0") {
         return;
     }
 
     var msgEl = document.getElementById("msg_" + msgId);
     var address = null;
     var nick = null;
-    if(msgEl.getElementsByClassName("nick").length > 0)
-    {
+    if (msgEl.getElementsByClassName("nick").length > 0) {
         address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
         nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
     }
-    if(address == null)
-    {
+    if (address == null) {
         address = userAddress;
-	}
-    if(nick == null)
-    {
+    }
+    if (nick == null) {
         nick = userNick;
-	}
+    }
 
     var title = SL_Modals["tipTitle"];
     title = title.replace("{0}", nick);
@@ -1428,40 +1438,33 @@ function payTipConfirmation(msgId)
     showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
 }
 
-function payTip()
-{
+function payTip() {
     hideModalDialog();
     location.href = "ixian:contextAction:tip:" + contextActionMsgId + ":" + tipPrice;
 }
 
-function showBotDetails()
-{
-    if(!isBot)
-    {
+function showBotDetails() {
+    if (!isBot) {
         location.href = "ixian:details";
         return;
     }
     document.getElementById("BotDetails").style.display = "block";
 }
 
-function hideBotDetails()
-{
+function hideBotDetails() {
     document.getElementById("BotDetails").style.display = "none";
 }
 
-function toggleNotifications(el)
-{
-    if(notifications)
-    {
+function toggleNotifications(el) {
+    if (notifications) {
         notifications = false;
         el.className = "spixi-switch off spixi-bot-notifications-toggle";
         location.href = "ixian:disableNotifications";
-	}else
-    {
+    } else {
         notifications = true;
         el.className = "spixi-switch spixi-bot-notifications-toggle";
         location.href = "ixian:enableNotifications";
-	}
+    }
 }
 
 var clipboardJs = new ClipboardJS('.address_qr_holder');
@@ -1471,7 +1474,9 @@ clipboardJs.on('success', function (e) {
 
     var x = document.getElementsByClassName("spixi-toastbar")[0];
     x.className = "spixi-toastbar show";
-    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    setTimeout(function () {
+        x.className = x.className.replace("show", "");
+    }, 3000);
 
 });
 
@@ -1521,45 +1526,37 @@ function setUserAddress(addr) {
     userQrCode.makeCode(addr);
 }
 
-function toggleSpixiBotAddress(toggleEl, addressElId)
-{
+function toggleSpixiBotAddress(toggleEl, addressElId) {
     var addressEl = document.getElementById(addressElId);
-    if(addressEl.style.display == "none")
-    {
+    if (addressEl.style.display == "none") {
         addressEl.style.display = "block";
         toggleEl.className = "fa fa-chevron-up";
-	}else
-    {
+    } else {
         addressEl.style.display = "none";
         toggleEl.className = "fa fa-chevron-down";
-	}
+    }
 }
 
-function showUserDetails(nick, address)
-{
+function showUserDetails(nick, address) {
     var userDetailsEl = document.getElementById("UserDetails");
     userDetailsEl.style.display = "block";
     userDetailsEl.getElementsByClassName("spixi-bot-user-nick")[0].innerHTML = nick;
     setUserAddress(address);
 }
 
-function hideUserDetails(e)
-{
-    if(e.target != e.currentTarget)
-    {
-         return;
-	}
+function hideUserDetails(e) {
+    if (e.target != e.currentTarget) {
+        return;
+    }
     var userDetailsEl = document.getElementById("UserDetails");
     userDetailsEl.style.display = "none";
 }
 
-function sendContactRequest(address)
-{
+function sendContactRequest(address) {
     location.href = "ixian:sendContactRequest:" + address;
 }
 
-function kickUser()
-{
+function kickUser() {
     var address = document.getElementById('UserAddressQrHolder').getAttribute('data-clipboard-text');
 
     var title = SL_Modals["kickTitle"];
@@ -1568,14 +1565,13 @@ function kickUser()
     var html = SL_Modals["kickBody"];
     html = html.replace("{0}", address);
 
-    var payBtnHtml = "<div onclick=\"location.href='ixian:kick:" + address +  "';\">" + SL_Modals["kickButton"] + "</div>";
+    var payBtnHtml = "<div onclick=\"location.href='ixian:kick:" + address + "';\">" + SL_Modals["kickButton"] + "</div>";
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
 
     showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
 }
 
-function banUser()
-{
+function banUser() {
     var address = document.getElementById('UserAddressQrHolder').getAttribute('data-clipboard-text');
 
     var title = SL_Modals["banTitle"];
@@ -1584,33 +1580,30 @@ function banUser()
     var html = SL_Modals["banBody"];
     html = html.replace("{0}", address);
 
-    var payBtnHtml = "<div onclick=\"location.href='ixian:ban:" + address +  "';\">" + SL_Modals["banButton"] + "</div>";
+    var payBtnHtml = "<div onclick=\"location.href='ixian:ban:" + address + "';\">" + SL_Modals["banButton"] + "</div>";
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
 
     showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
 }
 
 var userTypingTimeout = null;
-function showUserTyping()
-{
-    if(userTypingTimeout != null)
-    {
+
+function showUserTyping() {
+    if (userTypingTimeout != null) {
         clearTimeout(userTypingTimeout);
         userTypingTimeout = null;
-	}
+    }
     var userTypingEl = document.getElementById("UserTyping");
     userTypingEl.style.visibility = "visible";
     userTypingTimeout = setTimeout(hideUserTyping, 5000);
 }
 
-function hideUserTyping()
-{
+function hideUserTyping() {
     document.getElementById("UserTyping").style.visibility = "";
-    if(userTypingTimeout != null)
-    {
+    if (userTypingTimeout != null) {
         clearTimeout(userTypingTimeout);
         userTypingTimeout = null;
-	}
+    }
 }
 
 function setUnreadIndicator(unread_count) {
@@ -1627,8 +1620,7 @@ function showRequestSentModal(show) {
         document.getElementById("chatbar").style.display = "none";
         document.getElementById("CallButton").style.display = "none";
         document.getElementById("chat_input").disabled = true;
-    }
-    else {
+    } else {
         requestSentModal.style.display = "none";
         document.getElementById("chatbar").style.display = "block";
         document.getElementById("CallButton").style.display = "block";
@@ -1662,14 +1654,14 @@ document.getElementById("request_bar_accept").onclick = function () {
     showContactRequest(false);
     location.href = "ixian:accept";
 }
+
 function showContactRequest(show) {
     if (show == true) {
         requestReceivedModal.style.display = "block";
         document.getElementById("chatbar").style.display = "none";
         document.getElementById("CallButton").style.display = "none";
         document.getElementById("chat_input").disabled = true;
-    }
-    else {
+    } else {
         requestReceivedModal.style.display = "none";
         document.getElementById("chatbar").style.display = "block";
         document.getElementById("CallButton").style.display = "block";
@@ -1679,33 +1671,34 @@ function showContactRequest(show) {
 
 // function getCaretPosition copied from https://stackoverflow.com/questions/3972014/get-contenteditable-caret-index-position
 function getCaretPosition(editableDiv) {
-  var caretPos = 0,
-    sel, range;
-  if (window.getSelection) {
-    sel = window.getSelection();
-    if (sel.rangeCount) {
-      range = sel.getRangeAt(0);
-      if (range.commonAncestorContainer.parentNode == editableDiv) {
-        caretPos = range.endOffset;
-      }
+    var caretPos = 0,
+        sel, range;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            if (range.commonAncestorContainer.parentNode == editableDiv) {
+                caretPos = range.endOffset;
+            }
+        }
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        if (range.parentElement() == editableDiv) {
+            var tempEl = document.createElement("span");
+            editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+            var tempRange = range.duplicate();
+            tempRange.moveToElementText(tempEl);
+            tempRange.setEndPoint("EndToEnd", range);
+            caretPos = tempRange.text.length;
+        }
     }
-  } else if (document.selection && document.selection.createRange) {
-    range = document.selection.createRange();
-    if (range.parentElement() == editableDiv) {
-      var tempEl = document.createElement("span");
-      editableDiv.insertBefore(tempEl, editableDiv.firstChild);
-      var tempRange = range.duplicate();
-      tempRange.moveToElementText(tempEl);
-      tempRange.setEndPoint("EndToEnd", range);
-      caretPos = tempRange.text.length;
-    }
-  }
-  return caretPos;
+    return caretPos;
 }
 
 // Fix for iOS toolbar offscreen issue when soft keyboard is shown
 var initialOffset = window.outerHeight - window.innerHeight;
 var msgHeight = document.getElementById("messages").style.height;
+
 function iosFixer() {
     var newOffset = window.outerHeight - window.innerHeight;
 
@@ -1718,8 +1711,7 @@ function iosFixer() {
         document.getElementById("messages").style.height = (window.innerHeight - 120) + "px"; // ${newDiff}px";// (msgHeight - diff + 20) + "px";
 
         scrollToBottom();
-    }
-    else if (newOffset < initialOffset) {
+    } else if (newOffset < initialOffset) {
         document.getElementById("wrap").style.maxHeight = '';
         document.getElementById("wrap").style.top = "0px";
         document.getElementById("messages").style.height = msgHeight;
