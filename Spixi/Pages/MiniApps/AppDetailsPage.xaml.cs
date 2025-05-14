@@ -144,7 +144,7 @@ namespace SPIXI
             string app_name = Node.MiniAppManager.install(fetchedApp);
             if (app_name != null)
             {
-                Node.shouldRefreshApps = true;
+                UIHelpers.shouldRefreshApps = true;
                 Utils.sendUiCommand(this, "showInstallSuccess");
                 
             }
@@ -166,7 +166,7 @@ namespace SPIXI
                 displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removefailed-text"), SpixiLocalization._SL("global-dialog-ok"));
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
-            Node.shouldRefreshApps = true;
+            UIHelpers.shouldRefreshApps = true;
         }
 
         private void onDetails()

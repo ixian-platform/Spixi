@@ -7,7 +7,7 @@ using Spixi;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
-using SPIXI.Storage;
+using SPIXI.Network;
 using System.IO.Compression;
 using System.Web;
 
@@ -555,8 +555,8 @@ namespace SPIXI
             setAsRoot();
 
             UIHelpers.shouldRefreshContacts = true;
-            Node.refreshAppRequests = true;
-            Node.shouldRefreshApps = true;
+            UIHelpers.refreshAppRequests = true;
+            UIHelpers.shouldRefreshApps = true;
             lastTransactionChange = 0;
 
             Utils.sendUiCommand(this, "selectTab", currentTab);
@@ -1229,11 +1229,11 @@ namespace SPIXI
 
         private void loadApps()
         {
-            if(!Node.shouldRefreshApps)
+            if(!UIHelpers.shouldRefreshApps)
             {
                 return;
             }
-            Node.shouldRefreshApps = false;
+            UIHelpers.shouldRefreshApps = false;
 
             Utils.sendUiCommand(this, "clearApps");
 

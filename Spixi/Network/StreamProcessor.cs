@@ -586,7 +586,7 @@ namespace SPIXI
                             {
                                 Node.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, 0, "");
                             }
-                            Node.refreshAppRequests = true;
+                            UIHelpers.refreshAppRequests = true;
                         }
                         return;
                     }else
@@ -604,7 +604,7 @@ namespace SPIXI
                     app_page.sessionId = app_data.sessionId;
                     am.addAppPage(app_page);
 
-                    Node.refreshAppRequests = true;
+                    UIHelpers.refreshAppRequests = true;
                 }
             });
         }
@@ -617,7 +617,7 @@ namespace SPIXI
             if (VoIPManager.hasSession(app_data.sessionId))
             {
                 VoIPManager.onAcceptedCall(app_data.sessionId, app_data.data);
-                Node.refreshAppRequests = true;
+                UIHelpers.refreshAppRequests = true;
                 return;
             }
 
@@ -632,7 +632,7 @@ namespace SPIXI
 
             page.appRequestAcceptReceived(sender_address, app_data.data);
 
-            Node.refreshAppRequests = true;
+            UIHelpers.refreshAppRequests = true;
         }
 
         public static void handleAppRequestReject(Address sender_address, byte[] app_data_raw)
@@ -644,7 +644,7 @@ namespace SPIXI
             if (VoIPManager.hasSession(session_id))
             {
                 VoIPManager.onRejectedCall(session_id);
-                Node.refreshAppRequests = true;
+                UIHelpers.refreshAppRequests = true;
                 return;
             }
 
@@ -657,7 +657,7 @@ namespace SPIXI
 
             page.appRequestRejectReceived(sender_address, app_data.data);
 
-            Node.refreshAppRequests = true;
+            UIHelpers.refreshAppRequests = true;
         }
 
         public static void handleAppEndSession(Address sender_address, byte[] app_data_raw)
@@ -669,7 +669,7 @@ namespace SPIXI
             if (VoIPManager.hasSession(session_id))
             {
                 VoIPManager.onHangupCall(session_id);
-                Node.refreshAppRequests = true;
+                UIHelpers.refreshAppRequests = true;
                 return;
             }
 
@@ -681,7 +681,7 @@ namespace SPIXI
             }
 
             page.appEndSessionReceived(sender_address, app_data.data);
-            Node.refreshAppRequests = true;
+            UIHelpers.refreshAppRequests = true;
         }
 
         public static void onBotAction(byte[] action_data, Friend bot, int channel_id)

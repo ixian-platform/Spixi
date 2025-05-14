@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Storage;
 using IXICore.Streaming;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System.Web;
 
@@ -131,7 +132,7 @@ namespace SPIXI
                     if (friend != null)
                     {
                         username = friend.nickname;
-                        useravatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                        useravatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
                     }
 
                     Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), username, useravatar, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);                    
@@ -162,7 +163,7 @@ namespace SPIXI
                 if (friend != null)
                 {
                     username = friend.nickname;
-                    useravatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                    useravatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
                 }
 
                 Utils.sendUiCommand(this, "addEntry", sender_address.ToString(), username, useravatar, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);               

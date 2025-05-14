@@ -517,7 +517,7 @@ namespace SPIXI
                 Preferences.Default.Set("rating_action", "show");
             }
 
-            Node.refreshAppRequests = true;
+            UIHelpers.refreshAppRequests = true;
 
             webView.FadeTo(1, 150);
 

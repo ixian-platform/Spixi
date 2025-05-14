@@ -24,8 +24,6 @@ namespace SPIXI.Meta
 
         public static int startCounter = 0;
 
-        public static bool refreshAppRequests = true;
-
         public static TransactionInclusion tiv = null;
 
         public static MiniAppManager MiniAppManager = null;

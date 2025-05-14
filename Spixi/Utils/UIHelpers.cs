@@ -5,7 +5,9 @@ namespace SPIXI
 {
     public static class UIHelpers
     {
-        public static bool shouldRefreshContacts = false;
+        public static bool shouldRefreshContacts = true;
+        public static bool shouldRefreshApps = true;
+        public static bool refreshAppRequests = true;
 
         public static void setContactStatus(Address address, bool online, int unread, string excerpt, long timestamp)
         {

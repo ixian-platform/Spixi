@@ -295,10 +295,10 @@ namespace SPIXI
 
         public virtual void updateScreen()
         {
-            if (Node.refreshAppRequests)
+            if (UIHelpers.refreshAppRequests)
             {
                 displayAppRequests();
-                Node.refreshAppRequests = false;
+                UIHelpers.refreshAppRequests = false;
             }
         }
 
@@ -310,7 +310,7 @@ namespace SPIXI
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            Node.refreshAppRequests = true;
+            UIHelpers.refreshAppRequests = true;
             updateScreen();
         }
 
