@@ -1,4 +1,4 @@
-﻿language-code = en-us
+language-code = en-us
 language = English
 
 ; Address Screen
@@ -259,7 +259,7 @@ index-tab-home = Home
 index-tab-chats = Chats
 index-tab-wallet = Wallet
 index-tab-contacts = Contacts
-index-tab-address = My Address
+index-tab-address = Address
 index-new-title = New
 index-new-contact = Contact
 index-new-chat = Chat
@@ -425,10 +425,10 @@ settings-emptynick-text = Please enter nickname.
 
 ; Settings Backup Screen
 settings-backup-title = Backup Account
-settings-backup-description = Download a wallet or account file which allows you to restore this Spixi account.
+settings-backup-description = Download a backup file which allows you to restore this Spixi account. Contacts are stored only on your device and included in backups made after they're added.
 settings-backup-save = BACKUP WALLET
-settings-backup-account-save = BACKUP ACCOUNT
-settings-backup-notice = This backup and the password associated with it will be required to restore access if you:
+settings-backup-account-save = BACKUP WALLET AND CONTACTS
+settings-backup-notice = This backup file and the password associated with it will be required to restore access if you:
 settings-backup-notice2 = - lose this device<br />- uninstall Spixi from this device<br />- delete this Spixi account<br />- delete this wallet
 settings-backup-invalidpassword-title = Invalid password
 settings-backup-invalidpassword-text = Please enter a valid password.
@@ -543,7 +543,7 @@ wallet-sent-title = Payment Details
 wallet-sent-subtitle = Payment sent to:
 wallet-status-sent-pending = Payment is Being Sent
 wallet-status-receive-pending = Payment Incoming
-wallet-status-sent = Payment Successfully Sent
+wallet-status-sent = Payment Sent
 wallet-status-receive = Payment Received
 wallet-status-failed = Payment Failed
 wallet-sent-amount = Amount
@@ -600,10 +600,9 @@ onboarding-next = Next
 onboarding-finish = Finish
 
 ; Empty State
-empty-state-title = Spixi
-empty-state-detail-1 = Spixi is a decentralized chat app with integrated wallet.
-empty-state-detail-2 = All messages are encrypted with state-of-the-art encryption methods and exchanged directly between you and your contacts.
-
+empty-state-title = Welcome to Spixi
+empty-state-detail-1 = Your secure peer-to-peer chat app with an integrated wallet.
+empty-state-detail-2 = Enjoy encrypted conversations that ensure your messages are stored and transmitted only between your device and your contact's, keeping your privacy intact.
 
 ; Ixinames
 ixinames-request-title = IXI Names Wants to Connect
@@ -621,7 +620,7 @@ rating-request-yes = Yes, I am loving it
 
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
-global-connecting-dlt = Connecting to Ixian Network...
+global-connecting-dlt = Connecting to Ixian Platform...
 global-received = RECEIVED
 global-sent = SENT
 global-app-accept = Accept

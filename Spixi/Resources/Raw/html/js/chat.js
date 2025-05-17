@@ -1017,6 +1017,47 @@ function updateTransactionStatus(txid, status, statusIcon) {
     statusContentEls[0].innerHTML = status + "<i class=\"fas " + statusIcon + "\"></i>";
 }
 
+
+function addAppRequest(id, appid, appname, address, nick, avatar, time, localSender, sent, read, appStatus, appInstallURL) {
+
+    var title = SL_ChatAppInviteSent;
+    if (localSender != "True") {
+        title = SL_ChatAppInviteReceived;
+    }
+
+    var message = "<div id=\"app_" + appid + "\" class=\"txid-el\"><div class=\"title\"><i class=\"fas fa-rocket\"></i> " + title + "</div>";
+    message += "<div class=\"content\">" + appname + "</div></div>";
+
+    var viewStyle = "display:none;";
+    var appButtonIcon = "<i class=\"fas fa-wand-magic-sparkles\"></i> ";
+    if (appStatus == "Missing") {
+        appButtonIcon = "<i class=\"fas fa-arrows-down-to-line\"></i> ";
+        const encodedURL = encodeURIComponent(appInstallURL);
+        message += "<div class=\"new-modal-buttons\"><div class=\"spixi-flat-button label-sm\" onclick=\"location.href = 'ixian:installApp:" + encodedURL + "'\"> " + appButtonIcon + SL_ChatAppGet + " </div>";
+    }
+    else if (appStatus == "Minimized") {
+        message += "<div class=\"new-modal-buttons\"><div class=\"spixi-flat-button label-sm\" onclick=\"location.href = 'ixian:joinApp:" + appid + "'\"> " + appButtonIcon + SL_ChatAppBack + " </div>";
+    }
+    else {
+        message += "<div class=\"new-modal-buttons\"><div class=\"spixi-flat-button label-sm\" onclick=\"location.href = 'ixian:joinApp:" + appid + "'\"> " + appButtonIcon + SL_ChatAppLaunch + " </div>";
+
+    }
+
+    var additionalClasses = "";
+    if (localSender == "True") {
+        additionalClasses = " myself";
+        if (sent == "True") {
+            additionalClasses += " sent";
+        }
+        if (read == "True") {
+            additionalClasses += " read";
+        }
+    }
+
+    addText(id, address, nick, avatar, message, time, "spixi-bubble spixi-payment-request" + additionalClasses);
+}		
+
+
 function setNickname(nick) {
     userNick = nick;
     document.getElementById("title").innerHTML = nick;

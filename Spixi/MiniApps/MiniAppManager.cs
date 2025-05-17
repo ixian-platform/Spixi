@@ -75,7 +75,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public MiniApp? fetch(string url, long maxSizeBytes = 1 * 1024 * 1024) // 1 MB default limit
+        public async Task<MiniApp?> fetch(string url, long maxSizeBytes = 1 * 1024 * 1024) // 1 MB default limit
         {
             if (string.IsNullOrWhiteSpace(url) || !Uri.TryCreate(url, UriKind.Absolute, out Uri uri) || uri.Scheme != Uri.UriSchemeHttps)
             {
@@ -85,17 +85,18 @@ namespace SPIXI.MiniApps
 
             try
             {
-                HttpResponseMessage headResponse = httpClient.Send(new HttpRequestMessage(HttpMethod.Head, url));
+                using var headRequest = new HttpRequestMessage(HttpMethod.Head, url);
+                using HttpResponseMessage headResponse = await httpClient.SendAsync(headRequest);
                 headResponse.EnsureSuccessStatusCode();
-                long contentLength = headResponse.Content.Headers.ContentLength ?? 0;
 
+                long contentLength = headResponse.Content.Headers.ContentLength ?? 0;
                 if (contentLength > maxSizeBytes)
                 {
                     Logging.error("App content size exceeds limit: " + contentLength + " bytes");
                     return null;
                 }
 
-                byte[] data = httpClient.GetByteArrayAsync(url).GetAwaiter().GetResult();
+                byte[] data = await httpClient.GetByteArrayAsync(url);
                 if (data.Length != contentLength)
                 {
                     Logging.error("Downloaded app data size mismatch: expected " + contentLength + " bytes, but got " + data.Length + " bytes");
@@ -136,6 +137,7 @@ namespace SPIXI.MiniApps
                 try
                 {
                     File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result);
+                    fetchedAppInfo.contentSize = new FileInfo(source_app_file_path).Length;
                 }
                 catch (Exception e)
                 {
@@ -372,6 +374,26 @@ namespace SPIXI.MiniApps
                 {
                     return path;
                 }
+            }
+            return null;
+        }
+
+        public string getAppInstallURL(string app_id)
+        {
+            MiniApp mini_app = getApp(app_id);
+            if (mini_app != null)
+            {
+                return mini_app.url;
+            }
+            return null;
+        }
+
+        public string getAppName(string app_id)
+        {
+            MiniApp mini_app = getApp(app_id);
+            if (mini_app != null)
+            {
+                return mini_app.name;
             }
             return null;
         }

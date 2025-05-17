@@ -24,9 +24,10 @@ namespace SPIXI.MiniApps
         public string image = "";
         public string url = "";
         public string contentUrl = "";
+        public long contentSize = 0;
         public string checksum = "";
         public byte[] publicKey = null;
-        public byte[] signature = null;
+        public byte[] signature = null;      
         public Dictionary<MiniAppCapabilities, bool> capabilities = null;
 
         public MiniApp(string[] app_info)
@@ -84,6 +85,13 @@ namespace SPIXI.MiniApps
 
                     case "contentUrl":
                         contentUrl = value;
+                        break;
+
+                    case "contentSize":
+                        if (long.TryParse(value, out long size))
+                        {
+                            contentSize = size;
+                        }
                         break;
 
                     case "checksum":
@@ -179,6 +187,7 @@ namespace SPIXI.MiniApps
             sb.AppendLine($"image = {image}");
             sb.AppendLine($"url = {url}");
             sb.AppendLine($"contentUrl = {contentUrl}");
+            sb.AppendLine($"contentSize = {contentSize}");
             sb.AppendLine($"checksum = {checksum}");
 
             File.WriteAllText(filePath, sb.ToString());

@@ -1,10 +1,6 @@
-﻿using SPIXI.Interfaces;
-using SPIXI.Lang;
+﻿using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
-using System;
-using System.Linq;
-using System.Text;
 using System.Web;
 
 namespace SPIXI
@@ -137,10 +133,10 @@ namespace SPIXI
 
         }
 
-        private void onFetch(string path)
+        private async void onFetch(string path)
         {
-            MiniApp? app = Node.MiniAppManager.fetch(path);
-            if(app == null)
+            MiniApp? app = await Node.MiniAppManager.fetch(path);
+            if (app == null)
             {
                 Utils.sendUiCommand(this, "showUrlError");
                 return;
