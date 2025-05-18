@@ -20,6 +20,7 @@ app-details-title = Aplikasi Spixi
 app-details-publisher = Penerbit:
 app-details-version = Versi:
 app-details-uninstall = Copot pemasangan
+app-details-start = Mulai
 app-details-dialog-title = Manajer Aplikasi Spixi
 app-details-dialog-removed-text = Aplikasi berhasil dihapus.
 app-details-dialog-removefailed-text = Terjadi kesalahan saat menghapus aplikasi.
@@ -35,15 +36,77 @@ app-new-dialog-installfailed-text = Terjadi kesalahan saat memasang aplikasi.
 ; Apps Screen
 apps-title = Aplikasi Spixi
 apps-empty = Anda tidak memiliki aplikasi yang terpasang.
+apps-apps-text = Aplikasi
+apps-not-sure-text = Tidak tahu harus mulai dari mana? Coba salah satu aplikasi pilihan kami di bawah ini.
+apps-launch = Luncurkan
+apps-launch-app = Luncurkan Aplikasi
+apps-remove-app = Hapus Aplikasi Ini
+apps-find-installed-apps = Temukan mini aplikasi yang terpasang
+apps-add-note = Ingin mencoba Mini App baru? Cukup masukkan URL atau pindai kode QR untuk menginstalnya.
+apps-add-url-placeholder = Silakan masukkan URL tempat Mini App berada...
+apps-get-from-url = Dapatkan Aplikasi dari URL
+apps-scan = Pindai
+apps-what-is-title = Mini Apps adalah aplikasi JavaScript ringan yang berjalan dengan aman di dalam Spixi.
+apps-what-is-description = Pasang hanya dari sumber yang Anda percayai. Anda selalu mengendalikan.
+apps-what-is-learn = Pelajari lebih lanjut
+apps-add-invalid-url = Silakan masukkan URL yang valid sebelum melanjutkan.
+apps-details-description = Deskripsi
+apps-details-capabilities = Kemampuan
+apps-details-details = Detail
+apps-details-id = ID
+apps-details-version = Versi
+apps-details-size = Ukuran
+apps-details-install-url = URL Instalasi
+apps-details-download = Unduh dan Pasang
+apps-details-download-note = Aplikasi akan dipasang dengan aman di lingkungan sandbox Spixi.
+apps-install-title = Pasang Mini App
+apps-source = Sumber
+apps-install-confirm = Konfirmasi Pasang
+apps-install-cancel = Batalkan
+apps-installing-title = Memasang Aplikasi...
+apps-installing-description = Mengunduh dan memverifikasi sumber
+apps-failed-install-title = Gagal Memasang Aplikasi
+apps-failed-install-description = Kami tidak dapat menyelesaikan pemasangan. Periksa koneksi Anda atau coba lagi nanti.
+apps-failed-install-retry = Coba Lagi
+apps-failed-install-cancel = Batalkan
+apps-success-install-title = Terpasang dengan Sukses
+apps-success-install-description = Aplikasi terpasang di perpustakaan Mini Apps Anda.
+apps-success-install-view = Lihat Detail Aplikasi
+apps-remove-title = Hapus Aplikasi?
+apps-remove-description = Ini akan menghapus aplikasi dari perangkat Anda. Tidak ada data yang akan hilang kecuali aplikasi menyimpannya secara lokal.
+apps-remove-confirm = Hapus Aplikasi
+apps-remove-cancel = Batalkan
+apps-removing-app = Menghapus Aplikasi...
+apps-removing-app-description = Data aplikasi sedang dihapus.
+apps-removing-app-success = Aplikasi Dihapus
+apps-removing-app-description-success = Aplikasi dan data aplikasi telah dihapus dari perangkat ini.
+apps-removing-app-continue = Lanjutkan
+apps-session-title = Anda sedang sesi dengan
+apps-session-return = Ketuk untuk kembali
+apps-session-leave = Keluar
+apps-session-invite-sent-to = Undangan terkirim ke
+apps-session-invite-cancel = Batalkan Undangan
+
+; App Actions
+app-action-title = Tindakan Layanan
+app-action-description = Layanan {0} ingin menjalankan tindakan {1}, apakah Anda yakin ingin melanjutkan?
+app-action-unknown = Tindakan tidak dikenal.
+app-action-error-processing-title = Kesalahan saat memproses tindakan
+app-action-error-processing = Kesalahan saat memproses tindakan {0}.
+app-action-error-sending-title = Kesalahan saat mengirimkan respons tindakan
+app-action-error-sending = Kesalahan saat mengirimkan respons tindakan ke layanan {0}.
+app-action-sent = Tindakan aplikasi terkirim
+app-action-response-confirmation = Apakah Anda ingin mengirimkan data berikut ke layanan? {0}
 
 ; Chat Screen
 chat-sent-contact-request = telah mengirim permintaan kontak
 chat-accept = Terima
 chat-ignore = Tolak
 chat-type-placeholder = Ketik pesan Anda...
-chat-send-file = Kirim File
-chat-request-payment = Minta Pembayaran
-chat-send-payment = Kirim Pembayaran
+chat-send-file = File
+chat-request-payment = Bayar
+chat-send-payment = Permintaan
+chat-app = Aplikasi
 chat-status = Status
 chat-amount = Jumlah
 chat-view = Detail
@@ -82,6 +145,12 @@ chat-request-sent-details = Setelah mereka menerimanya, Anda akan dapat mengobro
 chat-request-sent-undo = Batalkan
 chat-request-received-title = Permintaan Pertemanan Diterima
 chat-request-received-details = Seseorang ingin terhubung dengan Anda! Setelah Anda menerima, Anda akan dapat mengobrol dengan aman dengan mereka.
+
+chat-app-invite-sent = Undangan Terkirim
+chat-app-invite-received = Undangan Diterima
+chat-app-get = Dapatkan Aplikasi
+chat-app-back = Kembali ke Aplikasi
+chat-app-launch = Luncurkan Aplikasi
 
 chat-modal-tip-title = Tip {0}?
 chat-modal-tip-body = Ketuk jumlah yang ingin Anda berikan tip atau tetapkan tip khusus.
@@ -123,6 +192,9 @@ chat-report-details = Apakah Anda ingin melaporkan konten ini?
 chat-report = Laporkan
 chat-report-cancel = Batal
 
+chat-private-note-title = Obrolan ini bersifat pribadi.
+chat-private-note-message = Pesan disimpan hanya di perangkat Anda dan dikirim langsung ke kontak Anda dengan enkripsi canggih.
+
 ; Contact Details Screen
 contact-details-chat = obrolan
 contact-details-send = kirim
@@ -158,6 +230,11 @@ contact-new-confirm-details = Anda akan mengirim permintaan pertemanan ke Alamat
 downloads-title = Unduhan
 downloads-empty = Anda tidak memiliki berkas yang diunduh.
 
+; Contributors Screen
+contributors-title = Kontributor
+contributors-thanks = Terima kasih khusus kepada kontributor kami
+contributors-special-thanks-title = Terima kasih khusus kepada kontributor kami
+
 ; Index Screen
 index-balance = Saldo IXI Saya
 index-balance-show = Tampilkan
@@ -182,7 +259,7 @@ index-tab-home = beranda
 index-tab-chats = Obrolan
 index-tab-wallet = Dompet
 index-tab-contacts = Kontak
-index-tab-address = Alamat Saya
+index-tab-address = Alamat
 index-new-title = BARU
 index-new-contact = Kontak
 index-new-chat = Obrolan
@@ -198,6 +275,7 @@ index-side-security = Keamanan
 index-side-backup = Cadangkan
 index-side-password = Kata Sandi
 index-side-about = Tentang
+index-side-contributors = Kontributor
 index-side-howtouse = Cara menggunakan Spixi
 index-side-sendlog = Kirim Log
 index-devmode = Mode pengembang diaktifkan
@@ -211,6 +289,19 @@ index-excerpt-file = Berkas
 index-excerpt-voice-call = Panggilan Suara
 index-excerpt-self = Saya:
 index-excerpt-typing = Mengetik...
+index-side-settings-subtitle = Tema, bahasa, nama panggilan, dan data
+index-side-password-subtitle = Ubah kata sandi Spixi
+index-side-backup-subtitle = Buat file cadangan
+index-side-how-to-subtitle = Pelajari cara menggunakan Spixi
+index-side-about-subtitle = Informasi, bantuan, hubungi kami, kebijakan privasi
+index-missing-tx-title = Beberapa transaksi hilang?
+index-missing-tx-text = Spixi membaca langsung dari blockchain, bukan dari server terpusat, jadi sinkronisasi mungkin memakan sedikit waktu lebih lama.
+index-missing-tx-view-all = Lihat semua transaksi di penjelajah
+index-backup-prompt-title = Jangan lupa untuk mencadangkan
+index-backup-prompt-desc = Spixi sepenuhnya terdesentralisasi - data Anda hanya ada di perangkat Anda. Untuk menjaga kontak Anda aman dan memulihkan semuanya nanti, buat cadangan sekarang.
+index-backup-prompt-create = Ya, buat cadangan
+index-backup-prompt-not-now = Tidak Sekarang
+index-backup-prompt-note = Disarankan untuk mencadangkan setiap kali Anda menambahkan kontak baru.
 
 ; Intro Screen
 intro-title = Selamat datang di Spixi,
@@ -334,7 +425,7 @@ settings-emptynick-text = Harap masukkan nama panggilan Anda.
 
 ; Settings Backup Screen
 settings-backup-title = Cadangkan Akun
-settings-backup-description = Unduh file dompet atau akun yang memungkinkan Anda memulihkan akun Spixi milik Anda.
+settings-backup-description = Unduh file cadangan yang memungkinkan Anda untuk mengembalikan akun Spixi ini. Kontak hanya disimpan di perangkat Anda dan termasuk dalam cadangan yang dibuat setelah mereka ditambahkan.
 settings-backup-save = CADANGAKN DOMPET
 settings-backup-account-save = CADANGKAN AKUN
 settings-backup-notice = Cadangan ini dan kata sandi enkripsi yang terkait dengannya akan diperlukan untuk memulihkan akses Anda dalam kasus berikut:
@@ -466,6 +557,8 @@ wallet-sent-txid = ID Transaksi
 wallet-sent-view-explorer = Lihat di Penjelajah
 wallet-sent-dismiss = TUTUP
 wallet-sent-unconfirmed-details = Pembayaran telah dikirim, tetapi belum dikonfirmasi oleh jaringan. Setelah dikonfirmasi, Anda akan melihat ID transaksi dan tautan untuk melihatnya di penjelajah.
+wallet-unknown-sender = Pengirim Tidak Dikenal
+wallet-unknown-recipient = Penerima Tidak Dikenal
 wallet-sentrecv-title = Pembayaran Diterima
 wallet-sentrecv-subtitle = Pembayaran diterima dari:
 wallet-sentrecv-amount = Jumlah yang Diterima
@@ -507,10 +600,9 @@ onboarding-next = Berikutnya
 onboarding-finish = Selesai
 
 ; Empty State
-empty-state-title = Spixi
-empty-state-detail-1 = Spixi adalah aplikasi obrolan terdesentralisasi dengan dompet terintegrasi.
-empty-state-detail-2 = Semua pesan dienkripsi dengan metode enkripsi canggih dan dipertukarkan secara langsung antara Anda dan kontak milik Anda.
-
+empty-state-title = Selamat datang di Spixi
+empty-state-detail-1 = Aplikasi chat peer-to-peer Anda yang aman dengan dompet terintegrasi.
+empty-state-detail-2 = Nikmati percakapan terenkripsi yang memastikan pesan Anda hanya disimpan dan ditransmisikan antara perangkat Anda dan kontak Anda, menjaga privasi Anda tetap utuh.
 
 ; Ixinames
 ixinames-request-title = IXI Names Ingin Terhubung

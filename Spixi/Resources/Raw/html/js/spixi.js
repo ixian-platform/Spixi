@@ -169,6 +169,7 @@ function addCallAppRequest(sessionId, text) {
 function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
     removeAppRequest(sessionId);
 
+/*  // TODO: Uncomment this when global app request support is implemented
     var el = document.createElement("div");
     el.id = "AppReq_" + sessionId;
     el.className = "spixi-callbar";
@@ -181,7 +182,7 @@ function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
 
     el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6"><div onclick="' + acceptAction + '" style="display:inline-block;">' + acceptHtml + '</div></div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + rejectHtml + '</div></div></div>';
 
-    document.body.appendChild(el);
+    document.body.appendChild(el);*/
 }
 
 function removeAppRequest(sessionId) {

@@ -447,9 +447,13 @@ namespace SPIXI
         public static void sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
         {
             // TODO use channels and drop SpixiAppData
+            string app_install_url = Node.MiniAppManager.getAppInstallURL(app_id);
+            string app_name = Node.MiniAppManager.getAppName(app_id);
+            string app_info = $"{app_id}||{app_install_url}||{app_name}"; // TODO pack this information better
+
             SpixiMessage spixi_msg = new SpixiMessage();
             spixi_msg.type = SpixiMessageCode.appRequest;
-            spixi_msg.data = new SpixiAppData(session_id, data, app_id).getBytes();
+            spixi_msg.data = new SpixiAppData(session_id, data, app_info).getBytes();
 
             StreamMessage new_msg = new StreamMessage();
             new_msg.type = StreamMessageCode.data;
@@ -561,7 +565,16 @@ namespace SPIXI
                 return;
             }
 
-            string app_id = app_data.appId;
+            if (string.IsNullOrEmpty(app_data.appId))
+            {
+                Logging.error("App with session id: {0} has no provided app id.", Crypto.hashToString(app_data.sessionId));
+                return;
+            }
+
+            string[] appid_data = app_data.appId.Split("||");
+            string app_id = appid_data[0];
+            string? app_install_url = appid_data.Length > 1 ? appid_data[1] : null;
+
 
             app_page = am.getAppPage(sender_address, app_id);
             if (app_page != null)
@@ -593,19 +606,10 @@ namespace SPIXI
                     {
                         // app doesn't exist
                         Logging.error("App with id {0} is not installed.", app_id);
-                        return;
                     }
                 }
-                if (Node.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app.id) != null)
-                {
-                    app_page = new MiniAppPage(app_id, sender_address, user_addresses, am.getAppEntryPoint(app_id));
-                    app_page.myRequestAddress = recipient_address;
-                    app_page.requestedByAddress = sender_address;
-                    app_page.sessionId = app_data.sessionId;
-                    am.addAppPage(app_page);
+                FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
 
-                    UIHelpers.refreshAppRequests = true;
-                }
             });
         }
 

@@ -820,6 +820,17 @@ namespace SPIXI
                                 excerpt = SpixiLocalization._SL("index-excerpt-payment-received");
                             }
                         }
+                        else if (lastmsg.type == FriendMessageType.appSession)
+                        {
+                            if (lastmsg.localSender)
+                            {
+                                excerpt = SpixiLocalization._SL("chat-app-invite-sent");
+                            }
+                            else
+                            {
+                                excerpt = SpixiLocalization._SL("chat-app-invite-received");
+                            }
+                        }
                         else if (lastmsg.type == FriendMessageType.requestAdd)
                         {
                             if (friend.approved)
@@ -1289,15 +1300,13 @@ namespace SPIXI
             try
             {
                 await Navigation.PopAsync(Config.defaultXamarinAnimations);
-                
-                MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), new Address[] { id_bytes }, Node.MiniAppManager.getAppEntryPoint(appId));
-                miniAppPage.accepted = true;
-                Node.MiniAppManager.addAppPage(miniAppPage);
 
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
-                });
+                byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
+
+                string install_url = Node.MiniAppManager.getAppInstallURL(appId);
+
+                FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, appId, true, null, 0, false);
+                StreamProcessor.sendAppRequest(friend, appId, session_id, null);
             }
             catch (Exception ex)
             {
@@ -1305,6 +1314,33 @@ namespace SPIXI
             }
         }
 
+        public byte[] onJoinApp(string appId, Address[] userAddresses)
+        {
+            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), userAddresses, Node.MiniAppManager.getAppEntryPoint(appId));
+            miniAppPage.accepted = true;
+            Node.MiniAppManager.addAppPage(miniAppPage);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+            });
+            return miniAppPage.sessionId;
+        }
+        public async void onInstallApp(string appUrl)
+        {
+            MiniApp? app = await Node.MiniAppManager.fetch(appUrl);
+            if (app == null)
+            {
+                return;
+            }
+
+            app.url = appUrl;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+            });
+        }
         private void onAppDetails(string appId)
         {
             Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);

@@ -46,6 +46,15 @@ namespace SPIXI
             return amount_string;
         }
 
+        public static string bytesToHumanFormatString(long bytes)
+        {
+            if (bytes < 1024)
+                return $"{bytes} B";
+            if (bytes < 1024 * 1024)
+                return $"{(bytes / 1024.0):0.##} kB";
+            return $"{(bytes / 1024.0 / 1024.0):0.##} MB";
+        }
+
         public static void sendUiCommand(SpixiContentPage contentPage, string command, params string[] arguments)
         {
             try

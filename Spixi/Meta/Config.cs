@@ -8,7 +8,7 @@ namespace SPIXI.Meta
         // Providing pre-defined values
         // Can be read from a file later, or read from the command line
 
-        public static NetworkType networkType = NetworkType.main;
+        public static NetworkType networkType = NetworkType.test;
 
         public static bool enablePushNotifications = true;
 

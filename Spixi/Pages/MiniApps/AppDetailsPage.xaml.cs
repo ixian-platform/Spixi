@@ -123,10 +123,22 @@ namespace SPIXI
                 icon = "";
             }
 
-            var appList = Node.MiniAppManager.getInstalledApps();
-            bool isAppInstalled = appList.ContainsKey(appId);
+            var app_list = Node.MiniAppManager.getInstalledApps();
+            bool app_installed = app_list.ContainsKey(appId);
+            bool app_verified = true;
 
-            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.description, app.version, app.url, app.getCapabilitiesAsString(), appId, app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), isAppInstalled.ToString());
+            Utils.sendUiCommand(this, "init", 
+                app.name, 
+                icon, app.publisher, 
+                app.description, 
+                app.version, 
+                app.url, 
+                Utils.bytesToHumanFormatString(app.contentSize), 
+                app.getCapabilitiesAsString(), 
+                appId, 
+                app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), 
+                app_installed.ToString(),
+                app_verified.ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
