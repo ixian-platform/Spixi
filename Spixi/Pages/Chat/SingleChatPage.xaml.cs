@@ -195,6 +195,16 @@ namespace SPIXI
                 string app_id = current_url.Substring("ixian:app:".Length);
                 onApp(app_id);
             }
+            else if (current_url.StartsWith("ixian:installApp:"))
+            {
+                string app_url = current_url.Substring("ixian:installApp:".Length);
+                onInstallApp(app_url);
+            }
+            else if (current_url.StartsWith("ixian:joinApp:"))
+            {
+                string app_id = current_url.Substring("ixian:joinApp:".Length);
+                onJoinApp(app_id);
+            }
             else if (current_url.StartsWith("ixian:loadContacts"))
             {
                 loadContacts();
@@ -735,17 +745,75 @@ namespace SPIXI
         public void onApp(string app_id)
         {
             Address[] user_addresses = new Address[] { friend.walletAddress };
-            MiniAppPage custom_app_page = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.MiniAppManager.getAppEntryPoint(app_id));
-            custom_app_page.accepted = true;
-            Node.MiniAppManager.addAppPage(custom_app_page);
+
+            byte[]? session_id = null;
+            if (homePage != null)
+            {
+                session_id = homePage.onJoinApp(app_id, user_addresses);
+            }
+            else
+            {
+                MiniAppPage custom_app_page = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.MiniAppManager.getAppEntryPoint(app_id));
+                custom_app_page.accepted = true;
+                Node.MiniAppManager.addAppPage(custom_app_page);
+                session_id = custom_app_page.sessionId;
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
+                });
+            }
+
+
+            if(session_id == null)
+            {
+                return;
+            }
+
+            FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, app_id, true, null, 0, false);
+            StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
+        }
+
+        public void onJoinApp(string app_id)
+        {
+            
+            Address[] user_addresses = new Address[] { friend.walletAddress };
+            if (homePage != null)
+            {
+                homePage.onJoinApp(app_id, user_addresses);
+                return;
+            }
+
+            MiniAppPage miniAppPage = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.MiniAppManager.getAppEntryPoint(app_id));
+            miniAppPage.accepted = true;
+            Node.MiniAppManager.addAppPage(miniAppPage);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
+                Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
             });
 
-            FriendList.addMessageWithType(custom_app_page.sessionId, FriendMessageType.appSession, friend.walletAddress, 0, app_id, true, null, 0, false);
-            StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId, null);
+        }
+
+        public async void onInstallApp(string app_url)
+        {
+            if (homePage != null)
+            {
+                homePage.onInstallApp(app_url);
+                return;
+            }
+
+            MiniApp? app = await Node.MiniAppManager.fetch(app_url);
+            if (app == null)
+            {
+                return;
+            }
+
+            app.url = app_url;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+            });
         }
 
         private void onKickUser(Address address)
@@ -1157,8 +1225,51 @@ namespace SPIXI
                     Utils.sendUiCommand(this, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString(), paid.ToString());
                 }
             }
-            
-            if(message.type == FriendMessageType.standard)
+
+            if (message.type == FriendMessageType.appSession)
+            {
+                MiniAppManager am = Node.MiniAppManager;
+
+                string app_id;
+                string app_install_url = "";
+                string app_name = "";
+                if (message.message.Contains("||"))
+                {
+                    string[] app_id_data = message.message.Split(new[] { "||" }, StringSplitOptions.None);
+                    app_id = app_id_data[0];
+                    app_install_url = app_id_data.Length > 1 ? app_id_data[1] : "";
+                    app_name = app_id_data.Length > 2 ? app_id_data[2] : "";
+                }
+                else
+                {
+                    app_id = message.message;
+                }
+
+
+                MiniApp app = am.getApp(app_id);
+                string app_state = "";
+                
+                if (app == null)
+                {
+                    app_state = "Missing";
+                }
+                else
+                {
+                    app_name = app.name;
+                }
+
+
+                if (message.localSender)
+                {
+                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
+                }
+                else
+                {
+                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
+                }
+            }
+
+            if (message.type == FriendMessageType.standard)
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only

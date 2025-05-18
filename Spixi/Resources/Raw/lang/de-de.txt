@@ -20,6 +20,7 @@ app-details-title = Spixi App
 app-details-publisher = Herausgeber:
 app-details-version = Version:
 app-details-uninstall = Deinstallieren
+app-details-start = Starten
 app-details-dialog-title = Spixi App Manager
 app-details-dialog-removed-text = Die App wurde erfolgreich entfernt.
 app-details-dialog-removefailed-text = Ein Fehler ist beim Entfernen der App aufgetreten.
@@ -35,15 +36,77 @@ app-new-dialog-installfailed-text = Ein Fehler ist beim Installieren der App auf
 ; Apps Screen
 apps-title = Spixi Apps
 apps-empty = Du hast keine Apps installiert.
+apps-apps-text = Apps
+apps-not-sure-text = Du weißt nicht, wo du anfangen sollst? Probiere eine unserer empfohlenen Apps unten aus.
+apps-launch = Starten
+apps-launch-app = App starten
+apps-remove-app = Diese App entfernen
+apps-find-installed-apps = Installierte Mini-Apps finden
+apps-add-note = Möchtest du eine neue Mini-App ausprobieren? Gib einfach die URL ein oder scanne einen QR-Code, um sie zu installieren.
+apps-add-url-placeholder = Bitte gib die URL ein, unter der sich die Mini-App befindet...
+apps-get-from-url = App über URL abrufen
+apps-scan = Scannen
+apps-what-is-title = Was sind Mini-Apps?
+apps-what-is-description = Mini-Apps sind leichtgewichtige JavaScript-Anwendungen, die sicher innerhalb von Spixi ausgeführt werden.
+apps-what-is-learn = Mehr erfahren
+apps-add-invalid-url = Bitte gib eine gültige URL ein, bevor du fortfährst.
+apps-details-description = Beschreibung
+apps-details-capabilities = Funktionen
+apps-details-details = Details
+apps-details-id = ID
+apps-details-version = Version
+apps-details-size = Größe
+apps-details-install-url = Installations-URL
+apps-details-download = Herunterladen und installieren
+apps-details-download-note = Die App wird sicher in der Spixi-Sandbox installiert.
+apps-install-title = Mini-App installieren
+apps-source = Quelle
+apps-install-confirm = Installation bestätigen
+apps-install-cancel = Abbrechen
+apps-installing-title = App wird installiert...
+apps-installing-description = Quelle wird heruntergeladen und überprüft
+apps-failed-install-title = App konnte nicht installiert werden
+apps-failed-install-description = Die Installation konnte nicht abgeschlossen werden. Bitte überprüfe deine Verbindung oder versuche es später erneut.
+apps-failed-install-retry = Erneut versuchen
+apps-failed-install-cancel = Abbrechen
+apps-success-install-title = Erfolgreich installiert
+apps-success-install-description = Die App wurde in deiner Mini-Apps-Bibliothek installiert.
+apps-success-install-view = App-Details anzeigen
+apps-remove-title = App entfernen?
+apps-remove-description = Dadurch wird die App von deinem Gerät gelöscht. Es gehen keine Daten verloren, es sei denn, die App speichert sie lokal.
+apps-remove-confirm = App entfernen
+apps-remove-cancel = Abbrechen
+apps-removing-app = App wird entfernt...
+apps-removing-app-description = App-Daten werden gelöscht.
+apps-removing-app-success = App entfernt
+apps-removing-app-description-success = App und Daten wurden von diesem Gerät gelöscht.
+apps-removing-app-continue = Weiter
+apps-session-title = Du bist in einer Sitzung mit
+apps-session-return = Tippen, um zurückzukehren
+apps-session-leave = Verlassen
+apps-session-invite-sent-to = Einladung gesendet an
+apps-session-invite-cancel = Einladung abbrechen
+
+; App Actions
+app-action-title = Dienstaktion
+app-action-description = Der Dienst {0} möchte die Aktion {1} ausführen. Bist du sicher, dass du fortfahren möchtest?
+app-action-unknown = Unbekannte Aktion.
+app-action-error-processing-title = Fehler beim Verarbeiten der Aktion
+app-action-error-processing = Fehler beim Verarbeiten der Aktion {0}.
+app-action-error-sending-title = Fehler beim Senden der Antwort
+app-action-error-sending = Fehler beim Senden der Antwort an den Dienst {0}.
+app-action-sent = App-Aktion gesendet
+app-action-response-confirmation = Möchtest du dem Dienst folgende Daten senden? {0}
 
 ; Chat Screen
 chat-sent-contact-request = hat dir eine Kontaktanfrage gesendet
 chat-accept = Akzeptieren
 chat-ignore = Ablehnen
 chat-type-placeholder = Schreibe eine Nachricht...
-chat-send-file = Datei senden
-chat-request-payment = Zahlungsanfrage
-chat-send-payment = Zahlung senden
+chat-send-file = Datei
+chat-request-payment = Anfordern
+chat-send-payment = Zahlen
+chat-app = App
 chat-status = Status
 chat-amount = Menge
 chat-view = Details
@@ -82,6 +145,12 @@ chat-request-sent-details = Sobald deine Anfrage angenommen wurde, kannst du sic
 chat-request-sent-undo = Rückgangig
 chat-request-received-title = Kontakt Anfrage erhalten
 chat-request-received-details = Jemand möchte sich mit dir verbinden! Sobald du angenommen hast, kannst du sicher chatten.
+
+chat-app-invite-sent = Einladung gesendet
+chat-app-invite-received = Einladung erhalten
+chat-app-get = App holen
+chat-app-back = Zurück zur App
+chat-app-launch = App starten
 
 chat-modal-tip-title = Spende {0}?
 chat-modal-tip-body = Wähle oder füge die zu spendende Menge ein.
@@ -123,6 +192,9 @@ chat-report-details = Möchten Sie diesen Inhalt melden?
 chat-report = Melden
 chat-report-cancel = Abbrechen
 
+chat-private-note-title = Dieser Chat ist privat.
+chat-private-note-message = Nachrichten werden nur auf deinem Gerät gespeichert und direkt mit modernster Verschlüsselung an deinen Kontakt gesendet.
+
 ; Contact Details Screen
 contact-details-chat = Chat
 contact-details-send = Senden
@@ -158,6 +230,11 @@ contact-new-confirm-details = Du bist dabei, eine Kontaktanfrage an die folgende
 downloads-title = Downloads
 downloads-empty = Du hast keine Dateien heruntergeladen.
 
+; Contributors Screen
+contributors-title = Mitwirkende
+contributors-thanks = Besonderer Dank an unsere Mitwirkenden
+contributors-special-thanks-title = Besonderer Dank an unsere Mitwirkenden
+
 ; Index Screen
 index-balance = IXI-Guthaben
 index-balance-show = Anzeigen
@@ -182,7 +259,7 @@ index-tab-home = Start
 index-tab-chats = Chats
 index-tab-wallet = Wallet
 index-tab-contacts = Kontakte
-index-tab-address = Meine Adresse
+index-tab-address = Adresse
 index-new-title = Neu
 index-new-contact = Kontakt
 index-new-chat = Chat
@@ -198,6 +275,7 @@ index-side-security = Sicherheit
 index-side-backup = Sicherung
 index-side-password = Passwort
 index-side-about = Über
+index-side-contributors = Mitwirkende
 index-side-howtouse = So verwendest du Spixi
 index-side-sendlog = App-Log senden
 index-devmode = Entwicklermodus aktiviert
@@ -211,6 +289,19 @@ index-excerpt-file = Datei
 index-excerpt-voice-call = Sprachanruf
 index-excerpt-self = 
 index-excerpt-typing = Tippt...
+index-side-settings-subtitle = Themen, Sprache, Spitzname und Daten
+index-side-password-subtitle = Spixi-Passwort ändern
+index-side-backup-subtitle = Sicherungsdatei erstellen
+index-side-how-to-subtitle = Erfahre, wie du Spixi verwendest
+index-side-about-subtitle = Informationen, Hilfe, Kontakt, Datenschutzerklärung
+index-missing-tx-title = Fehlende Transaktionen?
+index-missing-tx-text = Spixi liest direkt von der Blockchain, nicht von zentralen Servern. Die Synchronisierung kann daher etwas länger dauern.
+index-missing-tx-view-all = Alle Transaktionen im Explorer anzeigen
+index-backup-prompt-title = Nicht vergessen zu sichern
+index-backup-prompt-desc = Spixi ist vollständig dezentralisiert – deine Daten bleiben nur auf deinem Gerät. Um deine Kontakte zu schützen und alles später wiederherstellen zu können, erstelle jetzt ein Backup.
+index-backup-prompt-create = Ja, Backup erstellen
+index-backup-prompt-not-now = Jetzt nicht
+index-backup-prompt-note = Es wird empfohlen, nach jedem neuen Kontakt ein Backup zu erstellen.
 
 ; Intro Screen
 intro-title = Willkommen bei Spixi,
@@ -304,6 +395,8 @@ settings-account-nick-edit = Spitzname
 settings-account-nick-placeholder = Neuen Spitznamen eingeben
 settings-account-deleteinfo = Du kannst dieses Spixi-Konto und alle zugehörigen Daten jederzeit dauerhaft von diesem Gerät löschen. <b>Wichtig:</b> Nach dem Löschen musst du ein Konto erstellen oder wiederherstellen, um Spixi weiter zu nutzen.
 settings-account-delete = Konto löschen
+settings-deletea-title = Delete This Spixi Account?
+settings-deletea-text = Bist du sicher, dass du dieses Spixi-Konto löschen möchtest?<br/><br/>Diese Aktion ist nicht umkehrbar! Es wird empfohlen, dieses Konto vor dem Löschen zu sichern. Du benötigst die Sicherungsdatei, falls du später wieder Zugriff auf dieses Konto erhalten möchtest.
 settings-deleteda-title = Gelöscht
 settings-deleteda-text = Spixi-Konto wurde gelöscht.
 settings-wallet-settings = Wallet-Einstellungen
@@ -330,12 +423,11 @@ settings-deleted-error-text = Ein unbekannter Fehler ist aufgetreten.
 settings-emptynick-title = Ungültiger Spitzname
 settings-emptynick-text = Bitte gib einen Spitznamen ein.
 
-
 ; Settings Backup Screen
 settings-backup-title = Konto sichern
-settings-backup-description = Lade eine Wallet- oder Kontodatei herunter, mit der du dieses Spixi-Konto wiederherstellen kannst.
+settings-backup-description = settings-backup-description = Lade eine Sicherungsdatei herunter, mit der du dieses Spixi-Konto wiederherstellen kannst. Kontakte werden nur auf deinem Gerät gespeichert und sind nur in Backups enthalten, die nach dem Hinzufügen erstellt wurden.
 settings-backup-save = WALLET SICHERN
-settings-backup-account-save = KONTO SICHERN
+settings-backup-account-save = WALLET UND KONTAKTE SICHERN
 settings-backup-notice = Dieses Backup und das damit verknüpfte Passwort werden benötigt, um den Zugang wiederherzustellen, falls du:y
 settings-backup-notice2 = - dieses Gerät verlierst<br />- Spixi von diesem Gerät deinstallierst<br />- dieses Spixi Konto löscht<br />- diese Wallet löschst
 settings-backup-invalidpassword-title = Ungültiges Passwort
@@ -465,6 +557,8 @@ wallet-sent-txid = Transaktions-ID
 wallet-sent-view-explorer = Im Explorer anzeigen
 wallet-sent-dismiss = Schließen
 wallet-sent-unconfirmed-details = Die Zahlung wurde gesendet, ist aber noch nicht vom Netzwerk bestätigt. Sobald sie bestätigt ist, siehst du die Transaktions-ID und einen Link, um sie im Explorer anzuzeigen.
+wallet-unknown-sender = Unbekannter Absender
+wallet-unknown-recipient = Unbekannter Empfänger
 wallet-sentrecv-title = Zahlung erhalten
 wallet-sentrecv-subtitle = Zahlung erhalten von:
 wallet-sentrecv-amount = Betrag
@@ -506,10 +600,9 @@ onboarding-next = Weiter
 onboarding-finish = Fertigstellen
 
 ; Empty State
-empty-state-title = Spixi
-empty-state-detail-1 = Spixi ist eine dezentrale Chat-App mit integrierter Wallet.
-empty-state-detail-2 = Alle Nachrichten sind mit modernsten Verschlüsselungsmethoden gesichert und werden direkt zwischen dir und deinen Kontakten ausgetauscht.
-
+empty-state-title = Willkommen bei Spixi
+empty-state-detail-1 = Deine sichere Peer-to-Peer-Chat-App mit integrierter Wallet.
+empty-state-detail-2 = Genieße verschlüsselte Unterhaltungen, bei denen deine Nachrichten nur zwischen deinem Gerät und dem deines Kontakts gespeichert und übertragen werden – deine Privatsphäre bleibt gewahrt.
 
 ; Ixinames
 ixinames-request-title = IXI Names möchte eine Verbindung herstellen

@@ -20,6 +20,7 @@ app-details-title = Aplicación Spixi
 app-details-publisher = Publicado por:
 app-details-version = Versión:
 app-details-uninstall = Desinstalar
+app-details-start = Iniciar
 app-details-dialog-title = Administrador de aplicaciones Spixi
 app-details-dialog-removed-text = La aplicación se eliminó correctamente.
 app-details-dialog-removefailed-text = Ocurrió un error al eliminar la aplicación.
@@ -35,15 +36,77 @@ app-new-dialog-installfailed-text = Ocurrió un error al instalar la aplicación
 ; Apps Screen
 apps-title = Aplicaciones de Spixi
 apps-empty = No tienes aplicaciones instaladas.
+apps-apps-text = Aplicaciones
+apps-not-sure-text = ¿No sabes por dónde empezar? Prueba una de nuestras aplicaciones destacadas a continuación.
+apps-launch = Iniciar
+apps-launch-app = Iniciar aplicación
+apps-remove-app = Eliminar esta aplicación
+apps-find-installed-apps = Buscar mini aplicaciones instaladas
+apps-add-note = ¿Quieres probar una nueva Mini App? Solo introduce su URL o escanea un código QR para instalarla.
+apps-add-url-placeholder = Por favor, introduce la URL donde se encuentra la Mini App...
+apps-get-from-url = Obtener aplicación desde URL
+apps-scan = Escanear
+apps-what-is-title = ¿Qué son las Mini Apps?
+apps-what-is-description = Las Mini Apps son aplicaciones JavaScript ligeras que se ejecutan de forma segura dentro de Spixi.
+apps-what-is-learn = Más información
+apps-add-invalid-url = Introduce una URL válida antes de continuar.
+apps-details-description = Descripción
+apps-details-capabilities = Funciones
+apps-details-details = Detalles
+apps-details-id = ID
+apps-details-version = Versión
+apps-details-size = Tamaño
+apps-details-install-url = URL de instalación
+apps-details-download = Descargar e instalar
+apps-details-download-note = La aplicación se instalará de forma segura en el entorno aislado (sandbox) de Spixi.
+apps-install-title = Instalar Mini App
+apps-source = Fuente
+apps-install-confirm = Confirmar instalación
+apps-install-cancel = Cancelar
+apps-installing-title = Instalando aplicación...
+apps-installing-description = Descargando y verificando fuente
+apps-failed-install-title = Fallo al instalar la aplicación
+apps-failed-install-description = No pudimos completar la instalación. Verifica tu conexión o inténtalo de nuevo más tarde.
+apps-failed-install-retry = Reintentar
+apps-failed-install-cancel = Cancelar
+apps-success-install-title = Instalación exitosa
+apps-success-install-description = Aplicación instalada en tu biblioteca de Mini Apps.
+apps-success-install-view = Ver detalles de la aplicación
+apps-remove-title = ¿Eliminar aplicación?
+apps-remove-description = Esto eliminará la aplicación de tu dispositivo. No se perderán datos a menos que la aplicación los haya almacenado localmente.
+apps-remove-confirm = Eliminar aplicación
+apps-remove-cancel = Cancelar
+apps-removing-app = Eliminando aplicación...
+apps-removing-app-description = Eliminando datos de la aplicación.
+apps-removing-app-success = Aplicación eliminada
+apps-removing-app-description-success = La aplicación y sus datos han sido eliminados de este dispositivo.
+apps-removing-app-continue = Continuar
+apps-session-title = Estás en una sesión con
+apps-session-return = Toca para volver
+apps-session-leave = Salir
+apps-session-invite-sent-to = Invitación enviada a
+apps-session-invite-cancel = Cancelar invitación
+
+; App Actions
+app-action-title = Acción del servicio
+app-action-description = El servicio {0} quiere ejecutar la acción {1}. ¿Estás seguro de que deseas continuar?
+app-action-unknown = Acción desconocida.
+app-action-error-processing-title = Error al procesar la acción
+app-action-error-processing = Error al procesar la acción {0}.
+app-action-error-sending-title = Error al enviar la respuesta
+app-action-error-sending = Error al enviar la respuesta al servicio {0}.
+app-action-sent = Acción de la aplicación enviada
+app-action-response-confirmation = ¿Deseas enviar los siguientes datos al servicio? {0}
 
 ; Chat Screen
 chat-sent-contact-request = ha enviado una solicitud de contacto
 chat-accept = Aceptar
 chat-ignore = Ignorar
 chat-type-placeholder = Escribe un mensaje...
-chat-send-file = Enviar archivo
-chat-request-payment = Solicitar pago
-chat-send-payment = Enviar pago
+chat-send-file = Archivo
+chat-request-payment = Solicitar
+chat-send-payment = Pagar
+chat-app = Aplicación
 chat-status = Estado
 chat-amount = Monto
 chat-view = Detalles
@@ -82,6 +145,12 @@ chat-request-sent-details = Podrás chatear de forma segura una vez que tu solic
 chat-request-sent-undo = Deshacer
 chat-request-received-title = Solicitud de contacto recibida
 chat-request-received-details = ¡Alguien quiere conectarse contigo! Cuando aceptes, podrán chatear de forma segura.
+
+chat-app-invite-sent = Invitación enviada
+chat-app-invite-received = Invitación recibida
+chat-app-get = Obtener aplicación
+chat-app-back = Volver a la aplicación
+chat-app-launch = Iniciar aplicación
 
 chat-modal-tip-title = ¿Enviar propina a {0}?
 chat-modal-tip-body = Elige o introduce un monto para enviar como propina.
@@ -123,6 +192,9 @@ chat-report-details = ¿Deseas reportar este contenido?
 chat-report = Reportar
 chat-report-cancel = Cancelar
 
+chat-private-note-title = Este chat es privado.
+chat-private-note-message = Los mensajes se almacenan solo en tu dispositivo y se envían directamente a tu contacto con cifrado de última generación.
+
 ; Contact Details Screen
 contact-details-chat = Chat
 contact-details-send = Enviar
@@ -158,6 +230,11 @@ contact-new-confirm-details = Se enviará una solicitud de contacto a la siguien
 downloads-title = Descargas
 downloads-empty = No tienes archivos descargados.
 
+; Contributors Screen
+contributors-title = Colaboradores
+contributors-thanks = Agradecimiento especial a nuestros colaboradores
+contributors-special-thanks-title = Agradecimiento especial a nuestros colaboradores
+
 ; Index Screen
 index-balance = Saldo IXI
 index-balance-show = Mostrar
@@ -182,7 +259,7 @@ index-tab-home = Inicio
 index-tab-chats = Chats
 index-tab-wallet = Monedero
 index-tab-contacts = Contactos
-index-tab-address = Mi dirección
+index-tab-address = Dirección
 index-new-title = Nuevo
 index-new-contact = Contacto
 index-new-chat = Chat
@@ -198,6 +275,7 @@ index-side-security = Seguridad
 index-side-backup = Copia de seguridad
 index-side-password = Contraseña
 index-side-about = Acerca de
+index-side-contributors = Colaboradores
 index-side-howtouse = Cómo usar Spixi
 index-side-sendlog = Enviar registro de la aplicación
 index-devmode = Modo desarrollador activado
@@ -211,6 +289,19 @@ index-excerpt-file = Archivo
 index-excerpt-voice-call = Llamada de voz
 index-excerpt-self = 
 index-excerpt-typing = Escribiendo...
+index-side-settings-subtitle = Temas, idioma, nombre y datos
+index-side-password-subtitle = Cambiar contraseña de Spixi
+index-side-backup-subtitle = Crear archivo de respaldo
+index-side-how-to-subtitle = Aprende a usar Spixi
+index-side-about-subtitle = Información, ayuda, contacto, política de privacidad
+index-missing-tx-title = ¿Faltan algunas transacciones?
+index-missing-tx-text = Spixi lee directamente de la blockchain, no de servidores centralizados, así que la sincronización puede tardar un poco más.
+index-missing-tx-view-all = Ver todas las transacciones en el explorador
+index-backup-prompt-title = No olvides hacer una copia de seguridad
+index-backup-prompt-desc = Spixi es completamente descentralizado: tus datos se almacenan solo en tu dispositivo. Para proteger tus contactos y restaurar todo más adelante, crea una copia de seguridad ahora.
+index-backup-prompt-create = Sí, crear respaldo
+index-backup-prompt-not-now = Ahora no
+index-backup-prompt-note = Se recomienda hacer un respaldo cada vez que agregues un nuevo contacto.
 
 ; Intro Screen
 intro-title = Bienvenido a Spixi,
@@ -334,9 +425,9 @@ settings-emptynick-text = Por favor, introduce un nombre.
 
 ; Settings Backup Screen
 settings-backup-title = Copia de seguridad de la cuenta
-settings-backup-description = Descarga el archivo de la cuenta o la billetera para poder restaurar tu cuenta de Spixi si es necesario.
+settings-backup-description = Descarga un archivo de respaldo que te permitirá restaurar esta cuenta de Spixi. Los contactos se almacenan solo en tu dispositivo y se incluyen en los respaldos creados después de agregarlos.
 settings-backup-save = GUARDAR BILLETERA
-settings-backup-account-save = GUARDAR CUENTA
+settings-backup-account-save = GUARDAR BILLETERA Y CONTACTOS
 settings-backup-notice = Necesitarás esta copia de seguridad y tu contraseña para restaurar tu cuenta si:
 settings-backup-notice2 = - Pierdes este dispositivo<br />- Desinstalas Spixi de este dispositivo<br />- Eliminas esta cuenta de Spixi<br />- Eliminas esta billetera
 settings-backup-invalidpassword-title = Contraseña inválida
@@ -466,6 +557,8 @@ wallet-sent-txid = ID de la transacción
 wallet-sent-view-explorer = Ver en el explorador de bloques
 wallet-sent-dismiss = Cerrar
 wallet-sent-unconfirmed-details = El pago ha sido enviado, pero aún no ha sido confirmado por la red. Una vez confirmado, verás el ID de la transacción y el enlace al explorador de bloques.
+wallet-unknown-sender = Remitente desconocido
+wallet-unknown-recipient = Destinatario desconocido
 wallet-sentrecv-title = Pago recibido
 wallet-sentrecv-subtitle = Pago recibido de:
 wallet-sentrecv-amount = Monto
@@ -507,9 +600,9 @@ onboarding-next = Siguiente
 onboarding-finish = Finalizar
 
 ; Empty State
-empty-state-title = Spixi
-empty-state-detail-1 = Spixi es una aplicación de mensajería descentralizada con una billetera integrada.
-empty-state-detail-2 = Todos los mensajes están protegidos con cifrado avanzado y se envían directamente entre tú y tus contactos.
+empty-state-title = Bienvenido a Spixi
+empty-state-detail-1 = Tu aplicación segura de mensajería peer-to-peer con billetera integrada.
+empty-state-detail-2 = Disfruta de conversaciones cifradas donde los mensajes se almacenan y transmiten solo entre tu dispositivo y el de tu contacto, manteniendo tu privacidad intacta.
 
 ; Ixinames
 ixinames-request-title = IXI Names solicita conexión
@@ -561,4 +654,3 @@ global-time-minutesago = min
 global-share-choose = Selecciona una acción
 global-share-savefile = Guardar archivo
 global-share-sharefile = Compartir archivo
-

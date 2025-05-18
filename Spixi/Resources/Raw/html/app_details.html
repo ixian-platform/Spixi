@@ -99,8 +99,7 @@
                 <div class="spixi-app-details-title">
                     <span class="heading-xs s-text-01" data-role="AppName"></span>
                     <span class="label-sm s-text-02" data-role="AppPublisher"></span>
-                    <!--                    TODO: add display none if not verified-->
-                    <span class="label-xs s-text-success"><i class="fas fa-lock"></i> Verified</span>
+                    <span class="label-xs s-text-success" id="AppVerified"><i class="fas fa-lock"></i> Verified</span>
                 </div>
             </div>
             <div class="spixi-app-details-properties ">
@@ -213,7 +212,7 @@
     </div>
    
     <script type="text/javascript">
-        function init(name, icon, publisher, description, version, url, capabilities, appId, isMultiuser, isAppInstalled) {
+        function init(name, icon, publisher, description, version, url, size, capabilities, appId, isMultiuser, isAppInstalled, isAppVerified) {
             icon = icon.replace(/&#92;/g, '\\');
 
             const mappedCapsToArray = capabilities?.split(',').map(cap => cap.trim()) || [];
@@ -230,6 +229,7 @@
 
             document.getElementById("AppDescription").textContent = description;
             document.getElementById("AppVersion").textContent = version;
+            document.getElementById("AppSize").textContent = size;         
             document.getElementById("installUrlValue").textContent = url;
 
             document.getElementById("source").textContent = url;
@@ -238,6 +238,10 @@
                 item.innerHTML = mappedCapsToArray?.map(cap => `<span class="label-xs s-text-inverse single-capability">${cap}</span>`).join('');
             });
             document.getElementById("AppID").textContent = appId;
+
+            if (parseBoolean(isAppVerified) == false) {
+                document.getElementById("AppVerified").style.display = "none";
+            }
 
             //check if installed and append correct content
             const appDetailsSection = document.getElementById("appDetailsSection");

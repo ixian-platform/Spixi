@@ -20,6 +20,7 @@ app-details-title = Spixi programa
 app-details-publisher = Leidėjas:
 app-details-version = Versija:
 app-details-uninstall = Pašalinti
+app-details-start = Pradėti
 app-details-dialog-title = Spixi programų tvarkyklė
 app-details-dialog-removed-text = Programa sėkmingai pašalinta.
 app-details-dialog-removefailed-text = Įvyko klaida šalinant programą.
@@ -35,15 +36,77 @@ app-new-dialog-installfailed-text = Įvyko klaida diegiant programą.
 ; Apps Screen
 apps-title = Spixi programos
 apps-empty = Jūs neturite įdiegtų programų.
+apps-apps-text = Programėlės
+apps-not-sure-text = Nežinote, nuo ko pradėti? Išbandykite vieną iš mūsų rekomenduojamų programėlių žemiau.
+apps-launch = Pradėti
+apps-launch-app = Pradėti programėlę
+apps-remove-app = Pašalinti šią programėlę
+apps-find-installed-apps = Ieškoti įdiegtų mini programėlių
+apps-add-note = Norite išbandyti naują Mini programėlę? Tiesiog įveskite jos URL arba nuskenuokite QR kodą, kad ją įdiegtumėte.
+apps-add-url-placeholder = Įveskite URL, kur yra Mini programėlė...
+apps-get-from-url = Gauti programėlę iš URL
+apps-scan = Nuskaityti
+apps-what-is-title = Mini programėlės – tai lengvos JavaScript programėlės, kurios saugiai veikia „Spixi“ viduje.
+apps-what-is-description = Įdiekite tik iš patikimų šaltinių. Jūs visada kontroliuojate.
+apps-what-is-learn = Sužinokite daugiau
+apps-add-invalid-url = Prieš tęsdami įveskite galiojantį URL.
+apps-details-description = Aprašymas
+apps-details-capabilities = Funkcijos
+apps-details-details = Detalės
+apps-details-id = ID
+apps-details-version = Versija
+apps-details-size = Dydis
+apps-details-install-url = Įdiegimo URL
+apps-details-download = Atsisiųsti ir įdiegti
+apps-details-download-note = Programėlė bus saugiai įdiegta „Spixi“ smėlio dėžės aplinkoje.
+apps-install-title = Įdiegti Mini programėlę
+apps-source = Šaltinis
+apps-install-confirm = Patvirtinti įdiegimą
+apps-install-cancel = Atšaukti
+apps-installing-title = Diegiama programėlė...
+apps-installing-description = Atsisiunčiama ir tikrinama šaltinio
+apps-failed-install-title = Programėlės įdiegimas nepavyko
+apps-failed-install-description = Nepavyko užbaigti įdiegimo. Patikrinkite savo ryšį arba pabandykite vėliau.
+apps-failed-install-retry = Pabandykite dar kartą
+apps-failed-install-cancel = Atšaukti
+apps-success-install-title = Sėkmingai įdiegta
+apps-success-install-description = Programėlė įdiegta į jūsų Mini programėlių biblioteką.
+apps-success-install-view = Rodyti programėlės detales
+apps-remove-title = Pašalinti programėlę?
+apps-remove-description = Tai pašalins programėlę iš jūsų įrenginio. Duomenys nebus prarasti, nebent programėlė juos saugo vietoje.
+apps-remove-confirm = Pašalinti programėlę
+apps-remove-cancel = Atšaukti
+apps-removing-app = Pašalinama programėlė...
+apps-removing-app-description = Pašalinami programėlės duomenys.
+apps-removing-app-success = Programėlė pašalinta
+apps-removing-app-description-success = Programėlė ir jos duomenys buvo pašalinti iš šio įrenginio.
+apps-removing-app-continue = Tęsti
+apps-session-title = Jūs esate sesijoje su
+apps-session-return = Palieskite, kad grįžtumėte
+apps-session-leave = Išeiti
+apps-session-invite-sent-to = Kvietimas išsiųstas
+apps-session-invite-cancel = Atšaukti kvietimą
+
+; App Actions
+app-action-title = Paslaugos veiksmas
+app-action-description = Paslauga {0} nori atlikti veiksmą {1}, ar tikrai norite tęsti?
+app-action-unknown = Nežinomas veiksmas.
+app-action-error-processing-title = Klaida apdorojant veiksmą
+app-action-error-processing = Klaida apdorojant veiksmą {0}.
+app-action-error-sending-title = Klaida siunčiant atsakymą
+app-action-error-sending = Klaida siunčiant atsakymą paslaugai {0}.
+app-action-sent = Programėlės veiksmas išsiųstas
+app-action-response-confirmation = Ar norite išsiųsti šiuos duomenis paslaugai? {0}
 
 ; Chat Screen
 chat-sent-contact-request = išsiuntė prašymą pridėti prie kontaktų
 chat-accept = Priimti
 chat-ignore = Atmesti
 chat-type-placeholder = Rašykite savo žinutę...
-chat-send-file = Siųsti failą
-chat-request-payment = Gauti mokėjimą
-chat-send-payment = Siųsti mokėjimą
+chat-send-file = Failas
+chat-request-payment = Prašyti
+chat-send-payment = Sumokėti
+chat-app = Programėlė
 chat-status = Būsena
 chat-amount = Suma
 chat-view = Išsami informacija
@@ -82,6 +145,12 @@ chat-request-sent-details = Galėsite saugiai bendrauti, kai jūsų prašymas bu
 chat-request-sent-undo = Atšaukti
 chat-request-received-title = Gautas kontakto prašymas
 chat-request-received-details = Kažkas nori susisiekti su tavimi! Priėmus prašymą, galėsite saugiai bendrauti.
+
+chat-app-invite-sent = Kvietimas išsiųstas
+chat-app-invite-received = Kvietimas gautas
+chat-app-get = Gauti programėlę
+chat-app-back = Grįžti į programėlę
+chat-app-launch = Paleisti programėlę
 
 chat-modal-tip-title = Dovanoti {0}?
 chat-modal-tip-body = Pasirinkite arba įveskite sumą, kurią norite padovanoti.
@@ -123,6 +192,9 @@ chat-report-details = Ar norite pranešti apie šį turinį?
 chat-report = Pranešti
 chat-report-cancel = Atšaukti
 
+chat-private-note-title = Šis pokalbis yra privačias.
+chat-private-note-message = Žinutės yra saugomos tik jūsų įrenginyje ir siunčiamos tiesiogiai jūsų kontaktui naudojant pažangiausią šifravimą.
+
 ; Contact Details Screen
 contact-details-chat = Pokalbis
 contact-details-send = Siųsti
@@ -158,6 +230,11 @@ contact-new-confirm-details = Jūs ketinate išsiųsti kontakto prašymą šiam 
 downloads-title = Atsisiuntimai
 downloads-empty = Jūs neturite atsisiųstų failų.
 
+; Contributors Screen
+contributors-title = Prisidėję asmenys
+contributors-thanks = Ypatingas ačiū mūsų prisidėjusiems asmenims
+contributors-special-thanks-title = Ypatingas ačiū mūsų prisidėjusiems asmenims
+
 ; Index Screen
 index-balance = Mano IXI balansas
 index-balance-show = Rodyti
@@ -182,7 +259,7 @@ index-tab-home = Pagrindinis
 index-tab-chats = Pokalbiai
 index-tab-wallet = Piniginė
 index-tab-contacts = Kontaktai
-index-tab-address = Mano adresas
+index-tab-address = Adresas
 index-new-title = Naujas
 index-new-contact = Kontaktas
 index-new-chat = Pokalbis
@@ -198,6 +275,7 @@ index-side-security = Saugumas
 index-side-backup = Atsarginė kopija
 index-side-password = Slaptažodis
 index-side-about = Apie
+index-side-contributors = Prisidėję asmenys
 index-side-howtouse = Kaip naudotis Spixi
 index-side-sendlog = Siųsti programos Log'a
 index-devmode = Kūrėjo režimas įjungtas
@@ -211,6 +289,19 @@ index-excerpt-file = Failas
 index-excerpt-voice-call = Balso skambutis
 index-excerpt-self = 
 index-excerpt-typing = Rašo...
+index-side-settings-subtitle = Temos, kalba, slapyvardis ir duomenys
+index-side-password-subtitle = Keisti Spixi slaptažodį
+index-side-backup-subtitle = Sukurti atsarginę kopiją
+index-side-how-to-subtitle = Sužinokite, kaip naudoti Spixi
+index-side-about-subtitle = Informacija, pagalba, susisiekite su mumis, privatumo politika
+index-missing-tx-title = Trūksta kai kurių sandorių?
+index-missing-tx-text = Spixi tiesiogiai perskaito iš blockchain, o ne iš centralizuotų serverių, todėl sinchronizavimas gali užtrukti ilgiau.
+index-missing-tx-view-all = Peržiūrėti visus sandorius naršyklėje
+index-backup-prompt-title = Nepamirškite atlikti atsarginės kopijos
+index-backup-prompt-desc = Spixi yra visiškai decentralizuota – jūsų duomenys lieka tik jūsų įrenginyje. Norėdami apsaugoti savo kontaktus ir vėliau atkurti viską, sukurkite atsarginę kopiją dabar.
+index-backup-prompt-create = Taip, sukurti atsarginę kopiją
+index-backup-prompt-not-now = Dabar ne
+index-backup-prompt-note = Rekomenduojama atlikti atsarginę kopiją kiekvieną kartą pridėjus naują kontaktą.
 
 ; Intro Screen
 intro-title = Sveiki atvykę į Spixi,
@@ -334,9 +425,9 @@ settings-emptynick-text = Prašome įvesti slapyvardį.
 
 ; Settings Backup Screen
 settings-backup-title = Paskyros atsarginė kopija
-settings-backup-description = Atsisiųskite piniginės arba paskyros failą, kuris leis jums atkurti šią Spixi paskyrą.
+settings-backup-description = Atsisiųskite atsarginę kopiją, kuri leis atkurti šį Spixi paskyrą. Kontaktai saugomi tik jūsų įrenginyje ir įtraukiami į atsargines kopijas, padarytas po jų pridėjimo.
 settings-backup-save = ATSARGINĖ PINIGINĖS KOPIJA
-settings-backup-account-save = ATSARGINĖ PASKYROS KOPIJA
+settings-backup-account-save = ATSARGINĖ PINIGINĖS IR KONTAKTŲ KOPIJA
 settings-backup-notice = Ši atsarginė kopija ir su ja susietas slaptažodis bus reikalingi, jei norėsite atkurti prieigą, jei:
 settings-backup-notice2 = - prarasite šį įrenginį<br />- pašalinsite Spixi iš šio įrenginio<br />- ištrinsite šią Spixi paskyrą<br />- ištrinsite šią piniginę
 settings-backup-invalidpassword-title = Neteisingas slaptažodis
@@ -466,6 +557,8 @@ wallet-sent-txid = Operacijos ID
 wallet-sent-view-explorer = Peržiūrėti naršyklėje
 wallet-sent-dismiss = Atsisakyti
 wallet-sent-unconfirmed-details = Mokėjimas išsiųstas, bet dar nepatvirtintas tinkle. Kai bus patvirtintas, pamatysite operacijos ID ir nuorodą, kad galėtumėte ją peržiūrėti naršyklėje.
+wallet-unknown-sender = Nežinomas siuntėjas
+wallet-unknown-recipient = Nežinomas gavėjas
 wallet-sentrecv-title = Mokėjimas gautas
 wallet-sentrecv-subtitle = Mokėjimas gautas iš:
 wallet-sentrecv-amount = Suma
@@ -507,9 +600,9 @@ onboarding-next = Toliau
 onboarding-finish = Baigti
 
 ; Empty State
-empty-state-title = Spixi
-empty-state-detail-1 = Spixi yra decentralizuota pokalbių programa su integruota pinigine.
-empty-state-detail-2 = Visos žinutės šifruojamos dvikryptiniu transformaciniu kodavimo metodu (state-of-the-art ) ir apsikeičia tik tiesiogiai tarp jūsų ir jūsų kontaktų.
+empty-state-title = Sveiki atvykę į Spixi
+empty-state-detail-1 = Jūsų saugi peer-to-peer pokalbių programa su integruotu piniginių funkcionalumu.
+empty-state-detail-2 = Mėgaukitės užšifruotais pokalbiais, kurie užtikrina, kad jūsų žinutės būtų saugomos ir perduodamos tik tarp jūsų įrenginio ir jūsų kontakto, išlaikant jūsų privatumą.
 
 ; Ixinames
 ixinames-request-title = IXI Names nori prisijungti

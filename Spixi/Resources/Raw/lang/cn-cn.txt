@@ -20,6 +20,7 @@ app-details-title = Spixi 应用
 app-details-publisher = 发布者：
 app-details-version = 版本：
 app-details-uninstall = 卸载
+app-details-start = 开始
 app-details-dialog-title = Spixi 应用管理
 app-details-dialog-removed-text = 应用已成功卸载。
 app-details-dialog-removefailed-text = 卸载应用时发生错误。
@@ -35,6 +36,67 @@ app-new-dialog-installfailed-text = 安装应用时发生错误。
 ; Apps Screen
 apps-title = Spixi 应用
 apps-empty = 您没有已安装的应用。
+apps-apps-text = 应用
+apps-not-sure-text = 不确定从哪里开始？试试下面的精选应用。
+apps-launch = 启动
+apps-launch-app = 启动应用
+apps-remove-app = 移除此应用
+apps-find-installed-apps = 查找已安装的迷你应用
+apps-add-note = 想尝试新的迷你应用？只需输入其 URL 或扫描二维码进行安装。
+apps-add-url-placeholder = 请输入迷你应用的地址 URL...
+apps-get-from-url = 从 URL 获取应用
+apps-scan = 扫描
+apps-what-is-title = 什么是迷你应用？
+apps-what-is-description = 迷你应用是在 Spixi 中安全运行的轻量级 JavaScript 应用。
+apps-what-is-learn = 了解更多
+apps-add-invalid-url = 请输入有效的 URL 后再继续。
+apps-details-description = 描述
+apps-details-capabilities = 功能
+apps-details-details = 详细信息
+apps-details-id = ID
+apps-details-version = 版本
+apps-details-size = 大小
+apps-details-install-url = 安装地址
+apps-details-download = 下载并安装
+apps-details-download-note = 该应用将被安全地安装在 Spixi 的沙盒环境中。
+apps-install-title = 安装迷你应用
+apps-source = 来源
+apps-install-confirm = 确认安装
+apps-install-cancel = 取消
+apps-installing-title = 正在安装应用...
+apps-installing-description = 正在下载并验证来源
+apps-failed-install-title = 应用安装失败
+apps-failed-install-description = 无法完成安装。请检查您的网络连接或稍后重试。
+apps-failed-install-retry = 重试
+apps-failed-install-cancel = 取消
+apps-success-install-title = 安装成功
+apps-success-install-description = 应用已添加到您的迷你应用库中。
+apps-success-install-view = 查看应用详情
+apps-remove-title = 移除应用？
+apps-remove-description = 这将从您的设备中删除该应用。除非应用本地存储了数据，否则不会丢失任何数据。
+apps-remove-confirm = 移除应用
+apps-remove-cancel = 取消
+apps-removing-app = 正在移除应用...
+apps-removing-app-description = 正在移除应用数据。
+apps-removing-app-success = 应用已移除
+apps-removing-app-description-success = 应用及其数据已从该设备中删除。
+apps-removing-app-continue = 继续
+apps-session-title = 当前正在与以下对象会话
+apps-session-return = 点击返回
+apps-session-leave = 离开
+apps-session-invite-sent-to = 邀请已发送至
+apps-session-invite-cancel = 取消邀请
+
+; App Actions
+app-action-title = 服务操作
+app-action-description = 服务 {0} 想要执行操作 {1}，您确定要继续吗？
+app-action-unknown = 未知操作。
+app-action-error-processing-title = 处理操作时出错
+app-action-error-processing = 处理操作 {0} 时出错。
+app-action-error-sending-title = 发送操作响应时出错
+app-action-error-sending = 向服务 {0} 发送操作响应时出错。
+app-action-sent = 应用操作已发送
+app-action-response-confirmation = 您是否要将以下数据发送给服务？{0}
 
 ; Chat Screen
 chat-sent-contact-request = 发送了联系人请求
@@ -43,6 +105,7 @@ chat-ignore = 拒绝
 chat-type-placeholder = 输入消息...
 chat-send-file = 发送文件
 chat-request-payment = 请求付款
+chat-app = 应用
 chat-send-payment = 发送付款
 chat-status = 状态
 chat-amount = 金额
@@ -82,6 +145,12 @@ chat-request-sent-details = 对方接受后，您可以安全聊天。
 chat-request-sent-undo = 撤销
 chat-request-received-title = 收到联系人请求
 chat-request-received-details = 有人想与您建立联系！接受后，您可以安全聊天。
+
+chat-app-invite-sent = 邀请已发送
+chat-app-invite-received = 收到邀请
+chat-app-get = 获取应用
+chat-app-back = 返回应用
+chat-app-launch = 启动应用
 
 chat-modal-tip-title = 向 {0} 发送打赏？
 chat-modal-tip-body = 选择或输入要打赏的金额。
@@ -123,6 +192,9 @@ chat-report-details = 您想举报此内容吗？
 chat-report = 举报
 chat-report-cancel = 取消
 
+chat-private-note-title = 此聊天为私密聊天。
+chat-private-note-message = 消息仅存储在您的设备上，并通过先进的加密技术直接发送给您的联系人。
+
 ; Contact Details Screen
 contact-details-chat = 聊天
 contact-details-send = 发送
@@ -158,6 +230,11 @@ contact-new-confirm-details = 您将向以下 Spixi 地址发送联系人请求�
 downloads-title = 下载
 downloads-empty = 您没有已下载的文件。
 
+; Contributors Screen
+contributors-title = 贡献者
+contributors-thanks = 特别感谢我们的贡献者
+contributors-special-thanks-title = 特别感谢我们的贡献者
+
 ; Index Screen
 index-balance = IXI 余额
 index-balance-show = 显示
@@ -182,7 +259,7 @@ index-tab-home = 主页
 index-tab-chats = 聊天
 index-tab-wallet = 钱包
 index-tab-contacts = 联系人
-index-tab-address = 我的地址
+index-tab-address = 地址
 index-new-title = 新建
 index-new-contact = 联系人
 index-new-chat = 聊天
@@ -198,6 +275,7 @@ index-side-security = 安全
 index-side-backup = 备份
 index-side-password = 密码
 index-side-about = 关于
+index-side-contributors = 贡献者
 index-side-howtouse = 如何使用 Spixi
 index-side-sendlog = 发送应用日志
 index-devmode = 开发者模式已启用
@@ -211,6 +289,19 @@ index-excerpt-file = 文件
 index-excerpt-voice-call = 语音通话
 index-excerpt-self = 
 index-excerpt-typing = 输入中...
+index-side-settings-subtitle = 主题、语言、昵称和数据
+index-side-password-subtitle = 更改 Spixi 密码
+index-side-backup-subtitle = 创建备份文件
+index-side-how-to-subtitle = 学习如何使用 Spixi
+index-side-about-subtitle = 信息、帮助、联系我们、隐私政策
+index-missing-tx-title = 有些交易丢失了吗？
+index-missing-tx-text = Spixi 直接从区块链读取数据，而不是从中心化服务器，因此同步可能需要更长时间。
+index-missing-tx-view-all = 在浏览器中查看所有交易
+index-backup-prompt-title = 别忘了备份
+index-backup-prompt-desc = Spixi 是完全去中心化的——您的数据仅保存在设备上。为保护联系人并便于以后恢复，请立即创建备份。
+index-backup-prompt-create = 是的，创建备份
+index-backup-prompt-not-now = 暂不备份
+index-backup-prompt-note = 建议每次添加新联系人后都进行备份。
 
 ; Intro Screen
 intro-title = 欢迎来到 Spixi，
@@ -334,9 +425,9 @@ settings-emptynick-text = 请输入昵称。
 
 ; Settings Backup Screen
 settings-backup-title = 账户备份
-settings-backup-description = 下载钱包或账户文件，以便在需要时恢复 Spixi 账户。
+settings-backup-description = 下载备份文件以便恢复此 Spixi 账户。联系人仅存储在您的设备上，并包含在添加后创建的备份中。
 settings-backup-save = 保存钱包
-settings-backup-account-save = 保存账户
+settings-backup-account-save = 备份钱包和联系人
 settings-backup-notice = 如果发生以下情况，您需要备份文件和密码才能恢复账户：
 settings-backup-notice2 = - 您丢失了此设备<br />- 您卸载了 Spixi<br />- 您删除了此 Spixi 账户<br />- 您删除了此钱包
 settings-backup-invalidpassword-title = 无效密码
@@ -466,6 +557,8 @@ wallet-sent-txid = 交易 ID
 wallet-sent-view-explorer = 在区块浏览器中查看
 wallet-sent-dismiss = 关闭
 wallet-sent-unconfirmed-details = 付款已发送，但尚未得到网络确认。确认后，您将看到交易 ID 和区块浏览器链接。
+wallet-unknown-sender = 未知发送方
+wallet-unknown-recipient = 未知接收方
 wallet-sentrecv-title = 付款已收到
 wallet-sentrecv-subtitle = 付款来自：
 wallet-sentrecv-amount = 金额
@@ -507,9 +600,9 @@ onboarding-next = 下一步
 onboarding-finish = 完成
 
 ; Empty State
-empty-state-title = Spixi
-empty-state-detail-1 = Spixi 是一个去中心化聊天应用，内置加密钱包。
-empty-state-detail-2 = 所有消息均经过先进加密技术保护，并直接传输给您的联系人。
+empty-state-title = 欢迎使用 Spixi
+empty-state-detail-1 = 您的安全点对点聊天应用，内置加密钱包。
+empty-state-detail-2 = 尽享加密聊天，确保您的消息仅在您与联系人之间存储和传输，保障您的隐私。
 
 ; Ixinames
 ixinames-request-title = IXI Names 请求连接
