@@ -460,6 +460,11 @@ function addReactions(id, reactions) {
     if (reactionsEl.innerHTML == "") {
         reactionsEl.parentNode.removeChild(reactionsEl);
     }
+
+    const messagesEl = document.getElementById("messages");
+    if (messagesEl) {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
 }
 
 function deleteMessage(id) {
