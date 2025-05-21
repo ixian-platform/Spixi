@@ -772,7 +772,7 @@ namespace SPIXI
                 return;
             }
 
-            FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, app_id, true, null, 0, false);
+            Node.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, app_id, true, null, 0, false);
             StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
         }
 
@@ -1539,7 +1539,7 @@ namespace SPIXI
             // Show connectivity warning bar
             if (NetworkClientManager.getConnectedClients(true).Count() > 0)
             {
-                if (!Config.enablePushNotifications && (friend.relayIP == null || StreamClientManager.isConnectedTo(friend.relayIP, true) == null))
+                if (!Config.enablePushNotifications && (friend.relayNode == null || StreamClientManager.isConnectedTo(friend.relayNode.hostname, true) == null))
                 {
                     Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
                 }

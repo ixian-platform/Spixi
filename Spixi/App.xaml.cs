@@ -34,7 +34,7 @@ public partial class App : Application
 
 
     public App()
-	{
+    {        
         InitializeComponent();
  
         // Check if already started
@@ -47,8 +47,8 @@ public partial class App : Application
             }
 
             // Init logging
-            Logging.setOptions(5, 1, false);
-            Logging.start(Config.spixiUserFolder);
+            Logging.setOptions(Config.maxLogSize, Config.maxLogCount, false);
+            Logging.start(Config.spixiUserFolder, Config.logVerbosity);
             Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
 
             // Init fatal exception handlers

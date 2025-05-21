@@ -1062,7 +1062,7 @@ namespace SPIXI
             try
             {
                 string new_version = checkForUpdate();
-                if (!new_version.StartsWith("(") && Version.Parse(new_version.Substring(new_version.IndexOf('-') + 1)).CompareTo(Version.Parse(Config.version.Substring(Config.version.IndexOf('-') + 1))) > 0)
+                if (!new_version.StartsWith("(") && new_version.Substring(new_version.IndexOf('-') + 1).CompareTo(Config.version.Substring(Config.version.IndexOf('-') + 1)) > 0)
                 {
                     Utils.sendUiCommand(this, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
                 }
@@ -1305,7 +1305,7 @@ namespace SPIXI
 
                 string install_url = Node.MiniAppManager.getAppInstallURL(appId);
 
-                FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, appId, true, null, 0, false);
+                Node.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, appId, true, null, 0, false);
                 StreamProcessor.sendAppRequest(friend, appId, session_id, null);
             }
             catch (Exception ex)
@@ -1346,5 +1346,9 @@ namespace SPIXI
             Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);
         }
 
+        public SpixiContentPage getDetailContent()
+        {
+            return detailContent;
+        }
     }
 }

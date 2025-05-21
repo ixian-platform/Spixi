@@ -10,6 +10,7 @@ using SPIXI.Meta;
 using SPIXI.Network;
 using SPIXI.VoIP;
 using System.Text;
+using IXICore.Utils;
 
 namespace SPIXI
 {    
@@ -175,12 +176,12 @@ namespace SPIXI
         }*/
 
         // Called when receiving S2 data from clients
-        public new void receiveData(byte[] bytes, RemoteEndpoint endpoint, bool fireLocalNotification = true)
+        public override ReceiveDataResponse receiveData(byte[] bytes, RemoteEndpoint endpoint, bool fireLocalNotification = true)
         {
             ReceiveDataResponse rdr = base.receiveData(bytes, endpoint, fireLocalNotification);
             if (rdr == null)
             {
-                return;
+                return rdr;
             }
 
             StreamMessage message = rdr.streamMessage;
@@ -249,27 +250,27 @@ namespace SPIXI
                         {
                             handleRequestFileData(sender_address, spixi_message);
                             // don't send confirmation back, so just return
-                            return;
+                            return rdr;
                         }
 
                     case SpixiMessageCode.fileData:
                         {
                             handleFileData(sender_address, spixi_message);
                             // don't send confirmation back, so just return
-                            return;
+                            return rdr;
                         }
 
                     case SpixiMessageCode.fileFullyReceived:
                         {
                             handleFileFullyReceived(sender_address, spixi_message);
-                            break;
+                            return rdr;
                         }
 
                     case SpixiMessageCode.appData:
                         {
                             // app data received, find the session id of the app and forward the data to it
                             handleAppData(sender_address, spixi_message.data);
-                            return;
+                            return rdr;
                         }
 
                     case SpixiMessageCode.appRequest:
@@ -340,7 +341,7 @@ namespace SPIXI
 
                     case SpixiMessageCode.msgTyping:
                         handleFriendIsTyping(friend);
-                        return;
+                        return rdr;
 
                     case SpixiMessageCode.avatar:
                         if (spixi_message.data != null && spixi_message.data.Length < 500000)
@@ -368,13 +369,25 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.msgReceived:
-                        UIHelpers.shouldRefreshContacts = true;
-                        UIHelpers.updateMessage(friend, channel, friend.getMessage(channel, spixi_message.data));
+                        {
+                            UIHelpers.shouldRefreshContacts = true;
+                            var fm = friend.getMessage(channel, spixi_message.data);
+                            if (fm != null)
+                            {
+                                UIHelpers.updateMessage(friend, channel, fm);
+                            }
+                        }
                         break;
-
+                            
                     case SpixiMessageCode.msgRead:
-                        UIHelpers.shouldRefreshContacts = true;
-                        UIHelpers.updateMessage(friend, channel, friend.getMessage(channel, spixi_message.data));
+                        {
+                            UIHelpers.shouldRefreshContacts = true;
+                            var fm = friend.getMessage(channel, spixi_message.data);
+                            if (fm != null)
+                            {
+                                UIHelpers.updateMessage(friend, channel, fm);
+                            }
+                        }
                         break;
 
                     case SpixiMessageCode.msgDelete:
@@ -407,6 +420,7 @@ namespace SPIXI
             {
                 Logging.error("Exception occured in StreamProcessor.receiveData: " + e);
             }
+            return rdr;
         }
 
         protected void handleFriendIsTyping(Friend friend)
@@ -608,7 +622,7 @@ namespace SPIXI
                         Logging.error("App with id {0} is not installed.", app_id);
                     }
                 }
-                FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
+                Node.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
 
             });
         }
@@ -705,6 +719,73 @@ namespace SPIXI
                 case SpixiBotActionCode.banUser:
                     Node.addMessageWithType(null, FriendMessageType.banned, bot.walletAddress, 0, SpixiLocalization._SL("chat-banned"));
                     break;
+            }
+        }
+
+        public static void fetchAllFriendsPresences(int maxCount)
+        {
+            var friends = FriendList.friends.OrderBy(x => x.metaData.lastMessage.timestamp);
+            int count = 0;
+            foreach (var friend in friends)
+            {
+                if (count > maxCount)
+                {
+                    break;
+                }
+
+                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds)
+                {
+                    continue;
+                }
+
+                fetchFriendsPresence(friend);
+                count++;
+            }
+        }
+
+        public static void fetchAllFriendsPresencesInSector(Address address)
+        {
+            var friends = FriendList.friends;
+            foreach (var friend in friends)
+            {
+                if (friend.sectorNodes.Find(x => x.walletAddress.SequenceEqual(address)) == null)
+                {
+                    continue;
+                }
+
+                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds)
+                {
+                    continue;
+                }
+
+                fetchFriendsPresence(friend);
+            }
+        }
+
+        public static void fetchFriendsPresence(Friend friend)
+        {
+            if (friend.sectorNodes.Count() == 0)
+            {
+                CoreProtocolMessage.fetchSectorNodes(friend.walletAddress, Config.maxRelaySectorNodesToRequest);
+                return;
+            }
+
+            using (MemoryStream mw = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(mw))
+                {
+                    writer.WriteIxiVarInt(friend.walletAddress.addressNoChecksum.Length);
+                    writer.Write(friend.walletAddress.addressNoChecksum);
+                }
+
+                if (!StreamClientManager.sendToClient(friend.sectorNodes, ProtocolMessageCode.getPresence2, mw.ToArray(), null))
+                {
+                    // Not connected to contact's sector node
+
+                    var rnd = new Random();
+                    var sn = friend.sectorNodes[rnd.Next(friend.sectorNodes.Count - 1)];
+                    StreamClientManager.connectTo(sn.hostname, sn.walletAddress);
+                }
             }
         }
     }

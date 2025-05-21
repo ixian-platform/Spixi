@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Inventory;
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.RegNames;
@@ -33,6 +34,8 @@ namespace SPIXI.Meta
 
         public static bool generatedNewWallet = false;
 
+        public static NetworkClientManagerStatic networkClientManagerStatic = null;
+
         // Private data
 
         private static Thread mainLoopThread;
@@ -56,9 +59,13 @@ namespace SPIXI.Meta
 
             CoreConfig.simultaneousConnectedNeighbors = 6;
 
-            IxianHandler.init(Config.version, this, Config.networkType);
+            IxianHandler.init(Config.version, this, Config.networkType, false, Config.checksumLock);
 
             PeerStorage.init(Config.spixiUserFolder);
+
+            // Network configuration
+            networkClientManagerStatic = new NetworkClientManagerStatic(Config.maxRelaySectorNodesToConnectTo);
+            NetworkClientManager.init(networkClientManagerStatic);
 
             // Init TIV
             tiv = new TransactionInclusion(new SpixiTransactionInclusionCallbacks());
@@ -93,8 +100,6 @@ namespace SPIXI.Meta
             IxianHandler.localStorage.start();
 
             FriendList.loadContacts();
-
-            ProtocolMessage.resubscribeEvents();
         }
 
         static public void start()
@@ -143,6 +148,10 @@ namespace SPIXI.Meta
 
             // Start the network queue
             NetworkQueue.start();
+
+            InventoryCache.init(new InventoryCacheClient(tiv));
+
+            RelaySectors.init(CoreConfig.relaySectorLevels, null);
 
             // Start the keepalive thread
             PresenceList.startKeepAlive();
@@ -200,6 +209,14 @@ namespace SPIXI.Meta
             if (walletStorage.readWallet(password))
             {
                 IxianHandler.addWallet(walletStorage);
+
+                // Prepare the balances list
+                List<Address> address_list = IxianHandler.getWalletStorage().getMyAddresses();
+                foreach (Address addr in address_list)
+                {
+                    IxianHandler.balances.Add(new Balance(addr, 0));
+                }
+
                 return true;
             }
             return false;
@@ -225,7 +242,7 @@ namespace SPIXI.Meta
             NetworkClientManager.start(2);
 
             // Start the s2 client manager
-            StreamClientManager.start();
+            StreamClientManager.start(Config.maxConnectedStreamingNodes);
         }
 
         private static void connectToBotNodes()
@@ -237,9 +254,9 @@ namespace SPIXI.Meta
             }
             foreach (var bot_entry in bot_list)
             {
-                if (bot_entry.relayIP != null)
+                if (bot_entry.relayNode != null)
                 {
-                    StreamClientManager.connectTo(bot_entry.searchForRelay(), bot_entry.walletAddress);
+                    StreamClientManager.connectTo(bot_entry.relayNode.hostname, bot_entry.walletAddress);
                 }
             }
         }
@@ -247,7 +264,7 @@ namespace SPIXI.Meta
         // Handle timer routines
         static public void mainLoop()
         {
-            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressWithChecksum;
+            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum;
             if (primaryAddress == null)
                 return;
 
@@ -280,7 +297,9 @@ namespace SPIXI.Meta
                     // Request initial wallet balance
                     if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
                     {
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, getBalanceBytes, null);
+                        CoreProtocolMessage.broadcastProtocolMessage(['M', 'H', 'R'], ProtocolMessageCode.getBalance2, getBalanceBytes, null);
+                        CoreProtocolMessage.fetchSectorNodes(IxianHandler.primaryWalletAddress, Config.maxRelaySectorNodesToRequest);
+                        ProtocolMessage.fetchAllFriendsSectorNodes();
                     }
 
                     // Check price if enough time passed
@@ -591,6 +610,11 @@ namespace SPIXI.Meta
                 bool oldMessage = false;
 
                 Friend friend = FriendList.getFriend(wallet_address);
+
+                if (!friend.online)
+                {
+                    StreamProcessor.fetchFriendsPresence(friend);
+                }
 
                 // Check if the message was sent before the friend was added to the contact list
                 if (friend.addedTimestamp > friend_message.timestamp)

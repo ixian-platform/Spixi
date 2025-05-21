@@ -4,6 +4,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using SPIXI.Lang;
+using SPIXI.Meta;
 using System.Diagnostics;
 using Windows.Graphics;
 
@@ -69,6 +70,8 @@ public partial class App : MauiWinUIApplication
 
         SpixiLocalization.addCustomString("Platform", "Xamarin-WPF");
 
+        Config.readConfigFile(Config.configFilename);
+
         // Add prepare storage (copy/overwrite html folder with embedded one)
         copyResources();
     }
@@ -89,7 +92,7 @@ public partial class App : MauiWinUIApplication
     public void copyResources()
     {
         string sourceDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html");
-        string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Spixi", "html");
+        string targetDirectory = Path.Combine(Config.spixiUserFolder, "html");
 
         copyContents(sourceDirectory, targetDirectory);
     }

@@ -1,4 +1,5 @@
-﻿using IXICore.Meta;
+﻿using IXICore;
+using IXICore.Meta;
 using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
@@ -136,6 +137,13 @@ namespace SPIXI
                         Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
                         Navigation.RemovePage(this);
                     });
+
+                    // Prepare the balances list
+                    List<Address> address_list = IxianHandler.getWalletStorage().getMyAddresses();
+                    foreach (Address addr in address_list)
+                    {
+                        IxianHandler.balances.Add(new Balance(addr, 0));
+                    }
                 }
                 else
                 {

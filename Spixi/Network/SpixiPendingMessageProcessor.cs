@@ -1,5 +1,6 @@
 ﻿
 using IXICore;
+using IXICore.Meta;
 using IXICore.Streaming;
 
 namespace SPIXI.Network
@@ -13,7 +14,11 @@ namespace SPIXI.Network
         protected override void onMessageSent(Friend friend, int channel, StreamMessage msg)
         {
             UIHelpers.shouldRefreshContacts = true;
-            UIHelpers.updateMessage(friend, channel, friend.getMessage(channel, msg.id));
+            var fm = friend.getMessage(channel, msg.id);
+            if (fm != null)
+            {
+                UIHelpers.updateMessage(friend, channel, fm);
+            }
         }
     }
 }

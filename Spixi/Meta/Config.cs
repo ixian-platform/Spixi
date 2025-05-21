@@ -1,5 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Network;
+using System.Text;
 
 namespace SPIXI.Meta
 {
@@ -8,7 +10,7 @@ namespace SPIXI.Meta
         // Providing pre-defined values
         // Can be read from a file later, or read from the command line
 
-        public static NetworkType networkType = NetworkType.test;
+        public static NetworkType networkType = NetworkType.main;
 
         public static bool enablePushNotifications = true;
 
@@ -31,7 +33,7 @@ namespace SPIXI.Meta
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.9.5"; // Spixi version
+        public static readonly string version = "spixi-0.9.6-dev"; // Spixi version
 
         public static readonly string checkVersionUrl = "https://resources.ixian.io/spixi-update.txt";
         public static readonly int checkVersionSeconds = 1 * 60 * 60; // 1 hour
@@ -59,5 +61,111 @@ namespace SPIXI.Meta
         public static readonly int VoIP_sampleRate = 16000;
         public static readonly int VoIP_bitRate = 16;
         public static readonly int VoIP_channels = 1;
+
+
+        public static int maxRelaySectorNodesToRequest = 6;
+        public static int maxRelaySectorNodesToConnectTo = 3;
+
+        public static int contactSectorNodeIntervalSeconds = CoreConfig.clientPresenceExpiration / 2;
+
+        public static int maxLogSize = 5;
+        public static int maxLogCount = 1;
+
+        public static int logVerbosity = (int)LogSeverity.info + (int)LogSeverity.warn + (int)LogSeverity.error;
+
+        // Store the device id in a cache for reuse in later instances
+        public static string externalIp = "";
+
+        public static string configFilename = "ixian.cfg";
+
+        public static byte[] checksumLock = null;
+
+        public static int maxConnectedStreamingNodes = 6;
+
+        public static void readConfigFile(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                return;
+            }
+            Logging.info("Reading config file: " + filename);
+            bool foundAddPeer = false;
+            bool foundAddTestPeer = false;
+            List<string> lines = File.ReadAllLines(filename).ToList();
+            foreach (string line in lines)
+            {
+                string[] option = line.Split('=');
+                if (option.Length < 2)
+                {
+                    continue;
+                }
+                string key = option[0].Trim(new char[] { ' ', '\t', '\r', '\n' });
+                string value = option[1].Trim(new char[] { ' ', '\t', '\r', '\n' });
+
+                if (key.StartsWith(";"))
+                {
+                    continue;
+                }
+                Logging.info("Processing config parameter '" + key + "' = '" + value + "'");
+                switch (key)
+                {
+                    case "externalIp":
+                        externalIp = value;
+                        break;
+                    case "addPeer":
+                        if (!foundAddPeer)
+                        {
+                            NetworkUtils.seedNodes.Clear();
+                        }
+                        foundAddPeer = true;
+                        NetworkUtils.seedNodes.Add(new string[2] { value, null });
+                        break;
+                    case "addTestnetPeer":
+                        if (!foundAddTestPeer)
+                        {
+                            NetworkUtils.seedTestNetNodes.Clear();
+                        }
+                        foundAddTestPeer = true;
+                        NetworkUtils.seedTestNetNodes.Add(new string[2] { value, null });
+                        break;
+                    case "maxLogSize":
+                        maxLogSize = int.Parse(value);
+                        break;
+                    case "maxLogCount":
+                        maxLogCount = int.Parse(value);
+                        break;
+                    case "logVerbosity":
+                        logVerbosity = int.Parse(value);
+                        break;
+                    case "checksumLock":
+                        checksumLock = Encoding.UTF8.GetBytes(value);
+                        break;
+                    case "networkType":
+                        value = value.ToLower();
+                        switch (value)
+                        {
+                            case "mainnet":
+                                networkType = NetworkType.main;
+                                break;
+                            case "testnet":
+                                networkType = NetworkType.test;
+                                break;
+                            case "regtest":
+                                networkType = NetworkType.reg;
+                                break;
+                            default:
+                                throw new Exception(string.Format("Unknown network type '{0}'. Possible values are 'mainnet', 'testnet', 'regtest'", value));
+                        }
+                        break;
+                    case "spixiUserFolder":
+                        spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), value);
+                        break;
+                    default:
+                        // unknown key
+                        Logging.warn("Unknown config parameter was specified '" + key + "'");
+                        break;
+                }
+            }
+        }
     }
 }

@@ -88,7 +88,8 @@ namespace SPIXI
 
         public static SingleChatPage getChatPage(Friend friend)
         {
-            foreach (var item in App.appWindow.Navigation.NavigationStack)
+            
+            foreach (var item in App.Current.MainPage.Navigation.NavigationStack)
             {
                 if (item is SingleChatPage)
                 {
@@ -98,13 +99,27 @@ namespace SPIXI
                     }
                 }
             }
+
+            if (HomePage.Instance() != null
+                && HomePage.Instance().getDetailContent() != null)
+            {
+                var item = HomePage.Instance().getDetailContent();
+                if (item is SingleChatPage)
+                {
+                    if (((SingleChatPage)item).friend == friend)
+                    {
+                        return (SingleChatPage)item;
+                    }
+                }
+            }
+
             return null;
         }
 
         public static List<SingleChatPage> getChatPages()
         {
             List<SingleChatPage> chatPages = new();
-            foreach (var item in App.appWindow.Navigation.NavigationStack)
+            foreach (var item in App.Current.MainPage.Navigation.NavigationStack)
             {
                 if (item is SingleChatPage)
                 {

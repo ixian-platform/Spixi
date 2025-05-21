@@ -8,7 +8,6 @@ namespace SPIXI
         public static bool shouldRefreshContacts = true;
         public static bool shouldRefreshApps = true;
         public static bool refreshAppRequests = true;
-
         public static void setContactStatus(Address address, bool online, int unread, string excerpt, long timestamp)
         {
             Page page = Application.Current.MainPage.Navigation.NavigationStack.Last();
@@ -34,27 +33,27 @@ namespace SPIXI
 
         public static void updateMessage(Friend friend, int channel, FriendMessage msg)
         {
-            Utils.getChatPage(friend).updateMessage(msg, channel);
+            Utils.getChatPage(friend)?.updateMessage(msg, channel);
         }
 
         public static void insertMessage(Friend friend, int channel, FriendMessage msg)
         {
-            Utils.getChatPage(friend).insertMessage(msg, channel);
+            Utils.getChatPage(friend)?.insertMessage(msg, channel);
         }
 
         public static void deleteMessage(Friend friend, int channel, byte[] msgId)
         {
-            Utils.getChatPage(friend).deleteMessage(msgId, channel);
+            Utils.getChatPage(friend)?.deleteMessage(msgId, channel);
         }
 
         public static void updateReactions(Friend friend, int channel, byte[] msgId)
         {
-            Utils.getChatPage(friend).updateReactions(msgId, channel);
+            Utils.getChatPage(friend)?.updateReactions(msgId, channel);
         }
 
         public static void updateGroupChatNicks(Friend friend, Address realSenderAddress, string nick)
         {
-            Utils.getChatPage(friend).updateGroupChatNicks(realSenderAddress, nick);
+            Utils.getChatPage(friend)?.updateGroupChatNicks(realSenderAddress, nick);
         }
 
         public static bool isChatScreenDisplayed(Friend friend)
