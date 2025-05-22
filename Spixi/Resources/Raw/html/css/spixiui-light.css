@@ -55,8 +55,8 @@
     --colors-surface-02: #F5F5F5;
     --colors-surface-03: #EAEBEB;
     --colors-surface-04: #E3E3E3;
-    --colors-surface-05: #C5E0FC;
-    --colors-surface-bubble: #C9DFF7;
+    --colors-surface-05: #e0f0ff;
+    --colors-surface-bubble: #bdddff;
     --colors-surface-action: #0456a9;
     --colors-surface-action-hover: #003d79;
     --colors-surface-action-focused: #0565c7;
@@ -1032,6 +1032,7 @@ img.emoji {
     background: var(--colors-text-select);
     position: absolute;
     margin: 6px 40% 18px 60%;
+    border: 1px solid var(--colors-surface-brand-dark);
 }
 
 .unread .spixi-footer-chat-unread-indicator {
@@ -1332,7 +1333,6 @@ img.emoji {
 }
 
 .spixi-outline-button {
-    margin: 24px;
     height: 48px;
     border: 2px solid var(--colors-outline-action);
     border-radius: 12px;
@@ -1341,6 +1341,9 @@ img.emoji {
     font-weight: 600;
     color: var(--colors-text-action);
     padding-top: 12px;
+    margin: 16px auto;
+    width: calc(100% - 32px);
+    max-width: 640px;
 }
 
 .spixi-outline-button:hover {
@@ -2314,7 +2317,7 @@ img.emoji {
 
 .spixi-bubble > div
 {
-    padding: 12px 16px;
+    padding: 12px 12px;
     padding-bottom: 4px;
 }
 
@@ -2328,6 +2331,8 @@ img.emoji {
 .spixi-bubble .text img {
     max-width: 100%;
     object-fit: contain;
+    border-radius: 12px;
+    margin-bottom: 8px;
 }
 
 .spixi-bubble.file {
@@ -2350,7 +2355,7 @@ img.emoji {
 }
 
 .spixi-bubble .time {
-    font-size: 10px;
+    font-size: 11px;
     height: 20px;
     max-height: 20px;
     text-align: end;
@@ -2364,7 +2369,7 @@ img.emoji {
     align-items: center;
     justify-content: flex-end; 
     gap: 4px; 
-    padding-right: 12px;
+    padding-right: 16px;
     color: var(--colors-text-02);
 }
 
@@ -2382,6 +2387,7 @@ img.emoji {
     height: 32px;
     border-radius: 32px;
     object-fit: cover;
+        box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.3)
 }
 .spixi-bubble .avatar:hover {
     cursor: pointer;
@@ -2597,14 +2603,15 @@ img.emoji {
 
 .spixi-bubble .reactions {
     background: var(--colors-surface-01);
-    font-size: 10px;
+    font-size: 11px;
+    font-weight: 500;
     border-radius: 0px 0px 16px 16px;
-    padding: 4px 14px;
+    padding: 6px 6px;
     text-align: left;
 }
 
 .spixi-bubble.myself .reactions {
-    padding: 6px 12px;
+    padding: 6px 6px;
     background: var(--colors-surface-bubble);
 }
 
@@ -2614,7 +2621,10 @@ img.emoji {
 
 .spixi-bubble .reactions .reaction {
     display: inline-block;
-    margin-right: 16px;
+    margin-right: 4px;
+    background-color: var(--colors-surface-05);
+    padding: 8px;
+    border-radius: 20px;
 }
 
 .spixi-bubble .reactions .reaction img {
@@ -2624,7 +2634,7 @@ img.emoji {
 
 .spixi-bubble .reactions .reaction i {
     font-size: 16px;
-    line-height: 28px;
+    line-height: 16px;
     margin-right: 6px;
 }
 
@@ -2838,7 +2848,6 @@ img.emoji {
 .spixi-chat-unread-indicator {
     display: none;
     background: var(--colors-surface-success-inverse);
-    width: 100%;
     border-radius: 16px;
     padding: 2px 8px;
     color: var(--colors-text-inverse);
@@ -4675,6 +4684,7 @@ img.emoji {
 
 .spixi-chat-item-avatar-container {
     position: relative;
+    
 }
 
 .spixi-chat-item-message-container {
@@ -4698,6 +4708,7 @@ img.emoji {
     height: 14px;
     border-radius: 50%;
     background: var(--colors-icon-success);
+    border: 1.5px solid var(--colors-outline-01);
     position: absolute;
     bottom: 0;
     right: 0;
@@ -4712,10 +4723,11 @@ img.emoji {
     height: 48px;
     border-radius: 50%;
     object-fit: contain;
+    box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.3);
 }
 
 .private-messages-note {
-    margin: 0 auto;
+    margin: 12px auto;
     width: 100%;
     max-width: 312px;
     display: flex;
