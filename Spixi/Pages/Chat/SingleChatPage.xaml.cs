@@ -1233,6 +1233,7 @@ namespace SPIXI
                 string app_id;
                 string app_install_url = "";
                 string app_name = "";
+                string app_image = "img/app-noicon.jpg";
                 if (message.message.Contains("||"))
                 {
                     string[] app_id_data = message.message.Split(new[] { "||" }, StringSplitOptions.None);
@@ -1256,16 +1257,17 @@ namespace SPIXI
                 else
                 {
                     app_name = app.name;
+                    app_image = $"Apps/{app_id}/icon.png";
                 }
 
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
+                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, app_image, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
                 }
                 else
                 {
-                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
+                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, app_image, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
                 }
             }
 

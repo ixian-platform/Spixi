@@ -1023,7 +1023,7 @@ function updateTransactionStatus(txid, status, statusIcon) {
 }
 
 
-function addAppRequest(id, appid, appname, address, nick, avatar, time, localSender, sent, read, appStatus, appInstallURL) {
+function addAppRequest(id, appid, appname, appimage, address, nick, avatar, time, localSender, sent, read, appStatus, appInstallURL) {
 
     var title = SL_ChatAppInviteSent;
     if (localSender != "True") {
@@ -1031,7 +1031,13 @@ function addAppRequest(id, appid, appname, address, nick, avatar, time, localSen
     }
 
     var message = "<div id=\"app_" + appid + "\" class=\"txid-el\"><div class=\"title\"><i class=\"fas fa-rocket\"></i> " + title + "</div>";
-    message += "<div class=\"content\">" + appname + "</div></div>";
+
+    message += "<div class=\"content\" style=\"display: flex; align-items: center; gap: 8px;\">";
+    if (appimage) {
+        message += "<img src=\"" + appimage + "\" alt=\"app icon\" class=\"spixi-bubble-app-image\">";
+    }
+    message += "<span>" + appname + "</span></div>";
+
 
     var viewStyle = "display:none;";
     var appButtonIcon = "<i class=\"fas fa-wand-magic-sparkles\"></i> ";
