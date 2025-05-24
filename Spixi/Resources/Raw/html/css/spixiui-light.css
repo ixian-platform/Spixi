@@ -2692,6 +2692,13 @@ img.emoji {
     z-index: 4;
 }
 
+.spixi-bubble-app-image {
+    max-width: 32px;
+    max-height: 32px;
+    width: auto;
+    height: auto;
+}
+
 .chatholder {
     -moz-transition: all 0.6s ease-in-out;
     -ms-transition: all 0.6s ease-in-out;
