@@ -53,18 +53,17 @@
                 <div id="sendrequest" class="spixi-flat-button label-sm">
                     <i class="fas fa-globe"></i>&nbsp;*SL{apps-get-from-url}
                 </div>
-                <span class="body-sm">or</span>
+                <span class="body-sm s-text-01">or</span>
                 <div class="spixi-outline-button label-sm" onclick="scanAppCode()">
                     <i class="fas fa-qrcode"></i>&nbsp; *SL{apps-scan}
                 </div>
             </div>
 
-            <div class="important-notice-container">
+            <div class="important-notice-container extended push-to-bottom">
                 <i class="fa fa-lock"></i>
                 <div class="important-notice-text">
                     <span class="label-sm">*SL{apps-what-is-title}</span>
                     <span class="body-xs">*SL{apps-what-is-description}</span>
-                    <span class="label-xs s-text-link" onclick="redirectToSpixi()">*SL{apps-what-is-learn} <i class="fa fa-arrow-right"></i></span>
                 </div>
             </div>
         </section>
@@ -104,11 +103,6 @@
             const errLabel = document.getElementById("app-url-input-err-label");
             addressInput.className = "spixi-textfield add-mini-app-url-input add-mini-app-url-input-error"
             errLabel.style.display = 'block';
-        }
-
-        // TODO: check how this behaves in android/ios + change url with correct one
-        const redirectToSpixi = () => {
-            window.open("https://www.spixi.io/");
         }
     </script>
 
