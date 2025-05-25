@@ -17,8 +17,8 @@ namespace SPIXI
         public string appId = null;
         public byte[] sessionId = null; // App session ID
 
-        public Address myRequestAddress = null; // which address the app request was sent to
-        public Address requestedByAddress = null; // which address sent the app request to us
+        //public Address myRequestAddress = null; // which address the app request was sent to
+        //public Address requestedByAddress = null; // which address sent the app request to us
 
         public Address hostUserAddress = null; // address of the user that initiated the app
         private Address[] userAddresses = null; // addresses of all users connected to/using the app
@@ -32,7 +32,8 @@ namespace SPIXI
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            sessionId = Guid.NewGuid().ToByteArray();
+            // TODO randomize session id and add support for more users
+            sessionId = CryptoManager.lib.sha3_512sqTrunc(UTF8Encoding.UTF8.GetBytes(app_id));
 
             appId = app_id;
 
@@ -206,32 +207,47 @@ namespace SPIXI
 
         private void onBack()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
-            Node.MiniAppManager.removeAppPage(sessionId);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                Node.MiniAppManager.removeAppPage(sessionId);
+            });
         }
 
         public void networkDataReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkData", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkData", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public void appRequestAcceptReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public void appRequestRejectReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public void appEndSessionReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public bool hasUser(Address user)

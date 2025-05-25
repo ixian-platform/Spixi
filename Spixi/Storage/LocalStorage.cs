@@ -266,122 +266,125 @@ namespace SPIXI.Storage
         // Read the account file from local storage
         public bool readAccountFile()
         {
-            string account_filename = Path.Combine(documentsPath, accountFileName);
-
-            if (File.Exists(account_filename) == false)
+            lock (accountLock)
             {
-                Logging.log(LogSeverity.error, "Cannot read account file.");
+                string account_filename = Path.Combine(documentsPath, accountFileName);
 
-                // Generate a new wallet
-                return false;
-            }
-
-            BinaryReader reader;
-            try
-            {
-                reader = new BinaryReader(new FileStream(account_filename, FileMode.Open));
-            }
-            catch (Exception e)
-            {
-                Logging.error("Cannot open account file: {0}", e.Message);
-                return false;
-            }
-
-            int version = 0;
-
-            try
-            {
-                // TODO: decrypt data and compare the address/pubkey
-                version = reader.ReadInt32();
-                int address_length = reader.ReadInt32();
-                byte[] address = reader.ReadBytes(address_length);
-                string nick = reader.ReadString();
-
-                nickname = nick;
-
-                if(version < 3)
+                if (File.Exists(account_filename) == false)
                 {
-                    FriendList.contactsLoaded = true;
-                    FriendList.clear();
-                    int num_contacts = reader.ReadInt32();
-                    for (int i = 0; i < num_contacts; i++)
+                    Logging.log(LogSeverity.error, "Cannot read account file.");
+
+                    // Generate a new wallet
+                    return false;
+                }
+
+                BinaryReader reader;
+                try
+                {
+                    reader = new BinaryReader(new FileStream(account_filename, FileMode.Open));
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Cannot open account file: {0}", e.Message);
+                    return false;
+                }
+
+                int version = 0;
+
+                try
+                {
+                    // TODO: decrypt data and compare the address/pubkey
+                    version = reader.ReadInt32();
+                    int address_length = reader.ReadInt32();
+                    byte[] address = reader.ReadBytes(address_length);
+                    string nick = reader.ReadString();
+
+                    nickname = nick;
+
+                    if (version < 3)
                     {
-                        int friend_len = reader.ReadInt32();
-                        byte[] friend_bytes = reader.ReadBytes(friend_len);
+                        FriendList.contactsLoaded = true;
+                        FriendList.clear();
+                        int num_contacts = reader.ReadInt32();
+                        for (int i = 0; i < num_contacts; i++)
+                        {
+                            int friend_len = reader.ReadInt32();
+                            byte[] friend_bytes = reader.ReadBytes(friend_len);
 
-                        Friend friend = null;
-                        try
-                        {
-                            friend = new Friend(friend_bytes, version);
-                        }
-                        catch (Exception e)
-                        {
-                            Logging.error("Error reading contact from accounts file: " + e);
-                            continue;
-                        }
-
-                        string friend_path = Path.Combine(documentsPath, "Chats", friend.walletAddress.ToString());
-                        if (!Directory.Exists(friend_path))
-                        {
-                            Directory.CreateDirectory(friend_path);
-                        }
-
-                        if (friend.bot)
-                        {
-                            var files = Directory.EnumerateFiles(friend_path, "*.ixi");
-                            if (files.Count() > 0)
+                            Friend friend = null;
+                            try
                             {
-                                foreach (var file in files)
-                                {
-                                    File.Delete(file);
-                                }
+                                friend = new Friend(friend_bytes, version);
                             }
-                        }
-                        else
-                        {
-                            var files = Directory.EnumerateFiles(friend_path, "*.ixi");
-                            if (files.Count() > 0)
+                            catch (Exception e)
                             {
-                                string channel_path = Path.Combine(friend_path, "0");
-                                if (!Directory.Exists(channel_path))
+                                Logging.error("Error reading contact from accounts file: " + e);
+                                continue;
+                            }
+
+                            string friend_path = Path.Combine(documentsPath, "Chats", friend.walletAddress.ToString());
+                            if (!Directory.Exists(friend_path))
+                            {
+                                Directory.CreateDirectory(friend_path);
+                            }
+
+                            if (friend.bot)
+                            {
+                                var files = Directory.EnumerateFiles(friend_path, "*.ixi");
+                                if (files.Count() > 0)
                                 {
-                                    Directory.CreateDirectory(channel_path);
-                                }
-                                foreach (var file in files)
-                                {
-                                    if (!friend.bot)
-                                    {
-                                        File.Move(file, Path.Combine(channel_path, Path.GetFileName(file)));
-                                    }
-                                    else
+                                    foreach (var file in files)
                                     {
                                         File.Delete(file);
                                     }
                                 }
                             }
-                        }
+                            else
+                            {
+                                var files = Directory.EnumerateFiles(friend_path, "*.ixi");
+                                if (files.Count() > 0)
+                                {
+                                    string channel_path = Path.Combine(friend_path, "0");
+                                    if (!Directory.Exists(channel_path))
+                                    {
+                                        Directory.CreateDirectory(channel_path);
+                                    }
+                                    foreach (var file in files)
+                                    {
+                                        if (!friend.bot)
+                                        {
+                                            File.Move(file, Path.Combine(channel_path, Path.GetFileName(file)));
+                                        }
+                                        else
+                                        {
+                                            File.Delete(file);
+                                        }
+                                    }
+                                }
+                            }
 
-                        if(FriendList.addFriend(friend) != null)
-                        {
-                            friend.save();
-                            friend.saveMetaData();
+                            if (FriendList.addFriend(friend) != null)
+                            {
+                                friend.save();
+                                friend.saveMetaData();
+                            }
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Logging.error("Cannot read from account file: {0}", e);
-            }
+                catch (Exception e)
+                {
+                    Logging.error("Cannot read from account file: {0}", e);
+                }
 
-            reader.Close();
+                reader.Close();
 
-            if (version < 3)
-            {
-                writeAccountFile();
+                if (version < 3)
+                {
+                    writeAccountFile();
+                }
+
+                return true;
             }
-
-            return true;
         }
         
         // Write the account file to local storage
@@ -795,92 +798,101 @@ namespace SPIXI.Storage
         // Reads the message archive for a given wallet
         public bool readTransactionCacheFile()
         {
-            string tx_filename = Path.Combine(documentsPath, txCacheFileName);
-
-            if (!File.Exists(tx_filename))
-                return false;
-            
-            BinaryReader reader;
-            try
+            lock (txCacheLock)
             {
-                reader = new BinaryReader(new FileStream(tx_filename, FileMode.Open));
-            }
-            catch (Exception e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot open file. {0}", e.Message));
-                return false;
-            }
+                string tx_filename = Path.Combine(documentsPath, txCacheFileName);
 
-            TransactionCache.clearAllTransactions();
+                if (!File.Exists(tx_filename))
+                    return false;
 
-            int version = 0;
-            try
-            {
-                version = reader.ReadInt32();
+                BinaryReader reader;
+                FileStream fs;
+                try
+                {
+                    fs = new FileStream(tx_filename, FileMode.Open);
+                    reader = new BinaryReader(fs);
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Cannot open file. {0}", e.Message);
+                    return false;
+                }
+
+                TransactionCache.clearAllTransactions();
+
+                int version = 0;
+                try
+                {
+                    version = reader.ReadInt32();
+
+                    if (version < 3)
+                    {
+                        // Read confirmed transactions first
+                        int num_tx = reader.ReadInt32();
+                        for (int i = 0; i < num_tx; i++)
+                        {
+                            int data_length = reader.ReadInt32();
+                            byte[] data = reader.ReadBytes(data_length);
+
+                            Transaction transaction = new(data, true);
+                            TransactionCache.addTransaction(transaction, false);
+                        }
+
+                        // Read unconfirmed transactions
+                        int num_utx = reader.ReadInt32();
+                        for (int i = 0; i < num_utx; i++)
+                        {
+                            int data_length = reader.ReadInt32();
+                            byte[] data = reader.ReadBytes(data_length);
+
+                            Transaction transaction = new(data, true);
+                            TransactionCache.addUnconfirmedTransaction(transaction, false);
+                            Node.tiv.receivedNewTransaction(transaction);
+                        }
+                    }
+                    else
+                    {
+                        // Read confirmed transactions first
+                        int num_tx = reader.ReadInt32();
+                        for (int i = 0; i < num_tx; i++)
+                        {
+                            int data_length = reader.ReadInt32();
+                            byte[] data = reader.ReadBytes(data_length);
+                            StorageTransaction storageTransaction = new(data);
+                            TransactionCache.addTransaction(storageTransaction, false);
+                        }
+
+                        // Read unconfirmed transactions
+                        int num_utx = reader.ReadInt32();
+                        for (int i = 0; i < num_utx; i++)
+                        {
+                            int data_length = reader.ReadInt32();
+                            byte[] data = reader.ReadBytes(data_length);
+                            StorageTransaction storageTransaction = new(data);
+
+                            TransactionCache.addUnconfirmedTransaction(storageTransaction, false);
+                            Node.tiv.receivedNewTransaction(storageTransaction.transaction);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Cannot read from file. {0}", e.Message);
+                }
+
+                reader.Close();
+                reader.Dispose();
+
+                fs.Close();
+                fs.Dispose();
 
                 if (version < 3)
                 {
-                    // Read confirmed transactions first
-                    int num_tx = reader.ReadInt32();
-                    for (int i = 0; i < num_tx; i++)
-                    {
-                        int data_length = reader.ReadInt32();
-                        byte[] data = reader.ReadBytes(data_length);
-
-                        Transaction transaction = new(data, true);
-                        TransactionCache.addTransaction(transaction, false);
-                    }
-
-                    // Read unconfirmed transactions
-                    int num_utx = reader.ReadInt32();
-                    for (int i = 0; i < num_utx; i++)
-                    {
-                        int data_length = reader.ReadInt32();
-                        byte[] data = reader.ReadBytes(data_length);
-
-                        Transaction transaction = new(data, true);
-                        TransactionCache.addUnconfirmedTransaction(transaction, false);
-                        Node.tiv.receivedNewTransaction(transaction);
-                    }
+                    writeTransactionCacheFile();
                 }
-                else
-                {
-                    // Read confirmed transactions first
-                    int num_tx = reader.ReadInt32();
-                    for (int i = 0; i < num_tx; i++)
-                    {
-                        int data_length = reader.ReadInt32();
-                        byte[] data = reader.ReadBytes(data_length);
-                        StorageTransaction storageTransaction = new(data);
-                        TransactionCache.addTransaction(storageTransaction);
-                    }
 
-                    // Read unconfirmed transactions
-                    int num_utx = reader.ReadInt32();
-                    for (int i = 0; i < num_utx; i++)
-                    {
-                        int data_length = reader.ReadInt32();
-                        byte[] data = reader.ReadBytes(data_length);
-                        StorageTransaction storageTransaction = new(data);
-
-                        TransactionCache.addUnconfirmedTransaction(storageTransaction);
-                        Node.tiv.receivedNewTransaction(storageTransaction.transaction);
-                    }
-                }
+                return true;
             }
-            catch (Exception e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot read from file. {0}", e.Message));
-            }
-
-            reader.Close();
-
-            if(version < 3)
-            {
-                writeTransactionCacheFile();
-            }
-
-            return true;
         }
 
         // Writes the cached offline messages to a file
@@ -900,7 +912,7 @@ namespace SPIXI.Storage
                 }
                 catch (Exception e)
                 {
-                    Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
+                    Logging.error("Cannot create file. {0}", e.Message);
                     return false;
                 }
 

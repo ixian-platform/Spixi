@@ -75,7 +75,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public async Task<MiniApp?> fetch(string url, long maxSizeBytes = 1 * 1024 * 1024) // 1 MB default limit
+        public async Task<MiniApp?> fetch(string url, long maxSizeBytes = 10 * 1024 * 1024) // 10 MB default limit
         {
             if (string.IsNullOrWhiteSpace(url) || !Uri.TryCreate(url, UriKind.Absolute, out Uri uri) || uri.Scheme != Uri.UriSchemeHttps)
             {
@@ -403,13 +403,16 @@ namespace SPIXI.MiniApps
             return appList;
         }
 
-        public MiniAppPage getAppPage(byte[] session_id)
+        public MiniAppPage getAppPage(Address sender_address, byte[] session_id)
         {
             lock (appPages)
             {
                 if (appPages.ContainsKey(session_id))
                 {
-                    return appPages[session_id];
+                    if (appPages[session_id].hasUser(sender_address))
+                    {
+                        return appPages[session_id];
+                    }
                 }
                 return null;
             }
@@ -422,7 +425,7 @@ namespace SPIXI.MiniApps
                 var pages = appPages.Values.Where(x => x.appId.SequenceEqual(app_id) && x.hasUser(sender_address));
                 if (pages.Any())
                 {
-                    return getAppPage(pages.First().sessionId);
+                    return getAppPage(sender_address, pages.First().sessionId);
                 }
                 return null;
             }
@@ -449,25 +452,25 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public MiniAppPage acceptAppRequest(byte[] session_id)
+        public MiniAppPage acceptAppRequest(Address sender_address, byte[] session_id)
         {
-            MiniAppPage app_page = getAppPage(session_id);
+            MiniAppPage app_page = getAppPage(sender_address, session_id);
             if (app_page != null)
             {
                 app_page.accepted = true;
-                StreamProcessor.sendAppRequestAccept(FriendList.getFriend(app_page.requestedByAddress), session_id);
+                StreamProcessor.sendAppRequestAccept(FriendList.getFriend(sender_address), session_id);
             }
             return app_page;
         }
 
-        public void rejectAppRequest(byte[] session_id)
+        public void rejectAppRequest(Address sender_address, byte[] session_id)
         {
-            MiniAppPage app_page = getAppPage(session_id);
+            MiniAppPage app_page = getAppPage(sender_address, session_id);
             if (app_page != null)
             {
                 if (removeAppPage(session_id))
                 {
-                    StreamProcessor.sendAppRequestReject(FriendList.getFriend(app_page.requestedByAddress), session_id);
+                    StreamProcessor.sendAppRequestReject(FriendList.getFriend(sender_address), session_id);
                 }
             }
         }

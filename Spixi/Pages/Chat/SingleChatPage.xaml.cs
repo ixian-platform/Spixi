@@ -959,7 +959,7 @@ namespace SPIXI
                         {
                             icon = "";
                         }
-                        Utils.sendUiCommand(this, "addApp", app.id, app.name, icon);
+                        Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher);
                     }
                     catch (Exception e)
                     {

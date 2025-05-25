@@ -1269,7 +1269,7 @@ namespace SPIXI
                     {
                         icon = "";
                     }
-                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
+                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.SingleUser).ToString(), app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
                 }
             }
         }
@@ -1293,7 +1293,11 @@ namespace SPIXI
             {
                 HandlePickAppMultiUserSucceeded(sender, e, appId);
             };
-            Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
+            });
         }
 
         private async void HandlePickAppMultiUserSucceeded(object sender, SPIXI.EventArgs<string> e, string appId)
@@ -1313,8 +1317,6 @@ namespace SPIXI
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
 
-                string install_url = Node.MiniAppManager.getAppInstallURL(appId);
-
                 FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, appId, true, null, 0, false);
                 StreamProcessor.sendAppRequest(friend, appId, session_id, null);
             }
@@ -1330,12 +1332,15 @@ namespace SPIXI
             miniAppPage.accepted = true;
             Node.MiniAppManager.addAppPage(miniAppPage);
 
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async() =>
             {
-                Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+                await Task.Delay(200); // WinUI Crash fix
+                await Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
             });
+
             return miniAppPage.sessionId;
         }
+
         public async void onInstallApp(string appUrl)
         {
             MiniApp? app = await Node.MiniAppManager.fetch(appUrl);

@@ -53,7 +53,7 @@
                     <span class="heading-xs s-text-01" data-role="AppName"></span>
                     <span class="label-sm s-text-02" data-role="AppPublisher"></span>
                     <!--                    TODO: add display none if not verified-->
-                    <span class="label-xs s-text-success"><i class="fas fa-lock"></i> Verified</span>
+                    <span class="label-xs s-text-success" style="display:none;"><i class="fas fa-lock"></i> Verified</span>
                 </div>
             </div>
             <div class="spixi-app-details-properties">
@@ -210,9 +210,32 @@
             </div>
         </div>
     </div>
-   
+
+
+    <!-- Multi user app modal -->
+    <div id="multiUserAppModal" class="new-modal-wrapper" style="display: none;">
+        <div class="new-modal-container" id="multiUserModalContent">
+            <img src="img/people-arrows-icon.png" alt="people-arrows-icon" width="32" height="32" />
+            <div class="new-modal-texts">
+                <span class="label-lg">Multi-user App</span>
+                <span class="body-sm">This app supports more than one user. Would you like to invite one of your contacts?</span>
+            </div>
+            <div class="new-modal-buttons">
+                <div class="spixi-flat-button label-sm"
+                     onclick="launchMultiUserMode(this)">
+                    <i class="fas fa-user-plus"></i>Invite Contact
+                </div>
+                <div class="spixi-flat-button label-sm button outline"
+                     onclick="launchSoloMode(this)">
+                    <i class="fas fa-person"></i>Launch Solo Mode
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script type="text/javascript">
-        function init(name, icon, publisher, description, version, url, size, capabilities, appId, isMultiuser, isAppInstalled, isAppVerified) {
+        function init(name, icon, publisher, description, version, url, size, capabilities, appId, isSingleUser, isMultiuser, isAppInstalled, isAppVerified) {
             icon = icon.replace(/&#92;/g, '\\');
 
             const mappedCapsToArray = capabilities?.split(',').map(cap => cap.trim()) || [];
@@ -229,7 +252,7 @@
 
             document.getElementById("AppDescription").textContent = description;
             document.getElementById("AppVersion").textContent = version;
-            document.getElementById("AppSize").textContent = size;         
+            document.getElementById("AppSize").textContent = size;
             document.getElementById("installUrlValue").textContent = url;
 
             document.getElementById("source").textContent = url;
@@ -247,28 +270,28 @@
             const appDetailsSection = document.getElementById("appDetailsSection");
             if (parseBoolean(isAppInstalled)) {
                 const launchAppItem = `
-                 <div id="launchButton" class="add-mini-app-buttons spixi-app-details-buttons" data-is-multiuser="${parseBoolean(isMultiuser)}">
-                    <div class="spixi-flat-button label-sm" onclick="launchAppHandler()">
-                    <i class="fas fa-arrow-right"></i>&nbsp; *SL{apps-launch-app}
-                </div>
-                <div class="spixi-flat-button label-sm button outline" onclick="removeAppHandler()">
-                     *SL{apps-remove-app}
-                </div>
-                </div>`;
+                     <div id="launchButton" class="add-mini-app-buttons spixi-app-details-buttons" data-single-user="${parseBoolean(isSingleUser)}" data-multi-user="${parseBoolean(isMultiuser)}" onclick="onLaunchHandler(this)">
+                        <div class="spixi-flat-button label-sm">
+                        <i class="fas fa-arrow-right"></i>&nbsp; *SL{apps-launch-app}
+                    </div>
+                    <div class="spixi-flat-button label-sm button outline" onclick="removeAppHandler()">
+                         *SL{apps-remove-app}
+                    </div>
+                    </div>`;
 
                 appDetailsSection.insertAdjacentHTML("beforeend", launchAppItem);
 
             } else {
                 const installAppItem = `
-                <div class="add-mini-app-buttons spixi-app-details-buttons">
-                    <div class="spixi-flat-button label-sm" onclick="toggleAnimatedSlider('install-mini-app-prompt')">
-                        <i class="fas fa-arrows-down-to-line"></i>&nbsp; *SL{apps-details-download}
+                    <div class="add-mini-app-buttons spixi-app-details-buttons">
+                        <div class="spixi-flat-button label-sm" onclick="toggleAnimatedSlider('install-mini-app-prompt')">
+                            <i class="fas fa-arrows-down-to-line"></i>&nbsp; *SL{apps-details-download}
+                        </div>
+                        <span class="label-xs s-text-02" style="max-width: 244px;text-align: center">
+                            *SL{apps-details-download-note}
+                        </span>
                     </div>
-                    <span class="label-xs s-text-02" style="max-width: 244px;text-align: center">
-                        *SL{apps-details-download-note}
-                    </span>
-                </div>
-                `;
+                    `;
 
                 appDetailsSection.insertAdjacentHTML("beforeend", installAppItem);
             }
@@ -290,18 +313,70 @@
         });
 
         function viewAppDetails() {
-            window.location.href = 'ixian:details';          
+            window.location.href = 'ixian:details';
         }
 
-        function launchAppHandler() {
-            const appId = document.getElementById("AppID").textContent;
-            const isMultiuser = document.getElementById("launchButton")?.getAttribute('data-is-multiuser') === "true";
+        function onLaunchHandler(element) {
+            const multiUserModal = document.getElementById("multiUserAppModal");
+            const modalContent = document.getElementById("multiUserModalContent");
 
-            if (isMultiuser) {
-                //TODO: change this to start MULTIUSER mode!!!
+            multiUserModal.setAttribute("data-app-id", null);
+
+            const appId = document.getElementById("AppID").textContent;
+            const isSingleUser = element.getAttribute('data-single-user') === "true";
+            const isMultiuser = element.getAttribute('data-multi-user') === "true";
+
+            //show multi-user modal if true
+            if (isSingleUser
+                && isMultiuser) {
+                multiUserModal.style.display = "flex";
+                multiUserModal.setAttribute("data-app-id", appId);
+
+                setTimeout(() => {
+                    function handleClickOutside(event) {
+                        const clickedInsideModal = modalContent.contains(event.target);
+                        const clickedInsideWrapper = multiUserModal.contains(event.target);
+
+                        if (clickedInsideWrapper && !clickedInsideModal) {
+                            multiUserModal.style.display = "none";
+                            document.removeEventListener("click", handleClickOutside);
+                        }
+                    }
+
+                    document.addEventListener("click", handleClickOutside);
+                }, 10);
+            }
+            //else just start the app in solo mode
+            else if (isSingleUser) {
+                window.location.href = `ixian:startApp:${appId}`;
+            }
+            //else just start the app in multiuser mode
+            else if (isMultiuser) {
+                window.location.href = `ixian:startAppMulti:${appId}`;
+            }
+        }
+
+        function launchSoloMode(buttonElement) {
+            const multiUserModal = document.getElementById("multiUserAppModal");
+            const appId = buttonElement.closest('#multiUserAppModal')?.getAttribute('data-app-id');
+
+            if (appId) {
+                multiUserModal.style.display = "none";
                 window.location.href = `ixian:startApp:${appId}`;
             } else {
-                window.location.href = `ixian:startApp:${appId}`;
+                console.error("App ID not found.");
+            }
+        }
+
+        function launchMultiUserMode(buttonElement) {
+            const multiUserModal = document.getElementById("multiUserAppModal");
+            const appId = buttonElement.closest('#multiUserAppModal')?.getAttribute('data-app-id');
+
+            if (appId) {
+                multiUserModal.style.display = "none";
+                window.location.href = `ixian:startAppMulti:${appId}`;
+            } else {
+                console.error("App ID not found.");
             }
         }
 
@@ -325,7 +400,7 @@
         }
 
 
-        function confirmInstallCall(){
+        function confirmInstallCall() {
             location.href = 'ixian:install';
             toggleAnimatedSlider('install-mini-app-prompt');
         }
@@ -333,7 +408,7 @@
         function confirmRemoveApp() {
             document.getElementById('removeAppModal').style.display = 'none';
             document.getElementById("removingAppLoader").style.display = "flex";
-            location.href = 'ixian:uninstall';           
+            location.href = 'ixian:uninstall';
         }
 
         function showAppRemoved() {

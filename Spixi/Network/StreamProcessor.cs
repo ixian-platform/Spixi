@@ -1133,7 +1133,7 @@ namespace SPIXI
                 VoIPManager.onData(app_data.sessionId, app_data.data);
                 return;
             }
-            MiniAppPage app_page = Node.MiniAppManager.getAppPage(app_data.sessionId);
+            MiniAppPage app_page = Node.MiniAppManager.getAppPage(sender_address, app_data.sessionId);
             if(app_page == null)
             {
                 Logging.error("App with session id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
@@ -1228,7 +1228,7 @@ namespace SPIXI
             msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg.data = spixi_msg.getBytes();
 
-            sendMessage(friend, msg, true, true, false);
+            sendMessage(friend, msg, true, false, false);
         }
 
         private static void handleAppRequest(Address sender_address, Address recipient_address, byte[] app_data_raw)
@@ -1256,7 +1256,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage app_page = am.getAppPage(app_data.sessionId);
+            MiniAppPage app_page = am.getAppPage(sender_address, app_data.sessionId);
             if (app_page != null)
             {
                 Logging.error("App with session id: {0} already exists.", Crypto.hashToString(app_data.sessionId));
@@ -1323,7 +1323,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(app_data.sessionId);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, app_data.sessionId);
             if(page == null)
             {
                 Logging.info("App session does not exist.");
@@ -1350,7 +1350,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(session_id);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");
@@ -1375,7 +1375,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(session_id);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");

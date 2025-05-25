@@ -267,7 +267,7 @@ namespace SPIXI
             }
         }
 
-        public void onAppAccept(string session_id)
+        public void onAppAccept(Address sender_address, string session_id)
         {
             byte[] b_session_id = Crypto.stringToHash(session_id);
             if (VoIPManager.hasSession(b_session_id))
@@ -275,14 +275,14 @@ namespace SPIXI
                 VoIPManager.acceptCall(b_session_id);
                 return;
             }
-            MiniAppPage app_page = Node.MiniAppManager.acceptAppRequest(b_session_id);
+            MiniAppPage app_page = Node.MiniAppManager.acceptAppRequest(sender_address, b_session_id);
             if (app_page != null)
             {
                 Navigation.PushAsync(app_page, Config.defaultXamarinAnimations);
             }// TODO else error?
         }
 
-        public void onAppReject(string session_id)
+        public void onAppReject(Address sender_address, string session_id)
         {
             byte[] b_session_id = Crypto.stringToHash(session_id);
             if (VoIPManager.hasSession(b_session_id))
@@ -290,7 +290,7 @@ namespace SPIXI
                 VoIPManager.rejectCall(b_session_id);
                 return;
             }
-            Node.MiniAppManager.rejectAppRequest(b_session_id);
+            Node.MiniAppManager.rejectAppRequest(sender_address, b_session_id);
         }
 
         public virtual void updateScreen()
@@ -338,13 +338,13 @@ namespace SPIXI
         {
             if (url.StartsWith("ixian:appAccept:"))
             {
-                string session_id = url.Substring("ixian:appAccept:".Length);
-                onAppAccept(session_id);
+                var split = url.Split(':');
+                onAppAccept(new Address(split[2]), split[3]);
             }
             else if (url.StartsWith("ixian:appReject:"))
             {
-                string session_id = url.Substring("ixian:appReject:".Length);
-                onAppReject(session_id);
+                var split = url.Split(':');
+                onAppReject(new Address(split[2]), split[3]);
             }
             else if (url.StartsWith("ixian:hangUp:"))
             {

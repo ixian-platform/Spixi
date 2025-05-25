@@ -600,7 +600,7 @@
         appsNode.style.display = 'grid';
     }
 
-    function addApp(id, name, icon, publisher, isMultiuser) {
+    function addApp(id, name, icon, publisher, isSingleUser, isMultiuser) {
         const mappedIcon = icon.replace(/&#92;/g, '\\');
 
         const singleApp = `<div class="mini-apps-list-single-item">
@@ -610,7 +610,7 @@
         <div class="mini-apps-single-item-info s-text-01">
             <span class="label-sm appNameItem">${name}</span>
             <span class="body-xs">${publisher}</span>
-            <div class="launchBtn" data-app-id="${id}" data-multi-user="${parseBoolean(isMultiuser)}">
+            <div class="launchBtn" data-app-id="${id}" data-single-user="${parseBoolean(isSingleUser)}" data-multi-user="${parseBoolean(isMultiuser)}">
                 <span class="label-xs s-text-action">*SL{apps-launch} <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
@@ -635,10 +635,12 @@
         multiUserModal.setAttribute("data-app-id", null);
 
         const appId = element.getAttribute('data-app-id');
+        const isSingleUser = element.getAttribute('data-single-user') === "true";
         const isMultiuser = element.getAttribute('data-multi-user') === "true";
 
         //show multi-user modal if true
-        if (isMultiuser) {
+        if (isSingleUser
+            && isMultiuser) {
             multiUserModal.style.display = "flex";
             multiUserModal.setAttribute("data-app-id", appId);
 
@@ -657,8 +659,12 @@
             }, 10);
         }
         //else just start the app in solo mode
-        else {
+        else if (isSingleUser) {
             window.location.href = `ixian:startApp:${appId}`;
+        }
+        //else just start the app in multiuser mode
+        else if (isMultiuser) {
+            window.location.href = `ixian:startAppMulti:${appId}`;
         }
     }
 
