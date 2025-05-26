@@ -398,6 +398,12 @@ namespace SPIXI.MiniApps
             return null;
         }
 
+        public string getAppInfo(string app_id)
+        {
+            MiniApp mini_app = getApp(app_id);
+            return $"{app_id}||{mini_app.url}||{mini_app.name}"; // TODO pack this information better
+        }
+
         public Dictionary<string, MiniApp> getInstalledApps()
         {
             return appList;

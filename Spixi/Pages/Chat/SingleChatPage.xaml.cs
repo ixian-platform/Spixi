@@ -30,6 +30,8 @@ namespace SPIXI
 
         private HomePage? homePage;
 
+        private bool reload = false;
+
         public SingleChatPage(Friend fr) : this(fr, null)
         {
         }
@@ -58,11 +60,20 @@ namespace SPIXI
 
         protected override void OnAppearing()
         {
+            base.OnAppearing();
             if (friend != null)
             {
                 friend.chat_page = this;
             }
-            base.OnAppearing();
+
+            if (reload)
+            {
+                reload = false;
+
+                loadApps();
+                loadMessages();
+            }
+
         }
 
 
@@ -769,8 +780,9 @@ namespace SPIXI
                 return;
             }
 
-            FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, app_id, true, null, 0, false);
-            StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
+            var msg = StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
+            var app_info = Node.MiniAppManager.getAppInfo(app_id);
+            FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
         }
 
         public void onJoinApp(string app_id)
@@ -810,9 +822,10 @@ namespace SPIXI
 
             app.url = app_url;
 
+            reload = true;
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, true), Config.defaultXamarinAnimations);
             });
         }
 
@@ -942,6 +955,7 @@ namespace SPIXI
 
         public void loadApps()
         {
+            Utils.sendUiCommand(this, "clearApps");
             var apps = Node.MiniAppManager.getInstalledApps();
             lock (apps)
             {

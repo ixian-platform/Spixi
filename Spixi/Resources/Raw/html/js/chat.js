@@ -1271,6 +1271,13 @@ function clearMessages(showMore) {
     }
 }
 
+function clearApps(showMore) {
+    const appsContainer = document.getElementById("AppsMenu");
+    const itemsContainer = appsContainer.querySelector(".choose-apps-items-container");
+
+    itemsContainer.innerHTML = "";
+}
+
 
 function displayContextMenu(e) {
     var contextMenuEl = document.getElementById("ContextMenu");

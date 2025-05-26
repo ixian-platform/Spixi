@@ -15,6 +15,8 @@ namespace SPIXI
 
         MiniApp fetchedApp = null;
 
+        bool fromChat = false;
+
         public AppDetailsPage(string app_id)
         {
             InitializeComponent();
@@ -26,9 +28,11 @@ namespace SPIXI
             loadPage(webView, "app_details.html");
         }
 
-        public AppDetailsPage(MiniApp app)
+        public AppDetailsPage(MiniApp app, bool fromChat = false)
         {
             InitializeComponent();
+
+            this.fromChat = fromChat;
 
             fetchedApp = app;
 
@@ -145,7 +149,8 @@ namespace SPIXI
                 app.hasCapability(MiniAppCapabilities.SingleUser).ToString(),
                 app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), 
                 app_installed.ToString(),
-                app_verified.ToString());
+                app_verified.ToString(),
+                (!fromChat).ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -196,7 +201,7 @@ namespace SPIXI
                 return;
             }
 
-            Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new AppDetailsPage(app, fromChat), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
         }
 
@@ -261,8 +266,9 @@ namespace SPIXI
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
 
-                FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, appId, true, null, 0, false);
-                StreamProcessor.sendAppRequest(friend, appId, session_id, null);
+                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null);
+                var app_info = Node.MiniAppManager.getAppInfo(appId);
+                FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
             }
             catch (Exception ex)
             {

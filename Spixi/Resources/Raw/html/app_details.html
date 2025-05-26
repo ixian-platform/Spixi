@@ -235,7 +235,7 @@
 
 
     <script type="text/javascript">
-        function init(name, icon, publisher, description, version, url, size, capabilities, appId, isSingleUser, isMultiuser, isAppInstalled, isAppVerified) {
+        function init(name, icon, publisher, description, version, url, size, capabilities, appId, isSingleUser, isMultiuser, isAppInstalled, isAppVerified, displayLaunch) {
             icon = icon.replace(/&#92;/g, '\\');
 
             const mappedCapsToArray = capabilities?.split(',').map(cap => cap.trim()) || [];
@@ -269,14 +269,18 @@
             //check if installed and append correct content
             const appDetailsSection = document.getElementById("appDetailsSection");
             if (parseBoolean(isAppInstalled)) {
-                const launchAppItem = `
-                     <div id="launchButton" class="add-mini-app-buttons spixi-app-details-buttons" data-single-user="${parseBoolean(isSingleUser)}" data-multi-user="${parseBoolean(isMultiuser)}" onclick="onLaunchHandler(this)">
-                        <div class="spixi-flat-button label-sm">
-                        <i class="fas fa-arrow-right"></i>&nbsp; *SL{apps-launch-app}
-                    </div>
-                    <div class="spixi-flat-button label-sm button outline" onclick="removeAppHandler()">
-                         *SL{apps-remove-app}
-                    </div>
+                var launchAppItem = `
+                     <div id="launchButton" class="add-mini-app-buttons spixi-app-details-buttons" data-single-user="${parseBoolean(isSingleUser)}" data-multi-user="${parseBoolean(isMultiuser)}">`;
+                if (parseBoolean(displayLaunch)) {
+                    launchAppItem += `
+                        <div class="spixi-flat-button label-sm" onclick="onLaunchHandler(this.parentNode)">
+                            <i class="fas fa-arrow-right"></i>&nbsp; *SL{apps-launch-app}
+                        </div>`;
+                }
+                launchAppItem += `
+                        <div class="spixi-flat-button label-sm button outline" onclick="removeAppHandler()">
+                             *SL{apps-remove-app}
+                        </div>
                     </div>`;
 
                 appDetailsSection.insertAdjacentHTML("beforeend", launchAppItem);

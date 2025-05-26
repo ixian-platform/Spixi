@@ -1316,9 +1316,10 @@ namespace SPIXI
                 await Navigation.PopAsync(Config.defaultXamarinAnimations);
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
-
-                FriendList.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, appId, true, null, 0, false);
-                StreamProcessor.sendAppRequest(friend, appId, session_id, null);
+                
+                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null);
+                var app_info = Node.MiniAppManager.getAppInfo(appId);
+                FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
             }
             catch (Exception ex)
             {
