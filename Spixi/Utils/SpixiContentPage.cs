@@ -261,7 +261,7 @@ namespace SPIXI
                     {
                         Friend f = VoIPManager.currentCallContact;
                         string text = SpixiLocalization._SL("global-call-incoming") + " - " + f.nickname;
-                        Utils.sendUiCommand(this, "addCallAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text);
+                        Utils.sendUiCommand(this, "addCallAppRequest", f.walletAddress.ToString(), Crypto.hashToString(VoIPManager.currentCallSessionId), text);
                     }
                 }
             }
