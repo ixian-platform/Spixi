@@ -59,5 +59,7 @@ namespace SPIXI.Meta
         public static readonly int VoIP_sampleRate = 16000;
         public static readonly int VoIP_bitRate = 16;
         public static readonly int VoIP_channels = 1;
+
+        public static readonly long backupReminder = 86400 * 30; // 1 month
     }
 }

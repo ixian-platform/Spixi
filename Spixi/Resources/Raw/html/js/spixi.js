@@ -319,15 +319,20 @@ function parseBoolean(value) {
 
 function toggleAnimatedSlider(elementId) {
     const slideUpContainer = document.getElementById(elementId);
+    const toolbarEl = document.getElementById("toolbar");
 
     if (slideUpContainer.classList.contains('active')) {
         slideUpContainer.classList.remove('active');
         document.getElementById("wrap").classList.remove("blurredContent");
-        document.getElementById("toolbar").classList.remove("blurredContent");
+        if (toolbarEl != null) {
+            toolbarEl.classList.remove("blurredContent");
+        }
     } else {
         slideUpContainer.classList.add('active');
         document.getElementById("wrap").classList.add("blurredContent");
-        document.getElementById("toolbar").classList.add("blurredContent");
+        if (toolbarEl != null) {
+            toolbarEl.classList.add("blurredContent");
+        }
     }
 }
 

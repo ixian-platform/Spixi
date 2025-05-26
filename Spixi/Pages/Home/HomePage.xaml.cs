@@ -1038,12 +1038,22 @@ namespace SPIXI
             }
         }
 
-
+        private void displayBackupReminder()
+        {
+            if (!Preferences.Default.ContainsKey("backupReminderTimestamp")
+                || Clock.getTimestamp() - long.Parse(Preferences.Default.Get("backupReminderTimestamp", "").ToString()) > Config.backupReminder)
+            {
+                Utils.sendUiCommand(this, "toggleAnimatedSlider", "backup-prompt");
+                Preferences.Default.Set("backupReminderTimestamp", Clock.getTimestamp().ToString());
+            }
+        }
 
         // Executed every second
         public override void updateScreen()
         {
             base.updateScreen();
+
+            displayBackupReminder();
 
             loadApps();
             loadChats();
