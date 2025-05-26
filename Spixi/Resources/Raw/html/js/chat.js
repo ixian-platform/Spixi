@@ -205,6 +205,8 @@ function hideBackButton() {
     placeholder.style.width = "12px";
     placeholder.style.minWidth = "12px";
     backBtn.parentNode.replaceChild(placeholder, backBtn);
+
+    document.getElementById("left-separator").style.display = "block";
 }
 
 document.getElementById("backbtn").onclick = function () {

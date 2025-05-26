@@ -4902,3 +4902,14 @@ img.emoji {
     max-width: 690px;
     margin: 0 auto;
 }
+
+#left-separator {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    width: 2px;
+    height: 100vh;
+    background-color: var(--colors-outline-02);
+    z-index: 99;
+    pointer-events: none;
+}

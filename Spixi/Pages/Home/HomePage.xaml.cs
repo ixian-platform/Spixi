@@ -80,7 +80,6 @@ namespace SPIXI
             rightContent.Content = defaultDetailContent.Content;
 
             this.SizeChanged += OnPageSizeChanged;
-            separator.Color = Color.FromArgb("#17181C");
 
             if (!running)
             {
@@ -119,8 +118,8 @@ namespace SPIXI
             {
                 // Show only main pane
                 mainGrid.ColumnDefinitions[0].Width = GridLength.Star;
+                //mainGrid.ColumnDefinitions[1].Width = new GridLength(0);
                 mainGrid.ColumnDefinitions[1].Width = new GridLength(0);
-                mainGrid.ColumnDefinitions[2].Width = new GridLength(0);
                 rightContent.IsVisible = false;
                 removeDetailContent();
             }
@@ -128,8 +127,8 @@ namespace SPIXI
             {
                 // Show both panes
                 mainGrid.ColumnDefinitions[0].Width = new GridLength(400);
-                mainGrid.ColumnDefinitions[1].Width = new GridLength(2);
-                mainGrid.ColumnDefinitions[2].Width = GridLength.Star;
+                //mainGrid.ColumnDefinitions[1].Width = new GridLength(2);
+                mainGrid.ColumnDefinitions[1].Width = GridLength.Star;
                 rightContent.IsVisible = true;
             }
         }
