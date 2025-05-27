@@ -182,7 +182,7 @@
             var contactEntry = document.createElement("div");
             contactEntry.className = "spixi-list-item";
             //contactEntry.innerHTML = '<a href="javascript:selectRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="fa fa-square spixi-list-item-action-icon"></i></div></div></a>';
-            contactEntry.innerHTML = '<a href="javascript:selectSingleRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-10 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+            contactEntry.innerHTML = '<a href="javascript:selectSingleRecipient(\'' + wal + '\')"><div class="row" style="flex-wrap: unset" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-10 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
 
             contactsNode.appendChild(contactEntry);
         }
