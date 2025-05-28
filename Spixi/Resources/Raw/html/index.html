@@ -602,7 +602,9 @@
     function addApp(id, name, icon, publisher, isSingleUser, isMultiuser) {
         const mappedIcon = icon.replace(/&#92;/g, '\\');
 
-        const singleApp = `<div class="mini-apps-list-single-item">
+        const div = document.createElement('div');
+        div.className = 'mini-apps-list-single-item';
+        div.innerHTML = `
         <div class="mini-apps-list-single-image-wrapper" onclick="window.location.href='ixian:appDetails:${id}'">
             <img src="${mappedIcon}" alt="mini-app-${name}"/>
         </div>
@@ -612,20 +614,15 @@
             <div class="launchBtn" data-app-id="${id}" data-single-user="${parseBoolean(isSingleUser)}" data-multi-user="${parseBoolean(isMultiuser)}">
                 <span class="label-xs s-text-action">*SL{apps-launch} <i class="fas fa-arrow-right"></i></span>
             </div>
-        </div>
-    </div>`;
+        </div>`;
 
-        const appListElement = document.getElementById("AppList");
-        appListElement.insertAdjacentHTML("beforeend", singleApp);
+        const launchBtn = div.querySelector(".launchBtn");
+        launchBtn.addEventListener("click", function () {
+            onLaunchHandler(launchBtn);
+        });
+
+        document.getElementById("AppList").appendChild(div);
     }
-
-    document.getElementById("AppList").addEventListener("click", function (event) {
-            if (event.target.closest(".launchBtn")) {
-                const launchBtn = event.target.closest(".launchBtn");
-                onLaunchHandler(launchBtn);
-            }
-        }
-    )
 
     function onLaunchHandler(element) {
         const multiUserModal = document.getElementById("multiUserAppModal");
