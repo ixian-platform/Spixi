@@ -17,13 +17,18 @@ namespace SPIXI.MiniApps
         public byte[]? getStorageData(string appId, string key)
         {
             string appStoragePath = Path.Combine(appsStoragePath, appId);
+            if (!File.Exists(appStoragePath))
+            {
+                return null;
+            }
+
             var storageData = File.ReadAllLines(appStoragePath);
             foreach (var line in storageData)
             {
                 var lineKey = line.Substring(0, line.IndexOf('=')).Trim();
                 if (lineKey == key)
                 {
-                    return Crypto.stringToHash(line.Substring(line.IndexOf('=')));
+                    return Crypto.stringToHash(line.Substring(line.IndexOf('=') + 1));
                 }
             }
             return null;
@@ -32,36 +37,43 @@ namespace SPIXI.MiniApps
         public void setStorageData(string appId, string key, byte[] value)
         {
             string appStoragePath = Path.Combine(appsStoragePath, appId);
-            var storageData = File.ReadAllLines(appStoragePath);
             int lineCount = 0;
             bool found = false;
-            foreach (var line in storageData)
+            List<string> storageData = new();
+            if (File.Exists(appStoragePath))
             {
-                var lineKey = line.Substring(0, line.IndexOf('=')).Trim();
-                if (lineKey == key)
+                storageData = File.ReadAllLines(appStoragePath).ToList();
+                foreach (var line in storageData)
                 {
-                    found = true;
-                    break;
+                    var lineKey = line.Substring(0, line.IndexOf('=')).Trim();
+                    if (lineKey == key)
+                    {
+                        found = true;
+                        break;
+                    }
+                    lineCount++;
                 }
-                lineCount++;
+
+                if (found)
+                {
+                    // update
+                    if (value != null)
+                    {
+                        storageData[lineCount] = key + "=" + Crypto.hashToString(value);
+                    }
+                    else
+                    {
+                        storageData.RemoveAt(lineCount);
+                    }
+                    File.WriteAllLines(appStoragePath, storageData);
+                    return;
+                }
             }
-            if (found)
-            {
-                // update
-                if (value != null)
-                {
-                    storageData[lineCount] = Crypto.hashToString(value);
-                } else
-                {
-                    var storageDataList = storageData.ToList();
-                    storageDataList.RemoveAt(lineCount);
-                    storageData = storageDataList.ToArray();
-                }
-                File.WriteAllLines(appStoragePath, storageData);
-            } else if (value != null)
+            
+            if (value != null)
             {
                 // create
-                storageData.Append(Crypto.hashToString(value));
+                storageData.Add(key + "=" + Crypto.hashToString(value));
                 File.WriteAllLines(appStoragePath, storageData);
             }
         }

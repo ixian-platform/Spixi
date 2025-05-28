@@ -96,13 +96,24 @@ namespace SPIXI
             {
                 var key = current_url.Substring("ixian:getStorageData".Length);
                 var data = Node.MiniAppStorage.getStorageData(appId, key);
-                Utils.sendUiCommand(this, "SpixiAppSdk.onStorageData", key, Crypto.hashToString(data));
+                string dataStr = "null";
+                if (data != null)
+                {
+                    dataStr = Convert.ToBase64String(data);
+                }
+                Utils.sendUiCommand(this, "SpixiAppSdk.onStorageData", key, dataStr);
             }
             else if (current_url.StartsWith("ixian:setStorageData", StringComparison.Ordinal))
             {
-                var key = current_url.Substring("ixian:setStorageData".Length, current_url.IndexOf('='));
-                var value = current_url.Substring(current_url.IndexOf('='));
-                Node.MiniAppStorage.setStorageData(appId, key, Crypto.stringToHash(value));
+                var prefixLen = "ixian:setStorageData".Length;
+                var key = current_url.Substring(prefixLen, current_url.IndexOf('=') - prefixLen);
+                var value = current_url.Substring(current_url.IndexOf('=') + 1);
+                byte[] valueToStore = null;
+                if (value != "null")
+                {
+                    valueToStore = Convert.FromBase64String(value);
+                }
+                Node.MiniAppStorage.setStorageData(appId, key, valueToStore);
             }
             else if (current_url.StartsWith("ixian:action", StringComparison.Ordinal))
             {
@@ -207,6 +218,20 @@ namespace SPIXI
 
         private void onBack()
         {
+            foreach (Address address in userAddresses)
+            {
+                Friend f = FriendList.getFriend(address);
+                if (f != null)
+                {
+                    // TODO TODO TODO probably a different encoding should be used for data
+                    StreamProcessor.sendAppEndSession(f, sessionId, UTF8Encoding.UTF8.GetBytes(IxianHandler.primaryWalletAddress.ToString()));
+                }
+                else
+                {
+                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
+                }
+            }
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
