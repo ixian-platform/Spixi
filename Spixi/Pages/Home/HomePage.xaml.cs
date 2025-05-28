@@ -87,7 +87,6 @@ namespace SPIXI
 
                 new Thread(() =>
                 {
-                    Thread.CurrentThread.IsBackground = true;
                     try
                     {
                         Node.start();
@@ -432,7 +431,7 @@ namespace SPIXI
 
         public void processQRResult(string result)
         {
-            Navigation.PopModalAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             // Check for add contact
             string[] split = result.Split(new string[] { ":send" }, StringSplitOptions.None);

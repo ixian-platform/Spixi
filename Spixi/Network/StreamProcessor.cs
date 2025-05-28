@@ -105,10 +105,11 @@ namespace SPIXI
             {
                 FileTransfer transfer = new FileTransfer(data.data);
 
-                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
+                string message_data = string.Format("{0}:{1}:{2}", transfer.uid, transfer.fileName, transfer.fileSize);
                 FriendMessage fm = FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, data.channel, message_data);
                 if (fm != null)
                 {
+                    // TODO this can probably be removed now
                     fm.transferId = transfer.uid;
                     fm.filePath = transfer.fileName;
                     fm.fileSize = transfer.fileSize;

@@ -398,7 +398,7 @@ img.emoji {
 }
 
 .spixi-toolbar-row-unread-indicator {
-    display: blocks;
+    display: none;
     border-radius: 10px;
     width: 10px;
     height: 10px;

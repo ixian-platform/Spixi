@@ -22,8 +22,6 @@ namespace SPIXI
 
         private uint messagesToShow = Config.messagesToLoad;
 
-        private int lastMessageCount = 0;
-
         private int selectedChannel = 0;
 
         private bool _waitingForContactConfirmation = false;
@@ -31,6 +29,11 @@ namespace SPIXI
         private HomePage? homePage;
 
         private bool reload = false;
+
+        private bool warningDisplayed = false;
+        private bool unreadIndicatorDisplayed = false;
+        private string setNickname = "";
+        private bool setOnlineStatus = false;
 
         public SingleChatPage(Friend fr) : this(fr, null)
         {
@@ -291,7 +294,7 @@ namespace SPIXI
                     Node.shouldRefreshContacts = true;
                     StreamProcessor.sendLeave(friend, null);
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    Navigation.PopAsync();
+                    Navigation.PopAsync(Config.defaultXamarinAnimations);
                     homePage?.removeDetailContent();
                 }
             }
@@ -318,7 +321,7 @@ namespace SPIXI
             {
                 // Remove friend from list and go back to the main screen
                 FriendList.removeFriend(friend);
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
                 homePage?.removeDetailContent();
 
                 // TODO: send a notification to the other party
@@ -1230,6 +1233,18 @@ namespace SPIXI
                 {
                     string uid = split[0];
                     string name = split[1];
+                    if (split.Length > 2)
+                    {
+                        ulong fileSize = ulong.Parse(split[2]);
+                        if (message.transferId == "")
+                        {
+                            Logging.warn("Transfer id is not set.");
+                            // Sometimes transfer data isn't set on restart - rebuild
+                            message.transferId = uid;
+                            message.filePath = name;
+                            message.fileSize = fileSize;
+                        }
+                    }
 
                     string progress = "0";
                     if(message.completed)
@@ -1499,9 +1514,13 @@ namespace SPIXI
         {
             base.updateScreen();
 
-            Utils.sendUiCommand(this, "setNickname", friend.nickname);
+            if (setNickname != friend.nickname)
+            {
+                Utils.sendUiCommand(this, "setNickname", friend.nickname);
+                setNickname = friend.nickname;
+            }
 
-            if(friend.bot)
+            if (friend.bot)
             {
                 long userCount = 0;
                 if(friend.metaData != null && friend.metaData.botInfo != null)
@@ -1516,14 +1535,19 @@ namespace SPIXI
                 {
                     if (friend.online)
                     {
-                        Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
+                        if (setOnlineStatus == false)
+                        {
+                            Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
+                            setOnlineStatus = true;
+                        }
                     }
-                    else
+                    else if (setOnlineStatus == true)
                     {
                         Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-offline"));
+                        setOnlineStatus = false;
                     }
 
-                    if(_waitingForContactConfirmation)
+                    if (_waitingForContactConfirmation)
                     {
                         _waitingForContactConfirmation = false;
                         Utils.sendUiCommand(this, "showRequestSentModal", "0");
@@ -1541,25 +1565,39 @@ namespace SPIXI
             {
                 if (!Config.enablePushNotifications && (friend.relayIP == null || StreamClientManager.isConnectedTo(friend.relayIP, true) == null))
                 {
-                    Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
+                    if (!warningDisplayed)
+                    {
+                        Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
+                        warningDisplayed = true;
+                    }
                 }
-                else
+                else if (warningDisplayed)
                 {
                     Utils.sendUiCommand(this, "showWarning", "");
+                    warningDisplayed = false;
                 }
             }
             else
             {
                 Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                warningDisplayed = true;
             }
             
                 
             // Show the messages indicator
             int msgCount = FriendList.getUnreadMessageCount();
-            //if(msgCount != lastMessageCount)
+            if(msgCount > 0)
             {
-                lastMessageCount = msgCount;
-                Utils.sendUiCommand(this, "setUnreadIndicator", string.Format("{0}", lastMessageCount));
+                if (!unreadIndicatorDisplayed)
+                {
+                    Utils.sendUiCommand(this, "setUnreadIndicator", string.Format("{0}", msgCount));
+                    unreadIndicatorDisplayed = true;
+                }
+            }
+            else if (unreadIndicatorDisplayed)
+            {
+                Utils.sendUiCommand(this, "setUnreadIndicator", "0");
+                unreadIndicatorDisplayed = false;
             }
         }
 
