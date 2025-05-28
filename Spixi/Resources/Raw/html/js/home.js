@@ -300,7 +300,7 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
                                     <span class="body-xs s-text-02">${timestamp}</span>
                                 </div>
                                 <div class="single-payment-info-right">
-                                    <span class="label-sm s-text-01">${isReceived ? '+' : '-'}${limitToTwoDecimals(amountWithCommas(amount))}</span>
+                                    <span class="label-sm s-text-01">${isReceived ? '+' : '-'}${amountWithCommas(limitToTwoDecimals(amount))}</span>
                                     <span class="body-xs s-text-02">${amountWithCommas(fiatAmount)}</span>
                                 </div>
                             </div>

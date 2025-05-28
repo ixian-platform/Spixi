@@ -105,7 +105,11 @@ namespace SPIXI
                     return;
                 }
 
-                Navigation.PushAsync(new WalletSend2Page(address), Config.defaultXamarinAnimations);
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await Task.Delay(200); // WinUI Crash fix
+                    await Navigation.PushAsync(new WalletSend2Page(address), Config.defaultXamarinAnimations);
+                });
 
                 /*             // TODO re-enable in a future update  
                  *             // Extract all addresses and amounts
