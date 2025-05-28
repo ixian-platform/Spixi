@@ -1286,7 +1286,11 @@ namespace SPIXI
                 else
                 {
                     app_name = app.name;
-                    app_image = $"Apps/{app_id}/icon.png";
+                    app_image = Node.MiniAppManager.getAppIconPath(app.id);
+                    if (app_image == null)
+                    {
+                        app_image = "img/app-noicon.jpg";
+                    }
                 }
 
 
