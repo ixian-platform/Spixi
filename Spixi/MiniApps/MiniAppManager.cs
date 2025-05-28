@@ -104,9 +104,9 @@ namespace SPIXI.MiniApps
                 }
 
                 string content = Encoding.UTF8.GetString(data);
-                string[] app_info = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                string[] app_info = content.Replace("\r\n", "\n").Split('\n');
 
-                return new MiniApp(app_info);
+                return new MiniApp(app_info, url);
             }
             catch (HttpRequestException e)
             {
@@ -138,6 +138,12 @@ namespace SPIXI.MiniApps
                 {
                     File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result);
                     fetchedAppInfo.contentSize = new FileInfo(source_app_file_path).Length;
+                    string file_checksum = Crypto.sha256(source_app_file_path);
+
+                    if (file_checksum != fetchedAppInfo.checksum)
+                    {
+                        throw new InvalidOperationException($"Checksum mismatch for downloaded app file. Expected {fetchedAppInfo.checksum} got {file_checksum}");
+                    }
                 }
                 catch (Exception e)
                 {

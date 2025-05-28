@@ -1,5 +1,4 @@
 ﻿using IXICore;
-using System.Linq;
 using System.Text;
 
 namespace SPIXI.MiniApps
@@ -30,7 +29,7 @@ namespace SPIXI.MiniApps
         public byte[] signature = null;      
         public Dictionary<MiniAppCapabilities, bool> capabilities = null;
 
-        public MiniApp(string[] app_info)
+        public MiniApp(string[] app_info, string? app_url = null)
         {
             foreach (string command in app_info)
             {
@@ -110,6 +109,31 @@ namespace SPIXI.MiniApps
                         break;
                 }
             }
+
+            // If an app url is provided, this app metadata is likely from a remote source
+            if (app_url != null)
+            {
+                // Attempt to resolve relative URLs
+                if (!contentUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    int last_index = app_url.LastIndexOf('/');
+                    if (last_index != -1)
+                    {
+                        contentUrl = app_url.Substring(0, last_index + 1) + contentUrl;
+                    }
+                    
+                }
+
+                if (!image.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    int last_index = app_url.LastIndexOf('/');
+                    if (last_index != -1)
+                    {
+                        image = app_url.Substring(0, last_index + 1) + image;
+                    }                  
+                }
+            }
+
         }
 
         private Dictionary<MiniAppCapabilities, bool> parseCapabilities(string value)
