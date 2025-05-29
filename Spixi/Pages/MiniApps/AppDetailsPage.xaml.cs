@@ -203,7 +203,7 @@ namespace SPIXI
                 return;
             }
             
-            Navigation.PushAsync(new AppDetailsPage(app, fromChat, true), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new AppDetailsPage(app, false, true), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);          
         }
 
