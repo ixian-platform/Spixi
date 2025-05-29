@@ -2,7 +2,6 @@
 using SPIXI.MiniApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using System;
 using System.Web;
 using IXICore;
 
@@ -17,6 +16,8 @@ namespace SPIXI
 
         bool fromChat = false;
 
+        private bool shouldReloadDetailView = false;
+
         public AppDetailsPage(string app_id)
         {
             InitializeComponent();
@@ -28,12 +29,12 @@ namespace SPIXI
             loadPage(webView, "app_details.html");
         }
 
-        public AppDetailsPage(MiniApp app, bool fromChat = false)
+        public AppDetailsPage(MiniApp app, bool fromChat = false, bool shouldReloadDetailView = false)
         {
             InitializeComponent();
 
             this.fromChat = fromChat;
-
+            this.shouldReloadDetailView = shouldReloadDetailView;
             fetchedApp = app;
 
             NavigationPage.SetHasNavigationBar(this, false);
@@ -184,6 +185,7 @@ namespace SPIXI
             if(Node.MiniAppManager.remove(appId))
             {
                 Utils.sendUiCommand(this, "showAppRemoved");
+                shouldReloadDetailView = true;
             }
             else
             {
@@ -200,9 +202,9 @@ namespace SPIXI
             {
                 return;
             }
-
-            Navigation.PushAsync(new AppDetailsPage(app, fromChat), Config.defaultXamarinAnimations);
-            Navigation.RemovePage(this);
+            
+            Navigation.PushAsync(new AppDetailsPage(app, fromChat, true), Config.defaultXamarinAnimations);
+            Navigation.RemovePage(this);          
         }
 
         // Executed every second
@@ -214,6 +216,10 @@ namespace SPIXI
         private void onBack()
         {
             Navigation.PopAsync(Config.defaultXamarinAnimations);
+            if (shouldReloadDetailView)
+            {
+                reloadDetailView();
+            }
         }
 
         protected override bool OnBackButtonPressed()
@@ -289,6 +295,14 @@ namespace SPIXI
             });
 
             return miniAppPage.sessionId;
+        }
+        private void reloadDetailView()
+        {
+            Page page = Application.Current.MainPage.Navigation.NavigationStack.Last();
+            if (page != null && page is HomePage)
+            {
+                ((HomePage)page).removeDetailContent();
+            }
         }
     }
 }

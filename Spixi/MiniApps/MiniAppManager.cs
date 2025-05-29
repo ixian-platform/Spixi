@@ -136,10 +136,9 @@ namespace SPIXI.MiniApps
             {
                 try
                 {
-                    byte[] zip_file = client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result;
-                    File.WriteAllBytes(source_app_file_path, zip_file);
-                    fetchedAppInfo.contentSize = zip_file.Length;
-                    string file_checksum = Crypto.hashToString(Crypto.sha256(zip_file));
+                    File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result);
+                    fetchedAppInfo.contentSize = new FileInfo(source_app_file_path).Length;
+                    string file_checksum = Crypto.sha256(source_app_file_path);
 
                     if (file_checksum != fetchedAppInfo.checksum)
                     {
