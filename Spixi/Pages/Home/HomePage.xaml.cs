@@ -1350,7 +1350,7 @@ namespace SPIXI
             return miniAppPage.sessionId;
         }
 
-        public async void onInstallApp(string appUrl)
+        public async void onInstallApp(string appUrl, bool fromChat)
         {
             MiniApp? app = await Node.MiniAppManager.fetch(appUrl);
             if (app == null)
@@ -1362,7 +1362,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, fromChat), Config.defaultXamarinAnimations);
             });
         }
         private void onAppDetails(string appId)

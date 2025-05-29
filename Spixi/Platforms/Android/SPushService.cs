@@ -1,12 +1,13 @@
 ﻿using Android.App;
-using AndroidX.Core.App;
-using Android.Graphics;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
+using AndroidX.Core.App;
 using IXICore.Meta;
-using SPIXI;
 using OneSignalSDK.DotNet;
 using OneSignalSDK.DotNet.Core.Debug;
+using SPIXI;
+using OneSignalNative = Com.OneSignal.Android.OneSignal;
 
 namespace Spixi
 {
@@ -46,6 +47,8 @@ namespace Spixi
         {
             var notificationManager = NotificationManagerCompat.From(Android.App.Application.Context);
             notificationManager.CancelAll();
+
+            OneSignalNative.Notifications.ClearAllNotifications();
         }
 
         public static void showLocalNotification(string title, string message, string data)

@@ -136,9 +136,10 @@ namespace SPIXI.MiniApps
             {
                 try
                 {
-                    File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result);
-                    fetchedAppInfo.contentSize = new FileInfo(source_app_file_path).Length;
-                    string file_checksum = Crypto.sha256(source_app_file_path);
+                    byte[] zip_file = client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result;
+                    File.WriteAllBytes(source_app_file_path, zip_file);
+                    fetchedAppInfo.contentSize = zip_file.Length;
+                    string file_checksum = Crypto.hashToString(Crypto.sha256(zip_file));
 
                     if (file_checksum != fetchedAppInfo.checksum)
                     {
@@ -407,7 +408,11 @@ namespace SPIXI.MiniApps
         public string getAppInfo(string app_id)
         {
             MiniApp mini_app = getApp(app_id);
-            return $"{app_id}||{mini_app.url}||{mini_app.name}"; // TODO pack this information better
+            if (mini_app != null)
+            {
+                return $"{app_id}||{mini_app.url}||{mini_app.name}"; // TODO pack this information better
+            }
+            return app_id;
         }
 
         public Dictionary<string, MiniApp> getInstalledApps()

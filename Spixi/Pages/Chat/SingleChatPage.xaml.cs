@@ -1,17 +1,17 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
-using SPIXI.MiniApps;
-using SPIXI.Interfaces;
-using SPIXI.Meta;
-using SPIXI.Storage;
-using SPIXI.VoIP;
-using System.Text;
-using System.Web;
-using SPIXI.Lang;
 using IXICore.SpixiBot;
 using Spixi;
+using SPIXI.Interfaces;
+using SPIXI.Lang;
+using SPIXI.Meta;
+using SPIXI.MiniApps;
+using SPIXI.Storage;
+using SPIXI.VoIP;
 using System.Net;
+using System.Text;
+using System.Web;
 
 namespace SPIXI
 {
@@ -813,7 +813,7 @@ namespace SPIXI
         {
             if (homePage != null)
             {
-                homePage.onInstallApp(app_url);
+                homePage.onInstallApp(app_url, true);
                 return;
             }
 
@@ -1233,21 +1233,29 @@ namespace SPIXI
                 {
                     string uid = split[0];
                     string name = split[1];
-                    if (split.Length > 2)
+                    if (message.transferId == "")
                     {
-                        ulong fileSize = ulong.Parse(split[2]);
-                        if (message.transferId == "")
+                        if (split.Length > 2)
                         {
+                            ulong fileSize = ulong.Parse(split[2]);
                             Logging.warn("Transfer id is not set.");
                             // Sometimes transfer data isn't set on restart - rebuild
                             message.transferId = uid;
                             message.filePath = name;
                             message.fileSize = fileSize;
                         }
+                        else
+                        {
+                            // fix for open file not working sometimes
+                            Logging.warn("Transfer id is not set.");
+                            // Sometimes transfer data isn't set on restart - rebuild
+                            message.transferId = uid;
+                            message.filePath = name;
+                        }
                     }
 
                     string progress = "0";
-                    if(message.completed)
+                    if (message.completed)
                     {
                         progress = "100";
                     }

@@ -218,17 +218,20 @@ namespace SPIXI
 
         private void onBack()
         {
-            foreach (Address address in userAddresses)
+            if (userAddresses != null)
             {
-                Friend f = FriendList.getFriend(address);
-                if (f != null)
+                foreach (Address address in userAddresses)
                 {
-                    // TODO TODO TODO probably a different encoding should be used for data
-                    StreamProcessor.sendAppEndSession(f, sessionId, UTF8Encoding.UTF8.GetBytes(IxianHandler.primaryWalletAddress.ToString()));
-                }
-                else
-                {
-                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
+                    Friend f = FriendList.getFriend(address);
+                    if (f != null)
+                    {
+                        // TODO TODO TODO probably a different encoding should be used for data
+                        StreamProcessor.sendAppEndSession(f, sessionId, UTF8Encoding.UTF8.GetBytes(IxianHandler.primaryWalletAddress.ToString()));
+                    }
+                    else
+                    {
+                        Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
+                    }
                 }
             }
 

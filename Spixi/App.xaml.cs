@@ -47,7 +47,11 @@ public partial class App : Application
 
             // Init logging
             Logging.setOptions(5, 1, false);
-            Logging.start(Config.spixiUserFolder);
+            if (!Logging.start(Config.spixiUserFolder))
+            {
+                Environment.Exit(1);
+                return;
+            }
             Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
 
             // Init fatal exception handlers
