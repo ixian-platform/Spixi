@@ -10,7 +10,20 @@ using SPIXI.Interfaces;
 using SPIXI.Lang;
 namespace Spixi;
 
-[Activity(Label = "Spixi", Icon = "@mipmap/ic_launcher", RoundIcon = "@mipmap/ic_round_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density, LaunchMode = LaunchMode.SingleInstance)]
+[Activity(Label = "Spixi",
+    Icon = "@mipmap/ic_launcher",
+    RoundIcon = "@mipmap/ic_round_launcher",
+    Theme = "@style/MainTheme",
+    MainLauncher = true,
+    SupportsPictureInPicture = true,
+    ResizeableActivity = true,
+    LaunchMode = LaunchMode.SingleInstance,
+    ConfigurationChanges = ConfigChanges.ScreenSize |
+                        ConfigChanges.Orientation |
+                        ConfigChanges.UiMode |
+                        ConfigChanges.ScreenLayout |
+                        ConfigChanges.SmallestScreenSize |
+                        ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
     public const int PickImageId = 1000;
