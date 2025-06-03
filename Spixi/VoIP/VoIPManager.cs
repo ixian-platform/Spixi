@@ -182,7 +182,8 @@ namespace SPIXI.VoIP
 
             if (currentCallContact != null)
             {
-                currentCallContact.endCall(currentCallSessionId, currentCallAccepted && currentCallCalleeAccepted, Clock.getTimestamp() - currentCallStartedTime, currentCallInitiator);
+                long call_duration = currentCallStartedTime > 0 ? Clock.getTimestamp() - currentCallStartedTime : 0;
+                currentCallContact.endCall(currentCallSessionId, currentCallAccepted && currentCallCalleeAccepted, call_duration, currentCallInitiator);
             }
 
             currentCallSessionId = null;
@@ -255,6 +256,8 @@ namespace SPIXI.VoIP
             currentCallCodec = Encoding.UTF8.GetString(data);
             currentCallCalleeAccepted = true;
             startVoIPSession();
+            if (currentCallContact == null)
+                return;
             ((SpixiContentPage)Application.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-in-call") + " - " + currentCallContact.nickname, currentCallStartedTime);
         }
 

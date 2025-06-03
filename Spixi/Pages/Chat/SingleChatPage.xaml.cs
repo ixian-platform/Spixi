@@ -1347,9 +1347,10 @@ namespace SPIXI
                 }else if(message.type == FriendMessageType.voiceCallEnd)
                 {
                     long seconds = Int32.Parse(message.message);
-                    long minutes = seconds / 60;
-                    seconds = seconds % 60;
+                    long minutes = seconds > 0 ? seconds / 60 : 0;
+                    seconds = seconds > 0 ? seconds % 60 : 0;
                     text = string.Format("{0} ({1}:{2})", text, minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
+
                 }
                 Utils.sendUiCommand(this, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
             }
