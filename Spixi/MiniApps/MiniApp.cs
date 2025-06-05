@@ -25,9 +25,13 @@ namespace SPIXI.MiniApps
         public string contentUrl = "";
         public long contentSize = 0;
         public string checksum = "";
-        public byte[] publicKey = null;
-        public byte[] signature = null;      
+  
         public Dictionary<MiniAppCapabilities, bool> capabilities = null;
+        public int minUsers = 1;
+        public int maxUsers = 1;
+
+        public byte[] publicKey = null;
+        public byte[] signature = null;
 
         public MiniApp(string[] app_info, string? app_url = null)
         {
@@ -96,6 +100,7 @@ namespace SPIXI.MiniApps
                     case "checksum":
                         checksum = value;
                         break;
+
                     case "publicKey":
                         publicKey = Crypto.stringToHash(value);
                         break;
@@ -106,6 +111,20 @@ namespace SPIXI.MiniApps
 
                     case "capabilities":
                         capabilities = parseCapabilities(value);
+                        break;
+
+                    case "minUsers":
+                        if (int.TryParse(value, out int minUsers))
+                        {
+                            this.minUsers = minUsers;
+                        }
+                        break;
+
+                    case "maxUsers":
+                        if (int.TryParse(value, out int maxUsers))
+                        {
+                            this.maxUsers = maxUsers;
+                        }
                         break;
                 }
             }
@@ -206,13 +225,15 @@ namespace SPIXI.MiniApps
             sb.AppendLine($"name = {name}");
             sb.AppendLine($"description = {description}");
             sb.AppendLine($"version = {version}");
-            var capabilities_str = getCapabilitiesAsString();
-            sb.AppendLine($"capabilities = {capabilities_str}");
             sb.AppendLine($"image = {image}");
             sb.AppendLine($"url = {url}");
             sb.AppendLine($"contentUrl = {contentUrl}");
             sb.AppendLine($"contentSize = {contentSize}");
             sb.AppendLine($"checksum = {checksum}");
+            var capabilities_str = getCapabilitiesAsString();
+            sb.AppendLine($"capabilities = {capabilities_str}");
+            sb.AppendLine($"minUsers = {minUsers}");
+            sb.AppendLine($"maxUsers = {maxUsers}");
 
             File.WriteAllText(filePath, sb.ToString());
         }
