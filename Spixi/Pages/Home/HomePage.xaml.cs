@@ -378,6 +378,10 @@ namespace SPIXI
                 string appId = current_url.Substring("ixian:appDetails:".Length);
                 onAppDetails(appId);
             }
+            else if (current_url.StartsWith("ixian:explorer"))
+            {
+                Browser.Default.OpenAsync(new Uri(Config.explorerUrl + "index.php?p=address&id=" + IxianHandler.primaryWalletAddress));
+            }
             else
             {
                 // Otherwise it's just normal navigation

@@ -189,6 +189,16 @@ namespace SPIXI
 
         private void onLoad()
         {
+            if (userAddresses != null)
+            {
+                // Multi User App
+                Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), string.Join(',', userAddresses.Select(x => x.ToString())));
+            } else
+            {
+                // Single User App
+                Utils.sendUiCommand(this, "SpixiAppSdk.onInit");
+            }
+
             // Execute timer-related functionality immediately
             updateScreen();
         }

@@ -12,6 +12,7 @@ namespace Spixi
         private Action<byte[]> OnSoundDataReceived;
 
         private AVAudioEngine audioRecorder = null;
+        private AVAudioConverter audioConverter = null;
         private IAudioEncoder audioEncoder = null;
 
         bool running = false;
@@ -23,6 +24,9 @@ namespace Spixi
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
         int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
         int channels = SPIXI.Meta.Config.VoIP_channels;
+
+        AVAudioFormat desiredFormat;
+        AVAudioFormat recordingFormat;
 
         private static SAudioRecorder _singletonInstance;
         public static SAudioRecorder Instance()
@@ -57,17 +61,29 @@ namespace Spixi
 
         private void initRecorder()
         {
-            audioRecorder = new AVAudioEngine();
             NSError error = new NSError();
             if (!AVAudioSession.SharedInstance().SetPreferredSampleRate(sampleRate, out error))
             {
-                throw new Exception("Error setting preffered sample rate for recorder: " + error);
+                throw new Exception("Error setting preferred sample rate for recorder: " + error);
             }
+
             AVAudioSession.SharedInstance().SetCategory(AVAudioSessionCategory.PlayAndRecord, AVAudioSessionCategoryOptions.InterruptSpokenAudioAndMixWithOthers);
             AVAudioSession.SharedInstance().SetActive(true);
-            AVAudioFormat recording_format = new AVAudioFormat(AVAudioCommonFormat.PCMInt16, sampleRate, (uint)channels, false);
-            uint buffer_size = (uint)CodecTools.getPcmFrameByteSize(sampleRate, bitRate, channels) * 1000;
-            audioRecorder.InputNode.InstallTapOnBus(0, buffer_size, recording_format, onDataAvailable);
+
+            audioRecorder = new AVAudioEngine();
+
+            desiredFormat = new AVAudioFormat(AVAudioCommonFormat.PCMInt16, sampleRate, (uint)channels, false);
+            recordingFormat = audioRecorder.InputNode.GetBusOutputFormat(0);
+
+            Logging.info($"Recording format: {recordingFormat}");
+            Logging.info($"Desired output format: {desiredFormat}");
+
+            audioConverter = new AVAudioConverter(recordingFormat, desiredFormat);
+
+
+            uint bufferSize = (uint)(recordingFormat.SampleRate * 0.1); // 100ms
+            audioRecorder.InputNode.InstallTapOnBus(0, bufferSize, recordingFormat, onDataAvailable);
+
             audioRecorder.Prepare();
             if (!audioRecorder.StartAndReturnError(out error))
             {
@@ -77,7 +93,21 @@ namespace Spixi
 
         private void onDataAvailable(AVAudioPcmBuffer buffer, AVAudioTime when)
         {
-            AudioBuffer audioBuffer = buffer.AudioBufferList[0];
+            AVAudioPcmBuffer outputBuffer = new AVAudioPcmBuffer(desiredFormat, (uint)(desiredFormat.SampleRate * 0.1)); // 100ms
+            AVAudioConverterInputHandler inputHandler = (uint inNumberOfPackets, out AVAudioConverterInputStatus outStatus) =>
+            {
+                outStatus = AVAudioConverterInputStatus.HaveData;
+                return buffer;
+            };
+            NSError? outError;
+            var status = audioConverter.ConvertToBuffer(outputBuffer, out outError, inputHandler);
+            if (status != AVAudioConverterOutputStatus.HaveData)
+            {
+                Logging.warn("Conversion failed or no data. Status: {0}, Error: {1}", status, outError?.LocalizedDescription ?? "Unknown error");
+                return;
+            }
+
+            AudioBuffer audioBuffer = outputBuffer.AudioBufferList[0];
             byte[] data = new byte[audioBuffer.DataByteSize];
             Marshal.Copy(audioBuffer.Data, data, 0, audioBuffer.DataByteSize);
 

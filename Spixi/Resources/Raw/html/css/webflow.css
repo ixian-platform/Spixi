@@ -1876,7 +1876,8 @@ textarea.w-select {
     padding-bottom: 8px;
     min-height: 100px;
     color: #6a6a6a;
-    overflow: break-all;
+    overflow: scroll;
+    word-break: break-all;
     overflow-wrap: anywhere;
 }
 
