@@ -1266,6 +1266,10 @@ namespace SPIXI
             {
                 return;
             }
+            if (detailContent != null)
+            {
+                detailContent.updateScreen();
+            }
             Node.shouldRefreshApps = false;
 
             Utils.sendUiCommand(this, "clearApps");

@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Utils;
 using System.IO.Compression;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace SPIXI.MiniApps
@@ -31,7 +32,6 @@ namespace SPIXI.MiniApps
             {
                 Directory.CreateDirectory(tmpPath);
             }
-
         }
 
         public void start()
@@ -75,7 +75,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public async Task<MiniApp?> fetch(string url, long maxSizeBytes = 10 * 1024 * 1024) // 10 MB default limit
+        public async Task<MiniApp?> fetch(string url, long maxSizeBytes = 1 * 1024 * 1024) // 1 MB default limit
         {
             if (string.IsNullOrWhiteSpace(url) || !Uri.TryCreate(url, UriKind.Absolute, out Uri uri) || uri.Scheme != Uri.UriSchemeHttps)
             {
@@ -86,6 +86,9 @@ namespace SPIXI.MiniApps
             try
             {
                 using var headRequest = new HttpRequestMessage(HttpMethod.Head, url);
+
+                httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MustRevalidate = true };
+
                 using HttpResponseMessage headResponse = await httpClient.SendAsync(headRequest);
                 headResponse.EnsureSuccessStatusCode();
 
@@ -136,6 +139,8 @@ namespace SPIXI.MiniApps
             {
                 try
                 {
+                    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MustRevalidate = true };
+                    
                     File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result);
                     fetchedAppInfo.contentSize = new FileInfo(source_app_file_path).Length;
                     string file_checksum = Crypto.sha256OfFile(source_app_file_path);
@@ -245,6 +250,7 @@ namespace SPIXI.MiniApps
             {
                 try
                 {
+                    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MustRevalidate = true };
                     File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(url).Result);
                 }
                 catch (Exception e)

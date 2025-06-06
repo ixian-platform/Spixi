@@ -28,8 +28,6 @@ namespace SPIXI
 
         private HomePage? homePage;
 
-        private bool reload = false;
-
         private bool warningDisplayed = false;
         private bool unreadIndicatorDisplayed = false;
         private string setNickname = "";
@@ -68,15 +66,6 @@ namespace SPIXI
             {
                 friend.chat_page = this;
             }
-
-            if (reload)
-            {
-                reload = false;
-
-                loadApps();
-                loadMessages();
-            }
-
         }
 
 
@@ -825,7 +814,6 @@ namespace SPIXI
 
             app.url = app_url;
 
-            reload = true;
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 Navigation.PushAsync(new AppDetailsPage(app, true), Config.defaultXamarinAnimations);
@@ -1526,6 +1514,18 @@ namespace SPIXI
         public override void updateScreen()
         {
             base.updateScreen();
+
+            if (Node.shouldRefreshApps)
+            {
+                if (homePage == null)
+                {
+                    Node.shouldRefreshApps = false;
+                }
+
+                loadApps();
+                loadMessages();
+            }
+
 
             if (setNickname != friend.nickname)
             {
