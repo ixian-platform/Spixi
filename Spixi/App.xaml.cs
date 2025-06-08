@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
 using SPIXI;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -33,7 +34,7 @@ public partial class App : Application
 
 
     public App()
-	{
+    {        
         InitializeComponent();
  
         // Check if already started
@@ -46,8 +47,8 @@ public partial class App : Application
             }
 
             // Init logging
-            Logging.setOptions(5, 1, false);
-            if (!Logging.start(Config.spixiUserFolder))
+            Logging.setOptions(Config.maxLogSize, Config.maxLogCount, false);
+            if (!Logging.start(Config.spixiUserFolder, Config.logVerbosity))
             {
                 Environment.Exit(1);
                 return;

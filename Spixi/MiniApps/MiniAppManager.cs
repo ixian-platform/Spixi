@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
 using IXICore.Utils;
 using System.IO.Compression;
 using System.Net.Http.Headers;

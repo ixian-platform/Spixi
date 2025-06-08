@@ -1,67 +1,50 @@
 ﻿using IXICore;
+using IXICore.Inventory;
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.RegNames;
+using IXICore.Storage;
+using IXICore.Streaming;
 using IXICore.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Spixi;
 using SPIXI.MiniApps;
 using SPIXI.Network;
-using SPIXI.Storage;
 using System.Text;
+using static IXICore.Transaction;
 
 namespace SPIXI.Meta
 {
-    class Balance
-    {
-        public Address address = null;
-        public IxiNumber balance = 0;
-        public ulong blockHeight = 0;
-        public byte[] blockChecksum = null;
-        public bool verified = false;
-        public long lastUpdate = 0;
-    }
-
     class Node : IxianNode
     {
-        // Used for all local data storage
-        public static LocalStorage localStorage;
-
         // Used to force reloading of some homescreen elements
         public static bool changedSettings = false;
-
-        public static Balance balance = new();  // Stores the last known balance for this node
 
         public static IxiNumber fiatPrice = 0;  // Stores the last known ixi fiat value
 
         public static int startCounter = 0;
-
-        public static bool shouldRefreshContacts = true;
-        public static bool shouldRefreshApps = true;
-
-        public static bool refreshAppRequests = true;
 
         public static TransactionInclusion tiv = null;
 
         public static MiniAppManager MiniAppManager = null;
         public static MiniAppStorage MiniAppStorage = null;
 
+        public static StreamProcessor streamProcessor = null;
+
         public static bool generatedNewWallet = false;
+
+        public static NetworkClientManagerStatic networkClientManagerStatic = null;
 
         // Private data
 
         private static Thread mainLoopThread;
 
-        public static ulong networkBlockHeight = 0;
-        private static byte[] networkBlockChecksum = null;
-        private static int networkBlockVersion = 0;
-
         public static Node Instance = null;
 
         private static bool running = false;
 
-        private static long lastPriceUpdate = 0;      
+        private static long lastPriceUpdate = 0;
 
         public Node()
         {
@@ -74,17 +57,21 @@ namespace SPIXI.Meta
 
             CoreConfig.simultaneousConnectedNeighbors = 6;
 
-            IxianHandler.init(Config.version, this, Config.networkType);
+            IxianHandler.init(Config.version, this, Config.networkType, false, Config.checksumLock);
 
             PeerStorage.init(Config.spixiUserFolder);
 
+            // Network configuration
+            networkClientManagerStatic = new NetworkClientManagerStatic(Config.maxRelaySectorNodesToConnectTo);
+            NetworkClientManager.init(networkClientManagerStatic);
+
             // Init TIV
-            tiv = new TransactionInclusion();
+            tiv = new TransactionInclusion(new SpixiTransactionInclusionCallbacks());
 
             Logging.info("Initing local storage");
 
             // Prepare the local storage
-            localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
+            IxianHandler.localStorage = new LocalStorage(Config.spixiUserFolder, new SpixiLocalStorageCallbacks());
 
             MiniAppManager = new MiniAppManager(Config.spixiUserFolder);
             MiniAppStorage = new MiniAppStorage(Config.spixiUserFolder);
@@ -92,7 +79,9 @@ namespace SPIXI.Meta
             FriendList.init(Config.spixiUserFolder);
 
             // Prepare the stream processor
-            StreamProcessor.initialize(Config.spixiUserFolder);
+            streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications));
+
+            OfflinePushMessages.init(Config.pushServiceUrl, streamProcessor);
 
             Logging.info("Node init done");
 
@@ -106,7 +95,7 @@ namespace SPIXI.Meta
         static public void preStart()
         {
             // Start local storage
-            localStorage.start();
+            IxianHandler.localStorage.start();
 
             FriendList.loadContacts();
         }
@@ -153,10 +142,14 @@ namespace SPIXI.Meta
             //tiv.start(headers_path, block_height, block_checksum, true);
             
             // Generate presence list
-            PresenceList.init(IxianHandler.publicIP, 0, 'C');
+            PresenceList.init(IxianHandler.publicIP, 0, 'C', CoreConfig.clientKeepAliveInterval);
 
             // Start the network queue
             NetworkQueue.start();
+
+            InventoryCache.init(new InventoryCacheClient(tiv));
+
+            RelaySectors.init(CoreConfig.relaySectorLevels, null);
 
             // Start the keepalive thread
             PresenceList.startKeepAlive();
@@ -216,6 +209,14 @@ namespace SPIXI.Meta
             if (walletStorage.readWallet(password))
             {
                 IxianHandler.addWallet(walletStorage);
+
+                // Prepare the balances list
+                List<Address> address_list = IxianHandler.getWalletStorage().getMyAddresses();
+                foreach (Address addr in address_list)
+                {
+                    IxianHandler.balances.Add(new Balance(addr, 0));
+                }
+
                 return true;
             }
             return false;
@@ -241,13 +242,29 @@ namespace SPIXI.Meta
             NetworkClientManager.start(2);
 
             // Start the s2 client manager
-            StreamClientManager.start();
+            StreamClientManager.start(Config.maxConnectedStreamingNodes);
+        }
+
+        private static void connectToBotNodes()
+        {
+            List<Friend> bot_list = null;
+            lock (FriendList.friends)
+            {
+                bot_list = FriendList.friends.FindAll(x => x.bot);
+            }
+            foreach (var bot_entry in bot_list)
+            {
+                if (bot_entry.relayNode != null)
+                {
+                    StreamClientManager.connectTo(bot_entry.relayNode.hostname, bot_entry.walletAddress);
+                }
+            }
         }
 
         // Handle timer routines
         static public void mainLoop()
         {
-            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressWithChecksum;
+            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum;
             if (primaryAddress == null)
                 return;
 
@@ -270,16 +287,19 @@ namespace SPIXI.Meta
                         OfflinePushMessages.fetchPushMessages();
 
                     // Update the friendlist
-                    FriendList.Update();
+                    updateFriendStatuses();
 
                     // Cleanup the presence list
                     // TODO: optimize this by using a different thread perhaps
                     PresenceList.performCleanup();
 
+                    Balance balance = IxianHandler.balances.First();
                     // Request initial wallet balance
                     if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
                     {
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, getBalanceBytes, null);
+                        CoreProtocolMessage.broadcastProtocolMessage(['M', 'H', 'R'], ProtocolMessageCode.getBalance2, getBalanceBytes, null);
+                        CoreProtocolMessage.fetchSectorNodes(IxianHandler.primaryWalletAddress, Config.maxRelaySectorNodesToRequest);
+                        ProtocolMessage.fetchAllFriendsSectorNodes();
                     }
 
                     // Check price if enough time passed
@@ -287,12 +307,53 @@ namespace SPIXI.Meta
                     {
                         checkPrice();
                     }
+
+                    connectToBotNodes();
                 }
                 catch (Exception e)
                 {
                     Logging.error("Exception occured in mainLoop: " + e);
                 }
                 Thread.Sleep(2500);
+            }
+        }
+
+        static public void updateFriendStatuses()
+        {
+            lock (FriendList.friends)
+            {
+                // Go through each friend and check for the pubkey in the PL
+                foreach (Friend friend in FriendList.friends)
+                {
+                    Presence presence = null;
+
+                    try
+                    {
+                        presence = PresenceList.getPresenceByAddress(friend.walletAddress);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Presence Error {0}", e.Message);
+                        presence = null;
+                    }
+
+                    if (presence != null)
+                    {
+                        if (friend.online == false)
+                        {
+                            friend.online = true;
+                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
+                        }
+                    }
+                    else
+                    {
+                        if (friend.online == true)
+                        {
+                            friend.online = false;
+                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
+                        }
+                    }
+                }
             }
         }
 
@@ -309,9 +370,9 @@ namespace SPIXI.Meta
             running = false;
 
             // Stop the stream processor
-            StreamProcessor.uninitialize();
+            streamProcessor.uninitialize();
 
-            localStorage.stop();
+            IxianHandler.localStorage.stop();
 
             MiniAppManager.stop();
 
@@ -351,58 +412,6 @@ namespace SPIXI.Meta
             stop();
         }
 
-
-        static public void setNetworkBlock(ulong block_height, byte[] block_checksum, int block_version)
-        {
-            ulong _oldNetworkBlockHeight = networkBlockHeight;
-            networkBlockHeight = block_height;
-            networkBlockChecksum = block_checksum;
-            networkBlockVersion = block_version;
-
-            // If there is a considerable change in blockheight, update the transaction lists
-            if (_oldNetworkBlockHeight + Config.txConfirmationBlocks < networkBlockHeight)
-            {
-                TransactionCache.updateCacheChangeStatus();
-            }
-        }
-
-        public override void receivedTransactionInclusionVerificationResponse(byte[] txid, bool verified)
-        {
-            // TODO implement error
-            // TODO implement blocknum
-            Transaction tx = TransactionCache.getUnconfirmedTransaction(txid);
-            if (tx == null)
-            {
-                return;
-            }
-
-            if (!verified)
-            {
-                tx.applied = 0;
-            }
-
-            TransactionCache.addTransaction(tx);
-            Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
-            if (p.GetType() == typeof(SingleChatPage))
-            {
-                ((SingleChatPage)p).updateTransactionStatus(Transaction.getTxIdString(txid), verified);
-            }
-        }
-
-        public override void receivedBlockHeader(Block block_header, bool verified)
-        {
-            if (balance.blockChecksum != null && balance.blockChecksum.SequenceEqual(block_header.blockChecksum))
-            {
-                balance.verified = true;
-            }
-            if (block_header.blockNum >= networkBlockHeight)
-            {
-                IxianHandler.status = NodeStatus.ready;
-                setNetworkBlock(block_header.blockNum, block_header.blockChecksum, block_header.version);
-            }
-            processPendingTransactions();
-        }
-
         public override ulong getLastBlockHeight()
         {
             if (tiv.getLastBlockHeader() == null)
@@ -414,7 +423,14 @@ namespace SPIXI.Meta
 
         public override ulong getHighestKnownNetworkBlockHeight()
         {
-            return networkBlockHeight;
+            ulong bh = getLastBlockHeight();
+            ulong netBlockNum = CoreProtocolMessage.determineHighestNetworkBlockNum();
+            if (bh < netBlockNum)
+            {
+                bh = netBlockNum;
+            }
+
+            return bh;
         }
 
         public override int getLastBlockVersion()
@@ -428,11 +444,15 @@ namespace SPIXI.Meta
             return tiv.getLastBlockHeader().version;
         }
 
-        public override bool addTransaction(Transaction tx, bool force_broadcast)
+        public override bool addTransaction(Transaction tx, List<Address> relayNodeAddresses, bool force_broadcast)
         {
             // TODO Send to peer if directly connectable
-            CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
-            PendingTransactions.addPendingLocalTransaction(tx);
+            foreach (var address in relayNodeAddresses)
+            {
+                NetworkClientManager.sendToClient(address, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
+            }
+            //CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'R' }, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
+            PendingTransactions.addPendingLocalTransaction(tx, relayNodeAddresses);
             return true;
         }
 
@@ -444,6 +464,7 @@ namespace SPIXI.Meta
         public override Wallet getWallet(Address id)
         {
             // TODO Properly implement this for multiple addresses
+            Balance balance = IxianHandler.balances.First();
             if (balance.address != null && id.SequenceEqual(balance.address))
             {
                 return new Wallet(balance.address, balance.balance);
@@ -454,6 +475,7 @@ namespace SPIXI.Meta
         public override IxiNumber getWalletBalance(Address id)
         {
             // TODO Properly implement this for multiple addresses
+            Balance balance = IxianHandler.balances.First();
             if (balance.address != null && id.SequenceEqual(balance.address))
             {
                 return balance.balance;
@@ -464,7 +486,8 @@ namespace SPIXI.Meta
         // Returns the current wallet's usable balance
         public static IxiNumber getAvailableBalance()
         {
-            IxiNumber currentBalance = Node.balance.balance;
+            Balance balance = IxianHandler.balances.First();
+            IxiNumber currentBalance = balance.balance;
             currentBalance -= TransactionCache.getPendingSentTransactionsAmount();
 
             return currentBalance;
@@ -527,7 +550,13 @@ namespace SPIXI.Meta
 
         public void onLowMemory()
         {
-            FriendList.onLowMemory();
+            var pages = Utils.getChatPages();
+            List<Address> excludeAddresses = new();
+            foreach (var p in pages)
+            {
+                excludeAddresses.Add(p.friend.walletAddress);
+            }
+            FriendList.onLowMemory(excludeAddresses);
         }
 
         public override Block getBlockHeader(ulong blockNum)
@@ -571,6 +600,158 @@ namespace SPIXI.Meta
         public override byte[] getBlockHash(ulong blockNum)
         {
             throw new NotImplementedException();
+        }
+
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)
+        {
+            FriendMessage friend_message = FriendList.addMessageWithType(id, type, wallet_address, channel, message, local_sender, sender_address, timestamp, fire_local_notification, payable_data_len);
+            if (friend_message != null)
+            {
+                bool oldMessage = false;
+
+                Friend friend = FriendList.getFriend(wallet_address);
+
+                if (!friend.online)
+                {
+                    StreamProcessor.fetchFriendsPresence(friend);
+                }
+
+                // Check if the message was sent before the friend was added to the contact list
+                if (friend.addedTimestamp > friend_message.timestamp)
+                {
+                    oldMessage = true;
+                }
+
+                // If a chat page is visible, insert the message directly
+                if (UIHelpers.isChatScreenDisplayed(friend))
+                {
+                    UIHelpers.insertMessage(friend, channel, friend_message);
+                }
+                else if (!friend_message.read)
+                {
+                    // Increase the unread counter if this is a new message
+                    if (!oldMessage)
+                        friend.metaData.unreadMessageCount++;
+
+                    friend.saveMetaData();
+                }
+
+                UIHelpers.shouldRefreshContacts = true;
+
+                // Only send alerts if this is a new message
+                if (oldMessage == false)
+                {
+                    // Send a local push notification if Spixi is not in the foreground
+                    if (fire_local_notification && !local_sender)
+                    {
+                        if (App.isInForeground == false || Utils.getChatPage(friend) == null)
+                        {
+                            // don't fire notification for nickname and avatar
+                            if (!friend_message.id.SequenceEqual(new byte[] { 4 }) && !friend_message.id.SequenceEqual(new byte[] { 5 }))
+                            {
+                                if (friend.bot == false
+                                    || (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification))
+                                {
+                                    SPushService.showLocalNotification("Spixi", "New Message", friend.walletAddress.ToString());
+                                }
+                            }
+                        }
+                    }
+
+                    SSystemAlert.flash();
+                }
+            }
+            return friend_message;
+        }
+
+        public override void triggerSignerPowSolutionFound()
+        {
+            throw new NotImplementedException();
+        }
+
+        static public Transaction sendTransaction(Address address, IxiNumber amount)
+        {
+            // TODO add support for sending funds from multiple addreses automatically based on remaining balance
+            Balance address_balance = IxianHandler.balances.First();
+            var from = address_balance.address;
+            return sendTransactionFrom(from, address, amount);
+        }
+
+        static public (Transaction transaction, List<Address> relayNodeAddresses) prepareTransactionFrom(Address fromAddress, Address toAddress, IxiNumber amount)
+        {
+            IxiNumber fee = ConsensusConfig.forceTransactionPrice;
+            SortedDictionary<Address, ToEntry> to_list = new(new AddressComparer());
+            Balance address_balance = IxianHandler.balances.FirstOrDefault(addr => addr.address.addressNoChecksum.SequenceEqual(fromAddress.addressNoChecksum));
+            Address pubKey = new(IxianHandler.getWalletStorage().getPrimaryPublicKey());
+
+            if (!IxianHandler.getWalletStorage().isMyAddress(fromAddress))
+            {
+                Logging.info("From address is not my address.");
+                return (null, null);
+            }
+
+            SortedDictionary<byte[], IxiNumber> from_list = new(new ByteArrayComparer())
+            {
+                { IxianHandler.getWalletStorage().getAddress(fromAddress).nonce, amount }
+            };
+
+            to_list.AddOrReplace(toAddress, new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), amount));
+
+            List<Address> relayNodeAddresses = NetworkClientManager.getRandomConnectedClientAddresses(2);
+            IxiNumber relayFee = 0;
+            foreach (Address relayNodeAddress in relayNodeAddresses)
+            {
+                var tmpFee = fee > ConsensusConfig.transactionDustLimit ? fee : ConsensusConfig.transactionDustLimit;
+                to_list.AddOrReplace(relayNodeAddress, new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), tmpFee));
+                relayFee += tmpFee;
+            }
+
+
+            // Prepare transaction to calculate fee
+            Transaction transaction = new((int)Transaction.Type.Normal, fee, to_list, from_list, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+
+            relayFee = 0;
+            foreach (Address relayNodeAddress in relayNodeAddresses)
+            {
+                var tmpFee = transaction.fee > ConsensusConfig.transactionDustLimit ? transaction.fee : ConsensusConfig.transactionDustLimit;
+                to_list[relayNodeAddress].amount = tmpFee;
+                relayFee += tmpFee;
+            }
+
+            byte[] first_address = from_list.Keys.First();
+            from_list[first_address] = from_list[first_address] + relayFee + transaction.fee;
+            IxiNumber wal_bal = IxianHandler.getWalletBalance(new Address(transaction.pubKey.addressNoChecksum, first_address));
+            if (from_list[first_address] > wal_bal)
+            {
+                IxiNumber maxAmount = wal_bal - transaction.fee;
+
+                if (maxAmount < 0)
+                    maxAmount = 0;
+
+                Logging.info("Insufficient funds to cover amount and transaction fee.\nMaximum amount you can send is {0} IXI.\n", maxAmount);
+                return (null, null);
+            }
+            // Prepare transaction with updated "from" amount to cover fee
+            transaction = new((int)Transaction.Type.Normal, fee, to_list, from_list, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+            return (transaction, relayNodeAddresses);
+        }
+
+        static public Transaction sendTransactionFrom(Address fromAddress, Address toAddress, IxiNumber amount)
+        {
+            var prepTx = prepareTransactionFrom(fromAddress, toAddress, amount);
+            var transaction = prepTx.transaction;
+            var relayNodeAddresses = prepTx.relayNodeAddresses;
+            // Send the transaction
+            if (IxianHandler.addTransaction(transaction, relayNodeAddresses, true))
+            {
+                Logging.info("Sending transaction, txid: {0}", transaction.getTxIdString());
+                return transaction;
+            }
+            else
+            {
+                Logging.warn("Could not send transaction, txid: {0}", transaction.getTxIdString());
+            }
+            return null;
         }
     }
 }

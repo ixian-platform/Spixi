@@ -7,18 +7,20 @@ using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
-using SPIXI.Storage;
 using SPIXI.VoIP;
 using System.Net;
 using System.Text;
 using System.Web;
+using IXICore.Streaming;
+using SPIXI.Network;
+using IXICore.Storage;
 
 namespace SPIXI
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SingleChatPage : SpixiContentPage
     {
-        private Friend friend = null;
+        public Friend friend = null;
 
         private uint messagesToShow = Config.messagesToLoad;
 
@@ -45,7 +47,6 @@ namespace SPIXI
             Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
             friend = fr;
-            friend.chat_page = this;
             Title = friend.nickname;
             selectedChannel = friend.metaData.lastMessageChannel;
 
@@ -62,10 +63,6 @@ namespace SPIXI
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            if (friend != null)
-            {
-                friend.chat_page = this;
-            }
         }
 
 
@@ -91,8 +88,6 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                friend.chat_page = null;
-
                 if (Navigation.NavigationStack.Count > 1)
                 {
                     try
@@ -255,7 +250,13 @@ namespace SPIXI
                 {
                     new_friend.save();
 
+                    UIHelpers.shouldRefreshContacts = true;
+
                     StreamProcessor.sendContactRequest(new_friend);
+                    if (new_friend.approved)
+                    {
+                        ProtocolMessage.resubscribeEvents();
+                    }
                 }
             }
             else if (current_url.StartsWith("ixian:kick:"))
@@ -280,7 +281,7 @@ namespace SPIXI
                 {
                     friend.pendingDeletion = true;
                     friend.save();
-                    Node.shouldRefreshContacts = true;
+                    UIHelpers.shouldRefreshContacts = true;
                     StreamProcessor.sendLeave(friend, null);
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
@@ -310,6 +311,8 @@ namespace SPIXI
             {
                 // Remove friend from list and go back to the main screen
                 FriendList.removeFriend(friend);
+
+                UIHelpers.shouldRefreshContacts = true;
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
                 homePage?.removeDetailContent();
 
@@ -417,7 +420,7 @@ namespace SPIXI
                 foreach (var contact in contacts)
                 {
                     string address = contact.Key.ToString();
-                    string avatar = Node.localStorage.getAvatarPath(address);
+                    string avatar = IxianHandler.localStorage.getAvatarPath(address);
                     if (avatar == null)
                     {
                         avatar = "img/spixiavatar.png";
@@ -527,7 +530,7 @@ namespace SPIXI
                 Preferences.Default.Set("rating_action", "show");
             }
 
-            Node.refreshAppRequests = true;
+            UIHelpers.refreshAppRequests = true;
 
             webView.FadeTo(1, 150);
 
@@ -566,7 +569,7 @@ namespace SPIXI
             byte[] spixi_msg_bytes = spixi_message.getBytes();
 
             // store the message and display it
-            FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
+            FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
 
             // Finally, clear the input field
             Utils.sendUiCommand(this, "clearInput");
@@ -640,12 +643,12 @@ namespace SPIXI
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
 
                 // store the message and display it
-                FriendMessage friend_message = FriendList.addMessageWithType(message.id, FriendMessageType.fileHeader, friend.walletAddress, selectedChannel, message_data, true);
+                FriendMessage friend_message = Node.addMessageWithType(message.id, FriendMessageType.fileHeader, friend.walletAddress, selectedChannel, message_data, true);
 
                 friend_message.transferId = transfer.uid;
                 friend_message.filePath = transfer.filePath;
 
-                Node.localStorage.requestWriteMessages(friend.walletAddress, selectedChannel);
+                IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, selectedChannel);
             }
             catch (Exception ex)
             {
@@ -685,7 +688,7 @@ namespace SPIXI
 
             friend.handshakePushed = false;
 
-            Node.shouldRefreshContacts = true;
+            UIHelpers.shouldRefreshContacts = true;
 
             StreamProcessor.sendAcceptAdd(friend, true);
         }
@@ -774,7 +777,7 @@ namespace SPIXI
 
             var msg = StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
             var app_info = Node.MiniAppManager.getAppInfo(app_id);
-            FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
+            Node.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
         }
 
         public void onJoinApp(string app_id)
@@ -860,7 +863,9 @@ namespace SPIXI
                         sender_address = friend.walletAddress;
                     }
                     IxiNumber amount = new IxiNumber(data);
-                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.forceTransactionPrice, sender_address, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
+                    var prepTx = Node.prepareTransactionFrom(IxianHandler.getWalletStorage().getPrimaryAddress(), sender_address, amount);
+                    var tx = prepTx.transaction;
+                    var relayNodeAddresses = prepTx.relayNodeAddresses;
                     IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
                     if(tx.amount <= 0)
                     {
@@ -883,7 +888,7 @@ namespace SPIXI
                         if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
                         {
                             StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
-                            IxianHandler.addTransaction(tx, true);
+                            IxianHandler.addTransaction(tx, relayNodeAddresses, true);
                             TransactionCache.addUnconfirmedTransaction(tx);
                             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-tip-confirmed-body"), nick, amount.ToString() + " IXI");
                             displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
@@ -902,7 +907,14 @@ namespace SPIXI
                     {
                         new_friend.save();
 
+                        UIHelpers.shouldRefreshContacts = true;
+
                         StreamProcessor.sendContactRequest(new_friend);
+
+                        if (new_friend.approved)
+                        {
+                            ProtocolMessage.resubscribeEvents();
+                        }
                     }
                     break;
 
@@ -1081,10 +1093,10 @@ namespace SPIXI
                 prefix = "addThem";
                 if(message.senderAddress != null)
                 {
-                    avatar = Node.localStorage.getAvatarPath(message.senderAddress.ToString());
+                    avatar = IxianHandler.localStorage.getAvatarPath(message.senderAddress.ToString());
                 }else
                 {
-                    avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                    avatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
                 }
                 if (avatar == null)
                 {
@@ -1177,7 +1189,7 @@ namespace SPIXI
 
                 if (transaction != null)
                 {
-                    if (Node.networkBlockHeight > transaction.blockHeight + Config.txConfirmationBlocks)
+                    if (IxianHandler.getHighestKnownNetworkBlockHeight() > transaction.blockHeight + Config.txConfirmationBlocks)
                     {
                         transaction.applied = transaction.blockHeight + Config.txConfirmationBlocks;
                         confirmed = true;
@@ -1359,7 +1371,7 @@ namespace SPIXI
             {
                 message.read = true;
 
-                Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
+                IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, channel);
 
                 UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
 
@@ -1448,8 +1460,13 @@ namespace SPIXI
             Utils.sendUiCommand(this, "addReactions", Crypto.hashToString(fm.id), reactions_str);
         }
 
-        public void updateMessage(FriendMessage message)
+        public void updateMessage(FriendMessage message, int channel)
         {
+            if (channel != selectedChannel)
+            {
+                return;
+            }
+
             bool paid = false;
             if(message.transactionId != "")
             {
@@ -1504,7 +1521,6 @@ namespace SPIXI
             if (homePage != null)
             {
                 Navigation.PopToRootAsync();
-                friend.chat_page = null;
                 homePage.removeDetailContent();
                 homePage.onChat(friend.walletAddress.ToString(), null);
             }
@@ -1515,11 +1531,11 @@ namespace SPIXI
         {
             base.updateScreen();
 
-            if (Node.shouldRefreshApps)
+            if (UIHelpers.shouldRefreshApps)
             {
                 if (homePage == null)
                 {
-                    Node.shouldRefreshApps = false;
+                    UIHelpers.shouldRefreshApps = false;
                 }
 
                 loadApps();
@@ -1576,7 +1592,7 @@ namespace SPIXI
             // Show connectivity warning bar
             if (NetworkClientManager.getConnectedClients(true).Count() > 0)
             {
-                if (!Config.enablePushNotifications && (friend.relayIP == null || StreamClientManager.isConnectedTo(friend.relayIP, true) == null))
+                if (!Config.enablePushNotifications && (friend.relayNode == null || StreamClientManager.isConnectedTo(friend.relayNode.hostname, true) == null))
                 {
                     if (!warningDisplayed)
                     {
@@ -1616,8 +1632,6 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            friend.chat_page = null;
-
             Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             return true;

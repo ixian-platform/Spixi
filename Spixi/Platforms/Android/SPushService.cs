@@ -4,6 +4,7 @@ using Android.Graphics;
 using Android.OS;
 using AndroidX.Core.App;
 using IXICore.Meta;
+using IXICore.Streaming;
 using OneSignalSDK.DotNet;
 using OneSignalSDK.DotNet.Core.Debug;
 using SPIXI;

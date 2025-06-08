@@ -1,11 +1,13 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.Storage;
+using IXICore.Streaming;
 using Spixi;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
-using SPIXI.Storage;
+using SPIXI.Network;
 using System.IO.Compression;
 using System.Web;
 
@@ -495,7 +497,14 @@ namespace SPIXI
             {
                 friend.save();
 
-                StreamProcessor.sendContactRequest(friend);
+                UIHelpers.shouldRefreshContacts = true;
+
+                CoreStreamProcessor.sendContactRequest(friend);
+
+                if (friend.approved)
+                {
+                    ProtocolMessage.resubscribeEvents();
+                }
             }
         }
 
@@ -547,14 +556,14 @@ namespace SPIXI
 
             setAsRoot();
 
-            Node.shouldRefreshContacts = true;
-            Node.refreshAppRequests = true;
-            Node.shouldRefreshApps = true;
+            UIHelpers.shouldRefreshContacts = true;
+            UIHelpers.refreshAppRequests = true;
+            UIHelpers.shouldRefreshApps = true;
             lastTransactionChange = 0;
 
             Utils.sendUiCommand(this, "selectTab", currentTab);
 
-            Utils.sendUiCommand(this, "loadAvatar", Node.localStorage.getOwnAvatarPath());
+            Utils.sendUiCommand(this, "loadAvatar", IxianHandler.localStorage.getOwnAvatarPath());
 
             Utils.sendUiCommand(this, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
 
@@ -668,9 +677,6 @@ namespace SPIXI
                 return;
             }
 
-
-            clearChatPages();
-
             fromChat = true;
             bool animated = e != null && Config.defaultXamarinAnimations;
 
@@ -699,7 +705,7 @@ namespace SPIXI
         // TODO: optimize this
         public void loadContacts()
         {
-            if (!Node.shouldRefreshContacts)
+            if (!UIHelpers.shouldRefreshContacts)
             {
                 //  No changes detected, stop here
                 return;
@@ -715,7 +721,7 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                string avatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
                 if (avatar == null)
                 {
                     avatar = "img/spixiavatar.png";
@@ -751,7 +757,7 @@ namespace SPIXI
                 Utils.sendUiCommand(this, "setUnreadIndicator", "0");
             }
 
-            if (!Node.shouldRefreshContacts)
+            if (!UIHelpers.shouldRefreshContacts)
             {
                 //  No changes detected, stop here
                 return;
@@ -853,7 +859,7 @@ namespace SPIXI
                         }
                     }
 
-                    string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                    string avatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
                     if(avatar == null)
                     {
                         avatar = "img/spixiavatar.png";
@@ -1009,7 +1015,7 @@ namespace SPIXI
                 string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
 
                 string confirmed = "false";
-                if(Node.networkBlockHeight > tx.blockHeight + Config.txConfirmationBlocks)
+                if(IxianHandler.getHighestKnownNetworkBlockHeight() > tx.blockHeight + Config.txConfirmationBlocks)
                 {
                     tx.applied = tx.blockHeight + Config.txConfirmationBlocks;
                     confirmed = "true";
@@ -1060,7 +1066,7 @@ namespace SPIXI
             loadApps();
             loadChats();
             loadContacts();
-            Node.shouldRefreshContacts = false;
+            UIHelpers.shouldRefreshContacts = false;
 
             updateContactStatus();
             loadTransactions();
@@ -1068,7 +1074,7 @@ namespace SPIXI
             try
             {
                 string new_version = checkForUpdate();
-                if (!new_version.StartsWith("(") && Version.Parse(new_version.Substring(new_version.IndexOf('-') + 1)).CompareTo(Version.Parse(Config.version.Substring(Config.version.IndexOf('-') + 1))) > 0)
+                if (!new_version.StartsWith("(") && new_version.Substring(new_version.IndexOf('-') + 1).CompareTo(Config.version.Substring(Config.version.IndexOf('-') + 1)) > 0)
                 {
                     Utils.sendUiCommand(this, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
                 }
@@ -1092,12 +1098,12 @@ namespace SPIXI
             IxiNumber availableBalance = Node.getAvailableBalance();
             string balance = Utils.amountToHumanFormatString(availableBalance);
             string fiatBalance = Utils.amountToHumanFormatString(Node.fiatPrice * availableBalance);
-            Utils.sendUiCommand(this, "setBalance", balance, fiatBalance, Node.localStorage.nickname);
+            Utils.sendUiCommand(this, "setBalance", balance, fiatBalance, IxianHandler.localStorage.nickname);
 
             // Check if we should reload certain elements
             if(Node.changedSettings == true)
             {
-                Utils.sendUiCommand(this, "loadAvatar", Node.localStorage.getOwnAvatarPath());
+                Utils.sendUiCommand(this, "loadAvatar", IxianHandler.localStorage.getOwnAvatarPath());
                 Node.changedSettings = false;
             }
 
@@ -1137,21 +1143,6 @@ namespace SPIXI
                 checkForRating();
             }
             base.OnAppearing();
-        }
-
-        private void clearChatPages()
-        {
-            lock (FriendList.friends)
-            {
-                var tmp_list = FriendList.friends.FindAll(x => x.chat_page != null);
-                foreach (var friend in tmp_list)
-                {
-                    if (friend.chat_page != null)
-                    {
-                        friend.chat_page = null;
-                    }
-                }
-            }
         }
 
         private string checkForUpdate()
@@ -1252,7 +1243,6 @@ namespace SPIXI
             rightContent.Content = defaultDetailContent.Content;
 
             Utils.sendUiCommand(this, "selectChat", "");
-            clearChatPages();
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -1262,7 +1252,7 @@ namespace SPIXI
 
         private void loadApps()
         {
-            if(!Node.shouldRefreshApps)
+            if(!UIHelpers.shouldRefreshApps)
             {
                 return;
             }
@@ -1270,7 +1260,7 @@ namespace SPIXI
             {
                 detailContent.updateScreen();
             }
-            Node.shouldRefreshApps = false;
+            UIHelpers.shouldRefreshApps = false;
 
             Utils.sendUiCommand(this, "clearApps");
 
@@ -1335,7 +1325,7 @@ namespace SPIXI
                 
                 var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null);
                 var app_info = Node.MiniAppManager.getAppInfo(appId);
-                FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
+                Node.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
             }
             catch (Exception ex)
             {
@@ -1378,5 +1368,9 @@ namespace SPIXI
             Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);
         }
 
+        public SpixiContentPage getDetailContent()
+        {
+            return detailContent;
+        }
     }
 }

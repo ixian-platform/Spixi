@@ -22,7 +22,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            //webView.Eval(string.Format("setNickname(\"{0}\")", Node.localStorage.nickname));
+            //webView.Eval(string.Format("setNickname(\"{0}\")", IxianHandler.localStorage.nickname));
             Utils.sendUiCommand(this, "unlock");
         }
 

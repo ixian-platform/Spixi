@@ -1,9 +1,10 @@
 ﻿using IXICore.Meta;
+using IXICore.Storage;
+using IXICore.Streaming;
 using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Storage;
 using System.Web;
 
 namespace SPIXI
@@ -32,7 +33,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(this, "setNickname", Node.localStorage.nickname);
+            Utils.sendUiCommand(this, "setNickname", IxianHandler.localStorage.nickname);
             selectedAppearance = ThemeManager.getActiveAppearance();
             int activeAppearanceIdx = (int)selectedAppearance;
             Utils.sendUiCommand(this, "setAppearance", activeAppearanceIdx.ToString());
@@ -44,7 +45,7 @@ namespace SPIXI
             Utils.sendUiCommand(this, "setLockEnabled", lockEnabled.ToString());
 
 
-            var filePath = Node.localStorage.getOwnAvatarPath();
+            var filePath = IxianHandler.localStorage.getOwnAvatarPath();
             if (filePath.Equals("img/spixiavatar.png", StringComparison.Ordinal))
             {
                 // No custom avatar has been chosen
@@ -182,12 +183,12 @@ namespace SPIXI
 
             Preferences.Default.Set("lockenabled", lockEnabled);
 
-            if (Node.localStorage.nickname != nick)
+            if (IxianHandler.localStorage.nickname != nick)
             {
-                Node.localStorage.nickname = nick;
+                IxianHandler.localStorage.nickname = nick;
                 FriendList.broadcastNicknameChange();
             }
-            Node.localStorage.writeAccountFile();
+            IxianHandler.localStorage.writeAccountFile();
             Node.changedSettings = true;
             applyAvatar();
 
@@ -238,7 +239,7 @@ namespace SPIXI
 
                 SpixiLocalization.addCustomString("OnboardingComplete", "false");
 
-                Node.localStorage.deleteTransactionCacheFile();
+                IxianHandler.localStorage.deleteTransactionCacheFile();
                 TransactionCache.clearAllTransactions();
                 Node.tiv.clearCache();
 
@@ -259,10 +260,10 @@ namespace SPIXI
 
         public void onDeleteAccount(object sender, EventArgs e)
         {
-            Node.localStorage.deleteAllAvatars();
-            Node.localStorage.deleteAccountFile();
-            Node.localStorage.deleteAllDownloads();
-            StreamProcessor.deletePendingMessages();
+            IxianHandler.localStorage.deleteAllAvatars();
+            IxianHandler.localStorage.deleteAccountFile();
+            IxianHandler.localStorage.deleteAllDownloads();
+            CoreStreamProcessor.deletePendingMessages();
             FriendList.deleteEntireHistory();
             FriendList.deleteAccounts();
             FriendList.clear();
@@ -308,7 +309,7 @@ namespace SPIXI
             if (stream == null)
                 return;          
 
-            var file_path = Path.Combine(Node.localStorage.avatarsPath, "avatar-tmp.jpg");
+            var file_path = Path.Combine(IxianHandler.localStorage.avatarsPath, "avatar-tmp.jpg");
             try
             {
                 byte[] image_bytes = null;
@@ -340,8 +341,8 @@ namespace SPIXI
         // Applies the avatar image once the user chooses to Save changes
         public void applyAvatar()
         {
-            var file_path = Node.localStorage.getOwnAvatarPath(false);
-            var source_file_path = Path.Combine(Node.localStorage.avatarsPath, "avatar-tmp.jpg");
+            var file_path = IxianHandler.localStorage.getOwnAvatarPath(false);
+            var source_file_path = Path.Combine(IxianHandler.localStorage.avatarsPath, "avatar-tmp.jpg");
 
             // Check if the source file exists before proceeding
             if (!File.Exists(source_file_path))
@@ -368,10 +369,10 @@ namespace SPIXI
 
         public void onRemoveAvatar()
         {
-            if (Node.localStorage.deleteOwnAvatar())
+            if (IxianHandler.localStorage.deleteOwnAvatar())
             {
                 Utils.sendUiCommand(this, "showRemoveAvatar", "0");
-                Utils.sendUiCommand(this, "loadAvatar", Node.localStorage.getOwnAvatarPath());
+                Utils.sendUiCommand(this, "loadAvatar", IxianHandler.localStorage.getOwnAvatarPath());
                 Node.changedSettings = true;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System.Web;
@@ -154,6 +155,7 @@ namespace SPIXI
                     if (old_friend.pendingDeletion)
                     {
                         FriendList.removeFriend(old_friend);
+                        UIHelpers.shouldRefreshContacts = true;
                     }
                     else
                     {
@@ -170,7 +172,9 @@ namespace SPIXI
 
                     StreamProcessor.sendContactRequest(friend);
 
-                    FriendList.addMessageWithType(null, FriendMessageType.requestAddSent, recipient_address, 0, "", true);
+                    UIHelpers.shouldRefreshContacts = true;
+
+                    Node.addMessageWithType(null, FriendMessageType.requestAddSent, recipient_address, 0, "", true);
                 }
             }
             catch(Exception)

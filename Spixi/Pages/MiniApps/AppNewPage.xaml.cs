@@ -153,7 +153,7 @@ namespace SPIXI
             string app_name = Node.MiniAppManager.install(path);
             if (app_name != null)
             {
-                Node.shouldRefreshApps = true;
+                UIHelpers.shouldRefreshApps = true;
                 displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), string.Format(SpixiLocalization._SL("app-new-dialog-installed-text"), app_name), SpixiLocalization._SL("global-dialog-ok"));
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }

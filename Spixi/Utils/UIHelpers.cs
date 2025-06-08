@@ -1,11 +1,13 @@
 ﻿using IXICore;
-using SPIXI.Meta;
-using System.Linq;
+using IXICore.Streaming;
 
 namespace SPIXI
 {
     public static class UIHelpers
     {
+        public static bool shouldRefreshContacts = true;
+        public static bool shouldRefreshApps = true;
+        public static bool refreshAppRequests = true;
         public static void setContactStatus(Address address, bool online, int unread, string excerpt, long timestamp)
         {
             Page page = Application.Current.MainPage.Navigation.NavigationStack.Last();
@@ -14,7 +16,7 @@ namespace SPIXI
                 ((HomePage)page).setContactStatus(address, online, unread, excerpt, timestamp);
             }else
             {
-                Node.shouldRefreshContacts = true;
+                shouldRefreshContacts = true;
             }
         }
 
@@ -27,6 +29,36 @@ namespace SPIXI
             {
                 ((SpixiContentPage)p).reload();
             }
+        }
+
+        public static void updateMessage(Friend friend, int channel, FriendMessage msg)
+        {
+            Utils.getChatPage(friend)?.updateMessage(msg, channel);
+        }
+
+        public static void insertMessage(Friend friend, int channel, FriendMessage msg)
+        {
+            Utils.getChatPage(friend)?.insertMessage(msg, channel);
+        }
+
+        public static void deleteMessage(Friend friend, int channel, byte[] msgId)
+        {
+            Utils.getChatPage(friend)?.deleteMessage(msgId, channel);
+        }
+
+        public static void updateReactions(Friend friend, int channel, byte[] msgId)
+        {
+            Utils.getChatPage(friend)?.updateReactions(msgId, channel);
+        }
+
+        public static void updateGroupChatNicks(Friend friend, Address realSenderAddress, string nick)
+        {
+            Utils.getChatPage(friend)?.updateGroupChatNicks(realSenderAddress, nick);
+        }
+
+        public static bool isChatScreenDisplayed(Friend friend)
+        {
+            return Utils.getChatPage(friend) != null ? true : false;
         }
     }
 }

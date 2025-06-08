@@ -1,11 +1,8 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using IXICore.Network;
-using SPIXI.Interfaces;
+using IXICore.Streaming;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Storage;
-using System;
 using System.Text;
 using System.Web;
 
@@ -100,13 +97,14 @@ namespace SPIXI
                     message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                     message.data = spixi_message.getBytes();
 
-                    StreamProcessor.sendMessage(friend, message);
+                    CoreStreamProcessor.sendMessage(friend, message);
 
-                    Node.localStorage.requestWriteMessages(friend.walletAddress, 0);
+                    IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, 0);
 
-                    if (friend.chat_page != null)
+                    var chat_page = Utils.getChatPage(friend);
+                    if (chat_page != null)
                     {
-                        friend.chat_page.updateRequestFundsStatus(requestMsg.id, null, SpixiLocalization._SL("chat-payment-status-declined"));
+                        chat_page.updateRequestFundsStatus(requestMsg.id, null, SpixiLocalization._SL("chat-payment-status-declined"));
                     }
                 }
             }
@@ -116,6 +114,8 @@ namespace SPIXI
         private void onSend()
         {
             IxiNumber fee = ConsensusConfig.forceTransactionPrice;
+            IxiNumber relayFee = fee * 4;
+
             IxiNumber _amount = amount;
 
             if (_amount < (long)0)
@@ -125,7 +125,7 @@ namespace SPIXI
             }
 
             IxiNumber availableBalance = Node.getAvailableBalance();
-            if (_amount + fee > availableBalance)
+            if (_amount + fee + relayFee > availableBalance)
             {
                 string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), _amount + fee, availableBalance);
                 displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
@@ -142,11 +142,8 @@ namespace SPIXI
                 Address to = friend.walletAddress;
                 
                 Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
-                Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
-                Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
-
-                IxianHandler.addTransaction(transaction, true);
+                Transaction transaction = Node.sendTransactionFrom(from, to, amount);
                 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id + ":" + transaction.getTxIdString()));
 
@@ -158,13 +155,14 @@ namespace SPIXI
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
-                StreamProcessor.sendMessage(friend, message);
+                CoreStreamProcessor.sendMessage(friend, message);
 
-                Node.localStorage.requestWriteMessages(friend.walletAddress, 0);
+                IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, 0);
 
-                if (friend.chat_page != null)
+                var chat_page = Utils.getChatPage(friend);
+                if (chat_page != null)
                 {
-                    friend.chat_page.updateRequestFundsStatus(requestMsg.id, transaction.id, SpixiLocalization._SL("chat-payment-status-pending"));
+                    chat_page.updateRequestFundsStatus(requestMsg.id, transaction.id, SpixiLocalization._SL("chat-payment-status-pending"));
                 }
             }
 

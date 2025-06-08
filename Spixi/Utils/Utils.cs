@@ -1,5 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
+using Spixi;
 using System.Text;
 
 namespace SPIXI
@@ -82,6 +84,49 @@ namespace SPIXI
             {
                 Logging.error("Exception occured in sendUiCommand " + e);
             }
+        }
+
+        public static SingleChatPage getChatPage(Friend friend)
+        {
+            
+            foreach (var item in App.Current.MainPage.Navigation.NavigationStack)
+            {
+                if (item is SingleChatPage)
+                {
+                    if (((SingleChatPage)item).friend == friend)
+                    {
+                        return (SingleChatPage)item;
+                    }
+                }
+            }
+
+            if (HomePage.Instance() != null
+                && HomePage.Instance().getDetailContent() != null)
+            {
+                var item = HomePage.Instance().getDetailContent();
+                if (item is SingleChatPage)
+                {
+                    if (((SingleChatPage)item).friend == friend)
+                    {
+                        return (SingleChatPage)item;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public static List<SingleChatPage> getChatPages()
+        {
+            List<SingleChatPage> chatPages = new();
+            foreach (var item in App.Current.MainPage.Navigation.NavigationStack)
+            {
+                if (item is SingleChatPage)
+                {
+                    chatPages.Add((SingleChatPage)item);
+                }
+            }
+            return chatPages;
         }
     }
 }

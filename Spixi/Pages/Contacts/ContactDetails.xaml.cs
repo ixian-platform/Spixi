@@ -1,11 +1,10 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using Spixi.Storage.Models;
+using IXICore.Storage;
+using IXICore.Storage.Models;
+using IXICore.Streaming;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Storage;
-using System;
-using System.Linq;
 using System.Web;
 
 namespace SPIXI
@@ -128,14 +127,15 @@ namespace SPIXI
             {
                 friend.pendingDeletion = true;
                 friend.save();
-                Node.shouldRefreshContacts = true;
-                StreamProcessor.sendLeave(friend, null);
+                UIHelpers.shouldRefreshContacts = true;
+                CoreStreamProcessor.sendLeave(friend, null);
                 displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             else
             {
                 if (FriendList.removeFriend(friend) == true)
                 {
+                    UIHelpers.shouldRefreshContacts = true;
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
@@ -211,7 +211,7 @@ namespace SPIXI
         {
             Utils.sendUiCommand(this, "setNickname", friend.nickname);
 
-            string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString(), false);
+            string avatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString(), false);
             if (avatar == null)
             {
                 avatar = "";

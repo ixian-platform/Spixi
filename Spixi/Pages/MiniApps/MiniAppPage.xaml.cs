@@ -7,6 +7,7 @@ using SPIXI.Lang;
 using SPIXI.Meta;
 using System.Text;
 using System.Web;
+using IXICore.Streaming;
 
 
 namespace SPIXI
