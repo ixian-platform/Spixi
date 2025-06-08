@@ -118,7 +118,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                OnBackButtonPressed();
             }
             else if (current_url.Contains("ixian:send:"))
             {

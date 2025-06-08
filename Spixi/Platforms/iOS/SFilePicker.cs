@@ -68,7 +68,13 @@ namespace Spixi
             }
             else
             {
-                taskCompletionSource.SetResult(null);
+                var videoURL = (NSUrl)args.Info.ObjectForKey(UIImagePickerController.MediaURL);
+                NSData videoData = NSData.FromUrl(videoURL);
+
+                SpixiImageData spixi_img_data = new SpixiImageData() { name = Path.GetFileName(videoURL.AbsoluteString), path = "", stream = videoData.AsStream() };
+
+                // Set the Stream as the completion of the Task
+                taskCompletionSource.SetResult(spixi_img_data);
             }
             imagePicker.DismissModalViewController(true);
         }

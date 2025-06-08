@@ -2,8 +2,9 @@
 using SPIXI.MiniApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using System;
 using System.Web;
+using IXICore;
+using IXICore.Streaming;
 
 namespace SPIXI
 {
@@ -13,6 +14,10 @@ namespace SPIXI
         string appId = null;
 
         MiniApp fetchedApp = null;
+
+        bool fromChat = false;
+
+        private bool shouldReloadDetailView = false;
 
         public AppDetailsPage(string app_id)
         {
@@ -25,10 +30,12 @@ namespace SPIXI
             loadPage(webView, "app_details.html");
         }
 
-        public AppDetailsPage(MiniApp app)
+        public AppDetailsPage(MiniApp app, bool fromChat = false, bool shouldReloadDetailView = false)
         {
             InitializeComponent();
 
+            this.fromChat = fromChat;
+            this.shouldReloadDetailView = shouldReloadDetailView;
             fetchedApp = app;
 
             NavigationPage.SetHasNavigationBar(this, false);
@@ -83,10 +90,15 @@ namespace SPIXI
             {
                 onDetails();
             }
-            else if (current_url.StartsWith("ixian:startApp", StringComparison.Ordinal))
+            else if (current_url.StartsWith("ixian:startApp:", StringComparison.Ordinal))
             {
                 string appId = current_url.Substring("ixian:startApp:".Length);
                 onStartApp(appId);
+            }
+            else if (current_url.StartsWith("ixian:startAppMulti:", StringComparison.Ordinal))
+            {
+                string appId = current_url.Substring("ixian:startAppMulti:".Length);
+                onStartAppMulti(appId);
             }
             else
             {
@@ -125,7 +137,7 @@ namespace SPIXI
 
             var app_list = Node.MiniAppManager.getInstalledApps();
             bool app_installed = app_list.ContainsKey(appId);
-            bool app_verified = true;
+            bool app_verified = false;
 
             Utils.sendUiCommand(this, "init", 
                 app.name, 
@@ -135,10 +147,12 @@ namespace SPIXI
                 app.url, 
                 Utils.bytesToHumanFormatString(app.contentSize), 
                 app.getCapabilitiesAsString(), 
-                appId, 
+                appId,
+                app.hasCapability(MiniAppCapabilities.SingleUser).ToString(),
                 app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), 
                 app_installed.ToString(),
-                app_verified.ToString());
+                app_verified.ToString(),
+                (!fromChat).ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -172,6 +186,7 @@ namespace SPIXI
             if(Node.MiniAppManager.remove(appId))
             {
                 Utils.sendUiCommand(this, "showAppRemoved");
+                shouldReloadDetailView = true;
             }
             else
             {
@@ -188,9 +203,9 @@ namespace SPIXI
             {
                 return;
             }
-
-            Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
-            Navigation.RemovePage(this);
+            
+            Navigation.PushAsync(new AppDetailsPage(app, fromChat, true), Config.defaultXamarinAnimations);
+            Navigation.RemovePage(this);          
         }
 
         // Executed every second
@@ -202,6 +217,10 @@ namespace SPIXI
         private void onBack()
         {
             Navigation.PopAsync(Config.defaultXamarinAnimations);
+            if (shouldReloadDetailView)
+            {
+                reloadDetailView();
+            }
         }
 
         protected override bool OnBackButtonPressed()
@@ -213,14 +232,78 @@ namespace SPIXI
 
         public void onStartApp(string appId)
         {
-            MiniAppPage MiniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.MiniAppManager.getAppEntryPoint(appId));
-            MiniAppPage.accepted = true;
-            Node.MiniAppManager.addAppPage(MiniAppPage);
+            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), null, Node.MiniAppManager.getAppEntryPoint(appId));
+            miniAppPage.accepted = true;
+            Node.MiniAppManager.addAppPage(miniAppPage);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(MiniAppPage, Config.defaultXamarinAnimations);
+                Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
             });
+        }
+
+        private void onStartAppMulti(string appId)
+        {
+            var recipientPage = new WalletRecipientPage();
+            recipientPage.pickSucceeded += (sender, e) =>
+            {
+                HandlePickAppMultiUserSucceeded(sender, e, appId);
+            };
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
+            });
+        }
+
+        private async void HandlePickAppMultiUserSucceeded(object sender, SPIXI.EventArgs<string> e, string appId)
+        {
+            string id = e.Value;
+            Address id_bytes = new Address(id);
+            Friend friend = FriendList.getFriend(id_bytes);
+
+            if (friend == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+                byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
+
+                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null);
+                var app_info = Node.MiniAppManager.getAppInfo(appId);
+                FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Navigation failed: " + ex.Message);
+            }
+        }
+
+        public byte[] onJoinApp(string appId, Address[] userAddresses)
+        {
+            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), userAddresses, Node.MiniAppManager.getAppEntryPoint(appId));
+            miniAppPage.accepted = true;
+            Node.MiniAppManager.addAppPage(miniAppPage);
+
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Task.Delay(200); // WinUI Crash fix
+                await Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+            });
+
+            return miniAppPage.sessionId;
+        }
+        private void reloadDetailView()
+        {
+            Page page = Application.Current.MainPage.Navigation.NavigationStack.Last();
+            if (page != null && page is HomePage)
+            {
+                ((HomePage)page).removeDetailContent();
+            }
         }
     }
 }

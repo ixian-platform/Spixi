@@ -18,8 +18,8 @@ namespace SPIXI
         public string appId = null;
         public byte[] sessionId = null; // App session ID
 
-        public Address myRequestAddress = null; // which address the app request was sent to
-        public Address requestedByAddress = null; // which address sent the app request to us
+        //public Address myRequestAddress = null; // which address the app request was sent to
+        //public Address requestedByAddress = null; // which address sent the app request to us
 
         public Address hostUserAddress = null; // address of the user that initiated the app
         private Address[] userAddresses = null; // addresses of all users connected to/using the app
@@ -33,7 +33,8 @@ namespace SPIXI
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            sessionId = Guid.NewGuid().ToByteArray();
+            // TODO randomize session id and add support for more users
+            sessionId = CryptoManager.lib.sha3_512sqTrunc(UTF8Encoding.UTF8.GetBytes(app_id));
 
             appId = app_id;
 
@@ -96,13 +97,24 @@ namespace SPIXI
             {
                 var key = current_url.Substring("ixian:getStorageData".Length);
                 var data = Node.MiniAppStorage.getStorageData(appId, key);
-                Utils.sendUiCommand(this, "SpixiAppSdk.onStorageData", key, Crypto.hashToString(data));
+                string dataStr = "null";
+                if (data != null)
+                {
+                    dataStr = Convert.ToBase64String(data);
+                }
+                Utils.sendUiCommand(this, "SpixiAppSdk.onStorageData", key, dataStr);
             }
             else if (current_url.StartsWith("ixian:setStorageData", StringComparison.Ordinal))
             {
-                var key = current_url.Substring("ixian:setStorageData".Length, current_url.IndexOf('='));
-                var value = current_url.Substring(current_url.IndexOf('='));
-                Node.MiniAppStorage.setStorageData(appId, key, Crypto.stringToHash(value));
+                var prefixLen = "ixian:setStorageData".Length;
+                var key = current_url.Substring(prefixLen, current_url.IndexOf('=') - prefixLen);
+                var value = current_url.Substring(current_url.IndexOf('=') + 1);
+                byte[] valueToStore = null;
+                if (value != "null")
+                {
+                    valueToStore = Convert.FromBase64String(value);
+                }
+                Node.MiniAppStorage.setStorageData(appId, key, valueToStore);
             }
             else if (current_url.StartsWith("ixian:action", StringComparison.Ordinal))
             {
@@ -178,6 +190,16 @@ namespace SPIXI
 
         private void onLoad()
         {
+            if (userAddresses != null)
+            {
+                // Multi User App
+                Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), string.Join(',', userAddresses.Select(x => x.ToString())));
+            } else
+            {
+                // Single User App
+                Utils.sendUiCommand(this, "SpixiAppSdk.onInit");
+            }
+
             // Execute timer-related functionality immediately
             updateScreen();
         }
@@ -207,32 +229,64 @@ namespace SPIXI
 
         private void onBack()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
-            Node.MiniAppManager.removeAppPage(sessionId);
+            if (userAddresses != null)
+            {
+                foreach (Address address in userAddresses)
+                {
+                    Friend f = FriendList.getFriend(address);
+                    if (f != null)
+                    {
+                        // TODO TODO TODO probably a different encoding should be used for data
+                        StreamProcessor.sendAppEndSession(f, sessionId, UTF8Encoding.UTF8.GetBytes(IxianHandler.primaryWalletAddress.ToString()));
+                    }
+                    else
+                    {
+                        Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
+                    }
+                }
+            }
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                Node.MiniAppManager.removeAppPage(sessionId);
+            });
         }
 
         public void networkDataReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkData", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkData", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public void appRequestAcceptReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public void appRequestRejectReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public void appEndSessionReceived(Address sender_address, byte[] data)
         {
-            // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(this, "SpixiAppSdk.onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
         }
 
         public bool hasUser(Address user)

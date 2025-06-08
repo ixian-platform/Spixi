@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" Condition="$(TargetFramework.Contains('-ios'))">
   <PropertyGroup>
     <TargetFrameworks>net8.0-ios</TargetFrameworks>
     <OutputType>Library</OutputType>

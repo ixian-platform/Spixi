@@ -48,7 +48,11 @@ public partial class App : Application
 
             // Init logging
             Logging.setOptions(Config.maxLogSize, Config.maxLogCount, false);
-            Logging.start(Config.spixiUserFolder, Config.logVerbosity);
+            if (!Logging.start(Config.spixiUserFolder, Config.logVerbosity))
+            {
+                Environment.Exit(1);
+                return;
+            }
             Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
 
             // Init fatal exception handlers

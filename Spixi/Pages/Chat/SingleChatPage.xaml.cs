@@ -1,16 +1,16 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
-using SPIXI.MiniApps;
-using SPIXI.Interfaces;
-using SPIXI.Meta;
-using SPIXI.VoIP;
-using System.Text;
-using System.Web;
-using SPIXI.Lang;
 using IXICore.SpixiBot;
 using Spixi;
+using SPIXI.Interfaces;
+using SPIXI.Lang;
+using SPIXI.Meta;
+using SPIXI.MiniApps;
+using SPIXI.VoIP;
 using System.Net;
+using System.Text;
+using System.Web;
 using IXICore.Streaming;
 using SPIXI.Network;
 using IXICore.Storage;
@@ -24,13 +24,16 @@ namespace SPIXI
 
         private uint messagesToShow = Config.messagesToLoad;
 
-        private int lastMessageCount = 0;
-
         private int selectedChannel = 0;
 
         private bool _waitingForContactConfirmation = false;
 
         private HomePage? homePage;
+
+        private bool warningDisplayed = false;
+        private bool unreadIndicatorDisplayed = false;
+        private string setNickname = "";
+        private bool setOnlineStatus = false;
 
         public SingleChatPage(Friend fr) : this(fr, null)
         {
@@ -281,7 +284,7 @@ namespace SPIXI
                     UIHelpers.shouldRefreshContacts = true;
                     StreamProcessor.sendLeave(friend, null);
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    Navigation.PopAsync();
+                    Navigation.PopAsync(Config.defaultXamarinAnimations);
                     homePage?.removeDetailContent();
                 }
             }
@@ -310,7 +313,7 @@ namespace SPIXI
                 FriendList.removeFriend(friend);
 
                 UIHelpers.shouldRefreshContacts = true;
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
                 homePage?.removeDetailContent();
 
                 // TODO: send a notification to the other party
@@ -772,8 +775,9 @@ namespace SPIXI
                 return;
             }
 
-            Node.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, app_id, true, null, 0, false);
-            StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
+            var msg = StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
+            var app_info = Node.MiniAppManager.getAppInfo(app_id);
+            Node.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
         }
 
         public void onJoinApp(string app_id)
@@ -801,7 +805,7 @@ namespace SPIXI
         {
             if (homePage != null)
             {
-                homePage.onInstallApp(app_url);
+                homePage.onInstallApp(app_url, true);
                 return;
             }
 
@@ -815,7 +819,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, true), Config.defaultXamarinAnimations);
             });
         }
 
@@ -954,6 +958,7 @@ namespace SPIXI
 
         public void loadApps()
         {
+            Utils.sendUiCommand(this, "clearApps");
             var apps = Node.MiniAppManager.getInstalledApps();
             lock (apps)
             {
@@ -971,7 +976,7 @@ namespace SPIXI
                         {
                             icon = "";
                         }
-                        Utils.sendUiCommand(this, "addApp", app.id, app.name, icon);
+                        Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher);
                     }
                     catch (Exception e)
                     {
@@ -1228,9 +1233,29 @@ namespace SPIXI
                 {
                     string uid = split[0];
                     string name = split[1];
+                    if (message.transferId == "")
+                    {
+                        if (split.Length > 2)
+                        {
+                            ulong fileSize = ulong.Parse(split[2]);
+                            Logging.warn("Transfer id is not set.");
+                            // Sometimes transfer data isn't set on restart - rebuild
+                            message.transferId = uid;
+                            message.filePath = name;
+                            message.fileSize = fileSize;
+                        }
+                        else
+                        {
+                            // fix for open file not working sometimes
+                            Logging.warn("Transfer id is not set.");
+                            // Sometimes transfer data isn't set on restart - rebuild
+                            message.transferId = uid;
+                            message.filePath = name;
+                        }
+                    }
 
                     string progress = "0";
-                    if(message.completed)
+                    if (message.completed)
                     {
                         progress = "100";
                     }
@@ -1245,6 +1270,7 @@ namespace SPIXI
                 string app_id;
                 string app_install_url = "";
                 string app_name = "";
+                string app_image = "img/app-noicon.jpg";
                 if (message.message.Contains("||"))
                 {
                     string[] app_id_data = message.message.Split(new[] { "||" }, StringSplitOptions.None);
@@ -1268,16 +1294,21 @@ namespace SPIXI
                 else
                 {
                     app_name = app.name;
+                    app_image = Node.MiniAppManager.getAppIconPath(app.id);
+                    if (app_image == null)
+                    {
+                        app_image = "img/app-noicon.jpg";
+                    }
                 }
 
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
+                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, app_image, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
                 }
                 else
                 {
-                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
+                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(message.id), app_id, app_name, app_image, address, nick, avatar, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), app_state, app_install_url);
                 }
             }
 
@@ -1316,9 +1347,10 @@ namespace SPIXI
                 }else if(message.type == FriendMessageType.voiceCallEnd)
                 {
                     long seconds = Int32.Parse(message.message);
-                    long minutes = seconds / 60;
-                    seconds = seconds % 60;
+                    long minutes = seconds > 0 ? seconds / 60 : 0;
+                    seconds = seconds > 0 ? seconds % 60 : 0;
                     text = string.Format("{0} ({1}:{2})", text, minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
+
                 }
                 Utils.sendUiCommand(this, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
             }
@@ -1499,9 +1531,25 @@ namespace SPIXI
         {
             base.updateScreen();
 
-            Utils.sendUiCommand(this, "setNickname", friend.nickname);
+            if (UIHelpers.shouldRefreshApps)
+            {
+                if (homePage == null)
+                {
+                    UIHelpers.shouldRefreshApps = false;
+                }
 
-            if(friend.bot)
+                loadApps();
+                loadMessages();
+            }
+
+
+            if (setNickname != friend.nickname)
+            {
+                Utils.sendUiCommand(this, "setNickname", friend.nickname);
+                setNickname = friend.nickname;
+            }
+
+            if (friend.bot)
             {
                 long userCount = 0;
                 if(friend.metaData != null && friend.metaData.botInfo != null)
@@ -1516,14 +1564,19 @@ namespace SPIXI
                 {
                     if (friend.online)
                     {
-                        Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
+                        if (setOnlineStatus == false)
+                        {
+                            Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
+                            setOnlineStatus = true;
+                        }
                     }
-                    else
+                    else if (setOnlineStatus == true)
                     {
                         Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-offline"));
+                        setOnlineStatus = false;
                     }
 
-                    if(_waitingForContactConfirmation)
+                    if (_waitingForContactConfirmation)
                     {
                         _waitingForContactConfirmation = false;
                         Utils.sendUiCommand(this, "showRequestSentModal", "0");
@@ -1541,25 +1594,39 @@ namespace SPIXI
             {
                 if (!Config.enablePushNotifications && (friend.relayNode == null || StreamClientManager.isConnectedTo(friend.relayNode.hostname, true) == null))
                 {
-                    Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
+                    if (!warningDisplayed)
+                    {
+                        Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
+                        warningDisplayed = true;
+                    }
                 }
-                else
+                else if (warningDisplayed)
                 {
                     Utils.sendUiCommand(this, "showWarning", "");
+                    warningDisplayed = false;
                 }
             }
             else
             {
                 Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                warningDisplayed = true;
             }
             
                 
             // Show the messages indicator
             int msgCount = FriendList.getUnreadMessageCount();
-            //if(msgCount != lastMessageCount)
+            if(msgCount > 0)
             {
-                lastMessageCount = msgCount;
-                Utils.sendUiCommand(this, "setUnreadIndicator", string.Format("{0}", lastMessageCount));
+                if (!unreadIndicatorDisplayed)
+                {
+                    Utils.sendUiCommand(this, "setUnreadIndicator", string.Format("{0}", msgCount));
+                    unreadIndicatorDisplayed = true;
+                }
+            }
+            else if (unreadIndicatorDisplayed)
+            {
+                Utils.sendUiCommand(this, "setUnreadIndicator", "0");
+                unreadIndicatorDisplayed = false;
             }
         }
 

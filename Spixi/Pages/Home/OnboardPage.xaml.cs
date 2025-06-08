@@ -31,7 +31,7 @@ namespace SPIXI
 
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                Navigation.PopModalAsync();
             }
             else if (current_url.Contains("ixian:joinbot"))
             {
@@ -66,7 +66,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            Navigation.PopModalAsync(false);
 
             return true;
         }

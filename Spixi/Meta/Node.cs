@@ -55,8 +55,6 @@ namespace SPIXI.Meta
             Logging.info("Initing node constructor");
             Instance = this;
 
-            SPushService.initialize();
-
             CoreConfig.simultaneousConnectedNeighbors = 6;
 
             IxianHandler.init(Config.version, this, Config.networkType, false, Config.checksumLock);
@@ -175,7 +173,9 @@ namespace SPIXI.Meta
             mainLoopThread.Start();
 
             // Init push service
-            string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();          
+            SPushService.initialize();
+
+            string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
             SPushService.setTag(tag);
             SPushService.clearNotifications();
 

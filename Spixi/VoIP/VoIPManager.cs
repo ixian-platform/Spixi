@@ -185,8 +185,8 @@ namespace SPIXI.VoIP
             if (currentCallContact != null)
             {
                 bool callAccepted = currentCallAccepted && currentCallCalleeAccepted;
-                long callDuration = Clock.getTimestamp() - currentCallStartedTime;
-                var fm = currentCallContact.endCall(currentCallSessionId, callAccepted, callDuration, currentCallInitiator);
+                long callDuration = currentCallStartedTime > 0 ? Clock.getTimestamp() - currentCallStartedTime : 0;
+                var fm = currentCallContact.endCall(currentCallSessionId, currentCallAccepted && currentCallCalleeAccepted, callDuration, currentCallInitiator);
                 if (fm == null)
                 {
                     Logging.warn("Cannot end call, no message with session ID exists.");
@@ -282,6 +282,8 @@ namespace SPIXI.VoIP
             currentCallCodec = Encoding.UTF8.GetString(data);
             currentCallCalleeAccepted = true;
             startVoIPSession();
+            if (currentCallContact == null)
+                return;
             ((SpixiContentPage)Application.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-in-call") + " - " + currentCallContact.nickname, currentCallStartedTime);
         }
 

@@ -148,15 +148,15 @@ function startCallTimeUpdate(className)
     }, 500);
 }
 
-function addCallAppRequest(sessionId, text) {
+function addCallAppRequest(senderAddress, sessionId, text) {
     removeAppRequest(sessionId);
 
     var el = document.createElement("div");
     el.id = "AppReq_" + sessionId;
     el.className = "spixi-callbar";
 
-    var acceptAction = "appAccept('" + sessionId + "');";
-    var rejectAction = "appReject('" + sessionId + "');";
+    var acceptAction = "appAccept('" + senderAddress + "', '" + sessionId + "');";
+    var rejectAction = "appReject('" + senderAddress + "', '" + sessionId + "');";
 
     var acceptHtml = "<div style='background:#2fd63b;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone'></i></div>";
     var rejectHtml = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
@@ -166,7 +166,7 @@ function addCallAppRequest(sessionId, text) {
     document.body.appendChild(el);
 }
 
-function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
+function addAppRequest(senderAddress, sessionId, text, acceptHtml, rejectHtml) {
     removeAppRequest(sessionId);
 
 /*  // TODO: Uncomment this when global app request support is implemented
@@ -174,8 +174,8 @@ function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
     el.id = "AppReq_" + sessionId;
     el.className = "spixi-callbar";
 
-    var acceptAction = "appAccept('" + sessionId + "');";
-    var rejectAction = "appReject('" + sessionId + "');";
+    var acceptAction = "appAccept('" + senderAddress + "', '" + sessionId + "');";
+    var rejectAction = "appReject('" + senderAddress + "', '" + sessionId + "');";
 
     acceptHtml = unescapeParameter(acceptHtml);
     rejectHtml = unescapeParameter(rejectHtml);
@@ -200,16 +200,16 @@ function clearAppRequests() {
     }
 }
 
-function appAccept(sessionId) {
+function appAccept(senderAddress, sessionId) {
     var el = document.getElementById("AppReq_" + sessionId);
     el.parentElement.removeChild(el);
-    location.href = 'ixian:appAccept:' + sessionId;
+    location.href = 'ixian:appAccept:' + senderAddress + ':' + sessionId;
 }
 
-function appReject(sessionId) {
+function appReject(senderAddress, sessionId) {
     var el = document.getElementById("AppReq_" + sessionId);
     el.parentElement.removeChild(el);
-    location.href = 'ixian:appReject:' + sessionId;
+    location.href = 'ixian:appReject:' + senderAddress + ':' + sessionId;
 }
 
 function displayCallBar(sessionId, text, displayTime)
@@ -319,15 +319,20 @@ function parseBoolean(value) {
 
 function toggleAnimatedSlider(elementId) {
     const slideUpContainer = document.getElementById(elementId);
+    const toolbarEl = document.getElementById("toolbar");
 
     if (slideUpContainer.classList.contains('active')) {
         slideUpContainer.classList.remove('active');
         document.getElementById("wrap").classList.remove("blurredContent");
-        document.getElementById("toolbar").classList.remove("blurredContent");
+        if (toolbarEl != null) {
+            toolbarEl.classList.remove("blurredContent");
+        }
     } else {
         slideUpContainer.classList.add('active');
         document.getElementById("wrap").classList.add("blurredContent");
-        document.getElementById("toolbar").classList.add("blurredContent");
+        if (toolbarEl != null) {
+            toolbarEl.classList.add("blurredContent");
+        }
     }
 }
 

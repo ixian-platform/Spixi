@@ -9,7 +9,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="0" />
-                <ColumnDefinition Width="0" />
             </Grid.ColumnDefinitions>
             
             <Grid.RowDefinitions>
@@ -17,8 +16,7 @@
             </Grid.RowDefinitions>
 
             <WebView x:Name="webView" Navigating="onNavigating" Navigated="onNavigated" VerticalOptions="Fill" HorizontalOptions="Fill"  Grid.Column="0"/>
-            <BoxView x:Name="separator" Color="#17181C" Grid.Column="1" VerticalOptions="FillAndExpand" />
-            <ContentView x:Name="rightContent" Grid.Column="2"/>
+            <ContentView x:Name="rightContent" Grid.Column="1"/>
         </Grid>
         
     </ContentPage.Content>

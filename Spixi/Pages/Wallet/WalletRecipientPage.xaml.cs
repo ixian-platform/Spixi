@@ -71,7 +71,7 @@ namespace SPIXI
         {
             string id = e.Value;
             onPickSucceeded(id);
-            Navigation.PopModalAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
 
         private void onPickSucceeded(string id)
@@ -104,7 +104,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopModalAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             return true;
         }

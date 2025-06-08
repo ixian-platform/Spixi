@@ -28,10 +28,11 @@ namespace SPIXI
             {
                 FileTransfer transfer = new FileTransfer(data.data);
 
-                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
+                string message_data = string.Format("{0}:{1}:{2}", transfer.uid, transfer.fileName, transfer.fileSize);
                 FriendMessage fm = Node.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, data.channel, message_data);
                 if (fm != null)
                 {
+                    // TODO this can probably be removed now
                     fm.transferId = transfer.uid;
                     fm.filePath = transfer.fileName;
                     fm.fileSize = transfer.fileSize;
@@ -276,7 +277,7 @@ namespace SPIXI
                     case SpixiMessageCode.appRequest:
                         {
                             // app request received
-                            handleAppRequest(sender_address, message.recipient, spixi_message.data);
+                            handleAppRequest(message.id, sender_address, message.recipient, spixi_message.data);
                             break;
                         }
 
@@ -449,7 +450,7 @@ namespace SPIXI
                 VoIPManager.onData(app_data.sessionId, app_data.data);
                 return;
             }
-            MiniAppPage app_page = Node.MiniAppManager.getAppPage(app_data.sessionId);
+            MiniAppPage app_page = Node.MiniAppManager.getAppPage(sender_address, app_data.sessionId);
             if(app_page == null)
             {
                 Logging.error("App with session id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
@@ -458,12 +459,12 @@ namespace SPIXI
             app_page.networkDataReceived(sender_address, app_data.data);
         }
 
-        public static void sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
+        public static StreamMessage sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
         {
             // TODO use channels and drop SpixiAppData
             string app_install_url = Node.MiniAppManager.getAppInstallURL(app_id);
             string app_name = Node.MiniAppManager.getAppName(app_id);
-            string app_info = $"{app_id}||{app_install_url}||{app_name}"; // TODO pack this information better
+            string app_info = Node.MiniAppManager.getAppInfo(app_id);
 
             SpixiMessage spixi_msg = new SpixiMessage();
             spixi_msg.type = SpixiMessageCode.appRequest;
@@ -476,6 +477,8 @@ namespace SPIXI
             new_msg.data = spixi_msg.getBytes();
 
             CoreStreamProcessor.sendMessage(friend, new_msg);
+
+            return new_msg;
         }
 
         public static void sendAppRequestAccept(Friend friend, byte[] session_id, byte[] data = null)
@@ -544,10 +547,10 @@ namespace SPIXI
             msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg.data = spixi_msg.getBytes();
 
-            CoreStreamProcessor.sendMessage(friend, msg, true, true, false);
+            CoreStreamProcessor.sendMessage(friend, msg, true, false, false);
         }
 
-        private static void handleAppRequest(Address sender_address, Address recipient_address, byte[] app_data_raw)
+        private static void handleAppRequest(byte[] messageId, Address sender_address, Address recipient_address, byte[] app_data_raw)
         {
             MiniAppManager am = Node.MiniAppManager;
 
@@ -572,7 +575,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage app_page = am.getAppPage(app_data.sessionId);
+            MiniAppPage app_page = am.getAppPage(sender_address, app_data.sessionId);
             if (app_page != null)
             {
                 Logging.error("App with session id: {0} already exists.", Crypto.hashToString(app_data.sessionId));
@@ -622,7 +625,7 @@ namespace SPIXI
                         Logging.error("App with id {0} is not installed.", app_id);
                     }
                 }
-                Node.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
+                Node.addMessageWithType(messageId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
 
             });
         }
@@ -639,7 +642,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(app_data.sessionId);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, app_data.sessionId);
             if(page == null)
             {
                 Logging.info("App session does not exist.");
@@ -666,7 +669,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(session_id);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");
@@ -691,7 +694,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(session_id);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");

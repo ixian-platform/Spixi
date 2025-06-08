@@ -1,10 +1,24 @@
 ﻿using IXICore;
+using IXICore.Meta;
+using IXICore.Utils;
+using System.Text;
 
 namespace SPIXI.MiniApps
 {
+    class MiniAppDataCache
+    {
+        public Dictionary<string, byte[]> data = new();
+        public long firstRequestWrite = 0;
+        public long lastRequestWrite = 0;
+    }
+
     public class MiniAppStorage
     {
         string appsStoragePath = "AppsStorage";
+        Dictionary<string, MiniAppDataCache> appDataCache = new();
+        public bool running = false;
+        Thread storageThread;
+
         public MiniAppStorage(string baseAppPath)
         {
             appsStoragePath = Path.Combine(baseAppPath, "AppsStorage");
@@ -12,18 +26,120 @@ namespace SPIXI.MiniApps
             {
                 Directory.CreateDirectory(appsStoragePath);
             }
+            running = true;
+
+            storageThread = new Thread(storageLoop);
+            storageThread.IsBackground = true;
+            storageThread.Start();
+        }
+
+        private void storageLoop()
+        {
+            while (running)
+            {
+                try
+                {
+                    Dictionary<string, MiniAppDataCache> appDataCacheCopy = new(appDataCache);
+                    foreach (var cache in appDataCacheCopy)
+                    {
+                        if (cache.Value.firstRequestWrite == 0)
+                        {
+                            continue;
+                        }
+
+                        if (Clock.getTimestampMillis() - cache.Value.firstRequestWrite < 1000
+                            && Clock.getTimestampMillis() - cache.Value.lastRequestWrite < 200)
+                        {
+                            continue;
+                        }
+
+                        writeStorageData(cache.Key);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception in MiniAppStorage: " + e);
+                }
+                Thread.Sleep(1000);
+            }
+        }
+
+        private MiniAppDataCache getStorageCache(string appId)
+        {
+            lock (appDataCache)
+            {
+                if (appDataCache.ContainsKey(appId))
+                {
+                    return appDataCache[appId];
+                }
+
+                var madc = new MiniAppDataCache();
+                appDataCache.Add(appId, madc);
+
+                string appStoragePath = Path.Combine(appsStoragePath, appId);
+
+                lock (madc)
+                {
+                    if (!File.Exists(appStoragePath))
+                    {
+                        return madc;
+                    }
+
+                    using (var fs = File.Open(appStoragePath, FileMode.Open))
+                    {
+                        using (var br = new BinaryReader(fs))
+                        {
+                            br.ReadBytes(1); // version
+                            while (br.BaseStream.Position < br.BaseStream.Length)
+                            {
+                                try
+                                {
+                                    var key = UTF8Encoding.UTF8.GetString(br.ReadBytes((int)br.ReadIxiVarUInt()));
+                                    var value = br.ReadBytes((int)br.ReadIxiVarUInt());
+                                    madc.data.Add(key, value);
+                                }
+                                catch (Exception e)
+                                {
+                                    Logging.error("" + e);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return madc;
+            }
+        }
+
+        private void writeStorageData(string appId)
+        {
+            var madc = getStorageCache(appId);
+            lock (madc)
+            {
+                madc.firstRequestWrite = 0;
+                madc.lastRequestWrite = 0;
+
+                string appStoragePath = Path.Combine(appsStoragePath, appId);
+                using (var fs = File.Open(appStoragePath, FileMode.Create))
+                {
+                    fs.WriteByte(0);
+                    foreach (var entry in madc.data)
+                    {
+                        fs.Write(IxiUtils.GetIxiBytes(UTF8Encoding.UTF8.GetBytes(entry.Key)));
+                        fs.Write(IxiUtils.GetIxiBytes(entry.Value));
+                    }
+                }
+            }
         }
 
         public byte[]? getStorageData(string appId, string key)
         {
-            string appStoragePath = Path.Combine(appsStoragePath, appId);
-            var storageData = File.ReadAllLines(appStoragePath);
-            foreach (var line in storageData)
+            var madc = getStorageCache(appId);
+            lock (madc)
             {
-                var lineKey = line.Substring(0, line.IndexOf('=')).Trim();
-                if (lineKey == key)
+                if (madc.data.ContainsKey(key))
                 {
-                    return Crypto.stringToHash(line.Substring(line.IndexOf('=')));
+                    return madc.data[key];
                 }
             }
             return null;
@@ -31,38 +147,28 @@ namespace SPIXI.MiniApps
 
         public void setStorageData(string appId, string key, byte[] value)
         {
-            string appStoragePath = Path.Combine(appsStoragePath, appId);
-            var storageData = File.ReadAllLines(appStoragePath);
-            int lineCount = 0;
-            bool found = false;
-            foreach (var line in storageData)
+            var madc = getStorageCache(appId);
+            lock (madc)
             {
-                var lineKey = line.Substring(0, line.IndexOf('=')).Trim();
-                if (lineKey == key)
+                if (madc.data.ContainsKey(key))
                 {
-                    found = true;
-                    break;
+                    if (value == null)
+                    {
+                        madc.data.Remove(key);
+                        if (madc.firstRequestWrite == 0)
+                        {
+                            madc.firstRequestWrite = Clock.getTimestampMillis();
+                        }
+                        madc.lastRequestWrite = Clock.getTimestampMillis();
+                        return;
+                    }
                 }
-                lineCount++;
-            }
-            if (found)
-            {
-                // update
-                if (value != null)
+                madc.data[key] = value;
+                if (madc.firstRequestWrite == 0)
                 {
-                    storageData[lineCount] = Crypto.hashToString(value);
-                } else
-                {
-                    var storageDataList = storageData.ToList();
-                    storageDataList.RemoveAt(lineCount);
-                    storageData = storageDataList.ToArray();
+                    madc.firstRequestWrite = Clock.getTimestampMillis();
                 }
-                File.WriteAllLines(appStoragePath, storageData);
-            } else if (value != null)
-            {
-                // create
-                storageData.Append(Crypto.hashToString(value));
-                File.WriteAllLines(appStoragePath, storageData);
+                madc.lastRequestWrite = Clock.getTimestampMillis();
             }
         }
     }

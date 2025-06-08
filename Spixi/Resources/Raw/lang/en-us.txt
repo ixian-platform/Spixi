@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = An error occurred while installing the app.
 apps-title = Spixi Apps
 apps-empty = You don't have any apps installed.
 apps-apps-text = Apps
-apps-not-sure-text = Not sure where to start? Try one of our featured apps bellow.
+apps-not-sure-text = Not sure where to start? Try one of our featured apps below.
 apps-launch = Launch
 apps-launch-app = Launch App
 apps-remove-app = Remove This App
@@ -602,7 +602,7 @@ onboarding-finish = Finish
 ; Empty State
 empty-state-title = Welcome to Spixi
 empty-state-detail-1 = Your secure peer-to-peer chat app with an integrated wallet.
-empty-state-detail-2 = Enjoy encrypted conversations that ensure your messages are stored and transmitted only between your device and your contact's, keeping your privacy intact.
+empty-state-detail-2 = Enjoy encrypted conversations that ensure your messages are stored and transmitted only between your device and your contacts, keeping your privacy intact.
 
 ; Ixinames
 ixinames-request-title = IXI Names Wants to Connect

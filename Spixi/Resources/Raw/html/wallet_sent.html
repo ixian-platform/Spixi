@@ -50,7 +50,7 @@
     </div>
 
     <div id="wrap" class="container-fluid noselect scrollable-div">
-
+        <div id="left-separator" style="display: none;"></div>
         <!-- Toolbar -->
         <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
@@ -95,7 +95,7 @@
             <div class="payment-data-row payment-data-middle-border">
                 <div id="subtitle-type" class="label-xs s-text-02">*SL{wallet-sent-subtitle}</div>
                 <div class="payment-data-user-info">
-                    <img src="" alt="usr_img" class="payment-data-avatar" id="avatar"> 
+                    <img src="" alt="usr_img" class="payment-data-avatar" id="avatar">
                     <span class="label-lg" id="user"></span>
                 </div>
                 <div class="payment-data-hash-copy">
@@ -112,7 +112,7 @@
             </div>
             <div class="payment-data-row">
                 <div id="viewexplorer" class="spixi-flat-button" style="width: 100%;">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> View in Explorer
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> *SL{wallet-sent-view-explorer}
                 </div>
             </div>
         </section>
@@ -138,6 +138,7 @@
             placeholder.style.width = "12px";
             placeholder.style.minWidth = "12px";
             backBtn.parentNode.replaceChild(placeholder, backBtn);
+            document.getElementById("left-separator").style.display = "block";
         }
 
         function setReceivedMode() {

@@ -121,7 +121,7 @@
                 <div class="important-notice-text">
                     <span class="label-sm">*SL{index-missing-tx-title}</span>
                     <span class="body-xs">*SL{index-missing-tx-text}</span>
-                    <span class="label-xs s-text-link" onclick="window.open('https://explorer.ixian.io/')">*SL{index-missing-tx-view-all} <i class="fa fa-arrow-right"></i></span>
+                    <span class="label-xs s-text-link" onclick="selectMenuOption('explorer');">*SL{index-missing-tx-view-all} <i class="fa fa-arrow-right"></i></span>
                 </div>
                 <i class="fa fa-chevron-down notice-toggle-chevron" style="cursor: pointer" onclick="toggleImportantNotice(this)"></i>
             </div>
@@ -232,7 +232,6 @@
 
 </div>  <!-- Wrap -->
 
-<!--TODO: needs proper logic when to show -->
 <div class="action-slide-up-container" id="backup-prompt">
     <div class="backup-prompt-icon-container">
         <i class="fas fa-folder-closed backupIcon"></i>
@@ -242,7 +241,7 @@
         <span class="body-sm s-text-01">*SL{index-backup-prompt-desc}</span>
     </div>
     <div class="add-mini-app-buttons">
-        <div class="spixi-flat-button label-sm" onclick="confirmInstallCall()">
+        <div class="spixi-flat-button label-sm" onclick="toggleAnimatedSlider('backup-prompt');window.location.href = 'ixian:backup';">
             *SL{index-backup-prompt-create}
         </div>
         <div class="spixi-flat-button label-sm button outline" onclick="toggleAnimatedSlider('backup-prompt')">
@@ -277,7 +276,7 @@
 
 <!-- Tabbar -->
 <div id="footer" class="fixed-bottom spixi-footer">
-    <div class="" style="width:90%; margin: auto;">
+    <div class="" style="width:98%; margin: auto;">
         <ul class="nav nav-tabs row no-gutters spixi-footer-row">
             <li id="tab1" class="col-3 spixi-tab">
                 <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
@@ -296,7 +295,7 @@
             <li id="tab3" class="col-3 spixi-tab">
                 <a data-toggle="tab" href="#spixiApps" class="spixi-tab-pad">
                     <div class="spixi-tab-icon"><i class="fa-solid fa-rocket"></i></div>
-                    <div class="spixi-tab-text">Apps</div>
+                    <div class="spixi-tab-text">*SL{index-side-apps}</div>
                 </a>
             </li>
             <li id="tab4" class="col-3 spixi-tab">
@@ -600,33 +599,30 @@
         appsNode.style.display = 'grid';
     }
 
-    function addApp(id, name, icon, publisher, isMultiuser) {
+    function addApp(id, name, icon, publisher, isSingleUser, isMultiuser) {
         const mappedIcon = icon.replace(/&#92;/g, '\\');
 
-        const singleApp = `<div class="mini-apps-list-single-item">
+        const div = document.createElement('div');
+        div.className = 'mini-apps-list-single-item';
+        div.innerHTML = `
         <div class="mini-apps-list-single-image-wrapper" onclick="window.location.href='ixian:appDetails:${id}'">
             <img src="${mappedIcon}" alt="mini-app-${name}"/>
         </div>
         <div class="mini-apps-single-item-info s-text-01">
             <span class="label-sm appNameItem">${name}</span>
             <span class="body-xs">${publisher}</span>
-            <div class="launchBtn" data-app-id="${id}" data-multi-user="${parseBoolean(isMultiuser)}">
+            <div class="launchBtn" data-app-id="${id}" data-single-user="${parseBoolean(isSingleUser)}" data-multi-user="${parseBoolean(isMultiuser)}">
                 <span class="label-xs s-text-action">*SL{apps-launch} <i class="fas fa-arrow-right"></i></span>
             </div>
-        </div>
-    </div>`;
+        </div>`;
 
-        const appListElement = document.getElementById("AppList");
-        appListElement.insertAdjacentHTML("beforeend", singleApp);
+        const launchBtn = div.querySelector(".launchBtn");
+        launchBtn.addEventListener("click", function () {
+            onLaunchHandler(launchBtn);
+        });
+
+        document.getElementById("AppList").appendChild(div);
     }
-
-    document.getElementById("AppList").addEventListener("click", function (event) {
-            if (event.target.closest(".launchBtn")) {
-                const launchBtn = event.target.closest(".launchBtn");
-                onLaunchHandler(launchBtn);
-            }
-        }
-    )
 
     function onLaunchHandler(element) {
         const multiUserModal = document.getElementById("multiUserAppModal");
@@ -635,10 +631,12 @@
         multiUserModal.setAttribute("data-app-id", null);
 
         const appId = element.getAttribute('data-app-id');
+        const isSingleUser = element.getAttribute('data-single-user') === "true";
         const isMultiuser = element.getAttribute('data-multi-user') === "true";
 
         //show multi-user modal if true
-        if (isMultiuser) {
+        if (isSingleUser
+            && isMultiuser) {
             multiUserModal.style.display = "flex";
             multiUserModal.setAttribute("data-app-id", appId);
 
@@ -657,8 +655,12 @@
             }, 10);
         }
         //else just start the app in solo mode
-        else {
+        else if (isSingleUser) {
             window.location.href = `ixian:startApp:${appId}`;
+        }
+        //else just start the app in multiuser mode
+        else if (isMultiuser) {
+            window.location.href = `ixian:startAppMulti:${appId}`;
         }
     }
 

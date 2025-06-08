@@ -205,6 +205,8 @@ function hideBackButton() {
     placeholder.style.width = "12px";
     placeholder.style.minWidth = "12px";
     backBtn.parentNode.replaceChild(placeholder, backBtn);
+
+    document.getElementById("left-separator").style.display = "block";
 }
 
 document.getElementById("backbtn").onclick = function () {
@@ -459,6 +461,11 @@ function addReactions(id, reactions) {
 
     if (reactionsEl.innerHTML == "") {
         reactionsEl.parentNode.removeChild(reactionsEl);
+    }
+
+    const messagesEl = document.getElementById("messages");
+    if (messagesEl) {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 }
 
@@ -1018,7 +1025,7 @@ function updateTransactionStatus(txid, status, statusIcon) {
 }
 
 
-function addAppRequest(id, appid, appname, address, nick, avatar, time, localSender, sent, read, appStatus, appInstallURL) {
+function addAppRequest(id, appid, appname, appimage, address, nick, avatar, time, localSender, sent, read, appStatus, appInstallURL) {
 
     var title = SL_ChatAppInviteSent;
     if (localSender != "True") {
@@ -1026,7 +1033,13 @@ function addAppRequest(id, appid, appname, address, nick, avatar, time, localSen
     }
 
     var message = "<div id=\"app_" + appid + "\" class=\"txid-el\"><div class=\"title\"><i class=\"fas fa-rocket\"></i> " + title + "</div>";
-    message += "<div class=\"content\">" + appname + "</div></div>";
+
+    message += "<div class=\"content\" style=\"display: flex; align-items: center; gap: 8px;\">";
+    if (appimage) {
+        message += "<img src=\"" + appimage + "\" alt=\"app icon\" class=\"spixi-bubble-app-image\">";
+    }
+    message += "<span>" + appname + "</span></div>";
+
 
     var viewStyle = "display:none;";
     var appButtonIcon = "<i class=\"fas fa-wand-magic-sparkles\"></i> ";
@@ -1081,22 +1094,22 @@ function updateGroupChatNicks(address, nick) {
     }
 }
 
-function addApp(id, name, icon) {
+function addApp(id, name, icon, publisher) {
     const appsContainer = document.getElementById("AppsMenu");
     const itemsContainer = appsContainer.querySelector(".choose-apps-items-container");
 
     const appBlock = document.createElement("div");
     appBlock.className = "spixi-app-details-header";
     appBlock.onclick = function () {
-        appsContainer.style.display = "none";
         location.href = "ixian:app:" + id;
+        toggleAnimatedSlider("AppsMenu");
     };
     appBlock.innerHTML = `
         <img data-role="AppIcon" class="spixi-app-details-image" src="${icon}" alt="app-icon" />
         <div class="spixi-app-details-title">
-            <span class="label-md s-text-01" data-role="AppName">${name}</span>
-            <span class="label-sm s-text-02" data-role="AppPublisher">Unknown creator</span>
-            <span class="label-xs s-text-success"><i class="fas fa-lock"></i> Verified</span>
+            <span class="label-md s-text-01 appNameItem" data-role="AppName">${name}</span>
+            <span class="label-sm s-text-02" data-role="AppPublisher">${publisher}</span>
+            <span class="label-xs s-text-success" style="display:none;"><i class="fas fa-lock"></i> Verified</span>
         </div>
     `;
 
@@ -1258,6 +1271,13 @@ function clearMessages(showMore) {
             location.href = "ixian:loadmore";
         }
     }
+}
+
+function clearApps(showMore) {
+    const appsContainer = document.getElementById("AppsMenu");
+    const itemsContainer = appsContainer.querySelector(".choose-apps-items-container");
+
+    itemsContainer.innerHTML = "";
 }
 
 
@@ -1708,6 +1728,22 @@ function showContactRequest(show) {
         document.getElementById("CallButton").style.display = "block";
         document.getElementById("chat_input").disabled = false;
     }
+}
+
+function searchMiniApps() {
+    const searchValue = document.getElementById("searchMiniApps")?.value.toLowerCase();
+    const appItems = document.querySelectorAll("#AppsMenu .spixi-app-details-header");
+
+    appItems.forEach(item => {
+        const nameElement = item.querySelector(".appNameItem");
+        const appName = nameElement ? nameElement.textContent.toLowerCase() : "";
+
+        if (appName.includes(searchValue)) {
+            item.style.display = "flex";
+        } else {
+            item.style.display = "none";
+        }
+    });
 }
 
 // function getCaretPosition copied from https://stackoverflow.com/questions/3972014/get-contenteditable-caret-index-position

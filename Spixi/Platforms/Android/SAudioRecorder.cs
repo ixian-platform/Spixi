@@ -127,7 +127,7 @@ namespace Spixi
         {
             Android.Media.Encoding encoding = Android.Media.Encoding.Pcm16bit;
 
-            shortsBuffer = new short[bufferSize];
+            shortsBuffer = new short[bufferSize / 2];
             buffer = new byte[bufferSize];
 
             audioRecorder = new AudioRecord(
@@ -410,7 +410,7 @@ namespace Spixi
                     total_size += buf.Length;
                 }
 
-                if (total_size >= 300)
+                if (total_size >= 150)
                 {
                     data_to_send = new byte[total_size];
                     int data_written = 0;

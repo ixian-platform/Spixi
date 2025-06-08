@@ -3,6 +3,7 @@ using IXICore.Meta;
 using IXICore.Streaming;
 using IXICore.Utils;
 using System.IO.Compression;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace SPIXI.MiniApps
@@ -32,7 +33,6 @@ namespace SPIXI.MiniApps
             {
                 Directory.CreateDirectory(tmpPath);
             }
-
         }
 
         public void start()
@@ -87,6 +87,9 @@ namespace SPIXI.MiniApps
             try
             {
                 using var headRequest = new HttpRequestMessage(HttpMethod.Head, url);
+
+                httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MustRevalidate = true };
+
                 using HttpResponseMessage headResponse = await httpClient.SendAsync(headRequest);
                 headResponse.EnsureSuccessStatusCode();
 
@@ -105,9 +108,9 @@ namespace SPIXI.MiniApps
                 }
 
                 string content = Encoding.UTF8.GetString(data);
-                string[] app_info = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                string[] app_info = content.Replace("\r\n", "\n").Split('\n');
 
-                return new MiniApp(app_info);
+                return new MiniApp(app_info, url);
             }
             catch (HttpRequestException e)
             {
@@ -137,8 +140,16 @@ namespace SPIXI.MiniApps
             {
                 try
                 {
+                    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MustRevalidate = true };
+                    
                     File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(fetchedAppInfo.contentUrl).Result);
                     fetchedAppInfo.contentSize = new FileInfo(source_app_file_path).Length;
+                    string file_checksum = Crypto.sha256OfFile(source_app_file_path);
+
+                    if (file_checksum != fetchedAppInfo.checksum)
+                    {
+                        throw new InvalidOperationException($"Checksum mismatch for downloaded app file. Expected {fetchedAppInfo.checksum} got {file_checksum}");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -240,6 +251,7 @@ namespace SPIXI.MiniApps
             {
                 try
                 {
+                    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MustRevalidate = true };
                     File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(url).Result);
                 }
                 catch (Exception e)
@@ -399,18 +411,31 @@ namespace SPIXI.MiniApps
             return null;
         }
 
+        public string getAppInfo(string app_id)
+        {
+            MiniApp mini_app = getApp(app_id);
+            if (mini_app != null)
+            {
+                return $"{app_id}||{mini_app.url}||{mini_app.name}"; // TODO pack this information better
+            }
+            return app_id;
+        }
+
         public Dictionary<string, MiniApp> getInstalledApps()
         {
             return appList;
         }
 
-        public MiniAppPage getAppPage(byte[] session_id)
+        public MiniAppPage getAppPage(Address sender_address, byte[] session_id)
         {
             lock (appPages)
             {
                 if (appPages.ContainsKey(session_id))
                 {
-                    return appPages[session_id];
+                    if (appPages[session_id].hasUser(sender_address))
+                    {
+                        return appPages[session_id];
+                    }
                 }
                 return null;
             }
@@ -423,7 +448,7 @@ namespace SPIXI.MiniApps
                 var pages = appPages.Values.Where(x => x.appId.SequenceEqual(app_id) && x.hasUser(sender_address));
                 if (pages.Any())
                 {
-                    return getAppPage(pages.First().sessionId);
+                    return getAppPage(sender_address, pages.First().sessionId);
                 }
                 return null;
             }
@@ -450,25 +475,25 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public MiniAppPage acceptAppRequest(byte[] session_id)
+        public MiniAppPage acceptAppRequest(Address sender_address, byte[] session_id)
         {
-            MiniAppPage app_page = getAppPage(session_id);
+            MiniAppPage app_page = getAppPage(sender_address, session_id);
             if (app_page != null)
             {
                 app_page.accepted = true;
-                StreamProcessor.sendAppRequestAccept(FriendList.getFriend(app_page.requestedByAddress), session_id);
+                StreamProcessor.sendAppRequestAccept(FriendList.getFriend(sender_address), session_id);
             }
             return app_page;
         }
 
-        public void rejectAppRequest(byte[] session_id)
+        public void rejectAppRequest(Address sender_address, byte[] session_id)
         {
-            MiniAppPage app_page = getAppPage(session_id);
+            MiniAppPage app_page = getAppPage(sender_address, session_id);
             if (app_page != null)
             {
                 if (removeAppPage(session_id))
                 {
-                    StreamProcessor.sendAppRequestReject(FriendList.getFriend(app_page.requestedByAddress), session_id);
+                    StreamProcessor.sendAppRequestReject(FriendList.getFriend(sender_address), session_id);
                 }
             }
         }

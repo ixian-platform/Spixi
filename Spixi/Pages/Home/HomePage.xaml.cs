@@ -82,7 +82,6 @@ namespace SPIXI
             rightContent.Content = defaultDetailContent.Content;
 
             this.SizeChanged += OnPageSizeChanged;
-            separator.Color = Color.FromArgb("#17181C");
 
             if (!running)
             {
@@ -90,7 +89,6 @@ namespace SPIXI
 
                 new Thread(() =>
                 {
-                    Thread.CurrentThread.IsBackground = true;
                     try
                     {
                         Node.start();
@@ -121,8 +119,8 @@ namespace SPIXI
             {
                 // Show only main pane
                 mainGrid.ColumnDefinitions[0].Width = GridLength.Star;
+                //mainGrid.ColumnDefinitions[1].Width = new GridLength(0);
                 mainGrid.ColumnDefinitions[1].Width = new GridLength(0);
-                mainGrid.ColumnDefinitions[2].Width = new GridLength(0);
                 rightContent.IsVisible = false;
                 removeDetailContent();
             }
@@ -130,8 +128,8 @@ namespace SPIXI
             {
                 // Show both panes
                 mainGrid.ColumnDefinitions[0].Width = new GridLength(400);
-                mainGrid.ColumnDefinitions[1].Width = new GridLength(2);
-                mainGrid.ColumnDefinitions[2].Width = GridLength.Star;
+                //mainGrid.ColumnDefinitions[1].Width = new GridLength(2);
+                mainGrid.ColumnDefinitions[1].Width = GridLength.Star;
                 rightContent.IsVisible = true;
             }
         }
@@ -382,6 +380,10 @@ namespace SPIXI
                 string appId = current_url.Substring("ixian:appDetails:".Length);
                 onAppDetails(appId);
             }
+            else if (current_url.StartsWith("ixian:explorer"))
+            {
+                Browser.Default.OpenAsync(new Uri(Config.explorerUrl + "index.php?p=address&id=" + IxianHandler.primaryWalletAddress));
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -435,7 +437,7 @@ namespace SPIXI
 
         public void processQRResult(string result)
         {
-            Navigation.PopModalAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             // Check for add contact
             string[] split = result.Split(new string[] { ":send" }, StringSplitOptions.None);
@@ -1044,12 +1046,22 @@ namespace SPIXI
             }
         }
 
-
+        private void displayBackupReminder()
+        {
+            if (!Preferences.Default.ContainsKey("backupReminderTimestamp")
+                || Clock.getTimestamp() - long.Parse(Preferences.Default.Get("backupReminderTimestamp", "").ToString()) > Config.backupReminder)
+            {
+                Utils.sendUiCommand(this, "toggleAnimatedSlider", "backup-prompt");
+                Preferences.Default.Set("backupReminderTimestamp", Clock.getTimestamp().ToString());
+            }
+        }
 
         // Executed every second
         public override void updateScreen()
         {
             base.updateScreen();
+
+            displayBackupReminder();
 
             loadApps();
             loadChats();
@@ -1244,6 +1256,10 @@ namespace SPIXI
             {
                 return;
             }
+            if (detailContent != null)
+            {
+                detailContent.updateScreen();
+            }
             UIHelpers.shouldRefreshApps = false;
 
             Utils.sendUiCommand(this, "clearApps");
@@ -1259,7 +1275,7 @@ namespace SPIXI
                     {
                         icon = "";
                     }
-                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
+                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.SingleUser).ToString(), app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
                 }
             }
         }
@@ -1283,7 +1299,11 @@ namespace SPIXI
             {
                 HandlePickAppMultiUserSucceeded(sender, e, appId);
             };
-            Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
+            });
         }
 
         private async void HandlePickAppMultiUserSucceeded(object sender, SPIXI.EventArgs<string> e, string appId)
@@ -1302,11 +1322,10 @@ namespace SPIXI
                 await Navigation.PopAsync(Config.defaultXamarinAnimations);
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
-
-                string install_url = Node.MiniAppManager.getAppInstallURL(appId);
-
-                Node.addMessageWithType(session_id, FriendMessageType.appSession, friend.walletAddress, 0, appId, true, null, 0, false);
-                StreamProcessor.sendAppRequest(friend, appId, session_id, null);
+                
+                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null);
+                var app_info = Node.MiniAppManager.getAppInfo(appId);
+                Node.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
             }
             catch (Exception ex)
             {
@@ -1320,13 +1339,16 @@ namespace SPIXI
             miniAppPage.accepted = true;
             Node.MiniAppManager.addAppPage(miniAppPage);
 
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async() =>
             {
-                Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
+                await Task.Delay(200); // WinUI Crash fix
+                await Navigation.PushAsync(miniAppPage, Config.defaultXamarinAnimations);
             });
+
             return miniAppPage.sessionId;
         }
-        public async void onInstallApp(string appUrl)
+
+        public async void onInstallApp(string appUrl, bool fromChat)
         {
             MiniApp? app = await Node.MiniAppManager.fetch(appUrl);
             if (app == null)
@@ -1338,7 +1360,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, fromChat), Config.defaultXamarinAnimations);
             });
         }
         private void onAppDetails(string appId)

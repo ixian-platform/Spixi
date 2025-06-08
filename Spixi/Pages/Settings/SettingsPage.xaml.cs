@@ -198,7 +198,7 @@ namespace SPIXI
             }
 
             // Pop the current page from the stack
-            Navigation.PopModalAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
 
         private void resetLanguage()
@@ -381,7 +381,7 @@ namespace SPIXI
         {
             resetLanguage();
 
-            Navigation.PopAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             return true;
         }

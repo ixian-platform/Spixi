@@ -26,17 +26,19 @@ jobs:
         path: Ixian-Core
         ref: ${{ github.event.push.ref }}
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@2008f912f56e61277eefaac6d1888b750582aa16
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install MAUI workload
+      run: dotnet workload install maui
 
     - name: Restore dependencies
-      run: nuget restore Spixi.sln
+      run: dotnet restore
 
     - name: Building Spixi
-      run: msbuild Spixi.sln -target:SPIXI_WPF
+      run: dotnet build Spixi/Spixi.csproj -f net8.0-windows10.0.19041.0 -p:Platform=x64 -v:n
 
     #- name: Running Unit Tests
     #  run: dotnet test UnitTests\bin\Debug\unittests.dll --verbosity normal
