@@ -82,6 +82,11 @@ namespace SPIXI.Meta
 
         public static int maxConnectedStreamingNodes = 6;
 
+        public static Dictionary<string, string> apiUsers = new Dictionary<string, string>();
+
+        public static List<string> apiAllowedIps = new List<string>();
+        public static List<string> apiBinds = new List<string>();
+
         public static void readConfigFile(string filename)
         {
             if (!File.Exists(filename))
@@ -159,6 +164,19 @@ namespace SPIXI.Meta
                         break;
                     case "spixiUserFolder":
                         spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), value);
+                        break;
+                    case "apiAllowIp":
+                        apiAllowedIps.Add(value);
+                        break;
+                    case "apiBind":
+                        apiBinds.Add(value);
+                        break;
+                    case "addApiUser":
+                        string[] credential = value.Split(':');
+                        if (credential.Length == 2)
+                        {
+                            apiUsers.Add(credential[0], credential[1]);
+                        }
                         break;
                     default:
                         // unknown key

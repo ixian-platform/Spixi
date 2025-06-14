@@ -53,6 +53,11 @@ namespace SPIXI
             loadPage(webView, "chat.html");
 
             homePage = home;
+
+            if (!friend.online)
+            {
+                StreamProcessor.fetchFriendsPresence(friend);
+            }
         }
 
         public override void recalculateLayout()

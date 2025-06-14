@@ -736,7 +736,7 @@ namespace SPIXI
                     break;
                 }
 
-                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds)
+                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes < Config.contactSectorNodeIntervalSeconds)
                 {
                     continue;
                 }
@@ -756,7 +756,7 @@ namespace SPIXI
                     continue;
                 }
 
-                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds)
+                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes < Config.contactSectorNodeIntervalSeconds)
                 {
                     continue;
                 }
@@ -781,12 +781,14 @@ namespace SPIXI
                     writer.Write(friend.walletAddress.addressNoChecksum);
                 }
 
+                Logging.trace("Fetching presence for " + friend.walletAddress.ToString());
                 if (!StreamClientManager.sendToClient(friend.sectorNodes, ProtocolMessageCode.getPresence2, mw.ToArray(), null))
                 {
                     // Not connected to contact's sector node
 
                     var rnd = new Random();
                     var sn = friend.sectorNodes[rnd.Next(friend.sectorNodes.Count - 1)];
+                    Logging.trace("Connecting to stream server " + sn.hostname + " " + sn.walletAddress.ToString());
                     StreamClientManager.connectTo(sn.hostname, sn.walletAddress);
                 }
             }

@@ -46,6 +46,8 @@ namespace SPIXI.Meta
 
         private static long lastPriceUpdate = 0;
 
+        private static GenericAPIServer apiServer;
+
         public Node()
         {
 #if DEBUG
@@ -179,6 +181,12 @@ namespace SPIXI.Meta
             SPushService.setTag(tag);
             SPushService.clearNotifications();
 
+            if (Config.apiBinds.Count != 0)
+            {
+                apiServer = new GenericAPIServer();
+                apiServer.start(Config.apiBinds, Config.apiUsers, Config.apiAllowedIps);
+            }
+
             Logging.info("Node started");
         }
 
@@ -299,7 +307,8 @@ namespace SPIXI.Meta
                     {
                         CoreProtocolMessage.broadcastProtocolMessage(['M', 'H', 'R'], ProtocolMessageCode.getBalance2, getBalanceBytes, null);
                         CoreProtocolMessage.fetchSectorNodes(IxianHandler.primaryWalletAddress, Config.maxRelaySectorNodesToRequest);
-                        ProtocolMessage.fetchAllFriendsSectorNodes();
+                        //ProtocolMessage.fetchAllFriendsSectorNodes(10);
+                        //StreamProcessor.fetchAllFriendsPresences(10);
                     }
 
                     // Check price if enough time passed
@@ -384,6 +393,13 @@ namespace SPIXI.Meta
 
             // Stop the keepalive thread
             PresenceList.stopKeepAlive();
+
+            // Stop the API server
+            if (apiServer != null)
+            {
+                apiServer.stop();
+                apiServer = null;
+            }
 
             // Stop the network queue
             NetworkQueue.stop();

@@ -418,21 +418,6 @@ namespace SPIXI.Network
 
             List<Peer> peers = new();
             var relays = RelaySectors.Instance.getSectorNodes(prefix, Config.maxRelaySectorNodesToRequest);
-            /*if (prefix.SequenceEqual(new Address("3iVDb7kj9H45guhSyC5izBa5Dzcn5Tb59qamTpR74o8k47ex77EQUXTYs9MX7TyUb").addressNoChecksum))
-            {
-                relays = new()
-                {
-                    new Address("3X3LX6fubHoeZbA6fxJBSouMtBJiCAkbKoeLFkmzi6GKx6YKEGE7tqe5iX1HhZ26J"),
-                    new Address("5F4YQ2p9CNqnifw8pvRn2cNT2scrnP3SQwfCyP41VzbiacXDQqapoMso3aCy2e65w")
-                };
-            } else if (prefix.SequenceEqual(new Address("4juymx8QUom5XL4teE6mU5JVBQgdWFRP51YDC6xqSWwidxnnxZXq44LjpgQgTrCub").addressNoChecksum))
-            {
-                relays = new()
-                {
-                    new Address("4xUvY6LacsebH4C9fZ6TEr3gpskXmD1tNXqyktJnXn3SqSdc7KQDxtA5zXhxiF7BT"),
-                    new Address("3SGWMjPwBrKLuACjkbwWffDV629LhizbPb6GxusjiyjZzAz1eMwoEXGwp672goTKr")
-                };
-            }*/
             foreach (var relay in relays)
             {
                 var p = PresenceList.getPresenceByAddress(relay);
@@ -446,13 +431,13 @@ namespace SPIXI.Network
                 PeerStorage.addPeerToPeerList(pa.address, p.wallet, pa.lastSeenTime, 0, 0, 0);
             }
 
-            if (IxianHandler.isMyAddress(new Address(prefix)))
+            if (IxianHandler.primaryWalletAddress.sectorPrefix.SequenceEqual(prefix))
             {
                 Node.networkClientManagerStatic.setClientsToConnectTo(peers);
             }
             else
             {
-                var friend = FriendList.getFriend(new Address(prefix));
+                var friend = FriendList.getFriendBySectorPrefix(prefix);
                 friend.updatedSectorNodes = Clock.getNetworkTimestamp();
                 friend.sectorNodes = peers;
             }
@@ -598,14 +583,22 @@ namespace SPIXI.Network
             }
         }
 
-        public static void fetchAllFriendsSectorNodes()
+        public static void fetchAllFriendsSectorNodes(int maxCount)
         {
+            int count = 0;
             foreach (var friend in FriendList.friends)
             {
-                if (Clock.getNetworkTimestamp() - friend.updatedSectorNodes > Config.contactSectorNodeIntervalSeconds
-                    || Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds)
+                count++;
+
+                if (Clock.getNetworkTimestamp() - friend.updatedSectorNodes < Config.contactSectorNodeIntervalSeconds
+                    || Clock.getNetworkTimestamp() - friend.updatedStreamingNodes < Config.contactSectorNodeIntervalSeconds)
                 {
                     continue;
+                }
+
+                if (count > maxCount)
+                {
+                    break;
                 }
 
                 CoreProtocolMessage.fetchSectorNodes(friend.walletAddress, Config.maxRelaySectorNodesToRequest);

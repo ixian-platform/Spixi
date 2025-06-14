@@ -15,16 +15,16 @@ jobs:
 
     steps:
     - name: Checkout Spixi
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         path: Spixi
 
     - name: Checkout Ixian-Core
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: ProjectIxian/Ixian-Core
         path: Ixian-Core
-        ref: ${{ github.event.push.ref }}
+        ref: ${{ github.ref_name }}
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
