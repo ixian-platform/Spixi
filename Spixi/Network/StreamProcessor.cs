@@ -767,8 +767,10 @@ namespace SPIXI
 
         public static void fetchFriendsPresence(Friend friend)
         {
-            if (friend.sectorNodes.Count() == 0)
+            if (friend.sectorNodes.Count() == 0
+                || (Clock.getNetworkTimestamp() - friend.updatedSectorNodes > Config.contactSectorNodeIntervalSeconds && Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds))
             {
+                // If sector nodes are not yet initialized or we haven't received contact's presence information and haven't updated presence within the interval
                 CoreProtocolMessage.fetchSectorNodes(friend.walletAddress, Config.maxRelaySectorNodesToRequest);
                 return;
             }
@@ -788,7 +790,7 @@ namespace SPIXI
 
                     var rnd = new Random();
                     var sn = friend.sectorNodes[rnd.Next(friend.sectorNodes.Count)];
-                    Logging.trace("Connecting to stream server " + sn.hostname + " " + sn.walletAddress.ToString());
+                    Logging.trace("Connecting to sector node " + sn.hostname + " " + sn.walletAddress.ToString());
                     StreamClientManager.connectTo(sn.hostname, sn.walletAddress);
                 }
             }
