@@ -232,6 +232,7 @@ namespace SPIXI.Network
                         break;
 
                     case ProtocolMessageCode.blockHeaders3:
+                    case ProtocolMessageCode.compactBlockHeaders1:
                         {
                             // Forward the block headers to the TIV handler
                             Node.tiv.receivedBlockHeaders3(data, endpoint);

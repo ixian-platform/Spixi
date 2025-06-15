@@ -68,7 +68,7 @@ namespace SPIXI.Meta
             NetworkClientManager.init(networkClientManagerStatic);
 
             // Init TIV
-            tiv = new TransactionInclusion(new SpixiTransactionInclusionCallbacks());
+            tiv = new TransactionInclusion(new SpixiTransactionInclusionCallbacks(), false);
 
             Logging.info("Initing local storage");
 
@@ -141,7 +141,7 @@ namespace SPIXI.Meta
 
             // TODO: replace the TIV with a liteclient-optimized implementation
             // Start TIV
-            //tiv.start(headers_path, block_height, block_checksum, true);
+            tiv.start(headers_path, block_height, block_checksum, true);
             
             // Generate presence list
             PresenceList.init(IxianHandler.publicIP, 0, 'C', CoreConfig.clientKeepAliveInterval);
