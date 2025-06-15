@@ -787,7 +787,7 @@ namespace SPIXI
                     // Not connected to contact's sector node
 
                     var rnd = new Random();
-                    var sn = friend.sectorNodes[rnd.Next(friend.sectorNodes.Count - 1)];
+                    var sn = friend.sectorNodes[rnd.Next(friend.sectorNodes.Count)];
                     Logging.trace("Connecting to stream server " + sn.hostname + " " + sn.walletAddress.ToString());
                     StreamClientManager.connectTo(sn.hostname, sn.walletAddress);
                 }
