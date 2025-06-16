@@ -680,7 +680,7 @@ namespace SPIXI.Meta
             return friend_message;
         }
 
-        public override void triggerSignerPowSolutionFound()
+        public override void onSignerSolutionFound()
         {
             throw new NotImplementedException();
         }
