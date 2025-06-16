@@ -231,8 +231,28 @@ namespace SPIXI.Network
                         handleKeepAlivePresence(data, endpoint);
                         break;
 
-                    case ProtocolMessageCode.blockHeaders3:
                     case ProtocolMessageCode.compactBlockHeaders1:
+                        {
+                            using (MemoryStream m = new MemoryStream(data))
+                            {
+                                using (BinaryReader reader = new BinaryReader(m))
+                                {
+                                    ulong from = reader.ReadIxiVarUInt();
+                                    ulong totalCount = reader.ReadIxiVarUInt();
+
+                                    int filterLen = (int)reader.ReadIxiVarUInt();
+                                    byte[] filterBytes = reader.ReadBytes(filterLen);
+
+                                    byte[] headersBytes = new byte[reader.BaseStream.Length - reader.BaseStream.Position];
+                                    Array.Copy(data, reader.BaseStream.Position, headersBytes, 0, headersBytes.Length);
+
+                                    Node.tiv.receivedBlockHeaders3(headersBytes, endpoint);
+                                }
+                            }
+                        }
+                        break;
+
+                    case ProtocolMessageCode.blockHeaders3:
                         {
                             // Forward the block headers to the TIV handler
                             Node.tiv.receivedBlockHeaders3(data, endpoint);
