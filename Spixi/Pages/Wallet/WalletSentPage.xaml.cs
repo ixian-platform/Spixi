@@ -101,12 +101,8 @@ namespace SPIXI
             {
                 ctransaction = transaction;
                 confirmed = "false";
-            }
-
-
-            if (IxianHandler.getHighestKnownNetworkBlockHeight() > ctransaction.blockHeight + Config.txConfirmationBlocks)
+            } else if (IxianHandler.getHighestKnownNetworkBlockHeight() > ctransaction.applied + Config.txConfirmationBlocks)
             {
-                ctransaction.applied = ctransaction.blockHeight + Config.txConfirmationBlocks;
                 confirmed = "true";
             }
 

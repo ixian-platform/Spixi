@@ -1015,9 +1015,9 @@ namespace SPIXI
                 string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
 
                 string confirmed = "false";
-                if(IxianHandler.getHighestKnownNetworkBlockHeight() > tx.blockHeight + Config.txConfirmationBlocks)
+                if(tx.applied > 0
+                    && IxianHandler.getHighestKnownNetworkBlockHeight() > tx.applied + Config.txConfirmationBlocks)
                 {
-                    tx.applied = tx.blockHeight + Config.txConfirmationBlocks;
                     confirmed = "true";
                 }
 

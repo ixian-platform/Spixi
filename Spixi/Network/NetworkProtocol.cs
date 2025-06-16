@@ -471,13 +471,14 @@ namespace SPIXI.Network
                 Rejected rej = new Rejected(data);
                 switch (rej.code)
                 {
-                    case RejectedCode.TxInvalid:
-                    case RejectedCode.TxInsufficientFee:
-                    case RejectedCode.TxDust:
+                    case RejectedCode.TransactionInvalid:
+                    case RejectedCode.TransactionInsufficientFee:
+                    case RejectedCode.TransactionDust:
                         Logging.error("Transaction {0} was rejected with code: {1}", Crypto.hashToString(rej.data), rej.code);
+                        // TODO flag transaction as invalid
                         break;
 
-                    case RejectedCode.TxDuplicate:
+                    case RejectedCode.TransactionDuplicate:
                         Logging.warn("Transaction {0} already sent.", Crypto.hashToString(rej.data), rej.code);
                         // All good
                         PendingTransactions.increaseReceivedCount(rej.data, endpoint.serverWalletAddress);

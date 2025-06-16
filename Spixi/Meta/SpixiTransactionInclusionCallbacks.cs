@@ -7,7 +7,7 @@ namespace SPIXI.Meta
 {
     internal class SpixiTransactionInclusionCallbacks : TransactionInclusionCallbacks
     {
-        public void receivedTransactionInclusionVerificationResponse(byte[] txid, bool verified)
+        public void receivedTIVResponse(byte[] txid, bool verified)
         {
             // TODO implement error
             // TODO implement blocknum
