@@ -302,7 +302,7 @@ namespace SPIXI
                         {
                             if (friend.approved)
                             {
-                                Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), false, friend.nickname));
+                                Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
                             }
                             else
                             {
@@ -317,14 +317,14 @@ namespace SPIXI
 
                     case SpixiMessageCode.acceptAdd:
                         {
-                            Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), false, friend.nickname));
+                            Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
                             ProtocolMessage.resubscribeEvents();
                         }
                         break;
 
                     case SpixiMessageCode.acceptAddBot:
                         {
-                            Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), false, friend.nickname));
+                            Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
                             var chat_page = Utils.getChatPage(friend);
                             if (chat_page != null)
                             {

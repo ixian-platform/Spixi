@@ -61,6 +61,7 @@ namespace SPIXI
                 onRemove();
 
                 Navigation.PopToRootAsync(Config.defaultXamarinAnimations);
+                HomePage.Instance().removeDetailContent();
             }
             else if (current_url.Equals("ixian:removehistory", StringComparison.Ordinal))
             {
