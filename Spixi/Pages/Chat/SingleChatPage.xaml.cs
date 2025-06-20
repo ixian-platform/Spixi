@@ -1526,7 +1526,7 @@ namespace SPIXI
             if (homePage != null)
             {
                 popToRootAsync();
-                homePage.removeDetailContent();
+                homePage.removeDetailContent(false);
                 homePage.onChat(friend.walletAddress.ToString(), null);
             }
         }

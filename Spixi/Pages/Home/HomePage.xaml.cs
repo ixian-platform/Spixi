@@ -122,7 +122,7 @@ namespace SPIXI
                 //mainGrid.ColumnDefinitions[1].Width = new GridLength(0);
                 mainGrid.ColumnDefinitions[1].Width = new GridLength(0);
                 rightContent.IsVisible = false;
-                removeDetailContent();
+                removeDetailContent(false);
             }
             else
             {
@@ -633,7 +633,7 @@ namespace SPIXI
             if (rightContent.IsVisible)
             {
                 await rightContent.Content.FadeTo(0, 50);
-                removeDetailContent();
+                removeDetailContent(false);
                 detailContent = new WalletSentPage(transaction, true, this);
                 rightContent.Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
@@ -669,7 +669,7 @@ namespace SPIXI
             {        
                 
                 await rightContent.Content.FadeTo(0, 50);
-                removeDetailContent();
+                removeDetailContent(false);
                 detailContent = new SingleChatPage(friend, this);
                 rightContent.Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
@@ -1240,19 +1240,29 @@ namespace SPIXI
             removeDetailContent();
         }
 
-        public void removeDetailContent()
+        public void removeDetailContent(bool setDefault = true)
         {
             if (detailContent != null)
             {
                 detailContent.Dispose();
+                detailContent = null;
             }
-            detailContent = null;
-            rightContent.Content = defaultDetailContent.Content;
 
-            Utils.sendUiCommand(this, "selectChat", "");
+            if (setDefault)
+            {
+                if (defaultDetailContent != null)
+                {
+                    defaultDetailContent.Dispose();
+                }
 
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+                defaultDetailContent = new EmptyDetail();
+                rightContent.Content = defaultDetailContent.Content;
+
+                Utils.sendUiCommand(this, "selectChat", "");
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
         }
 
         // Spixi Mini Apps logic
