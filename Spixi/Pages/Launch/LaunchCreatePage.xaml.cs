@@ -34,7 +34,7 @@ namespace SPIXI
 
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else if (current_url.Contains("ixian:create:"))
             {
@@ -135,7 +135,7 @@ namespace SPIXI
 
                     MainThread.BeginInvokeOnMainThread(() => {
                         Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
-                        Navigation.RemovePage(this);
+                        removePage(this);
                     });
 
                     // Prepare the balances list
@@ -163,7 +163,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

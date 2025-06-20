@@ -31,7 +31,7 @@ namespace SPIXI
 
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else if (current_url.Contains("ixian:proceed:"))
             {
@@ -71,7 +71,7 @@ namespace SPIXI
                 if(attempts > Config.encryptionRetryPasswordAttempts)
                 {
                     Navigation.PushAsync(new LaunchPage(), Config.defaultXamarinAnimations);
-                    Navigation.RemovePage(this);
+                    removePage(this);
                 }
 
                 // Remove overlay
@@ -81,7 +81,7 @@ namespace SPIXI
             }
 
             Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
-            Navigation.RemovePage(this);
+            removePage(this);
         }
     }
 }

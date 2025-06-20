@@ -97,7 +97,7 @@ namespace SPIXI
                 {
                     try
                     {
-                        Navigation.PopToRootAsync(false);
+                        popToRootAsync();
                     }
                     catch (Exception ex)
                     {
@@ -289,7 +289,7 @@ namespace SPIXI
                     UIHelpers.shouldRefreshContacts = true;
                     StreamProcessor.sendLeave(friend, null);
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    Navigation.PopAsync(Config.defaultXamarinAnimations);
+                    popPageAsync();
                     homePage?.removeDetailContent();
                 }
             }
@@ -318,7 +318,7 @@ namespace SPIXI
                 FriendList.removeFriend(friend);
 
                 UIHelpers.shouldRefreshContacts = true;
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
                 homePage?.removeDetailContent();
 
                 // TODO: send a notification to the other party
@@ -457,7 +457,7 @@ namespace SPIXI
                 {
                     if (sleep_cnt >= 50)
                     {
-                        Navigation.PopAsync(Config.defaultXamarinAnimations);
+                        popPageAsync();
                         DisplayAlert(SpixiLocalization._SL("chat-bot-not-ready-title"), SpixiLocalization._SL("chat-bot-not-ready-body"), SpixiLocalization._SL("global-dialog-ok"));
                         return;
                     }
@@ -1525,7 +1525,7 @@ namespace SPIXI
         {
             if (homePage != null)
             {
-                Navigation.PopToRootAsync();
+                popToRootAsync();
                 homePage.removeDetailContent();
                 homePage.onChat(friend.walletAddress.ToString(), null);
             }
@@ -1637,7 +1637,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

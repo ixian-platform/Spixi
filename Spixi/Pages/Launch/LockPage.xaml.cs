@@ -87,7 +87,7 @@ namespace SPIXI
                 {
                     // Show the launch screen
                     Navigation.PushAsync(new SPIXI.LaunchPage(), Config.defaultXamarinAnimations);
-                    Navigation.RemovePage(this);
+                    removePage(this);
                 }
             }
             else
@@ -132,7 +132,7 @@ namespace SPIXI
             }
             Navigation.InsertPageBefore(HomePage.Instance(true), this);
 
-            Navigation.RemovePage(this);           
+            removePage(this);           
         }
 
         protected override bool OnBackButtonPressed()

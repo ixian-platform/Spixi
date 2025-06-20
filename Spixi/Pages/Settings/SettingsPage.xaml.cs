@@ -198,7 +198,7 @@ namespace SPIXI
             }
 
             // Pop the current page from the stack
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
         }
 
         private void resetLanguage()
@@ -244,7 +244,7 @@ namespace SPIXI
                 Node.tiv.clearCache();
 
                 // Remove the settings page
-                Navigation.PopToRootAsync();
+                popToRootAsync();
 
                 // Show the launch page
                 Navigation.PushAsync(new LaunchPage(), Config.defaultXamarinAnimations);
@@ -381,7 +381,7 @@ namespace SPIXI
         {
             resetLanguage();
 
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

@@ -12,7 +12,7 @@ using Microsoft.Web.WebView2.Core;
 
 namespace SPIXI
 {
-    public class SpixiContentPage : ContentPage
+    public class SpixiContentPage : ContentPage, IDisposable
     {
         public bool CancelsTouchesInView = true;
         public bool pageLoaded = false;
@@ -318,20 +318,7 @@ namespace SPIXI
         {
             base.OnDisappearing();
 
-            if (!Navigation.NavigationStack.Contains(this))
-            {
-                pageLoaded = false;
-                messageQueue.Clear();
-
-                if (_webView != null)
-                {
-                    _webView.Navigated -= webViewNavigated;
-                    _webView.Navigating -= webViewNavigating;
-                    _webView = null;
-                }
-            }
-
-            GC.Collect();
+            Dispose();
         }
 
         protected bool onNavigatingGlobal(string url)
@@ -356,6 +343,54 @@ namespace SPIXI
                 return false;
             }
             return true;
+        }
+
+        public void Dispose()
+        {
+            if (!Navigation.NavigationStack.Contains(this))
+            {
+                pageLoaded = false;
+                messageQueue.Clear();
+
+                if (_webView != null)
+                {
+                    _webView.Navigated -= webViewNavigated;
+                    _webView.Navigating -= webViewNavigating;
+                    _webView.Handler?.DisconnectHandler();
+                    _webView = null;
+                    
+                    GC.Collect();
+                }
+            }
+        }
+
+        public async Task<Page> popPageAsync()
+        {
+            var page = await Navigation.PopAsync(Config.defaultXamarinAnimations);
+            if (page != null
+                && page is SpixiContentPage)
+            {
+                ((SpixiContentPage)page).Dispose();
+            }
+            return page;
+        }
+
+        public void popToRootAsync()
+        {
+            while (Navigation.NavigationStack.Count > 1)
+            {
+                removePage(Navigation.NavigationStack.Last());
+            }
+        }
+
+        public void removePage(Page page)
+        {
+            Navigation.RemovePage(page);
+            if (page != null
+                && page is SpixiContentPage)
+            {
+                ((SpixiContentPage)page).Dispose();
+            }
         }
     }
 }

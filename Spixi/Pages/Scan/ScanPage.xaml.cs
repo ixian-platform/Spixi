@@ -90,7 +90,7 @@ public partial class ScanPage : SpixiContentPage
 
     protected override bool OnBackButtonPressed()
     {
-        Navigation.PopAsync(Config.defaultXamarinAnimations);
+        popPageAsync();
         GC.Collect();
         return true;
     }

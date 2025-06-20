@@ -66,7 +66,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else
             {
@@ -108,7 +108,7 @@ namespace SPIXI
                     }
                 }
             }
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
         }
 
         private void onSend()
@@ -166,12 +166,12 @@ namespace SPIXI
                 }
             }
 
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
         }
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

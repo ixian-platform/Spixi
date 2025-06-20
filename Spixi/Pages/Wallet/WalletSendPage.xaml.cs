@@ -74,7 +74,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else if (current_url.Equals("ixian:pick", StringComparison.Ordinal))
             {
@@ -286,12 +286,12 @@ namespace SPIXI
 
                 Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
             }
-            await Navigation.PopAsync(Config.defaultXamarinAnimations);
+            await popPageAsync();
         }
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

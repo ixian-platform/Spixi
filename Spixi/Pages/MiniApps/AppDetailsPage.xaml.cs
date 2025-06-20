@@ -191,7 +191,7 @@ namespace SPIXI
             else
             {
                 displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removefailed-text"), SpixiLocalization._SL("global-dialog-ok"));
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             UIHelpers.shouldRefreshApps = true;
         }
@@ -205,7 +205,7 @@ namespace SPIXI
             }
             
             Navigation.PushAsync(new AppDetailsPage(app, fromChat, true), Config.defaultXamarinAnimations);
-            Navigation.RemovePage(this);          
+            removePage(this);          
         }
 
         // Executed every second
@@ -216,7 +216,7 @@ namespace SPIXI
 
         private void onBack()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
             if (shouldReloadDetailView)
             {
                 reloadDetailView();
@@ -269,7 +269,7 @@ namespace SPIXI
 
             try
             {
-                await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                await popPageAsync();
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
 

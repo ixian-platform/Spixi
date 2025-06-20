@@ -43,7 +43,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else if (current_url.Equals("ixian:newcontact", StringComparison.Ordinal))
             {
@@ -71,7 +71,7 @@ namespace SPIXI
         {
             string id = e.Value;
             onPickSucceeded(id);
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
         }
 
         private void onPickSucceeded(string id)
@@ -104,7 +104,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

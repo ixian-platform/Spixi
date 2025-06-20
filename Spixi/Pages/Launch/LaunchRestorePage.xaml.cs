@@ -31,7 +31,7 @@ namespace SPIXI
 
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else if (current_url.Equals("ixian:selectfile", StringComparison.Ordinal))
             {
@@ -189,7 +189,7 @@ namespace SPIXI
                 Directory.Delete(tmpDirectory, true);
                 File.Delete(source_path);
                 Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
-                Navigation.RemovePage(this);
+                removePage(this);
                 return true;
             }catch(Exception e)
             {
@@ -217,13 +217,13 @@ namespace SPIXI
                 Node.loadWallet();
             }
             Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
-            Navigation.RemovePage(this);
+            removePage(this);
             return true;
         }
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

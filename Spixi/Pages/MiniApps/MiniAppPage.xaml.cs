@@ -248,7 +248,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
                 Node.MiniAppManager.removeAppPage(sessionId);
             });
         }

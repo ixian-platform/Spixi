@@ -180,10 +180,10 @@ namespace SPIXI
         {
             if (!viewOnly)
             {
-                Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
-                Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+                removePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+                removePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
             }
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
         }
 
         protected override bool OnBackButtonPressed()

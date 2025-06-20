@@ -44,7 +44,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -59,7 +59,7 @@ namespace SPIXI
                 {
                     IxianHandler.getWalletStorage().writeWallet(new_password);
                     displaySpixiAlert(SpixiLocalization._SL("settings-encryption-passwordchanged-title"), SpixiLocalization._SL("settings-encryption-passwordchanged-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    Navigation.PopAsync(Config.defaultXamarinAnimations);
+                    popPageAsync();
                 }
                 else
                 {
@@ -78,7 +78,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             return true;
         }

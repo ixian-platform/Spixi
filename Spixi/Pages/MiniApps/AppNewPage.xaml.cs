@@ -145,7 +145,7 @@ namespace SPIXI
             app.url = path;
             
             Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
-            Navigation.RemovePage(this);
+            removePage(this);
         }
 
         private void onInstall(string path)
@@ -155,7 +155,7 @@ namespace SPIXI
             {
                 UIHelpers.shouldRefreshApps = true;
                 displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), string.Format(SpixiLocalization._SL("app-new-dialog-installed-text"), app_name), SpixiLocalization._SL("global-dialog-ok"));
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                popPageAsync();
             }
             else
             {
@@ -165,7 +165,7 @@ namespace SPIXI
 
         private void onBack()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
         }
 
         protected override bool OnBackButtonPressed()

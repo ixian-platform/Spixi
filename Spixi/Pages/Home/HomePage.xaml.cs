@@ -437,7 +437,7 @@ namespace SPIXI
 
         public void processQRResult(string result)
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            popPageAsync();
 
             // Check for add contact
             string[] split = result.Split(new string[] { ":send" }, StringSplitOptions.None);
@@ -481,7 +481,7 @@ namespace SPIXI
 
             try
             {
-                await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                await popPageAsync();
                 onChat(id, null);
             }
             catch (Exception ex)
@@ -527,7 +527,11 @@ namespace SPIXI
                     {
                         continue;
                     }
-                    Navigation.RemovePage(page);
+                    removePage(page);
+                    if (page is SpixiContentPage)
+                    {
+                        ((SpixiContentPage)page).Dispose();
+                    }
                 }
             }
             catch(Exception e)
@@ -684,7 +688,7 @@ namespace SPIXI
             {
                 if (Navigation.NavigationStack.Count > 1)
                 {
-                    await Navigation.PopToRootAsync(false);
+                    popToRootAsync();
                 }
 
                 // TODO
@@ -1238,8 +1242,11 @@ namespace SPIXI
 
         public void removeDetailContent()
         {
+            if (detailContent != null)
+            {
+                detailContent.Dispose();
+            }
             detailContent = null;
-            defaultDetailContent = new EmptyDetail();
             rightContent.Content = defaultDetailContent.Content;
 
             Utils.sendUiCommand(this, "selectChat", "");
@@ -1319,7 +1326,7 @@ namespace SPIXI
 
             try
             {
-                await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                await popPageAsync();
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
                 
