@@ -25,18 +25,31 @@ namespace Spixi
         public const string TitleKey = "title";
         public const string MessageKey = "message";
 
+        private static bool isInitializing = false;
+        private static bool isInitialized = false;
+
         public static void initialize()
         {
+            if (isInitializing
+                || isInitialized)
+            {
+                return;
+            }
+
+            isInitializing = true;
+
             OneSignal.Debug.LogLevel = LogLevel.WARN;
             OneSignal.Debug.AlertLevel = LogLevel.NONE;
 
             OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
 
+            OneSignal.Notifications.Clicked += handleNotificationOpened;
+            OneSignal.Notifications.WillDisplay += handleNotificationReceived;
+
             // RequestPermissionAsync will show the notification permission prompt.
             OneSignal.Notifications.RequestPermissionAsync(true);
 
-            OneSignal.Notifications.Clicked += handleNotificationOpened;
-            OneSignal.Notifications.WillDisplay += handleNotificationReceived;
+            isInitialized = true;
         }
 
         public static void setTag(string tag)
@@ -48,6 +61,22 @@ namespace Spixi
         {
             var notificationManager = NotificationManagerCompat.From(Android.App.Application.Context);
             notificationManager.CancelAll();
+
+            try
+            {
+                if (isInitialized)
+                {
+                    OneSignalNative.Notifications.ClearAllNotifications();
+                }
+                else
+                {
+                    Logging.warn("Cannot clear notifications, OneSignal is not initialized yet.");
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception while clearing all notifications: {0}.", e);
+            }
         }
 
         public static void showLocalNotification(string title, string message, string data)
@@ -113,7 +142,6 @@ namespace Spixi
 
                 if (OfflinePushMessages.fetchPushMessages(true, true))
                 {
-                    OneSignalNative.Notifications.ClearAllNotifications();
                     return;
                 }
             }
