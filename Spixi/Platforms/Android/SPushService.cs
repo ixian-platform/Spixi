@@ -48,8 +48,6 @@ namespace Spixi
         {
             var notificationManager = NotificationManagerCompat.From(Android.App.Application.Context);
             notificationManager.CancelAll();
-
-            OneSignalNative.Notifications.ClearAllNotifications();
         }
 
         public static void showLocalNotification(string title, string message, string data)
@@ -115,7 +113,7 @@ namespace Spixi
 
                 if (OfflinePushMessages.fetchPushMessages(true, true))
                 {
-                    //OneSignal.Current.ClearAndroidOneSignalNotifications();
+                    OneSignalNative.Notifications.ClearAllNotifications();
                     return;
                 }
             }
