@@ -358,39 +358,55 @@ namespace SPIXI
                     _webView.Navigating -= webViewNavigating;
                     _webView.Handler?.DisconnectHandler();
                     _webView = null;
-                    
-                    GC.Collect();
                 }
             }
         }
 
-        public async Task<Page> popPageAsync()
+        public void popPageAsync()
         {
-            var page = await Navigation.PopAsync(Config.defaultXamarinAnimations);
-            if (page != null
-                && page is SpixiContentPage)
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
-                ((SpixiContentPage)page).Dispose();
-            }
-            return page;
+                Page page = await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                if (page != null
+                    && page is SpixiContentPage)
+                {
+                    ((SpixiContentPage)page).Dispose();
+                }
+            });
         }
 
         public void popToRootAsync()
         {
-            while (Navigation.NavigationStack.Count > 1)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                removePage(Navigation.NavigationStack.Last());
-            }
+                while (Navigation.NavigationStack.Count > 1)
+                {
+                    var page = Navigation.NavigationStack.Last();
+                    if (page != null)
+                    {
+                        Navigation.RemovePage(page);
+                        if (page is SpixiContentPage)
+                        {
+                            ((SpixiContentPage)page).Dispose();
+                        }
+                    }
+                }
+            });
         }
 
         public void removePage(Page page)
         {
-            Navigation.RemovePage(page);
-            if (page != null
-                && page is SpixiContentPage)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                ((SpixiContentPage)page).Dispose();
-            }
+                if (page != null)
+                {
+                    Navigation.RemovePage(page);
+                    if (page is SpixiContentPage)
+                    {
+                        ((SpixiContentPage)page).Dispose();
+                    }
+                }
+            });
         }
     }
 }

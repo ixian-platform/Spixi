@@ -269,7 +269,7 @@ namespace SPIXI
 
             try
             {
-                await popPageAsync();
+                popPageAsync();
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
 

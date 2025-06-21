@@ -246,11 +246,8 @@ namespace SPIXI
                 }
             }
 
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                popPageAsync();
-                Node.MiniAppManager.removeAppPage(sessionId);
-            });
+            Node.MiniAppManager.removeAppPage(sessionId);
+            popPageAsync();
         }
 
         public void networkDataReceived(Address sender_address, byte[] data)

@@ -17,6 +17,7 @@ using Android.Views.InputMethods;
 using AndroidX.Core.View.InputMethod;
 using Android.OS;
 using AInputMethods = Android.Views.InputMethods;
+using Android.Runtime;
 
 namespace Spixi.Platforms.Android.Renderers;
 
@@ -24,7 +25,7 @@ public class SpixiWebChromeClient : WebChromeClient
 {
     WebNavigationResult _navigationResult = WebNavigationResult.Success;
     SpixiWebviewRenderer2 _renderer;
-   // Activity activity;
+    // Activity activity;
 
     public SpixiWebChromeClient(SpixiWebviewRenderer2 renderer)//, Activity context)
     {
@@ -60,45 +61,59 @@ public class SpixiWebViewClient : WebViewClient
         _renderer = renderer;
     }
 
+    public SpixiWebViewClient(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+    {
+
+    }
+
     // Hackish solution to the Xamarin ERR_UNKNOWN_URL_SCHEME issue plaguing the latest releases
     // TODO: find a better way to handle the Navigating event without triggering a page load
-        [Obsolete]
-        public override bool ShouldOverrideUrlLoading(global::Android.Webkit.WebView view, string url)
-        {
-            var args = new WebNavigatingEventArgs(WebNavigationEvent.NewPage, new UrlWebViewSource { Url = url }, url);
+    [Obsolete]
+    public override bool ShouldOverrideUrlLoading(global::Android.Webkit.WebView view, string url)
+    {
+        var args = new WebNavigatingEventArgs(WebNavigationEvent.NewPage, new UrlWebViewSource { Url = url }, url);
 
-            try
-            {
-                _renderer.ElementController.SendNavigating(args);
-            }
-            catch (Exception e)
-            {
-                Logging.error("Exception in should override url loading {0}", e);
-            }
-            if (args.Cancel)
-            {
-                return true;
-            }
-            return false;
+        try
+        {
+            _renderer.ElementController.SendNavigating(args);
+        }
+        catch (Exception e)
+        {
+            Logging.error("Exception in should override url loading {0}", e);
         }
 
-        public override void OnPageFinished(global::Android.Webkit.WebView view, string url)
+        if (args.Cancel)
         {
-            if (_renderer.Element == null)// || url == AssetBaseUrl)
-                return;
-            var source = new UrlWebViewSource { Url = url };
-            var args = new WebNavigatedEventArgs(WebNavigationEvent.NewPage, source, url, _navigationResult);
-            _renderer.ElementController.SendNavigated(args);
-            _renderer.UpdateCanGoBackForward();
+            return true;
+        }
+        return false;
+    }
+
+    public override void OnPageFinished(global::Android.Webkit.WebView view, string url)
+    {
+        if (_renderer.Element == null)// || url == AssetBaseUrl)
+        {
             base.OnPageFinished(view, url);
-        }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (disposing)
-                _renderer = null;
+            return;
         }
+        var source = new UrlWebViewSource { Url = url };
+        var args = new WebNavigatedEventArgs(WebNavigationEvent.NewPage, source, url, _navigationResult);
+        _renderer.ElementController.SendNavigated(args);
+        _renderer.UpdateCanGoBackForward();
+
+        base.OnPageFinished(view, url);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        if (disposing
+            && _renderer != null)
+        {
+            _renderer = null;
+        }
+    }
 }
 
 public class SpixiWebview(Context context) : AWebView(context), InputConnectionCompat.IOnCommitContentListener
@@ -155,7 +170,7 @@ public class SpixiWebview(Context context) : AWebView(context), InputConnectionC
     public override IInputConnection OnCreateInputConnection(EditorInfo? outAttrs)
     {
         var inputConnection = base.OnCreateInputConnection(outAttrs);
-        
+
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
             outAttrs.ImeOptions |= AInputMethods.ImeFlags.NoPersonalizedLearning;
@@ -237,18 +252,34 @@ public class SpixiWebviewRenderer2 : ViewRenderer<Microsoft.Maui.Controls.WebVie
         _isDisposed = true;
         if (disposing)
         {
-            if (Element != null)
+            try
             {
-                Control?.StopLoading();
-
-                ElementController.EvalRequested -= OnEvalRequested;
-                ElementController.GoBackRequested -= OnGoBackRequested;
-                ElementController.GoForwardRequested -= OnGoForwardRequested;
-                ElementController.ReloadRequested -= OnReloadRequested;
-                ElementController.EvaluateJavaScriptRequested -= OnEvaluateJavaScriptRequested;
+                if (Control != null)
+                {
+                    Control.StopLoading();
+                    Control.ClearHistory();
+                    Control.ClearCache(true);
+                    Control.RemoveAllViews();
+                    Control.Destroy();
+                }
 
                 _webViewClient?.Dispose();
                 _webChromeClient?.Dispose();
+                _webViewClient = null;
+                _webChromeClient = null;
+
+                if (ElementController != null)
+                {
+                    ElementController.EvalRequested -= OnEvalRequested;
+                    ElementController.EvaluateJavaScriptRequested -= OnEvaluateJavaScriptRequested;
+                    ElementController.GoBackRequested -= OnGoBackRequested;
+                    ElementController.GoForwardRequested -= OnGoForwardRequested;
+                    ElementController.ReloadRequested -= OnReloadRequested;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Error during WebView Dispose: " + ex.ToString());
             }
         }
 

@@ -481,7 +481,7 @@ namespace SPIXI
 
             try
             {
-                await popPageAsync();
+                popPageAsync();
                 onChat(id, null);
             }
             catch (Exception ex)
@@ -1336,7 +1336,7 @@ namespace SPIXI
 
             try
             {
-                await popPageAsync();
+                popPageAsync();
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
                 

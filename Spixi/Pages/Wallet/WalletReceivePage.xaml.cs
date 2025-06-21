@@ -215,7 +215,7 @@ namespace SPIXI
                 Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
             }
 
-            await popPageAsync();
+            popPageAsync();
         }
 
         protected override bool OnBackButtonPressed()

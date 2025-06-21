@@ -58,7 +58,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                popPageAsync();
+                OnBackButtonPressed();
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
