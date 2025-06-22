@@ -124,14 +124,18 @@ namespace SPIXI
                     IxiNumber fiat_amount = entry_amount * Node.fiatPrice;
 
                     string username = SpixiLocalization._SL("wallet-unknown-recipient");
-                    string useravatar = "img/spixiavatar.png";
+                    string user_avatar = "img/spixiavatar.png";
                     if (friend != null)
                     {
                         username = friend.nickname;
-                        useravatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                        var tmp_user_avatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                        if (tmp_user_avatar != null)
+                        {
+                            user_avatar = tmp_user_avatar;
+                        }
                     }
 
-                    Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), username, useravatar, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);                    
+                    Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), username, user_avatar, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);                    
                 }
             }
             else
@@ -154,15 +158,19 @@ namespace SPIXI
                 Friend friend = FriendList.getFriend(sender_address);
 
                 string username = SpixiLocalization._SL("wallet-unknown-sender");
-                string useravatar = "img/spixiavatar.png";
+                string user_avatar = "img/spixiavatar.png";
 
                 if (friend != null)
                 {
                     username = friend.nickname;
-                    useravatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                    var tmp_user_avatar = IxianHandler.localStorage.getAvatarPath(friend.walletAddress.ToString());
+                    if (tmp_user_avatar != null)
+                    {
+                        user_avatar = tmp_user_avatar;
+                    }
                 }
 
-                Utils.sendUiCommand(this, "addEntry", sender_address.ToString(), username, useravatar, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);               
+                Utils.sendUiCommand(this, "addEntry", sender_address.ToString(), username, user_avatar, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);               
 
             }
 

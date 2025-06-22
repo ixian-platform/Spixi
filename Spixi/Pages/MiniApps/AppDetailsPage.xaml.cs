@@ -15,7 +15,7 @@ namespace SPIXI
 
         MiniApp fetchedApp = null;
 
-        bool fromChat = false;
+        Address[] remoteContactAddresses = null;
 
         private bool shouldReloadDetailView = false;
 
@@ -30,11 +30,11 @@ namespace SPIXI
             loadPage(webView, "app_details.html");
         }
 
-        public AppDetailsPage(MiniApp app, bool fromChat = false, bool shouldReloadDetailView = false)
+        public AppDetailsPage(MiniApp app, Address[] remoteContactAddresses = null, bool shouldReloadDetailView = false)
         {
             InitializeComponent();
 
-            this.fromChat = fromChat;
+            this.remoteContactAddresses = remoteContactAddresses;
             this.shouldReloadDetailView = shouldReloadDetailView;
             fetchedApp = app;
 
@@ -152,7 +152,7 @@ namespace SPIXI
                 app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), 
                 app_installed.ToString(),
                 app_verified.ToString(),
-                (!fromChat).ToString());
+                (true).ToString());
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -204,7 +204,7 @@ namespace SPIXI
                 return;
             }
             
-            Navigation.PushAsync(new AppDetailsPage(app, fromChat, true), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new AppDetailsPage(app, remoteContactAddresses, true), Config.defaultXamarinAnimations);
             removePage(this);          
         }
 
@@ -244,6 +244,12 @@ namespace SPIXI
 
         private void onStartAppMulti(string appId)
         {
+            if (remoteContactAddresses != null)
+            {
+                onJoinApp(appId, remoteContactAddresses);
+                return;
+            }
+
             var recipientPage = new WalletRecipientPage();
             recipientPage.pickSucceeded += (sender, e) =>
             {

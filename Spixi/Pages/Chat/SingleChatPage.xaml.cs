@@ -806,7 +806,7 @@ namespace SPIXI
         {
             if (homePage != null)
             {
-                homePage.onInstallApp(app_url, true);
+                homePage.onInstallApp(app_url, [friend.walletAddress]);
                 return;
             }
 
@@ -820,7 +820,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app, true), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, [friend.walletAddress]), Config.defaultXamarinAnimations);
             });
         }
 
