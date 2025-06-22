@@ -130,10 +130,10 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
-                if (Node.getAvailableBalance() > ConsensusConfig.forceTransactionPrice * 2)
+                if (Node.getAvailableBalance() > ConsensusConfig.forceTransactionPrice * 6)
                 {
                     // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(this, "setMaxAmount", (Node.getAvailableBalance() - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
+                    Utils.sendUiCommand(this, "setMaxAmount", (Node.getAvailableBalance() - (ConsensusConfig.forceTransactionPrice * 6)).ToString());
                 }
             }
             else

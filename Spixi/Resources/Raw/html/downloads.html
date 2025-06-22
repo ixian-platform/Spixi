@@ -77,7 +77,7 @@
         function addFile(name, icon, time) {
             icon = icon.replace(/&#92;/g, '\\');
 
-            var deleteAction = "location.href='ixian:delete:" + name + "';";
+            var deleteAction = "location.href='ixian:delete:" + name + "';event.stopPropagation();return false;";
 
             var iconHtml = '<i class=\"fa fa-file\"></i>';
             if (icon != "") {

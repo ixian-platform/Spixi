@@ -1125,6 +1125,12 @@ namespace SPIXI
                 {
                     ((SpixiContentPage)page).updateScreen();
                 }
+
+                if (page == this
+                    && detailContent is not null and SpixiContentPage)
+                {
+                    ((SpixiContentPage)detailContent).updateScreen();
+                }
             }
             catch(Exception ex)
             {

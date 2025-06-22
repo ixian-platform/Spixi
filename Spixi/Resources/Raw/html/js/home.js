@@ -583,7 +583,7 @@ function countLogoClick()
     logoClicked++;
     if(logoClicked > 10)
     {
-        document.getElementById("SendLogMenuItem").style.display = "block";
+        document.getElementById("SendLogMenuItem").style.display = "";
         alert(SL_DevMode);
     }
 }
