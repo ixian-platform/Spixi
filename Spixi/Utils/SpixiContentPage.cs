@@ -370,6 +370,7 @@ namespace SPIXI
                 if (page != null
                     && page is SpixiContentPage)
                 {
+                    await Task.Delay(200);
                     ((SpixiContentPage)page).Dispose();
                 }
             });
@@ -379,9 +380,11 @@ namespace SPIXI
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                while (Navigation.NavigationStack.Count > 1)
+                var mainPage = (Application.Current.MainPage as NavigationPage);
+                int pageCount = mainPage.Navigation.NavigationStack.Count;
+                for (int i = 1; i < pageCount - 1; i++)
                 {
-                    var page = Navigation.NavigationStack.Last();
+                    var page = mainPage.Navigation.NavigationStack[i];
                     if (page != null)
                     {
                         Navigation.RemovePage(page);
@@ -392,17 +395,19 @@ namespace SPIXI
                     }
                 }
             });
+            popPageAsync();
         }
 
         public void removePage(Page page)
         {
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 if (page != null)
                 {
                     Navigation.RemovePage(page);
                     if (page is SpixiContentPage)
                     {
+                        await Task.Delay(200);
                         ((SpixiContentPage)page).Dispose();
                     }
                 }

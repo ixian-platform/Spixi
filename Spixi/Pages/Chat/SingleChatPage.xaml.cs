@@ -524,10 +524,6 @@ namespace SPIXI
                     _waitingForContactConfirmation = true;
                     Utils.sendUiCommand(this, "showRequestSentModal", "1");
                 }
-                else if (friend.state == FriendState.RequestReceived)
-                {
-                    Utils.sendUiCommand(this, "showContactRequest", "1");
-                }
             }
 
             if (!Preferences.Default.ContainsKey("rating_action"))
@@ -892,6 +888,7 @@ namespace SPIXI
                         string modal_title = String.Format(SpixiLocalization._SL("chat-modal-tip-title"), nick);
                         if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
                         {
+                            updateReactions(msg_id, selectedChannel);
                             StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
                             IxianHandler.addTransaction(tx, relayNodeAddresses, true);
                             TransactionCache.addUnconfirmedTransaction(tx);
@@ -950,6 +947,7 @@ namespace SPIXI
                 case "like":
                     if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
                     {
+                        updateReactions(msg_id, selectedChannel);
                         StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
                     }
                     break;
@@ -998,15 +996,6 @@ namespace SPIXI
             if (messages.Count < messagesToShow)
                 show_more = "false";
             Utils.sendUiCommand(this, "clearMessages", show_more);
-            if (friend.handshakeStatus < 2)
-            {
-                if (friend.handshakeStatus == 1 && friend.state == FriendState.Approved)
-                {
-                    Utils.sendUiCommand(this, "showContactRequest", "1");
-                }
-                return;
-            }
-
             
             lock (messages)
             {
