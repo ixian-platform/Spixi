@@ -456,7 +456,9 @@ namespace SPIXI
             }
 
             string id_to_add = split[0];
-            Navigation.PushAsync(new ContactNewPage(id_to_add), Config.defaultXamarinAnimations);
+            var contactNewPage = new ContactNewPage(id_to_add);
+            contactNewPage.pickSucceeded += HandlePickSucceeded;
+            Navigation.PushAsync(contactNewPage, Config.defaultXamarinAnimations);
             return;
         }
 
@@ -528,10 +530,6 @@ namespace SPIXI
                         continue;
                     }
                     removePage(page);
-                    if (page is SpixiContentPage)
-                    {
-                        ((SpixiContentPage)page).Dispose();
-                    }
                 }
             }
             catch(Exception e)

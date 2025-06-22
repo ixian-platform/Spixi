@@ -83,8 +83,8 @@ public partial class ScanPage : SpixiContentPage
         if (scanSucceeded != null)
         {
             allowScanning = false;
-            scanSucceeded(this, new SPIXI.EventArgs<string>(wal));
             OnBackButtonPressed();
+            scanSucceeded(this, new SPIXI.EventArgs<string>(wal));
         }
     }
 

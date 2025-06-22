@@ -378,13 +378,12 @@ namespace SPIXI
 
         public void popToRootAsync()
         {
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 var mainPage = (Application.Current.MainPage as NavigationPage);
-                int pageCount = mainPage.Navigation.NavigationStack.Count;
-                for (int i = 1; i < pageCount - 1; i++)
+                while (mainPage.Navigation.NavigationStack.Count > 2)
                 {
-                    var page = mainPage.Navigation.NavigationStack[i];
+                    var page = mainPage.Navigation.NavigationStack[mainPage.Navigation.NavigationStack.Count - 2];
                     if (page != null)
                     {
                         Navigation.RemovePage(page);
@@ -394,20 +393,28 @@ namespace SPIXI
                         }
                     }
                 }
+                if (mainPage.Navigation.NavigationStack.Count > 1)
+                {
+                    Page page = await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                    if (page != null
+                        && page is SpixiContentPage)
+                    {
+                        await Task.Delay(200);
+                        ((SpixiContentPage)page).Dispose();
+                    }
+                }
             });
-            popPageAsync();
         }
 
         public void removePage(Page page)
         {
-            MainThread.BeginInvokeOnMainThread(async () =>
+            MainThread.BeginInvokeOnMainThread(() =>
             {
                 if (page != null)
                 {
                     Navigation.RemovePage(page);
                     if (page is SpixiContentPage)
                     {
-                        await Task.Delay(200);
                         ((SpixiContentPage)page).Dispose();
                     }
                 }

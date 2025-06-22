@@ -186,8 +186,10 @@ namespace SPIXI
             {
                 pickSucceeded(this, new SPIXI.EventArgs<string>(contactName));
             }
-            popPageAsync();
-
+            else
+            {
+                popPageAsync();
+            }
         }
 
         protected override bool OnBackButtonPressed()
