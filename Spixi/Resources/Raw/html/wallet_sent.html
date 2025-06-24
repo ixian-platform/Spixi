@@ -153,10 +153,18 @@
         function addEntry(address, username, avatar, amount, fiat_amount, time, type, confirmed)
         {
             if (received == true) {
-                document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive-pending}";
+                if (confirmed == "true") {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive}";
+                } else {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive-pending}";
+                }
             }
             else {
-                document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent-pending}";
+                if (confirmed == "true") {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent}";
+                } else {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent-pending}";
+                }
             }
 
             amount = amountWithCommas(amount);
