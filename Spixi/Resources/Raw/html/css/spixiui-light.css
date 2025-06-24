@@ -341,6 +341,12 @@ img.emoji {
 .spixi-toolbar-row {
     height: 56px;
     display: table-row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home.spixi-toolbar-row {
+    display: flex;
 }
 
 .spixi-toolbar-row > div:nth-child(1) {
@@ -348,12 +354,7 @@ img.emoji {
     width: 50px;
     min-width: 50px;
     text-align: center;
-    height: 56px;
-    max-height: 56px;
     overflow: hidden;
-    display: table-cell;
-    vertical-align: middle;
-    padding: 0px;
     font-size: 24px;
 }
 
@@ -365,11 +366,6 @@ img.emoji {
     z-index: 0;
     box-sizing: border-box;
     text-align: left;
-    height: 56px;
-    max-height: 56px;
-    display: table-cell;
-    vertical-align: middle;
-    padding: 0px;
     max-width: 200px;
 }
 
@@ -378,12 +374,25 @@ img.emoji {
     width: 50px;
     min-width: 50px;
     text-align: center;
+    overflow: hidden;
+}
+
+.spixi-toolbar-row > div:nth-child(1),
+.spixi-toolbar-row > div:nth-child(2),
+.spixi-toolbar-row > div:nth-child(3) {
+    display: table-cell;
+    align-items: center;
+    justify-content: center;
     height: 56px;
     max-height: 56px;
-    overflow: hidden;
-    display: table-cell;
     vertical-align: middle;
     padding: 0px;
+}
+
+.home.spixi-toolbar-row > div:nth-child(1),
+.home.spixi-toolbar-row > div:nth-child(2),
+.home.spixi-toolbar-row > div:nth-child(3) {
+    display: flex;
 }
 
 .spixi-toolbar-row.extended {
@@ -440,12 +449,13 @@ img.emoji {
     width: 80px;
     background-size: 22px 24px !important;
     background-repeat: no-repeat;
-    background-position: 0px 3px;
+    background-position: left center;
     margin: auto;
     padding-left: 24px;
     font-size: 20px !important;
     font-style: normal;
     font-weight: 400;
+    line-height: 1;
 }
 
 .spixi-toolbar-title {

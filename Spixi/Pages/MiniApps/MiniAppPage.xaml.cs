@@ -288,7 +288,7 @@ namespace SPIXI
 
         public bool hasUser(Address user)
         {
-            if (userAddresses.Select(x => x.addressNoChecksum.SequenceEqual(user.addressNoChecksum)) != null)
+            if (userAddresses.Select(x => x.addressNoChecksum.SequenceEqual(user.addressNoChecksum)).Count() > 0)
             {
                 return true;
             }

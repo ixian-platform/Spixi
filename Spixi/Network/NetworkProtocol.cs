@@ -121,6 +121,19 @@ namespace SPIXI.Network
                                         IxianHandler.publicPort = endpoint.incomingPort;
                                         PresenceList.forceSendKeepAlive = true;
                                         Logging.info("Forcing KA from networkprotocol");
+                                    } else
+                                    {
+                                        // Announce local presence
+                                        var myPresence = PresenceList.curNodePresence;
+                                        if (myPresence != null)
+                                        {
+                                            foreach (var pa in myPresence.addresses)
+                                            {
+                                                byte[] hash = CryptoManager.lib.sha3_512sqTrunc(pa.getBytes());
+                                                var iika = new InventoryItemKeepAlive(hash, pa.lastSeenTime, myPresence.wallet, pa.device);
+                                                endpoint.addInventoryItem(iika);
+                                            }
+                                        }
                                     }
 
                                     StreamProcessor.fetchAllFriendsPresencesInSector(endpoint.presence.wallet);
@@ -355,12 +368,16 @@ namespace SPIXI.Network
 
         private static void handleUpdatePresence(byte[] data, RemoteEndpoint endpoint)
         {
-            Logging.info("NET: Receiving presence list update");
+            
             // Parse the data and update entries in the presence list
             Presence p = PresenceList.updateFromBytes(data, 0);
             if (p == null)
+            {
+                Logging.warn("Received invalid presence list update");
                 return;
+            }
 
+            Logging.info("Received presence update for " + p.wallet);
             Friend f = FriendList.getFriend(p.wallet);
             if (f != null)
             {
@@ -380,6 +397,8 @@ namespace SPIXI.Network
             byte[] device_id = null;
             char node_type;
             bool updated = PresenceList.receiveKeepAlive(data, out address, out last_seen, out device_id, out node_type, endpoint);
+
+            Logging.trace("Received keepalive update for " + address);
             Presence p = PresenceList.getPresenceByAddress(address);
             if (p == null)
                 return;

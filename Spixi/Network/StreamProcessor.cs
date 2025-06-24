@@ -748,6 +748,7 @@ namespace SPIXI
 
         public static void fetchAllFriendsPresencesInSector(Address address)
         {
+            Logging.trace("Fetching all friends presences in sector " + address.ToString());
             var friends = FriendList.friends;
             foreach (var friend in friends)
             {
@@ -771,6 +772,8 @@ namespace SPIXI
                 || (Clock.getNetworkTimestamp() - friend.updatedSectorNodes > Config.contactSectorNodeIntervalSeconds && Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds))
             {
                 // If sector nodes are not yet initialized or we haven't received contact's presence information and haven't updated presence within the interval
+
+                Logging.trace("Fetching sector nodes for " + friend.walletAddress.ToString());
                 CoreProtocolMessage.fetchSectorNodes(friend.walletAddress, Config.maxRelaySectorNodesToRequest);
                 return;
             }
@@ -784,7 +787,7 @@ namespace SPIXI
                 }
 
                 Logging.trace("Fetching presence for " + friend.walletAddress.ToString());
-                if (!StreamClientManager.sendToClient(friend.sectorNodes, ProtocolMessageCode.getPresence2, mw.ToArray(), null))
+                if (!StreamClientManager.sendToClient(friend.sectorNodes, ProtocolMessageCode.getPresence2, mw.ToArray(), null, 2))
                 {
                     // Not connected to contact's sector node
 
