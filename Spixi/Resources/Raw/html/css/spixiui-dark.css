@@ -1880,7 +1880,7 @@ img.emoji {
 
 .footer-version {
     width: 100%;
-    background: var(--colors-surface-04);
+    background: var(--colors-surface-02);
     color: var(--colors-text-01);
     min-height: 36px;
     padding: 8px;
