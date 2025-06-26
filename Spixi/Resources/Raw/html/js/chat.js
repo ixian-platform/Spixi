@@ -1,4 +1,4 @@
-﻿var notifications = false;
+var notifications = false;
 var isBot = false;
 var isAdmin = false;
 var messageCost = "";
@@ -642,13 +642,13 @@ function addText(id, address, nick, avatar, text, time, className) {
     bubbleContentWrapEl.appendChild(timeEl);
     if (className.includes("spixi-bubble myself")) {
         if (className.includes("sent")) {
-            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-arrow-right\"></i>";
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
         } else if (className.includes("default")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-clock\"></i>";
         } else if (className.includes("read")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check-double\"></i>";
         } else {
-            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check-double\"></i>";
         }
     }
     bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator paid fas fa-wallet\"></i>";

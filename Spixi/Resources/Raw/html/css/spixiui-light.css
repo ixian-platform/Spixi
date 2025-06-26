@@ -2432,7 +2432,7 @@ img.emoji {
 }
 
     .spixi-bubble.default .statusIndicator {
-        color: var(--colors-on-disabled);
+        color: var(--colors-icon-on-disabled);
         display: inline-block;
     }
 
