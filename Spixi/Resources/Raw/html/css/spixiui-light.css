@@ -1816,15 +1816,19 @@ img.emoji {
     flex-direction: column;
     flex: 1;
     overflow-y: auto;
+    gap: 8px;
 }
 
 .spixi-sidebar-single-item{
-    width: 100%;
     display: flex;
-    gap: 20px;
-    padding: 12px 24px;
+    gap: 12px;
+    padding: 12px 12px !important;
     align-items: center;
     position: relative;
+    margin-left: 12px;
+    margin-right: 12px;
+    border-radius: 16px;
+    border: solid 1px var(--colors-outline-02);
 
     &:hover{
         background: var(--colors-surface-03);
@@ -4831,7 +4835,7 @@ img.emoji {
     background: var(--colors-surface-01);
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 24px;
     max-width: 556px;
     margin: 0 auto;
 }
@@ -4845,9 +4849,9 @@ img.emoji {
     flex-direction: column;
     gap: 16px;
     align-items: center;
-    max-width: 420px;
     width: calc(100%-32px);
-    margin: 0 auto;
+    margin-left: 12px;
+    margin-right: 12px;
 }
 
 .remove-contact{
@@ -4870,14 +4874,15 @@ img.emoji {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    border-bottom: 1px solid var(--colors-outline-02);
-    padding-bottom: 8px;
+    padding-bottom: 24px;
 }
 
 .expanded-transactions-container{
     height: 100%;
     max-height: 290px;
     overflow: auto;
+    padding-right: 12px;
+    padding-left: 12px;
 }
 
 .edit-username-icons-btn{
