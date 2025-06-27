@@ -80,13 +80,12 @@ body {
 
 
 .content {
- position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  box-sizing: border-box;
   max-width: 640px;
+  width: 100%;
   padding: 8px 20px;
   text-align: center;
+  margin: auto;
 }
 
 .logo {
