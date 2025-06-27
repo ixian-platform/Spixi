@@ -306,6 +306,10 @@ namespace SPIXI.Network
                         handleRejected(data, endpoint);
                         break;
 
+                    case ProtocolMessageCode.getKeepAlives:
+                        CoreProtocolMessage.processGetKeepAlives(data, endpoint);
+                        break;
+
                     default:
                         Logging.warn("Unknown protocol message: {0}, from {1} ({2})", code, endpoint.getFullAddress(), endpoint.serverWalletAddress);
                         break;

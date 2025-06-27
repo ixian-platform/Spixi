@@ -28,6 +28,8 @@ namespace Spixi
         private static bool isInitializing = false;
         private static bool isInitialized = false;
 
+        private static bool clearNotificationsAfterInit = false;
+
         public static void initialize()
         {
             if (isInitializing
@@ -50,6 +52,12 @@ namespace Spixi
             OneSignal.Notifications.RequestPermissionAsync(true);
 
             isInitialized = true;
+
+            if (clearNotificationsAfterInit)
+            {
+                clearNotificationsAfterInit = false;
+                clearNotifications();
+            }
         }
 
         public static void setTag(string tag)
@@ -70,6 +78,7 @@ namespace Spixi
                 }
                 else
                 {
+                    clearNotificationsAfterInit = true;
                     Logging.warn("Cannot clear notifications, OneSignal is not initialized yet.");
                 }
             }

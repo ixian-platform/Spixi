@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using Spixi;
 using SPIXI.MiniApps;
 using SPIXI.Network;
+using SPIXI.VoIP;
 using System.Text;
 using static IXICore.Transaction;
 
@@ -318,6 +319,12 @@ namespace SPIXI.Meta
                     }
 
                     connectToBotNodes();
+
+                    if (VoIPManager.currentCallInitiated != 0
+                        && Clock.getTimestamp() - VoIPManager.currentCallInitiated > 30)
+                    {
+                        VoIPManager.hangupCall(null, true);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -479,22 +486,20 @@ namespace SPIXI.Meta
 
         public override Wallet getWallet(Address id)
         {
-            // TODO Properly implement this for multiple addresses
-            Balance balance = IxianHandler.balances.First();
-            if (balance.address != null && id.SequenceEqual(balance.address))
+            foreach (Balance balance in IxianHandler.balances)
             {
-                return new Wallet(balance.address, balance.balance);
+                if (id.addressNoChecksum.SequenceEqual(balance.address.addressNoChecksum))
+                    return new Wallet(id, balance.balance);
             }
             return new Wallet(id, 0);
         }
 
         public override IxiNumber getWalletBalance(Address id)
         {
-            // TODO Properly implement this for multiple addresses
-            Balance balance = IxianHandler.balances.First();
-            if (balance.address != null && id.SequenceEqual(balance.address))
+            foreach (Balance balance in IxianHandler.balances)
             {
-                return balance.balance;
+                if (id.addressNoChecksum.SequenceEqual(balance.address.addressNoChecksum))
+                    return balance.balance;
             }
             return 0;
         }
@@ -612,10 +617,15 @@ namespace SPIXI.Meta
         {
             throw new NotImplementedException();
         }
-
         public override byte[] getBlockHash(ulong blockNum)
         {
-            throw new NotImplementedException();
+            Block b = getBlockHeader(blockNum);
+            if (b == null)
+            {
+                return null;
+            }
+
+            return b.blockChecksum;
         }
 
         public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)

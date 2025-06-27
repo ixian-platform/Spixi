@@ -288,6 +288,11 @@ namespace SPIXI
                     friend.save();
                     UIHelpers.shouldRefreshContacts = true;
                     StreamProcessor.sendLeave(friend, null);
+                    var client = StreamClientManager.getClient(friend.walletAddress, false);
+                    if (client != null)
+                    {
+                        CoreProtocolMessage.sendBye(client, ProtocolByeCode.bye, "", "", false);
+                    }
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
                     popPageAsync();
                     homePage?.removeDetailContent();
@@ -1512,11 +1517,14 @@ namespace SPIXI
 
         public void convertToBot()
         {
+            popToRootAsync();
             if (homePage != null)
             {
-                popToRootAsync();
                 homePage.removeDetailContent(false);
                 homePage.onChat(friend.walletAddress.ToString(), null);
+            } else
+            {
+                HomePage.Instance().onChat(friend.walletAddress.ToString(), null);
             }
         }
         

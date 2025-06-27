@@ -27,6 +27,7 @@ namespace SPIXI.VoIP
         private static readonly object lastPacketReceivedLock = new object();
 
         static bool currentCallInitiator = false;
+        public static long currentCallInitiated { get; private set; } = 0;
 
         public static bool isInitiated()
         {
@@ -52,6 +53,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = true;
             currentCallCodec = null;
             currentCallInitiator = true;
+            currentCallInitiated = Clock.getTimestamp();
 
             string codecs = String.Join("|", SSpixiCodecInfo.getSupportedAudioCodecs());
 
@@ -80,6 +82,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = false;
             currentCallCodec = null;
             currentCallInitiator = false;
+            currentCallInitiated = Clock.getTimestamp();
 
             string codecs_str = Encoding.UTF8.GetString(data);
 
@@ -218,6 +221,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = false;
             currentCallCodec = null;
             currentCallStartedTime = 0;
+            currentCallInitiated = 0;
             lock (lastPacketReceivedLock)
             {
                 lastPacketReceivedTime = 0;

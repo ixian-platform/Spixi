@@ -211,7 +211,10 @@ namespace SPIXI
             {
                 return;
             }
-            Utils.sendUiCommand(this, "displayCallBar", Crypto.hashToString(session_id), text, call_started_time.ToString());
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Utils.sendUiCommand(this, "displayCallBar", Crypto.hashToString(session_id), text, call_started_time.ToString());
+            });
         }
 
         public void hideCallBar()
@@ -220,7 +223,10 @@ namespace SPIXI
             {
                 return;
             }
-            Utils.sendUiCommand(this, "hideCallBar");
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Utils.sendUiCommand(this, "hideCallBar");
+            });
         }
 
         public void displayAppRequests()
