@@ -95,7 +95,8 @@ namespace SPIXI.Network
 
                                 int block_version = (int)reader.ReadIxiVarUInt();
 
-                                if (node_type != 'C')
+                                // TODO TODO TODO remove node_type != 'R' once highest known network block height is enforced in PL
+                                if (node_type != 'C' && node_type != 'R')
                                 {
                                     ulong highest_block_height = IxianHandler.getHighestKnownNetworkBlockHeight();
                                     if (last_block_num + 10 < highest_block_height)
@@ -377,7 +378,6 @@ namespace SPIXI.Network
             Presence p = PresenceList.updateFromBytes(data, 0);
             if (p == null)
             {
-                Logging.warn("Received invalid presence list update");
                 return;
             }
 
@@ -386,7 +386,13 @@ namespace SPIXI.Network
             if (f != null)
             {
                 var pa = p.addresses[0];
-                f.relayNode = new Peer(pa.address, null, 0, 0, 0, 0);
+                // TODO use actual wallet address once Presence hostname contains such address
+                f.relayNode = new Peer(pa.address, null, pa.lastSeenTime, 0, 0, 0);
+                f.updatedStreamingNodes = pa.lastSeenTime;
+                if (UIHelpers.isChatScreenDisplayed(f))
+                {
+                    StreamClientManager.connectTo(f.relayNode.hostname, f.relayNode.walletAddress);
+                }
             }
         }
 
@@ -411,7 +417,13 @@ namespace SPIXI.Network
             if (f != null)
             {
                 var pa = p.addresses[0];
-                f.relayNode = new Peer(pa.address, null, 0, 0, 0, 0);
+                // TODO use actual wallet address once Presence hostname contains such address
+                f.relayNode = new Peer(pa.address, null, pa.lastSeenTime, 0, 0, 0);
+                f.updatedStreamingNodes = pa.lastSeenTime;
+                if (UIHelpers.isChatScreenDisplayed(f))
+                {
+                    StreamClientManager.connectTo(f.relayNode.hostname, f.relayNode.walletAddress);
+                }
             }
         }
 
@@ -461,7 +473,7 @@ namespace SPIXI.Network
             }
 
             List<Peer> peers = new();
-            var relays = RelaySectors.Instance.getSectorNodes(prefix, Config.maxRelaySectorNodesToRequest);
+            var relays = RelaySectors.Instance.getSectorNodes(prefix, CoreConfig.maxRelaySectorNodesToRequest);
             foreach (var relay in relays)
             {
                 var p = PresenceList.getPresenceByAddress(relay);
@@ -625,28 +637,6 @@ namespace SPIXI.Network
             {
                 pii.lastRequested = Clock.getTimestamp();
                 InventoryCache.Instance.processInventoryItem(pii);
-            }
-        }
-
-        public static void fetchAllFriendsSectorNodes(int maxCount)
-        {
-            int count = 0;
-            foreach (var friend in FriendList.friends)
-            {
-                count++;
-
-                if (Clock.getNetworkTimestamp() - friend.updatedSectorNodes < Config.contactSectorNodeIntervalSeconds
-                    || Clock.getNetworkTimestamp() - friend.updatedStreamingNodes < Config.contactSectorNodeIntervalSeconds)
-                {
-                    continue;
-                }
-
-                if (count > maxCount)
-                {
-                    break;
-                }
-
-                CoreProtocolMessage.fetchSectorNodes(friend.walletAddress, Config.maxRelaySectorNodesToRequest);
             }
         }
     }

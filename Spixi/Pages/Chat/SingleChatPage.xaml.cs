@@ -1382,7 +1382,8 @@ namespace SPIXI
                     msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                     msg_received.recipient = friend.walletAddress;
                     msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id, selectedChannel).getBytes();
-
+                    
+                    // TODO TODO TODO change remove_after_sending parameter to false after a few releases
                     StreamProcessor.sendMessage(friend, msg_received, true, true, false, true);
                 }
             }

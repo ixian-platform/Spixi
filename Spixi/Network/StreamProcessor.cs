@@ -10,7 +10,6 @@ using SPIXI.Meta;
 using SPIXI.Network;
 using SPIXI.VoIP;
 using System.Text;
-using IXICore.Utils;
 
 namespace SPIXI
 {    
@@ -547,7 +546,7 @@ namespace SPIXI
             msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg.data = spixi_msg.getBytes();
 
-            CoreStreamProcessor.sendMessage(friend, msg, true, false, false);
+            CoreStreamProcessor.sendMessage(friend, msg, true, true, false, false);
         }
 
         private static void handleAppRequest(byte[] messageId, Address sender_address, Address recipient_address, byte[] app_data_raw)
@@ -722,80 +721,6 @@ namespace SPIXI
                 case SpixiBotActionCode.banUser:
                     Node.addMessageWithType(null, FriendMessageType.banned, bot.walletAddress, 0, SpixiLocalization._SL("chat-banned"));
                     break;
-            }
-        }
-
-        public static void fetchAllFriendsPresences(int maxCount)
-        {
-            var friends = FriendList.friends.OrderBy(x => x.metaData.lastMessage.timestamp);
-            int count = 0;
-            foreach (var friend in friends)
-            {
-                if (count > maxCount)
-                {
-                    break;
-                }
-
-                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes < Config.contactSectorNodeIntervalSeconds)
-                {
-                    continue;
-                }
-
-                fetchFriendsPresence(friend);
-                count++;
-            }
-        }
-
-        public static void fetchAllFriendsPresencesInSector(Address address)
-        {
-            Logging.trace("Fetching all friends presences in sector " + address.ToString());
-            var friends = FriendList.friends;
-            foreach (var friend in friends)
-            {
-                if (friend.sectorNodes.Find(x => x.walletAddress.SequenceEqual(address)) == null)
-                {
-                    continue;
-                }
-
-                if (Clock.getNetworkTimestamp() - friend.updatedStreamingNodes < Config.contactSectorNodeIntervalSeconds)
-                {
-                    continue;
-                }
-
-                fetchFriendsPresence(friend);
-            }
-        }
-
-        public static void fetchFriendsPresence(Friend friend)
-        {
-            if (friend.sectorNodes.Count() == 0
-                || (Clock.getNetworkTimestamp() - friend.updatedSectorNodes > Config.contactSectorNodeIntervalSeconds && Clock.getNetworkTimestamp() - friend.updatedStreamingNodes > Config.contactSectorNodeIntervalSeconds))
-            {
-                // If sector nodes are not yet initialized or we haven't received contact's presence information and haven't updated presence within the interval
-
-                Logging.trace("Fetching sector nodes for " + friend.walletAddress.ToString());
-                CoreProtocolMessage.fetchSectorNodes(friend.walletAddress, Config.maxRelaySectorNodesToRequest);
-                return;
-            }
-
-            using (MemoryStream mw = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(mw))
-                {
-                    writer.WriteIxiVarInt(friend.walletAddress.addressNoChecksum.Length);
-                    writer.Write(friend.walletAddress.addressNoChecksum);
-                }
-
-                Logging.trace("Fetching presence for " + friend.walletAddress.ToString());
-                if (!StreamClientManager.sendToClient(friend.sectorNodes, ProtocolMessageCode.getPresence2, mw.ToArray(), null, 2))
-                {
-                    // Not connected to contact's sector node
-
-                    var rnd = new Random();
-                    var sn = friend.sectorNodes[rnd.Next(friend.sectorNodes.Count)];
-                    Logging.trace("Connecting to sector node " + sn.hostname + " " + sn.walletAddress.ToString());
-                    StreamClientManager.connectTo(sn.hostname, sn.walletAddress);
-                }
             }
         }
     }

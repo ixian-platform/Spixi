@@ -130,14 +130,10 @@ namespace SPIXI.Meta
                 if (generatedNewWallet || !checkForExistingWallet())
                 {
                     generatedNewWallet = false;
-                    block_height = CoreConfig.bakedBlockHeight;
-                    block_checksum = CoreConfig.bakedBlockChecksum;
                 }
-                else
-                {
-                    block_height = Config.bakedRecoveryBlockHeight;
-                    block_checksum = Config.bakedRecoveryBlockChecksum;
-                }
+
+                block_height = CoreConfig.bakedBlockHeight;
+                block_checksum = CoreConfig.bakedBlockChecksum;
             }
 
             // TODO: replace the TIV with a liteclient-optimized implementation
@@ -263,9 +259,13 @@ namespace SPIXI.Meta
             }
             foreach (var bot_entry in bot_list)
             {
-                if (bot_entry.relayNode != null)
+                if (Clock.getNetworkTimestamp() - bot_entry.updatedStreamingNodes < CoreConfig.clientPresenceExpiration
+                    && bot_entry.relayNode != null)
                 {
                     StreamClientManager.connectTo(bot_entry.relayNode.hostname, bot_entry.walletAddress);
+                } else
+                {
+                    CoreStreamProcessor.fetchFriendsPresence(bot_entry);
                 }
             }
         }
@@ -307,7 +307,7 @@ namespace SPIXI.Meta
                     if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
                     {
                         CoreProtocolMessage.broadcastProtocolMessage(['M', 'H', 'R'], ProtocolMessageCode.getBalance2, getBalanceBytes, null);
-                        CoreProtocolMessage.fetchSectorNodes(IxianHandler.primaryWalletAddress, Config.maxRelaySectorNodesToRequest);
+                        CoreProtocolMessage.fetchSectorNodes(IxianHandler.primaryWalletAddress, CoreConfig.maxRelaySectorNodesToRequest);
                         //ProtocolMessage.fetchAllFriendsSectorNodes(10);
                         //StreamProcessor.fetchAllFriendsPresences(10);
                     }
@@ -320,8 +320,9 @@ namespace SPIXI.Meta
 
                     connectToBotNodes();
 
-                    if (VoIPManager.currentCallInitiated != 0
-                        && Clock.getTimestamp() - VoIPManager.currentCallInitiated > 30)
+                    if (VoIPManager.currentCallStartedTime == 0
+                        && VoIPManager.currentCallInitiated != 0
+                        && Clock.getTimestamp() - VoIPManager.currentCallInitiated > 60)
                     {
                         VoIPManager.hangupCall(null, true);
                     }
