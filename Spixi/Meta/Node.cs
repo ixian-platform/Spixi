@@ -550,17 +550,19 @@ namespace SPIXI.Meta
 
                     if (cur_time - tx_time > 40) // if the transaction is pending for over 40 seconds, resend
                     {
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.transactionData2, t.getBytes(true, true), null);
+                        foreach (var address in entry.relayNodeAddresses)
+                        {
+                            NetworkClientManager.sendToClient(address, ProtocolMessageCode.transactionData2, t.getBytes(true, true), null);
+                        }
                         entry.addedTimestamp = cur_time;
-                        entry.confirmedNodeList.Clear();
                     }
 
-                    if (entry.confirmedNodeList.Count() > 3) // already received 3+ feedback
+                    if (entry.confirmedNodeList.Count() >= 2) // already received 2+ feedback
                     {
                         continue;
                     }
 
-                    if (cur_time - tx_time > 20) // if the transaction is pending for over 20 seconds, send inquiry
+                    if (cur_time - tx_time > 30) // if the transaction is pending for over 30 seconds, send inquiry
                     {
                         CoreProtocolMessage.broadcastGetTransaction(t.id, 0);
                     }

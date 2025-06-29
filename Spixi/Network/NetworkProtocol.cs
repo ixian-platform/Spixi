@@ -210,17 +210,16 @@ namespace SPIXI.Network
                                     // Retrieve the latest balance
                                     IxiNumber ixi_balance = new IxiNumber(new BigInteger(balance_bytes));
 
+                                    // Retrieve the blockheight for the balance
+                                    ulong block_height = reader.ReadIxiVarUInt();
+                                    byte[] block_checksum = reader.ReadBytes((int)reader.ReadIxiVarUInt());
+
                                     foreach (Balance balance in IxianHandler.balances)
                                     {
                                         if (address.addressNoChecksum.SequenceEqual(balance.address.addressNoChecksum))
                                         {
-                                            // Retrieve the blockheight for the balance
-                                            ulong block_height = reader.ReadIxiVarUInt();
-
                                             if (block_height > balance.blockHeight && (balance.balance != ixi_balance || balance.blockHeight == 0))
                                             {
-                                                byte[] block_checksum = reader.ReadBytes((int)reader.ReadIxiVarUInt());
-
                                                 balance.address = address;
                                                 balance.balance = ixi_balance;
                                                 balance.blockHeight = block_height;
@@ -510,6 +509,7 @@ namespace SPIXI.Network
                     case RejectedCode.TransactionInsufficientFee:
                     case RejectedCode.TransactionDust:
                         Logging.error("Transaction {0} was rejected with code: {1}", Crypto.hashToString(rej.data), rej.code);
+                        PendingTransactions.remove(rej.data);
                         // TODO flag transaction as invalid
                         break;
 
