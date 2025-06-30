@@ -17,6 +17,8 @@ namespace SPIXI
 
         private HomePage? homePage;
 
+        private bool isConfirmedDisplayed = false;
+
         public WalletSentPage(Transaction tx, bool view_only = true, HomePage? home = null)
         {
             viewOnly = view_only;
@@ -103,6 +105,8 @@ namespace SPIXI
                 confirmed = "false";
             } else if (IxianHandler.getHighestKnownNetworkBlockHeight() > ctransaction.applied + Config.txConfirmationBlocks)
             {
+                transaction.applied = ctransaction.applied;
+                isConfirmedDisplayed = true;
                 confirmed = "true";
             }
 
@@ -135,7 +139,13 @@ namespace SPIXI
                         }
                     }
 
-                    Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), username, user_avatar, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);                    
+                    Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), username, user_avatar, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
+
+                    // TODO Handle multiple recipients
+                    if (friend != null)
+                    {
+                        break;
+                    }
                 }
             }
             else
@@ -181,7 +191,27 @@ namespace SPIXI
 
         public override void updateScreen()
         {
-            //checkTransaction();
+            if (!isConfirmedDisplayed)
+            {
+                if (transaction.applied != 0)
+                {
+                    if (!isConfirmedDisplayed
+                        && IxianHandler.getHighestKnownNetworkBlockHeight() > transaction.applied + Config.txConfirmationBlocks)
+                    {
+                        checkTransaction();
+                    }
+                }
+                else
+                {
+                    Transaction ctransaction = TransactionCache.getTransaction(transaction.id);
+                    if (ctransaction != null
+                        && ctransaction.applied != 0
+                        && IxianHandler.getHighestKnownNetworkBlockHeight() > ctransaction.applied + Config.txConfirmationBlocks)
+                    {
+                        transaction.applied = ctransaction.applied;
+                    }
+                }
+            }
         }
 
         private void onDismiss()

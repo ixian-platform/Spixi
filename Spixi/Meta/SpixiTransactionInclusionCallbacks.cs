@@ -1,7 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Storage;
-using Spixi;
+using IXICore.Streaming;
 
 namespace SPIXI.Meta
 {
@@ -23,11 +23,28 @@ namespace SPIXI.Meta
             }
 
             TransactionCache.addTransaction(tx);
-            Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
-            if (p.GetType() == typeof(SingleChatPage))
+            Friend friend = FriendList.getFriend(tx.pubKey);
+            if (friend == null)
             {
-                ((SingleChatPage)p).updateTransactionStatus(Transaction.getTxIdString(txid), verified);
+                foreach (var toEntry in tx.toList)
+                {
+                    friend = FriendList.getFriend(toEntry.Key);
+                    if (friend != null)
+                    {
+                        break;
+                    }
+                }
             }
+            if (friend != null)
+            {
+                SingleChatPage page = Utils.getChatPage(friend);
+                if (page != null)
+                {
+                    page.updateTransactionStatus(Transaction.getTxIdString(txid), verified);
+                }
+            }
+
+            IxianHandler.balances.First().lastUpdate = 0;
         }
 
         public void receivedBlockHeader(Block block_header, bool verified)

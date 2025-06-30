@@ -361,6 +361,7 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.sentFunds:
+                        CoreProtocolMessage.broadcastGetTransaction(spixi_message.data, 0, endpoint);
                         Node.addMessageWithType(message.id, FriendMessageType.sentFunds, sender_address, 0, Transaction.getTxIdString(spixi_message.data));
                         break;
 

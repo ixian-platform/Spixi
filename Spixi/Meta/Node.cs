@@ -531,7 +531,11 @@ namespace SPIXI.Meta
                 int idx = 0;
                 foreach (var entry in tmp_pending_transactions)
                 {
-                    Transaction t = entry.transaction;
+                    Transaction t = TransactionCache.getTransaction(entry.transaction.id);
+                    if (t == null)
+                    {
+                        t = entry.transaction;
+                    }
                     long tx_time = entry.addedTimestamp;
 
                     if (t.applied != 0)
