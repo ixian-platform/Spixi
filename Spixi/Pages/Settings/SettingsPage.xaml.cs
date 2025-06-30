@@ -194,7 +194,7 @@ namespace SPIXI
 
             if (ThemeManager.changeAppearance(selectedAppearance))
             {
-                UIHelpers.reloadAllPages();
+                HomePage.Instance().reload();
             }
 
             // Pop the current page from the stack

@@ -1263,9 +1263,6 @@ namespace SPIXI
                 rightContent.Content = defaultDetailContent.Content;
 
                 Utils.sendUiCommand(this, "selectChat", "");
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
             }
         }
 
