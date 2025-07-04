@@ -196,7 +196,7 @@ chat-private-note-title = Ce chat est privé.
 chat-private-note-message = Les messages sont stockés uniquement sur votre appareil et envoyés directement à votre contact à l'aide d'un chiffrement de pointe.
 
 ; Contact Details Screen
-contact-details-chat = Conversation
+contact-details-chat = Disscusion
 contact-details-send = Envoyer
 contact-details-receive = Recevoir
 contact-details-notifications = Notifications
@@ -241,12 +241,14 @@ index-balance-show = Afficher
 index-balance-hide = Masquer
 index-balance-info = Caché
 index-notifications = Notifications
-index-unread-chats = Conversations non lues
-index-no-conversations-title = Aucune conversation
-index-no-conversations = Démarrez une conversation avec vos contacts.<br/>
-index-new-chat-button = Nouvelle conversation
-index-no-transactions-title = Aucune transaction
-index-no-transactions = Vos transactions apparaîtront ici lorsque vous commencerez à utiliser votre portefeuille IXI.
+index-unread-chats = Discussions non lues
+index-no-conversations-title = Ta messagerie t’attend
+index-no-conversations = Ajoute un contact et dis bonjour, tes discussions s’afficheront ici.
+index-no-contacts-title = C’est calme par ici
+index-no-contacts = Ajoute quelqu’un pour commencer. Seuls les contacts que tu acceptes peuvent t’envoyer des messages.
+index-new-chat-button = Nouvelle discussion
+index-no-transactions-title = Pas encore d’activité
+index-no-transactions = Dès que tu envoies ou reçois des IXI, tes transactions s’afficheront ici.
 index-send = Envoyer
 index-scan = Scanner
 index-receive = Recevoir
@@ -262,7 +264,7 @@ index-tab-contacts = Contacts
 index-tab-address = Adresse
 index-new-title = Nouveau
 index-new-contact = Contact
-index-new-chat = Conversation
+index-new-chat = Discussion
 index-new-send = Envoyer IXI
 index-new-request = Demander IXI
 index-new-cancel = Annuler
@@ -602,7 +604,7 @@ onboarding-finish = Terminer
 ; Empty State
 empty-state-title = Bienvenue sur Spixi
 empty-state-detail-1 = Votre application de messagerie peer-to-peer sécurisée avec un portefeuille intégré.
-empty-state-detail-2 = Profitez de conversations cryptées qui garantissent que vos messages sont stockés et transmis uniquement entre votre appareil et celui de votre contact, préservant ainsi votre vie privée.
+empty-state-detail-2 = Profitez de discussions cryptées qui garantissent que vos messages sont stockés et transmis uniquement entre votre appareil et celui de votre contact, préservant ainsi votre vie privée.
 
 ; Ixinames
 ixinames-request-title = IXI Names demande une connexion
