@@ -298,6 +298,7 @@ namespace SPIXI
                         }
 
                     case SpixiMessageCode.requestAdd:
+                    case SpixiMessageCode.requestAdd2:
                         {
                             if (friend.approved)
                             {
@@ -315,6 +316,7 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.acceptAdd:
+                    case SpixiMessageCode.acceptAdd2:
                         {
                             Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
                             ProtocolMessage.resubscribeEvents();
