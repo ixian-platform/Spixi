@@ -81,11 +81,6 @@ namespace SPIXI.Meta
 
             FriendList.init(Config.spixiUserFolder);
 
-            // Prepare the stream processor
-            streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications));
-
-            OfflinePushMessages.init(Config.pushServiceUrl, streamProcessor);
-
             Logging.info("Node init done");
 
             string backup_file_name = Path.Combine(Config.spixiUserFolder, "spixi.account.backup.ixi");
@@ -101,6 +96,11 @@ namespace SPIXI.Meta
             IxianHandler.localStorage.start();
 
             FriendList.loadContacts();
+
+            // Prepare the stream processor
+            streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications));
+
+            OfflinePushMessages.init(Config.pushServiceUrl, streamProcessor);
         }
 
         static public void start()

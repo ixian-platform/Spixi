@@ -940,7 +940,10 @@ namespace SPIXI
                     StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);
                     if (!friend.bot)
                     {
-                        friend.deleteMessage(msg_id, selectedChannel);
+                        if (friend.deleteMessage(msg_id, selectedChannel))
+                        {
+                            deleteMessage(msg_id, selectedChannel);
+                        }
                     }
                     break;
 
