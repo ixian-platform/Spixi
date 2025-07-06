@@ -360,7 +360,7 @@ namespace SPIXI
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileData, m.ToArray());
 
 
-                StreamMessage message = new StreamMessage();
+                StreamMessage message = new StreamMessage(friend.protocolVersion);
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -566,7 +566,7 @@ namespace SPIXI
 
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileFullyReceived, Crypto.stringToHash(uid));
 
-            StreamMessage message = new StreamMessage();
+            StreamMessage message = new StreamMessage(friend.protocolVersion);
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -594,7 +594,7 @@ namespace SPIXI
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFileData, m.ToArray());
 
-                StreamMessage message = new StreamMessage();
+                StreamMessage message = new StreamMessage(friend.protocolVersion);
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -640,7 +640,7 @@ namespace SPIXI
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptFile, m.ToArray());
 
-                StreamMessage message = new StreamMessage();
+                StreamMessage message = new StreamMessage(friend.protocolVersion);
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();

@@ -576,7 +576,7 @@ namespace SPIXI
             Utils.sendUiCommand(this, "clearInput");
 
 
-            StreamMessage message = new StreamMessage();
+            StreamMessage message = new StreamMessage(friend.protocolVersion);
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -632,7 +632,7 @@ namespace SPIXI
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileHeader, transfer.getBytes(), selectedChannel);
 
-                StreamMessage message = new StreamMessage();
+                StreamMessage message = new StreamMessage(friend.protocolVersion);
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -1375,7 +1375,7 @@ namespace SPIXI
                 if (!friend.bot)
                 {
                     // Send read confirmation
-                    StreamMessage msg_received = new StreamMessage();
+                    StreamMessage msg_received = new StreamMessage(friend.protocolVersion);
                     msg_received.type = StreamMessageCode.info;
                     msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                     msg_received.recipient = friend.walletAddress;

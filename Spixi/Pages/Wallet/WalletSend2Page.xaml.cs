@@ -188,7 +188,7 @@ namespace SPIXI
 
                     SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, transaction.id);
 
-                    StreamMessage message = new StreamMessage();
+                    StreamMessage message = new StreamMessage(friend.protocolVersion);
                     message.type = StreamMessageCode.info;
                     message.recipient = friend.walletAddress;
                     message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();

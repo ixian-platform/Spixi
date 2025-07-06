@@ -472,7 +472,7 @@ namespace SPIXI
             spixi_msg.type = SpixiMessageCode.appRequest;
             spixi_msg.data = new SpixiAppData(session_id, data, app_info).getBytes();
 
-            StreamMessage new_msg = new StreamMessage();
+            StreamMessage new_msg = new StreamMessage(friend.protocolVersion);
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
             new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -490,7 +490,7 @@ namespace SPIXI
             spixi_msg.type = SpixiMessageCode.appRequestAccept;
             spixi_msg.data = new SpixiAppData(session_id, data).getBytes();
 
-            StreamMessage new_msg = new StreamMessage();
+            StreamMessage new_msg = new StreamMessage(friend.protocolVersion);
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
             new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -506,7 +506,7 @@ namespace SPIXI
             spixi_msg.type = SpixiMessageCode.appRequestReject;
             spixi_msg.data = new SpixiAppData(session_id, data).getBytes();
 
-            StreamMessage new_msg = new StreamMessage();
+            StreamMessage new_msg = new StreamMessage(friend.protocolVersion);
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
             new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -522,7 +522,7 @@ namespace SPIXI
             spixi_msg.type = SpixiMessageCode.appData;
             spixi_msg.data = (new SpixiAppData(session_id, data)).getBytes();
 
-            StreamMessage msg = new StreamMessage();
+            StreamMessage msg = new StreamMessage(friend.protocolVersion);
             msg.type = StreamMessageCode.data;
             msg.recipient = friend.walletAddress;
             msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -543,7 +543,7 @@ namespace SPIXI
                 return;
             }
 
-            StreamMessage msg = new StreamMessage();
+            StreamMessage msg = new StreamMessage(friend.protocolVersion);
             msg.type = StreamMessageCode.data;
             msg.recipient = friend.walletAddress;
             msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
