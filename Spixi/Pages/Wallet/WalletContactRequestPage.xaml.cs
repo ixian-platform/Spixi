@@ -91,7 +91,7 @@ namespace SPIXI
 
                     requestMsg.message = "::" + requestMsg.message;
 
-                    StreamMessage message = new StreamMessage();
+                    StreamMessage message = new StreamMessage(friend.protocolVersion);
                     message.type = StreamMessageCode.info;
                     message.recipient = friend.walletAddress;
                     message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
@@ -149,7 +149,7 @@ namespace SPIXI
 
                 requestMsg.message = ":" + transaction.getTxIdString();
 
-                StreamMessage message = new StreamMessage();
+                StreamMessage message = new StreamMessage(friend.protocolVersion);
                 message.type = StreamMessageCode.info;
                 message.recipient = to;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
