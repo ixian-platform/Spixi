@@ -1880,11 +1880,11 @@ img.emoji {
 
 /* ListItems */
 
-.single-payment-container{
+.single-payment-container {
     width: 100%;
     display: flex;
     padding: 12px;
-    gap: 4px;
+    gap: 12px;
 }
 
 .single-payment-arrow{
@@ -4653,7 +4653,7 @@ img.emoji {
 
 .spixi-chat-item-left {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     flex: 1;
     min-width: 0;
 }

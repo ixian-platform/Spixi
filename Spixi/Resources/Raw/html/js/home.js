@@ -1,4 +1,4 @@
-﻿var searchingContacts = false;
+var searchingContacts = false;
 var timeoutId = 0;
 var balance = "0";
 var fiatBalance = "0";
@@ -396,10 +396,10 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
             readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-read fas fa-check-double"></i>';
             break;
         case "confirmed":
-            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-confirmed fas fa-check"></i>';
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-confirmed fas fa-check-double"></i>';
             break;
         case "pending":
-            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-pending-indicator fas fa-arrow-right"></i>';
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-pending-indicator fas fa-check"></i>';
             break;
         case "default":
             readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-default-indicator fas fa-clock"></i>';
