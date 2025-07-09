@@ -149,7 +149,7 @@ namespace SPIXI.VoIP
             catch(Exception e)
             {
                 Logging.error("Exception occured while starting VoIP session: " + e);
-                hangupCall(currentCallSessionId);
+                hangupCall(currentCallSessionId, true);
             }
         }
 

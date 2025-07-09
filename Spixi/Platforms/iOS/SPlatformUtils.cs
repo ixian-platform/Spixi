@@ -114,6 +114,7 @@ namespace Spixi
                 NSUrl soundUrl = NSUrl.FromFilename(toneFilePath);
 
                 dialtonePlayer = AVAudioPlayer.FromUrl(soundUrl)!;
+                dialtonePlayer.Volume = 0.1f;
                 dialtonePlayer.NumberOfLoops = shouldLoop ? -1 : 0;  // Loop for dialing, play once for others
                 dialtonePlayer.PrepareToPlay();
                 dialtonePlayer.Play();
