@@ -305,20 +305,21 @@ index-backup-prompt-create = Yes Create Backup
 index-backup-prompt-not-now = Not Now
 index-backup-prompt-note = It’s recommended to backup every time you add a new contact.
 
-; Intro Screen
-intro-title = Welcome to Spixi,
-intro-subtitle = Welcome to one of the most secure chat apps in the world.
-intro-headline = Let’s get you started!
-intro-language-text = What language do you speak?
-intro-text = Please create or restore<br/>Spixi account to continue.
-intro-create-account = New Account
-intro-restore-account = Already have an account?
-intro-restore-link = Click here to restore. 
-intro-tip-title = Did you know?
-intro-tip-body = Spixi doesn’t use servers, all messages are fully encrypted and sent directly to your contacts.
-intro-continue = Continue
-intro-step-1 = Step 1 of 2
-intro-step-2 = Step 2 of 2
+; Onboarding Sreen
+onboarding-choose-language = Choose your language
+onboarding-get-started = Get Started
+onboarding-step-skip = Skip
+onboarding-step-back = Back
+onboarding-step-next = Next
+onboarding-step-1-title = Your chat, your device, your rules.
+onboarding-step-1-subtitle = Spixi doesn’t use servers. Messages stay on your device and are only sent when encrypted, directly to your contact.
+onboarding-step-2-title = Your address is your only ID.
+onboarding-step-2-subtitle = Spixi doesn’t need your phone number or email. Your unique Spixi address is all you need to connect.
+onboarding-step-3-title = Send and receive IXI payments.
+onboarding-step-3-subtitle = Use the built-in wallet to send or receive IXI coins directly inside your chats. It's as simple as sending a message.
+onboarding-step-4-title = Discover Mini Apps inside your chats.
+onboarding-step-4-subtitle = Spixi Mini Apps let you play games, use tools, or unlock new features, all directly inside your conversations.
+
 
 ; Intro New Screen
 intro-new-description-1 = Choose a nickname and avatar.
