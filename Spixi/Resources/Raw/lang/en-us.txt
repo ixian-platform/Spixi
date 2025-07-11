@@ -574,10 +574,10 @@ wallet-error-balance-title = Insufficient Balance
 wallet-error-balance-text = Balance is too low for this transaction. Total cost of the transaction is {0}, while current balance is {1}.
 
 ; Onboarding join official bot
-onboarding-bot-title = Join Official Spixi Community
-onboarding-bot-text = A group chat, where you can tell us what you think about Spixi and keep up with the updates.
-onboarding-bot-join-button = Join now
-onboarding-bot-dont-join-button = Skip for now
+onboarding-bot-title = Be part of Spixi’s journey
+onboarding-bot-subtitle =  Join our official group chat to share feedback, connect with the team, and stay up to date with all the latest features.
+onboarding-bot-join-button = Join Community
+onboarding-bot-skip = Skip for now
 
 ; Onboarding 1
 onboarding-screen1-title = Connect With Confidence

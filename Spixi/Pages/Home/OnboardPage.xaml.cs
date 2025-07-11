@@ -36,6 +36,7 @@ namespace SPIXI
             else if (current_url.Contains("ixian:joinbot"))
             {
                 joinBot = true;
+                finishOnboarding();
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {

@@ -5009,8 +5009,8 @@ select {
 
 .terms-container {
     width: fit-content !important;
-    margin: 0 24px;
-    border-radius: 16px;
+    margin: 0 24px !important;
+    border-radius: 16px !important;
 }
 
 .onboarding-section {
@@ -5229,6 +5229,34 @@ select {
     }
 }
 
-.loader-create-acc {
+.join-community-section {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 360px;
+    padding-top: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
 
+    img {
+        max-width: 264px;
+    }
+}
+
+.join-text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.join-footer{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
 }
