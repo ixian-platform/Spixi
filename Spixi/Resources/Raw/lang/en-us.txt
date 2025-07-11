@@ -321,31 +321,30 @@ onboarding-step-4-title = Discover Mini Apps inside your chats.
 onboarding-step-4-subtitle = Spixi Mini Apps let you play games, use tools, or unlock new features, all directly inside your conversations.
 
 
-; Intro New Screen
-intro-new-description-1 = Choose a nickname and avatar.
-intro-new-description-2 = Nickname and Avatar will be displayed to your contacts.
-intro-new-name-placeholder = Nickname
-intro-new-change-image = Tap on the avatar to change it.
-intro-new-next = Next
-intro-new-step-1 = Step 1 of 2
-intro-new-step-2 = Step 2 of 2
-intro-new-description-3 = You’re almost there.
-intro-new-description-4 = This is your primary password. If you ever need to regain access to this account, you will need the password and use it with the backup file.
-intro-new-description-5 = This password is important. You'll need it to regain access to your account.
-intro-new-password = Enter password...
-intro-new-password-2 = Re-enter password...
-intro-new-finish = FINISH
-intro-new-create-title = Creating your Spixi Account...
-intro-new-create-description = This process might take a while on slower devices.
-intro-new-password10 = Password must contain at least 10 characters.
-intro-new-passwordconf = Enter password confirmation
-intro-new-passwordnomatch = Passwords do not match
-intro-new-passwordmatch = Passwords match
-intro-new-emptynick-title = Invalid nickname
-intro-new-emptynick-text = Please enter a nickname.
-intro-new-avatarerror-title = Avatar error
-intro-new-walleterror-title = Error
-intro-new-walleterror-text = Cannot generate wallet. Please try again.
+; Onboarding Create Account Screem
+create-account-title = Let’s get you started.
+create-account-description = Create a new account, or restore one using your backup.
+create-account-new = New Account
+create-account-already = Already have an account?
+create-account-restore = Restore Account
+create-account-step = Step
+create-account-step-of = of
+create-account-step-1-title = Set your nickname and photo
+create-account-step-1-subtitle = Your nickname and avatar will be visible to your contacts. You can change them anytime.
+create-account-step-1-tap = tap to upload
+create-account-step-1-nickname-placeholder = Enter Nickname
+create-account-step-2-title = Create a backup password
+create-account-step-2-subtitle = You’ll need this password to restore your Spixi account from a backup file. Keep it safe.
+create-account-step-2-password-placeholder = Enter password
+create-account-step-2-password-confirm = Confirm password
+create-account-step-2-password-confirm-note = The password must be at least 10 characters long.
+create-account-step-2-password-confirm-note-success = Passwords match
+create-account-step-2-password-confirm-note-error = Passwords must match
+create-account-step-2-note-title = Spixi doesn’t store this password.
+create-account-step-2-note-subtitle = Without it or your backup file, your account and wallet can’t be recovered.
+create-account-finish-setup = Finish Setup
+create-account-creating = Creating your account...
+create-account-creating-description =  This won’t take long. Your account is being secured.
 
 ; Intro Restore Screen
 intro-restore-description-1 = Restore Your Spixi Account

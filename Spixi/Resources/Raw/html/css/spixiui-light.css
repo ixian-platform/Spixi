@@ -4403,6 +4403,10 @@ img.emoji {
     margin-bottom: 24px;
 }
 
+.spixi-loader.loader-create-acc {
+    color: var(--colors-icon-success);
+}
+
 @keyframes mulShdSpin {
     0%,
     100% {
@@ -4952,7 +4956,7 @@ img.emoji {
     align-self: flex-end;
 
     i {
-        cursor:  pointer;
+        cursor: pointer;
         display: none;
     }
 }
@@ -4970,6 +4974,7 @@ img.emoji {
 .bottom-version {
     position: absolute;
     bottom: 24px;
+    color: var(--colors-text-02);
 }
 
 
@@ -5081,4 +5086,145 @@ select {
 
 .step-dot.active {
     background-color: var(--colors-icon-action);
+}
+
+.create-account-start-section {
+    width: 100%;
+    max-width: 342px;
+    padding-top: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 auto;
+
+    .details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+
+        img {
+            margin-top: 8px;
+            max-width: 264px;
+            margin-bottom: calc(64px - 8px)
+        }
+    }
+}
+
+.create-account-start-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 342px;
+    align-items: center;
+    padding-bottom: 64px;
+
+    div:first-child {
+        margin-bottom: 8px;
+    }
+}
+
+.create-account-stepper-header {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: space-between;
+    padding-top: 54px;
+    align-items: center;
+
+    .step-number {
+        /*TODO: missing variable*/
+        background: #C5E0FC;
+        padding: 4px 12px;
+        border-radius: 8px;
+        color: var(--colors-text-01);
+    }
+}
+
+.upload-img-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    margin: 24px 0;
+    cursor: pointer;
+
+    img {
+        max-width: 80px;
+    }
+}
+
+.create-step {
+    max-width: 350px;
+    gap: 8px;
+}
+
+.create-account-username {
+    width: 100%;
+    border: 1px solid var(--colors-outline-inverse);
+    border-radius: 12px;
+    max-height: 44px;
+    padding: 12px;
+    outline: none;
+}
+
+.create-account-username:focus-visible,
+.create-account-username:focus {
+    border-color: var(--colors-outline-action);
+}
+
+.create-account-username.error {
+    border-color: var(--colors-text-error);
+}
+
+.password-inputs {
+    margin-top: calc(32px - 8px);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.create-password-note {
+    background: #C5E0FC;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: calc(54px - 8px);
+}
+
+.error-match {
+    color: var(--colors-text-error)
+}
+
+.success-match {
+    color: var(--colors-text-success);
+}
+
+.pass-input-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    .password-eye {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        cursor: pointer;
+        color: var(--colors-text-02);
+        font-size: 16px;
+        transform: translateY(-50%);
+    }
+}
+
+.loader-create-acc {
+
 }
