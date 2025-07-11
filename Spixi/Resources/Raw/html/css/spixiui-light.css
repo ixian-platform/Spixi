@@ -40,6 +40,7 @@
     --colors-text-action-hover: #003d79;
     --colors-text-action-focus: #0565c7;
     --colors-text-link: #0052be;
+    --colors-text-link-02: #067FF9;
     --colors-text-disabled: #6b6c6c;
     --colors-text-accent: #ed5fe0;
     --colors-text-success: #17b51f;
@@ -3750,6 +3751,10 @@ img.emoji {
     color: var(--colors-text-link);
 }
 
+.s-text-link-02 {
+    color: var(--colors-text-link-02);
+}
+
 .s-text-success {
     color: var(--colors-text-success);
 }
@@ -5137,8 +5142,7 @@ select {
     align-items: center;
 
     .step-number {
-        /*TODO: missing variable*/
-        background: #C5E0FC;
+        background: var(--colors-surface-05);
         padding: 4px 12px;
         border-radius: 8px;
         color: var(--colors-text-01);
@@ -5190,7 +5194,7 @@ select {
 }
 
 .create-password-note {
-    background: #C5E0FC;
+    background: var(--colors-surface-05);
     border-radius: 8px;
     padding: 12px;
     display: flex;
