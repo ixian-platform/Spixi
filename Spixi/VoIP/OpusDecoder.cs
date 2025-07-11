@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Concentus;
+using System;
 
 namespace SPIXI.VoIP
 {
@@ -11,7 +12,7 @@ namespace SPIXI.VoIP
 
     public class OpusDecoder : IAudioDecoder
     {
-        Concentus.Structs.OpusDecoder decoder = null;
+        IOpusDecoder decoder = null;
         bool running = false;
 
         int samples;
@@ -55,7 +56,7 @@ namespace SPIXI.VoIP
                     for (int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size + 2)
                     {
                         packet_size = BitConverter.ToInt16(data, offset);
-                        int decoded_size = decoder.Decode(data, offset + 2, packet_size, shorts, 0, shorts.Length, false);
+                        int decoded_size = decoder.Decode(data.AsSpan(offset + 2, packet_size), shorts, shorts.Length, false);
                         decodedDataCallback.onDecodedData(shortsToBytes(shorts, 0, decoded_size));
                     }
                     break;
@@ -64,7 +65,7 @@ namespace SPIXI.VoIP
                     for (int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size + 2)
                     {
                         packet_size = BitConverter.ToInt16(data, offset);
-                        int decoded_size = decoder.Decode(data, offset + 2, packet_size, shorts, 0, shorts.Length, false);
+                        int decoded_size = decoder.Decode(data.AsSpan(offset + 2, packet_size), shorts, shorts.Length, false);
                         short[] send_buffer = new short[decoded_size];
                         Array.Copy(shorts, send_buffer, send_buffer.Length);
                         decodedDataCallback.onDecodedData(send_buffer);
@@ -75,7 +76,7 @@ namespace SPIXI.VoIP
                     for (int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size + 2)
                     {
                         packet_size = BitConverter.ToInt16(data, offset);
-                        int decoded_size = decoder.Decode(data, offset + 2, packet_size, floats, 0, floats.Length, false);
+                        int decoded_size = decoder.Decode(data.AsSpan(offset + 2, packet_size), floats, floats.Length, false);
                         float[] send_buffer = new float[decoded_size];
                         Array.Copy(floats, send_buffer, send_buffer.Length);
                         decodedDataCallback.onDecodedData(send_buffer);
@@ -92,7 +93,7 @@ namespace SPIXI.VoIP
                 return;
             }
             running = true;
-            decoder = Concentus.Structs.OpusDecoder.Create(samples, channels);
+            decoder = OpusCodecFactory.CreateDecoder(samples, channels);
         }
 
         public void stop()

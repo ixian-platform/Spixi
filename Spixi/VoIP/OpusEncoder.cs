@@ -1,4 +1,5 @@
-﻿using Concentus.Enums;
+﻿using Concentus;
+using Concentus.Enums;
 using IXICore.Meta;
 using Org.BouncyCastle.Crypto.Digests;
 using System;
@@ -8,7 +9,7 @@ namespace SPIXI.VoIP
 {
     public class OpusEncoder : IAudioEncoder
     {
-        Concentus.Structs.OpusEncoder encoder = null;
+        IOpusEncoder encoder = null;
         bool running = false;
 
         int samples;
@@ -109,7 +110,7 @@ namespace SPIXI.VoIP
             inputBuffer = new short[frameSize * 500];
             inputBufferPos = 0;
             
-            encoder = Concentus.Structs.OpusEncoder.Create(samples, channels, opusApplication);
+            encoder = OpusCodecFactory.CreateEncoder(samples, channels, opusApplication);
             encoder.Bitrate = bitRate;
 
             encodeThread = new Thread(encodeLoop);
@@ -140,7 +141,7 @@ namespace SPIXI.VoIP
 
         private byte[] encodeFrame(short[] shorts, int offset)
         {
-            int packet_size = encoder.Encode(shorts, offset, frameSize, frameOutputBuffer, 0, frameOutputBuffer.Length);
+            int packet_size = encoder.Encode(shorts.AsSpan(offset), frameSize, frameOutputBuffer, frameOutputBuffer.Length);
             byte[] trimmed_buffer = new byte[packet_size + 2];
 
             byte[] packet_size_bytes = BitConverter.GetBytes((short)packet_size);            
