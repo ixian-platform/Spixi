@@ -229,7 +229,7 @@ public partial class App : Application
 
                 window.Resumed += (s, e) =>
                 {
-                    if (Config.enablePushNotifications)
+                    if (Config.enablePushNotifications && IxianHandler.wallets.Count > 0)
                         OfflinePushMessages.fetchPushMessages(true);
                 };
 
