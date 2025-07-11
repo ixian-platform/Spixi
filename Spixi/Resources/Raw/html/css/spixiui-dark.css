@@ -1903,7 +1903,7 @@ img.emoji {
     width: 100%;
     display: flex;
     padding: 12px;
-    gap: 4px;
+    gap: 12px;
 }
 
 .single-payment-arrow {
@@ -2454,17 +2454,17 @@ img.emoji {
 }
 
 .spixi-bubble.default .statusIndicator {
-    color: var(--colors-icon-01);
+    color: var(--colors-icon-on-disabled);
     display: inline-block;
 }
 
 .spixi-bubble.sent .statusIndicator {
-    color: var(--colors-icon-01);
+    color: var(--colors-icon-on-disabled);
     display: inline-block;
 }
 
 .spixi-bubble.confirmed .statusIndicator {
-    color: var(--colors-icon-01);
+    color: var(--colors-icon-on-disabled);
     display: inline-block;
 }
 
@@ -4683,7 +4683,7 @@ img.emoji {
 
 .spixi-chat-item-left {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     flex: 1;
     min-width: 0;
 }

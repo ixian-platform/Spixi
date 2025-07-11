@@ -117,7 +117,6 @@ namespace Spixi
 
                 if (OfflinePushMessages.fetchPushMessages(true, true))
                 {
-                    //OneSignal.Current.ClearAndroidOneSignalNotifications();
                     return;
                 }
             }

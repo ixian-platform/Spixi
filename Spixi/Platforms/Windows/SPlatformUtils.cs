@@ -104,6 +104,7 @@ namespace Spixi
                 }
 
                 dialtonePlayer = playSoundFromAssets(toneFile, shouldLoop);
+                dialtonePlayer.Volume = 0.1f;
             }
             catch (Exception e)
             {

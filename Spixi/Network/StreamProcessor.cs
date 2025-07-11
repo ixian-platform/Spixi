@@ -312,6 +312,7 @@ namespace SPIXI
                             UIHelpers.shouldRefreshContacts = true;
 
                             ProtocolMessage.resubscribeEvents();
+                            CoreStreamProcessor.fetchFriendsPresence(friend);
                         }
                         break;
 
@@ -320,6 +321,7 @@ namespace SPIXI
                         {
                             Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
                             ProtocolMessage.resubscribeEvents();
+                            CoreStreamProcessor.fetchFriendsPresence(friend);
                         }
                         break;
 

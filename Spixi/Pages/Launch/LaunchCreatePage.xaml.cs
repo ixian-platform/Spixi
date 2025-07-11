@@ -124,6 +124,12 @@ namespace SPIXI
                     IxianHandler.localStorage.nickname = nick;
                     IxianHandler.localStorage.writeAccountFile();
 
+                    Preferences.Default.Remove("onboardingComplete");
+                    Preferences.Default.Remove("lockenabled");
+                    Preferences.Default.Remove("waletpass");
+
+                    SpixiLocalization.addCustomString("OnboardingComplete", "false");
+
                     // TODO: encrypt the password
                     Preferences.Default.Set("walletpass", pass);
 

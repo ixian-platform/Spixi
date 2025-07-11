@@ -941,13 +941,13 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
 
             if (msgEl.className.includes("spixi-bubble myself")) {
                 if (additionalClasses.includes("sent")) {
-                    statusEl.className = "statusIndicator fas fa-arrow-right";
+                    statusEl.className = "statusIndicator fas fa-check";
                 } else if (additionalClasses.includes("default")) {
                     statusEl.className = "statusIndicator fas fa-clock";
                 } else if (additionalClasses.includes("read")) {
                     statusEl.className = "statusIndicator fas fa-check-double";
                 } else {
-                    statusEl.className = "statusIndicator fas fa-check";
+                    statusEl.className = "statusIndicator fas fa-check-double";
                 }
             }
         }

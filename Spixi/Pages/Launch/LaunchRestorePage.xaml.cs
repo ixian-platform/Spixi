@@ -115,6 +115,12 @@ namespace SPIXI
         // Attempt to restore the wallet
         private bool onRestore(string pass)
         {
+            Preferences.Default.Remove("onboardingComplete");
+            Preferences.Default.Remove("lockenabled");
+            Preferences.Default.Remove("waletpass");
+
+            SpixiLocalization.addCustomString("OnboardingComplete", "false");
+
             Preferences.Default.Set("walletpass", pass);
 
             string source_path = Path.Combine(Config.spixiUserFolder, Config.walletFile) + ".tmp";
@@ -145,6 +151,11 @@ namespace SPIXI
                 }
                 Directory.CreateDirectory(tmpDirectory);
                 byte[] decrypted = CryptoManager.lib.decryptWithPassword(File.ReadAllBytes(source_path), pass, true);
+                if (decrypted == null)
+                {
+                    Directory.Delete(tmpDirectory, true);
+                    return false;
+                }
                 byte[] header = UTF8Encoding.UTF8.GetBytes("SPIXIACCB1");
                 for(int i = 0; i < header.Length; i++)
                 {
