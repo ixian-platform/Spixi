@@ -7,7 +7,6 @@ using IXICore.Storage;
 using IXICore.Streaming;
 using IXICore.Utils;
 using SPIXI.Meta;
-using System.Linq;
 using System.Numerics;
 
 namespace SPIXI.Network
