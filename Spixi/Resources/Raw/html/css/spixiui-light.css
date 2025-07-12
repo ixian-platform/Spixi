@@ -3759,6 +3759,10 @@ img.emoji {
     color: var(--colors-text-success);
 }
 
+.s-text-error {
+    color: var(--colors-text-error);
+}
+
 .s-text-inverse {
     color: var(--colors-text-inverse);
 }
@@ -4951,6 +4955,7 @@ img.emoji {
 }
 
 .language-section {
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 44px;
@@ -4977,8 +4982,7 @@ img.emoji {
 }
 
 .bottom-version {
-    position: absolute;
-    bottom: 24px;
+    margin-top: auto;
     color: var(--colors-text-02);
 }
 
@@ -5096,15 +5100,16 @@ select {
 .create-account-start-section {
     width: 100%;
     max-width: 342px;
-    padding-top: 64px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     height: 100%;
     margin: 0 auto;
+    gap: 8px;
 
     .details {
+        margin-top: 64px;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -5156,6 +5161,10 @@ select {
     align-items: center;
     margin: 24px 0;
     cursor: pointer;
+
+    #avatar {
+        border-radius: 50%;
+    }
 
     img {
         max-width: 80px;
@@ -5212,6 +5221,21 @@ select {
     color: var(--colors-text-success);
 }
 
+input.create-account-username[type="password"]::-ms-reveal,
+input.create-account-username[type="password"]::-ms-clear,
+input.create-account-username[type="password"]::-webkit-credentials-auto-fill-button,
+input.create-account-username[type="password"]::-webkit-textfield-decoration-container,
+input.create-account-username[type="password"]::-webkit-textfield-decoration {
+    display: none !important;
+    pointer-events: none;
+}
+
+input.create-account-username[type="password"] {
+    -webkit-text-security: disc;
+    text-security: disc;
+    autocomplete: new-password;
+}
+
 .pass-input-wrapper {
     position: relative;
     width: 100%;
@@ -5253,10 +5277,33 @@ select {
     margin-bottom: 40px;
 }
 
-.join-footer{
+.join-footer {
     display: flex;
     width: 100%;
     flex-direction: column;
     gap: 24px;
     align-items: center;
+}
+
+.password-inputs.restore{
+    margin: calc(32px - 8px) 0;
+}
+
+.upload-file-container{
+    width: 100%;
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--colors-surface-03);
+    color: var(--colors-text-01);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    :first-child i {
+        margin-right: 4px;
+    }
+
+    :nth-child(2) {
+        cursor: pointer;
+    }
 }

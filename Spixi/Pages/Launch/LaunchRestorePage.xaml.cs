@@ -44,7 +44,7 @@ namespace SPIXI
                 {
                     e.Cancel = true;
                     Utils.sendUiCommand(this, "removeLoadingOverlay");
-                    displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    Utils.sendUiCommand(this, "showPasswordError");
                     return;
                 }
 
@@ -109,7 +109,7 @@ namespace SPIXI
                 return;
             }
 
-            Utils.sendUiCommand(this, "enableRestore");
+            Utils.sendUiCommand(this, "setUploadedFileName", filepath);
         }
 
         // Attempt to restore the wallet
@@ -173,7 +173,7 @@ namespace SPIXI
                 if (!ws.verifyWallet(tmpWalletFile, pass))
                 {
                     Directory.Delete(tmpDirectory, true);
-                    displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    Utils.sendUiCommand(this, "showPasswordError");
                     // Remove overlay
                     Utils.sendUiCommand(this, "removeLoadingOverlay");
                     return false;
@@ -217,7 +217,7 @@ namespace SPIXI
             WalletStorage ws = new WalletStorage(source_path);
             if (!ws.verifyWallet(source_path, pass))
             {
-                displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
+                Utils.sendUiCommand(this, "showPasswordError");
                 // Remove overlay
                 Utils.sendUiCommand(this, "removeLoadingOverlay");
                 return false;

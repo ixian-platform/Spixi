@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 </head>
-<body>
+<body onload="onload()">
 <div id="wrap" class="onboarding-container">
     <section class="create-account-start-section" id="createAccountStart">
         <div class="details">
@@ -27,9 +27,9 @@
                 *SL{create-account-new} <i
                     class="fa fa-arrow-right"></i></div>
             <span class="body-sm s-text-01">*SL{create-account-already}</span>
-            <span class="label-sm s-text-link" onclick="onRestoreAccount()">*SL{create-account-restore}</span>
+            <span class="label-sm s-text-link" onclick="onRestoreAccount()" style="cursor: pointer">*SL{create-account-restore}</span>
         </div>
-        <div class="bottom-version body-xs">Spixi V</div>
+        <div id="version" class="bottom-version body-xs">Spixi V</div>
     </section>
 
     <section class="onboarding-section" id="onboardingSection" style="display: none">
@@ -78,7 +78,6 @@
             </div>
         </div>
         <div class="onboarding-stepper-footer">
-            <div id="step-nav"></div>
             <div id="stepperNext" onclick="nextStep()" class="spixi-flat-button label-sm" style="width: 100%">
                 *SL{onboarding-step-next} <i
                     class="fa fa-arrow-right"></i></div>
@@ -108,6 +107,13 @@
     let nickname = "";
     let password = "";
     let passwordConfirm = "";
+
+    function setVersion(version) {
+        if (version.startsWith("spixi-")) {
+            version = "v" + version.substring(6);
+        }
+        document.getElementById("version").innerHTML = version;
+    }
 
     document.getElementById("stepTotalSpan").innerText = steps.length.toString();
     document.getElementById("stepNumberSpan").innerText = currentStep.toString();
@@ -148,7 +154,7 @@
     }
 
     function onRestoreAccount() {
-        //
+        location.href = "ixian:restore";
     }
 
     function onNewAccountClick() {
@@ -216,8 +222,12 @@
 
     function togglePasswordVisible(inputId, node) {
         const input = document.getElementById(inputId);
-        input.type = input.type === 'password' ? 'text' : 'password';
-        node.className = input.type === 'password' ? 'fa fa-eye password-eye' : 'fa fa-eye-slash password-eye';
+        const isPassword = input.type === 'password';
+
+        input.type = isPassword ? 'text' : 'password';
+
+        node.classList.remove('fa-eye', 'fa-eye-slash');
+        node.classList.add(isPassword ? 'fa-eye-slash' : 'fa-eye');
     }
 </script>
 </body>

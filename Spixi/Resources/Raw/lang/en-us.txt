@@ -347,20 +347,18 @@ create-account-creating = Creating your account...
 create-account-creating-description =  This won’t take long. Your account is being secured.
 
 ; Intro Restore Screen
-intro-restore-description-1 = Restore Your Spixi Account
-intro-restore-description-2 = You need the Spixi backup file and the password to continue.
-intro-restore-password = Enter password...
-intro-restore-selectfile = Add backup file
-intro-restore-backupdescription = Add the backup file associated with your password.
-intro-restore-action = Restore my account
-intro-restore-title = Restoring Access to Your Spixi Account
-intro-restore-info = This may take a while
-intro-restore-file-error-title = File Error
-intro-restore-file-selecterror-text = Error occurred while adding restore file.
-intro-restore-file-readerror-text = Error occurred while reading wallet file.
-intro-restore-file-writeerror-text = Error occurred while saving wallet.
-intro-restore-file-invalidpassword-title = Invalid password
-intro-restore-file-invalidpassword-text = Cannot decrypt wallet, please try again.
+intro-restore-title = Restore Account
+intro-restore-subtitle = Select your backup file to begin restoring your Spixi account.
+intro-restore-select-file = Select Backup File
+intro-restore-pass-title = Enter Backup Password
+intro-restore-pass-subtitle = To restore your Spixi account, enter the password used to secure your backup file.
+intro-restore-pass-placeholder = Enter Password
+intro-restore-note-title = Spixi doesn’t store this password.
+intro-restore-note-subtitle = Only you can unlock this backup file.
+intro-restore-button = Restore Account
+intro-restoring-title = Restoring your account...
+intro-restoring-subtitle = Hang tight. We’re securely unlocking your account.
+intro-restore-pass-error = Incorrect password. Please try again.
 
 ; Intro Retry Screen
 intro-retry-description-1 = Re-enter password
