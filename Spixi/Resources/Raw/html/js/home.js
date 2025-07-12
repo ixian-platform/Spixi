@@ -7,12 +7,10 @@ var selectedItemId = null;
 
 var homeModal = document.getElementById('homeMenuModal');
 
-function onMainMenuAction() {
-    leftSidebar.style.display = "block";
-}
+const leftSidebar = document.getElementById('leftSidebar');
 
 function onMainMenuClose() {
-    leftSidebar.style.display = "none";
+    leftSidebar.classList.remove('open');
 }
 
 function onMaskWalletAddressHandler(){
@@ -50,7 +48,9 @@ document.getElementById("activity_balance_toggle").onclick = function () {
 
 // Toolbar
 document.getElementById("MainMenu").onclick = function() {
-    onMainMenuAction();
+    leftSidebar.style.transition = '';
+    leftSidebar.style.transform = '';
+    leftSidebar.classList.add('open');
 }
 
 document.getElementById("filter-all").onclick = function () {
@@ -514,14 +514,11 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 $("#leftSidebarHelper").swipe( {
     swipeStatus:function(event, phase, direction, distance)
     {
-        var str = "";
-        if(direction == "right")
+        if(direction === "right")
         {
-            leftSidebar.style.display = "block";
-            document.getElementById('leftSidebarHelper').style.display = "none";
-
-            leftSidebar.style.right = "0px";
-            document.getElementById("version").style.left = "0px";
+            leftSidebar.style.transition = '';
+            leftSidebar.style.transform = '';
+            leftSidebar.classList.add('open');
         }
     },
     threshold:10
@@ -530,25 +527,26 @@ $("#leftSidebarHelper").swipe( {
 $("#leftSidebar").swipe( {
     swipeStatus:function(event, phase, direction, distance)
     {
-        if(direction == "left")
+        if(direction === "left")
         {
-            if (phase=="move")
+            if (phase === "move")
             {
-                leftSidebar.style.left = "-" + distance + "px";
-                leftSidebar.style.right = distance + "px";
-                document.getElementById("version").style.left = "-" + distance + "px";
+
+                leftSidebar.style.transition = "none"; // Disable transition for smooth movement
+                leftSidebar.style.transform = "translateX(-" + distance + "px)";
+                leftSidebar.classList.remove('open');
             }
 
-            if (phase == "end" || phase == "cancel")
+            if (phase === "end" || phase === "cancel")
             {
-                if(distance > 100)
+                console.log(distance)
+                if(distance > 1)
                 {
-                    leftSidebar.style.display = "none";
-                    document.getElementById('leftSidebarHelper').style.display = "block";
+                    console.log("distance > 100")
+                    leftSidebar.style.transform = 'translateX(-100%)';
+                    leftSidebar.style.transition = "transform 0.3s ease";
+                    leftSidebar.classList.remove('open');
                 }
-                leftSidebar.style.left = "0px";
-                leftSidebar.style.right = "0px";
-                document.getElementById("version").style.left = "0px";
             }
         }
     },
