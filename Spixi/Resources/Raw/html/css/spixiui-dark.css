@@ -3363,7 +3363,7 @@ img.emoji {
     padding-bottom: 8px;
     min-height: 100px;
     color: var(--colors-text-01);
-    overflow: scroll;
+    overflow: auto;
     word-break: break-all;
     overflow-wrap: anywhere;
 }
