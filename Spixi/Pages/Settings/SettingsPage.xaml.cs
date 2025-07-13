@@ -211,7 +211,7 @@ namespace SPIXI
             SpixiLocalization.loadLanguage(lang);
         }
 
-        private void HandleAuthSucceeded(object sender, SPIXI.EventArgs<bool> e)
+        private void HandleAuthSucceeded(object sender, EventArgs<bool> e)
         {
             bool succeeded = e.Value;
 
@@ -223,8 +223,14 @@ namespace SPIXI
 
         }
 
-        public void onDeleteWallet(object sender, EventArgs e)
+        public void onDeleteWallet(object sender, EventArgs<bool> e)
         {
+            bool succeeded = e.Value;
+            if (!succeeded)
+            {
+                return;
+            }
+
             if (IxianHandler.getWalletStorage().deleteWallet())
             {
                 // Also delete the account
@@ -258,8 +264,14 @@ namespace SPIXI
 
         }
 
-        public void onDeleteAccount(object sender, EventArgs e)
+        public void onDeleteAccount(object sender, EventArgs<bool> e)
         {
+            bool succeeded = e.Value;
+            if (!succeeded)
+            {
+                return;
+            }
+
             IxianHandler.localStorage.deleteAllAvatars();
             IxianHandler.localStorage.deleteAccountFile();
             IxianHandler.localStorage.deleteAllDownloads();
