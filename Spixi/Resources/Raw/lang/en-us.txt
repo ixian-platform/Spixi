@@ -211,6 +211,12 @@ contact-details-removedcontact-text = Contact deleted.
 contact-details-deletehistory = Delete chat history
 contact-details-deletedhistory-title = Deleted
 contact-details-deletedhistory-text = Message history deleted.
+contact-details-delete-history-modal-title = Clear Chat History?
+contact-details-delete-history-modal-subtitle = The entire chat history will be removed.
+contact-details-delete-history-modal-confirm = Yes, Clear Chat
+contact-details-delete-contact-modal-title = Remove from contact
+contact-details-delete-contact-modal-subtitle = This will remove the contact from your list. You’ll no longer be able to send or receive messages unless you add them again.
+contact-details-delete-contact-modal-confirm = Yes, Remove Contact
 
 ; New Contact Screen
 contact-new-title = Add New Contact

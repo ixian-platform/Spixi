@@ -5,7 +5,8 @@
 <head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
 
     <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -25,181 +26,225 @@
 
 </head>
 <body onload="onload()">
-    <div id="wrap" class="container-fluid noselect">
+<div id="wrap" class="container-fluid noselect">
 
-        <section class="spixi-contact-details-section">
-            <div class="spixi-contact-details-header">
-                <i id="backbtn" class="fas fa-arrow-left spixi-contact-details-back-arrow"></i>
-                <div class="spixi-contact-details-header-user">
-                    <img id="avatar" src="img/spixiavatar.png" alt="avatar" class="spixi-contact-details-avatar" />
-                    <div class="spixi-contact-details-username" id="username-view-container">
-                        <div class="label-lg s-text-inverse" id="nickname"></div> <i class="fas fa-pen" onclick="showEditUsername()"></i>
-                    </div>
-                    <div class="spixi-contact-details-username-edit" style="display: none;" id="username-edit-container">
-                        <input type="text" id="nicknameInput" class="nickname-input body-sm s-text-02" />
-                        <div class="single-action-icon-wrapper edit-username-icons-btn" onclick="submitEditUsername()">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="single-action-icon-wrapper edit-username-icons-btn" onclick="dismissEditUsername()">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    </div>
+    <section class="spixi-contact-details-section">
+        <div class="spixi-contact-details-header">
+            <i id="backbtn" class="fas fa-arrow-left spixi-contact-details-back-arrow"></i>
+            <div class="spixi-contact-details-header-user">
+                <img id="avatar" src="img/spixiavatar.png" alt="avatar" class="spixi-contact-details-avatar"/>
+                <div class="spixi-contact-details-username" id="username-view-container">
+                    <div class="label-lg s-text-inverse" id="nickname"></div>
+                    <i class="fas fa-pen" onclick="showEditUsername()"></i>
                 </div>
-                <div class="spixi-contact-details-header-actions">
-                    <div class="spixi-contact-details-single-action" onclick="location.href = 'ixian:chat';">
-                        <div class="single-action-icon-wrapper">
-                            <i class="fas fa-comment-alt"></i>
-                        </div>
-                        <span class="body-sm s-text-inverse">*SL{contact-details-chat}</span>
+                <div class="spixi-contact-details-username-edit" style="display: none;" id="username-edit-container">
+                    <input type="text" id="nicknameInput" class="nickname-input body-sm s-text-02"/>
+                    <div class="single-action-icon-wrapper edit-username-icons-btn" onclick="submitEditUsername()">
+                        <i class="fas fa-check"></i>
                     </div>
-                    <div class="spixi-contact-details-single-action" onclick="location.href = 'ixian:send';">
-                        <div class="single-action-icon-wrapper">
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
-                        <span class="body-sm s-text-inverse">*SL{contact-details-send}</span>
-                    </div>
-                    <div class="spixi-contact-details-single-action" onclick="location.href = 'ixian:request';">
-                        <div class="single-action-icon-wrapper">
-                            <i class="fas fa-arrow-down"></i>
-                        </div>
-                        <span class="body-sm s-text-inverse">*SL{contact-details-receive}</span>
+                    <div class="single-action-icon-wrapper edit-username-icons-btn" onclick="dismissEditUsername()">
+                        <i class="fas fa-times"></i>
                     </div>
                 </div>
             </div>
-            <div class="spixi-contact-details-body">
-                <div class="spixi-contact-details-body-actions">
-                    <div id="exp2" class="spixi-sidebar-single-item" style="padding: 8px 0">
-                        <div class="spixi-sidebar-icon"><i class="fa fa-exchange"></i></div>
-                        <div class="spixi-sidebar-single-item-text">
-                            <span class="body-sm s-text-01">*SL{contact-details-history}</span>
-                        </div>
-                        <i id="exp2-icon" class="fa fa-chevron-down spixi-sidebar-single-item-chevron-right"></i>
+            <div class="spixi-contact-details-header-actions">
+                <div class="spixi-contact-details-single-action" onclick="location.href = 'ixian:chat';">
+                    <div class="single-action-icon-wrapper">
+                        <i class="fas fa-comment-alt"></i>
                     </div>
-                    <div id="exp2-contents" class="expanded-transactions-container" style="display: none;">
-                    </div>
-                    <div class="spixi-sidebar-single-item" style="padding: 8px 0" onclick="location.href = 'ixian:removehistory';">
-                        <div class="spixi-sidebar-icon"><i class="fa fa-trash-can"></i></div>
-                        <div class="spixi-sidebar-single-item-text">
-                            <span class="body-sm s-text-01">*SL{contact-details-deletehistory}</span>
-                        </div>
-                        <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
-                    </div>
-                    <div class="spixi-sidebar-single-item remove-contact" style="padding: 8px 0" onclick="location.href = 'ixian:remove';">
-                        <div class="spixi-sidebar-icon"><i class="fa fa-user-minus"></i></div>
-                        <div class="spixi-sidebar-single-item-text">
-                            <span class="body-sm s-text-01">*SL{contact-details-removecontact}</span>
-                        </div>
-                        <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
-                    </div>
+                    <span class="body-sm s-text-inverse">*SL{contact-details-chat}</span>
                 </div>
-                <div class="spixi-contact-details-body-address-container">
-                    <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>*SL{address-copied}</div>
-                    <span class="label-sm s-text-02">*SL{contact-details-account-address}</span>
-                    <div style="margin: 0" class="address_qr" id="qrcode"></div>
-                    <div class="payment-data-hash-copy">
-                        <div class="body-xs s-text-02 payment-data-hash-text" id="wallet_address"></div>
-                        <i class="fas fa-copy copy-icon" id="copy-recipient"></i>
+                <div class="spixi-contact-details-single-action" onclick="location.href = 'ixian:send';">
+                    <div class="single-action-icon-wrapper">
+                        <i class="fas fa-arrow-up"></i>
                     </div>
+                    <span class="body-sm s-text-inverse">*SL{contact-details-send}</span>
+                </div>
+                <div class="spixi-contact-details-single-action" onclick="location.href = 'ixian:request';">
+                    <div class="single-action-icon-wrapper">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <span class="body-sm s-text-inverse">*SL{contact-details-receive}</span>
                 </div>
             </div>
-        </section>
+        </div>
+        <div class="spixi-contact-details-body">
+            <div class="spixi-contact-details-body-actions">
+                <div id="exp2" class="spixi-sidebar-single-item" style="padding: 8px 0">
+                    <div class="spixi-sidebar-icon"><i class="fa fa-exchange"></i></div>
+                    <div class="spixi-sidebar-single-item-text">
+                        <span class="body-sm s-text-01">*SL{contact-details-history}</span>
+                    </div>
+                    <i id="exp2-icon" class="fa fa-chevron-down spixi-sidebar-single-item-chevron-right"></i>
+                </div>
+                <div id="exp2-contents" class="expanded-transactions-container" style="display: none;">
+                </div>
+                <div class="spixi-sidebar-single-item" style="padding: 8px 0"
+                     onclick="document.getElementById('deleteChatHistory').style.display = 'flex'">
+                    <div class="spixi-sidebar-icon"><i class="fa fa-trash-can"></i></div>
+                    <div class="spixi-sidebar-single-item-text">
+                        <span class="body-sm s-text-01">*SL{contact-details-deletehistory}</span>
+                    </div>
+                    <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+                </div>
+                <div class="spixi-sidebar-single-item remove-contact" style="padding: 8px 0"
+                      onclick="document.getElementById('removeContactModal').style.display = 'flex'">
+                    <div class="spixi-sidebar-icon"><i class="fa fa-user-minus"></i></div>
+                    <div class="spixi-sidebar-single-item-text">
+                        <span class="body-sm s-text-01">*SL{contact-details-removecontact}</span>
+                    </div>
+                    <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+                </div>
+            </div>
+            <div class="spixi-contact-details-body-address-container">
+                <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>*SL{address-copied}</div>
+                <span class="label-sm s-text-02">*SL{contact-details-account-address}</span>
+                <div style="margin: 0" class="address_qr" id="qrcode"></div>
+                <div class="payment-data-hash-copy">
+                    <div class="body-xs s-text-02 payment-data-hash-text" id="wallet_address"></div>
+                    <i class="fas fa-copy copy-icon" id="copy-recipient"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!--Delete Chat History Modal-->
+<div class="new-modal-wrapper" id="deleteChatHistory" style="display: none;">
+    <div class="new-modal-container">
+        <i class="fa fa-trash-can modal-trash-icon"></i>
+        <div class="new-modal-texts">
+            <span class="label-lg">*SL{contact-details-delete-history-modal-title}</span>
+            <span class="body-sm">*SL{contact-details-delete-history-modal-subtitle}</span>
+        </div>
+        <div class="new-modal-buttons">
+            <div class="spixi-flat-button label-sm" onclick="onRemoveChatHistory()">
+                *SL{contact-details-delete-history-modal-confirm}
+            </div>
+            <div class="spixi-flat-button label-sm button outline"
+                 onclick="document.getElementById('deleteChatHistory').style.display = 'none'">
+                *SL{index-new-cancel}
+            </div>
+        </div>
     </div>
+</div>
 
-    <script type="text/javascript">
-        var wal_id = "";
+<!--Remove Contact Modal-->
+<div class="new-modal-wrapper" id="removeContactModal" style="display: none;">
+    <div class="new-modal-container">
+        <i class="fa fa-user-times modal-remove-icon"></i>
+        <div class="new-modal-texts">
+            <span class="label-lg">*SL{contact-details-delete-contact-modal-title}</span>
+            <span class="body-sm">*SL{contact-details-delete-contact-modal-subtitle}</span>
+        </div>
+        <div class="new-modal-buttons">
+            <div class="spixi-flat-button label-sm" onclick="onRemoveContact()">
+                *SL{contact-details-delete-contact-modal-confirm}
+            </div>
+            <div class="spixi-flat-button label-sm button outline"
+                 onclick="document.getElementById('removeContactModal').style.display = 'none'">
+                *SL{index-new-cancel}
+            </div>
+        </div>
+    </div>
+</div>
 
-        var clipboard = new ClipboardJS('#copy-recipient', {
-            text: function () {
-                return wal_id;
-            }
-        });
+<script type="text/javascript">
+    var wal_id = "";
 
-        clipboard.on('success', function (e) {
-            e.clearSelection();
-
-            var x = document.getElementById("toastbar");
-            x.className = "spixi-toastbar show";
-            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-
-        });
-
-        clipboard.on('error', function (e) {
-
-        });
-
-        var qrcode = new QRCode("qrcode", {
-            text: "",
-            width: 200,
-            height: 200,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-
-        function generateQR() {
-            qrcode.clear(); // clear the code.
-            qrcode.makeCode(wal_id);
+    var clipboard = new ClipboardJS('#copy-recipient', {
+        text: function () {
+            return wal_id;
         }
+    });
 
-        document.getElementById("backbtn").onclick = function () {
-            location.href = "ixian:back";
+    clipboard.on('success', function (e) {
+        e.clearSelection();
+
+        var x = document.getElementById("toastbar");
+        x.className = "spixi-toastbar show";
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 3000);
+
+    });
+
+    clipboard.on('error', function (e) {
+
+    });
+
+    var qrcode = new QRCode("qrcode", {
+        text: "",
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    function generateQR() {
+        qrcode.clear(); // clear the code.
+        qrcode.makeCode(wal_id);
+    }
+
+    document.getElementById("backbtn").onclick = function () {
+        location.href = "ixian:back";
+    }
+
+
+    function setAddress(addr) {
+        wal_id = addr;
+        const walletAddress = document.getElementById("wallet_address");
+        if (walletAddress) {
+            walletAddress.innerHTML = addr;
         }
+        generateQR();
+    }
 
-
-        function setAddress(addr) {
-            wal_id = addr;
-            const walletAddress = document.getElementById("wallet_address");
-            if (walletAddress){
-                walletAddress.innerHTML = addr;
-            }
-            generateQR();
+    function setNickname(nick) {
+        const nickEl = document.getElementById("nickname");
+        nickEl.setAttribute("nick", nick);
+        if (nickEl.innerHTML.indexOf("<input ") != 0) {
+            nickEl.innerHTML = nick;
         }
+    }
 
-        function setNickname(nick) {
-            const nickEl = document.getElementById("nickname");
-            nickEl.setAttribute("nick", nick);
-            if(nickEl.innerHTML.indexOf("<input ") != 0)
-            {
-                nickEl.innerHTML = nick;
-            }
+    function setAvatar(avatarPath) {
+        avatarPath = avatarPath.replace(/&#92;/g, '/');
+        avatarPath = avatarPath.replace(/\\/g, '/');
+
+        const avatarImage = document.getElementById("avatar");
+        avatarImage.src = avatarPath || "img/spixiavatar.png";
+    }
+
+    function showIndicator(ind) {
+        const avatarImage = document.getElementById("avatar");
+        if (ind == "true") {
+            avatarImage.classList.add("spixi-contact-details-avatar-online");
+        } else {
+            avatarImage.classList.remove("spixi-contact-details-avatar-online");
         }
+    }
 
-        function setAvatar(avatarPath) {
-            avatarPath = avatarPath.replace(/&#92;/g, '/');
-            avatarPath = avatarPath.replace(/\\/g, '/');
 
-            const avatarImage = document.getElementById("avatar");
-            avatarImage.src = avatarPath || "img/spixiavatar.png";
+    // Clears payment activity from wallet page
+    function clearRecentActivity() {
+        var paymentsNode = document.getElementById("exp2-contents");
+        while (paymentsNode.firstChild) {
+            paymentsNode.removeChild(paymentsNode.firstChild);
         }
+    }
 
-        function showIndicator(ind) {
-            const avatarImage = document.getElementById("avatar");
-            if (ind == "true") {
-                avatarImage.classList.add("spixi-contact-details-avatar-online");
-            } else {
-                avatarImage.classList.remove("spixi-contact-details-avatar-online");
-            }
-        }
+    // Adds a payment
+    function addPaymentActivity(txid, text, timestamp, amount, confirmed) {
+        const isReceived = text === "RECEIVED";
+        const arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;
 
+        const paymentsNode = document.getElementById("exp2-contents");
+        const paymentEntry = document.createElement("div");
+        paymentEntry.className = "spixi-list-item nopad";
 
-        // Clears payment activity from wallet page
-        function clearRecentActivity() {
-            var paymentsNode = document.getElementById("exp2-contents");
-            while (paymentsNode.firstChild) {
-                paymentsNode.removeChild(paymentsNode.firstChild);
-            }
-        }
-
-        // Adds a payment
-        function addPaymentActivity(txid, text, timestamp, amount, confirmed) {
-            const isReceived = text === "RECEIVED";
-            const arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;
-
-            const paymentsNode = document.getElementById("exp2-contents");
-            const paymentEntry = document.createElement("div");
-            paymentEntry.className = "spixi-list-item nopad";
-
-            paymentEntry.innerHTML = `
+        paymentEntry.innerHTML = `
                  <a href="ixian:txdetails:${txid}">
                     <div class="single-payment-container">
                         <div class="single-payment-arrow">
@@ -216,27 +261,26 @@
                         </div>
                     </div>
                 </a>`;
-            paymentsNode.appendChild(paymentEntry);
+        paymentsNode.appendChild(paymentEntry);
+    }
+
+    document.getElementById("exp2").onclick = function () {
+        const x = document.getElementById("exp2-contents");
+        const eicon = document.getElementById("exp2-icon");
+
+
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            eicon.className = "fa fa-chevron-up spixi-sidebar-single-item-chevron-right";
+        } else {
+            x.style.display = "none";
+            eicon.className = "fa fa-chevron-down spixi-sidebar-single-item-chevron-right";
+
         }
-
-        document.getElementById("exp2").onclick = function () {
-            const x = document.getElementById("exp2-contents");
-            const eicon = document.getElementById("exp2-icon");
-
-
-            if (x.style.display === "none") {
-                x.style.display = "block";
-                eicon.className = "fa fa-chevron-up spixi-sidebar-single-item-chevron-right";
-            } else {
-                x.style.display = "none";
-                eicon.className = "fa fa-chevron-down spixi-sidebar-single-item-chevron-right";
-
-            }
-        }
+    }
 
         function setUserDefinedNick(nick)
         {
-            console.log("it happened")
             const nickEl = document.getElementById("nickname");
             if(nick){
                 nickEl.innerHTML = nick;
@@ -244,31 +288,41 @@
             }
         }
 
-        const viewUsernameContainer = document.getElementById("username-view-container");
-        const editUsernameContainer = document.getElementById("username-edit-container");
-        const editUsernameInput = document.getElementById("nicknameInput");
+    const viewUsernameContainer = document.getElementById("username-view-container");
+    const editUsernameContainer = document.getElementById("username-edit-container");
+    const editUsernameInput = document.getElementById("nicknameInput");
 
-        function showEditUsername(){
-            viewUsernameContainer.style.display = "none";
-            editUsernameContainer.style.display = "flex";
-            editUsernameInput.focus();
-            editUsernameInput.value = document.getElementById("nickname").getAttribute("nick");
-        }
+    function showEditUsername() {
+        viewUsernameContainer.style.display = "none";
+        editUsernameContainer.style.display = "flex";
+        editUsernameInput.focus();
+        editUsernameInput.value = document.getElementById("nickname").getAttribute("nick");
+    }
 
-        function dismissEditUsername(){
+    function dismissEditUsername() {
+        viewUsernameContainer.style.display = "flex";
+        editUsernameContainer.style.display = "none";
+        editUsernameInput.value = "";
+    }
+
+    function submitEditUsername() {
+        const newUsername = editUsernameInput.value.trim();
+        if (newUsername) {
+            setUserDefinedNick(newUsername);
             viewUsernameContainer.style.display = "flex";
             editUsernameContainer.style.display = "none";
-            editUsernameInput.value = "";
         }
+    }
 
-        function submitEditUsername(){
-            const newUsername = editUsernameInput.value.trim();
-            if(newUsername){
-                setUserDefinedNick(newUsername);
-                viewUsernameContainer.style.display = "flex";
-                editUsernameContainer.style.display = "none";
-            }
-        }
-    </script>
+    function onRemoveChatHistory() {
+        location.href = "ixian:removehistory";
+        document.getElementById("deleteChatHistory").style.display = "none";
+    }
+
+    function onRemoveContact(){
+        location.href = "ixian:remove";
+        document.getElementById("removeContactModal").style.display = "none";
+    }
+</script>
 </body>
 </html>

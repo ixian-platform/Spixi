@@ -539,10 +539,8 @@ $("#leftSidebar").swipe( {
 
             if (phase === "end" || phase === "cancel")
             {
-                console.log(distance)
                 if(distance > 1)
                 {
-                    console.log("distance > 100")
                     leftSidebar.style.transform = 'translateX(-100%)';
                     leftSidebar.style.transition = "transform 0.3s ease";
                     leftSidebar.classList.remove('open');

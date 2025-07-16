@@ -1045,23 +1045,22 @@ img.emoji {
     display: block;
 }
 
-
 /* ToastBar */
 .spixi-toastbar {
     visibility: hidden;
     min-width: 250px;
     margin-left: -125px;
-    background-color: var(--colors-surface-accent-inverse);
-    color: var(--colors-text-inverse);
+    background-color: var(--colors-surface-04);
+    color: var(--colors-text-01);
     text-align: center;
-    border-radius: 20px;
-    padding: 16px;
-    position: fixed;
+    border-radius: 8px;
+    padding: 12px 24px;
+    position: absolute;
     z-index: 2001;
     left: 50%;
-    top: 80%;
-    font-size: 11pt;
-    font-weight: bold;
+    top: 24px;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .spixi-toastbar.show {
@@ -1889,8 +1888,8 @@ img.emoji {
     font-size: 18pt;
 }
 
-.spixi-sidebar-closebutton:hover{
-    color:  var(--colors-icon-inverse) !important;
+.spixi-sidebar-closebutton:hover {
+    color: var(--colors-icon-inverse) !important;
 }
 
 /* ListItems */
@@ -4277,6 +4276,18 @@ img.emoji {
     flex-direction: column;
     gap: 32px;
     align-items: center;
+
+    i {
+        font-size: 28px;
+    }
+
+    .modal-trash-icon {
+        color: var(--colors-icon-on-disabled);
+    }
+
+    .modal-remove-icon{
+        color: var(--colors-icon-error);
+    }
 }
 
 .new-modal-buttons {
@@ -5295,11 +5306,11 @@ input.create-account-username[type="password"] {
     align-items: center;
 }
 
-.password-inputs.restore{
+.password-inputs.restore {
     margin: calc(32px - 8px) 0;
 }
 
-.upload-file-container{
+.upload-file-container {
     width: 100%;
     padding: 16px;
     border-radius: 8px;
