@@ -311,7 +311,7 @@ index-backup-prompt-create = Yes Create Backup
 index-backup-prompt-not-now = Not Now
 index-backup-prompt-note = It’s recommended to backup every time you add a new contact.
 
-; Onboarding Sreen
+; Onboarding Screen
 onboarding-choose-language = Choose your language
 onboarding-get-started = Get Started
 onboarding-step-skip = Skip
@@ -327,7 +327,7 @@ onboarding-step-4-title = Discover Mini Apps inside your chats.
 onboarding-step-4-subtitle = Spixi Mini Apps let you play games, use tools, or unlock new features, all directly inside your conversations.
 
 
-; Onboarding Create Account Screem
+; Onboarding Create Account Screen
 create-account-title = Let’s get you started.
 create-account-description = Create a new account, or restore one using your backup.
 create-account-new = New Account
@@ -582,28 +582,6 @@ onboarding-bot-title = Be part of Spixi’s journey
 onboarding-bot-subtitle =  Join our official group chat to share feedback, connect with the team, and stay up to date with all the latest features.
 onboarding-bot-join-button = Join Community
 onboarding-bot-skip = Skip for now
-
-; Onboarding 1
-onboarding-screen1-title = Connect With Confidence
-onboarding-screen1-text = Take Control of Your Communication and Payments with One of the Most Secure and Private Chat Apps in the World.
-onboarding-screen1-get-started = Get Started
-onboarding-screen1-skip = Skip Onboarding
-
-; Onboarding 2
-onboarding-screen2-title = Spixi Address is Your Only ID
-onboarding-screen2-text = Spixi doesn’t need your phone number or email. It uses your address which is your unique ID. You can add contacts by using their address.
-
-; Onboarding 3
-onboarding-screen3-title = Send and Receive IXI Payments
-onboarding-screen3-text = By using the wallet, you can quickly send or receive IXI payments. It’s as simple as sending a message.
-
-; Onboarding send and receive payments
-onboarding-screen4-title = Send and Receive IXI Payments
-onboarding-screen4-text = Use the wallet to quickly send and receive IXI payments, just like sending a message.
-onboarding-skip = Skip
-onboarding-back = Back
-onboarding-next = Next
-onboarding-finish = Finish
 
 ; Empty State
 empty-state-title = Welcome to Spixi

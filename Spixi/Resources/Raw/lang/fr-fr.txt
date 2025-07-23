@@ -211,6 +211,12 @@ contact-details-removedcontact-text = Le contact a été supprimé.
 contact-details-deletehistory = Supprimer l'historique
 contact-details-deletedhistory-title = Supprimé
 contact-details-deletedhistory-text = L'historique des messages a été supprimé.
+contact-details-delete-history-modal-title = Effacer l'historique du chat ?
+contact-details-delete-history-modal-subtitle = L'intégralité de l'historique du chat sera supprimée.
+contact-details-delete-history-modal-confirm = Oui, effacer le chat
+contact-details-delete-contact-modal-title = Supprimer le contact
+contact-details-delete-contact-modal-subtitle = Ce contact sera supprimé de votre liste. Vous ne pourrez plus envoyer ou recevoir de messages à moins de l’ajouter à nouveau.
+contact-details-delete-contact-modal-confirm = Oui, supprimer le contact
 
 ; New Contact Screen
 contact-new-title = Ajouter un nouveau contact
@@ -305,62 +311,59 @@ index-backup-prompt-create = Oui, créer une sauvegarde
 index-backup-prompt-not-now = Pas maintenant
 index-backup-prompt-note = Il est recommandé de faire une sauvegarde chaque fois que vous ajoutez un nouveau contact.
 
-; Intro Screen
-intro-title = Bienvenue sur Spixi
-intro-subtitle = Bienvenue sur l'une des applications de messagerie les plus sécurisées au monde.
-intro-headline = Commençons !
-intro-language-text = Quelle langue parlez-vous ?
-intro-text = Créez ou restaurez votre compte Spixi pour continuer.
-intro-create-account = Créer un compte
-intro-restore-account = Vous avez déjà un compte ?
-intro-restore-link = Cliquez ici pour le restaurer.
-intro-tip-title = Le saviez-vous ?
-intro-tip-body = Spixi ne repose pas sur des serveurs. Tous les messages sont entièrement chiffrés et envoyés directement à vos contacts.
-intro-continue = Continuer
-intro-step-1 = Étape 1 sur 2
-intro-step-2 = Étape 2 sur 2
+; Onboarding Screen
+onboarding-choose-language = Choisissez votre langue
+onboarding-get-started = Commencer
+onboarding-step-skip = Passer
+onboarding-step-back = Retour
+onboarding-step-next = Suivant
+onboarding-step-1-title = Votre chat, votre appareil, vos règles.
+onboarding-step-1-subtitle = Spixi n'utilise pas de serveurs. Les messages restent sur votre appareil et ne sont envoyés que chiffrés, directement à votre contact.
+onboarding-step-2-title = Votre adresse est votre seule identité.
+onboarding-step-2-subtitle = Spixi n’a pas besoin de votre numéro de téléphone ou d’email. Votre adresse Spixi unique suffit pour vous connecter.
+onboarding-step-3-title = Envoyez et recevez des paiements IXI.
+onboarding-step-3-subtitle = Utilisez le portefeuille intégré pour envoyer ou recevoir des IXI directement dans vos conversations. Aussi simple qu’un message.
+onboarding-step-4-title = Découvrez les Mini Apps dans vos chats.
+onboarding-step-4-subtitle = Les Mini Apps Spixi vous permettent de jouer, d’utiliser des outils ou de débloquer de nouvelles fonctionnalités, directement dans vos discussions.
 
-; Intro New Screen
-intro-new-description-1 = Choisissez un nom et un avatar.
-intro-new-description-2 = Votre nom et votre avatar seront visibles par vos contacts.
-intro-new-name-placeholder = Nom
-intro-new-change-image = Appuyez sur l'avatar pour le modifier.
-intro-new-next = Suivant
-intro-new-step-1 = Étape 1 sur 2
-intro-new-step-2 = Étape 2 sur 2
-intro-new-description-3 = Vous y êtes presque !
-intro-new-description-4 = Voici votre mot de passe principal. Si vous devez restaurer votre compte, vous en aurez besoin ainsi que de votre sauvegarde.
-intro-new-description-5 = Ce mot de passe est important. Il sera requis pour restaurer votre compte.
-intro-new-password = Saisissez un mot de passe...
-intro-new-password-2 = Confirmez le mot de passe...
-intro-new-finish = TERMINER
-intro-new-create-title = Création de votre compte Spixi...
-intro-new-create-description = Ce processus peut prendre quelques instants sur les appareils plus lents.
-intro-new-password10 = Le mot de passe doit comporter au moins 10 caractères.
-intro-new-passwordconf = Confirmer le mot de passe
-intro-new-passwordnomatch = Les mots de passe ne correspondent pas
-intro-new-passwordmatch = Les mots de passe correspondent
-intro-new-emptynick-title = Nom invalide
-intro-new-emptynick-text = Veuillez entrer un nom.
-intro-new-avatarerror-title = Erreur d'avatar
-intro-new-walleterror-title = Erreur
-intro-new-walleterror-text = Impossible de créer le portefeuille. Veuillez réessayer.
+; Onboarding Create Account Screen
+create-account-title = C'est parti.
+create-account-description = Créez un nouveau compte ou restaurez-en un à l’aide de votre sauvegarde.
+create-account-new = Nouveau compte
+create-account-already = Vous avez déjà un compte ?
+create-account-restore = Restaurer un compte
+create-account-step = Étape
+create-account-step-of = sur
+create-account-step-1-title = Définissez votre pseudo et votre photo
+create-account-step-1-subtitle = Votre pseudo et avatar seront visibles par vos contacts. Vous pourrez les modifier à tout moment.
+create-account-step-1-tap = appuyer pour télécharger
+create-account-step-1-nickname-placeholder = Entrez un pseudo
+create-account-step-2-title = Créez un mot de passe de sauvegarde
+create-account-step-2-subtitle = Vous aurez besoin de ce mot de passe pour restaurer votre compte Spixi depuis une sauvegarde. Gardez-le en sécurité.
+create-account-step-2-password-placeholder = Entrez le mot de passe
+create-account-step-2-password-confirm = Confirmez le mot de passe
+create-account-step-2-password-confirm-note = Le mot de passe doit contenir au moins 10 caractères.
+create-account-step-2-password-confirm-note-success = Les mots de passe correspondent
+create-account-step-2-password-confirm-note-error = Les mots de passe doivent correspondre
+create-account-step-2-note-title = Spixi ne stocke pas ce mot de passe.
+create-account-step-2-note-subtitle = Sans ce mot de passe ou votre sauvegarde, vous ne pourrez pas récupérer votre compte ni votre portefeuille.
+create-account-finish-setup = Terminer la configuration
+create-account-creating = Création de votre compte...
+create-account-creating-description = Cela ne prendra que quelques instants. Votre compte est en cours de sécurisation.
 
 ; Intro Restore Screen
-intro-restore-description-1 = Restaurer votre compte Spixi
-intro-restore-description-2 = Pour continuer, vous devez disposer du fichier de sauvegarde et du mot de passe de votre compte Spixi.
-intro-restore-password = Saisissez le mot de passe...
-intro-restore-selectfile = Ajouter une sauvegarde
-intro-restore-backupdescription = Ajoutez la sauvegarde associée à votre mot de passe.
-intro-restore-action = Restaurer mon compte
-intro-restore-title = Restauration de votre compte Spixi en cours
-intro-restore-info = Cela peut prendre quelques minutes
-intro-restore-file-error-title = Erreur de fichier
-intro-restore-file-selecterror-text = Une erreur est survenue lors de l'ajout du fichier de récupération.
-intro-restore-file-readerror-text = Erreur lors de la lecture du fichier du portefeuille.
-intro-restore-file-writeerror-text = Erreur lors de l'enregistrement du fichier du portefeuille.
-intro-restore-file-invalidpassword-title = Mot de passe invalide
-intro-restore-file-invalidpassword-text = Impossible de déchiffrer le fichier du portefeuille. Veuillez réessayer.
+intro-restore-title = Restaurer le compte
+intro-restore-subtitle = Sélectionnez votre fichier de sauvegarde pour commencer à restaurer votre compte Spixi.
+intro-restore-select-file = Sélectionner le fichier de sauvegarde
+intro-restore-pass-title = Entrez le mot de passe de sauvegarde
+intro-restore-pass-subtitle = Pour restaurer votre compte Spixi, entrez le mot de passe utilisé pour sécuriser le fichier de sauvegarde.
+intro-restore-pass-placeholder = Entrez le mot de passe
+intro-restore-note-title = Spixi ne stocke pas ce mot de passe.
+intro-restore-note-subtitle = Vous seul pouvez déverrouiller ce fichier de sauvegarde.
+intro-restore-button = Restaurer le compte
+intro-restoring-title = Restauration du compte...
+intro-restoring-subtitle = Patientez un instant. Nous déverrouillons votre compte en toute sécurité.
+intro-restore-pass-error = Mot de passe incorrect. Veuillez réessayer.
 
 ; Intro Retry Screen
 intro-retry-description-1 = Veuillez saisir à nouveau votre mot de passe
@@ -574,32 +577,10 @@ wallet-error-balance-title = Solde insuffisant
 wallet-error-balance-text = Votre solde est insuffisant pour cette transaction. Le coût total de la transaction est de {0}, tandis que votre solde actuel est de {1}.
 
 ; Onboarding join official bot
-onboarding-bot-title = Rejoignez la communauté officielle de Spixi
-onboarding-bot-text = Rejoignez le chat de groupe pour partager vos retours sur Spixi et rester informé des dernières mises à jour.
-onboarding-bot-join-button = Rejoindre maintenant
-onboarding-bot-dont-join-button = Passer
-
-; Onboarding 1
-onboarding-screen1-title = Connectez-vous en toute sécurité
-onboarding-screen1-text = Prenez le contrôle de vos communications et paiements avec l'une des applications de messagerie les plus sécurisées et privées au monde.
-onboarding-screen1-get-started = Commencer
-onboarding-screen1-skip = Passer l’introduction
-
-; Onboarding 2
-onboarding-screen2-title = L'adresse Spixi est votre seul identifiant
-onboarding-screen2-text = Spixi ne nécessite ni numéro de téléphone ni adresse e-mail. Utilisez votre adresse Spixi comme identifiant unique.
-
-; Onboarding 3
-onboarding-screen3-title = Envoyez et recevez des paiements IXI
-onboarding-screen3-text = Avec le portefeuille intégré, vous pouvez envoyer et recevoir des paiements IXI facilement, comme un simple message.
-
-; Onboarding send and receive payments
-onboarding-screen4-title = Envoyez et recevez des paiements IXI
-onboarding-screen4-text = Utilisez le portefeuille pour envoyer et recevoir des paiements IXI de manière simple, comme l’envoi d’un message.
-onboarding-skip = Passer
-onboarding-back = Retour
-onboarding-next = Suivant
-onboarding-finish = Terminer
+onboarding-bot-title = Faites partie de l’aventure Spixi
+onboarding-bot-subtitle = Rejoignez notre groupe de discussion officiel pour partager vos retours, échanger avec l’équipe et rester informé des dernières nouveautés.
+onboarding-bot-join-button = Rejoindre la communauté
+onboarding-bot-skip = Passer pour le moment
 
 ; Empty State
 empty-state-title = Bienvenue sur Spixi
