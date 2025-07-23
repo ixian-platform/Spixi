@@ -73,11 +73,11 @@ namespace SPIXI
                     string appearanceString = current_url.Substring("ixian:appearance:".Length);
                     selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
 
-                    // below wont work - we need to reload the LaunchPage on every appearance change
-//                     if (ThemeManager.changeAppearance(selectedAppearance))
-//                     {
-//                         LaunchPage.Instance().reload();
-//                     }
+                    if (ThemeManager.changeAppearance(selectedAppearance))
+                    {
+                        Utils.sendUiCommand(this, "reloadPage");
+                    }
+
                 }
             else
             {
