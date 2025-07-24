@@ -75,9 +75,8 @@ namespace SPIXI
 
                     if (ThemeManager.changeAppearance(selectedAppearance))
                     {
-                        Utils.sendUiCommand(this, "reloadPage");
+                        loadPage(webView, "intro.html");
                     }
-
                 }
             else
             {
