@@ -53,7 +53,8 @@ public partial class App : Application
                 Environment.Exit(1);
                 return;
             }
-            Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
+            Logging.info("Starting Spixi {0} ({1})", Config.version, CoreConfig.version);
+            Logging.info("Operating System is {0}", IXICore.Platform.getOSNameAndVersion());
 
             // Init fatal exception handlers
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;

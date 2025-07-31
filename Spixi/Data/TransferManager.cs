@@ -365,8 +365,9 @@ namespace SPIXI
                 message.recipient = friend.walletAddress;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
+                message.requireRcvConfirmation = true;
 
-                CoreStreamProcessor.sendMessage(friend, message, false, false, false);
+                CoreStreamProcessor.sendMessage(friend, message, false, false, false, !message.requireRcvConfirmation);
 
             }
 
@@ -599,8 +600,9 @@ namespace SPIXI
                 message.recipient = friend.walletAddress;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
+                message.requireRcvConfirmation = true;
 
-                CoreStreamProcessor.sendMessage(friend, message, false, false, false);
+                CoreStreamProcessor.sendMessage(friend, message, false, false, false, !message.requireRcvConfirmation);
 
                 var chat_page = Utils.getChatPage(friend);
                 if (chat_page != null)
