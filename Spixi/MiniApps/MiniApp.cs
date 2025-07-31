@@ -1,5 +1,7 @@
 ﻿using IXICore;
+using IXICore.Utils;
 using System.Text;
+using System.Text.Unicode;
 
 namespace SPIXI.MiniApps
 {
@@ -32,6 +34,8 @@ namespace SPIXI.MiniApps
 
         public byte[] publicKey = null;
         public byte[] signature = null;
+
+        public Dictionary<byte[], string> protocols = null;
 
         public MiniApp(string[] app_info, string? app_url = null)
         {
@@ -113,6 +117,10 @@ namespace SPIXI.MiniApps
                         capabilities = parseCapabilities(value);
                         break;
 
+                    case "protocols":
+                        protocols = parseProtocols(value);
+                        break;
+
                     case "minUsers":
                         if (int.TryParse(value, out int minUsers))
                         {
@@ -188,6 +196,18 @@ namespace SPIXI.MiniApps
             return caps;
         }
 
+        private Dictionary<byte[], string> parseProtocols(string value)
+        {
+            var protoArr = value.Split(',');
+            var protos = new Dictionary<byte[], string>(new ByteArrayComparer());
+            foreach (var proto in protoArr)
+            {
+                var trimmedProto = proto.Trim().ToLower();
+                protos.Add(CryptoManager.lib.sha3_512Trunc(UTF8Encoding.UTF8.GetBytes(trimmedProto)), value);
+            }
+            return protos;
+        }
+
         public bool hasCapability(MiniAppCapabilities capability)
         {
             if (capabilities != null && capabilities.ContainsKey(capability))
@@ -195,6 +215,24 @@ namespace SPIXI.MiniApps
                 return true;
             }
             return false;
+        }
+
+        public bool hasProtocol(byte[] protocolId)
+        {
+            if (protocols != null && protocols.ContainsKey(protocolId))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public string getProtocolName(byte[] protocolId)
+        {
+            if (protocols != null && protocols.ContainsKey(protocolId))
+            {
+                return protocols[protocolId];
+            }
+            return null;
         }
 
         public string getCapabilitiesAsString()

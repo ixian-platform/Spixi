@@ -279,8 +279,8 @@ namespace SPIXI
 
                 byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
 
-                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null);
                 var app_info = Node.MiniAppManager.getAppInfo(appId);
+                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null, app_info);
                 FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
             }
             catch (Exception ex)

@@ -91,7 +91,21 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:data", StringComparison.Ordinal))
             {
-                sendNetworkData(current_url.Substring(10));
+                // TODO TODO TODO probably a different encoding should be used for data
+                sendNetworkData(UTF8Encoding.UTF8.GetBytes(current_url.Substring(10)));
+            }
+            else if (current_url.StartsWith("ixian:protocolData", StringComparison.Ordinal))
+            {
+                var prefixLen = "ixian:protocolData".Length;
+                var protocolId = current_url.Substring(prefixLen, current_url.IndexOf('=') - prefixLen);
+                var data = current_url.Substring(current_url.IndexOf('=') + 1);
+                byte[] protocolIdBytes = null;
+                if (protocolId != "null")
+                {
+                    protocolIdBytes = CryptoManager.lib.sha3_512Trunc(UTF8Encoding.UTF8.GetBytes(protocolId));
+                }
+                // TODO TODO TODO probably a different encoding should be used for data
+                sendNetworkProtocolData(protocolIdBytes, UTF8Encoding.UTF8.GetBytes(data));
             }
             else if (current_url.StartsWith("ixian:getStorageData", StringComparison.Ordinal))
             {
@@ -210,15 +224,31 @@ namespace SPIXI
 
         }
 
-        private void sendNetworkData(string data)
+        private void sendNetworkData(byte[] data)
         {
             foreach (Address address in userAddresses)
             {
                 Friend f = FriendList.getFriend(address);
                 if (f != null)
                 {
-                    // TODO TODO TODO probably a different encoding should be used for data
-                    StreamProcessor.sendAppData(f, sessionId, UTF8Encoding.UTF8.GetBytes(data));
+                    StreamProcessor.sendAppData(f, sessionId, data);
+                }
+                else
+                {
+                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
+                }
+            }
+        }
+
+
+        private void sendNetworkProtocolData(byte[] protocolId, byte[] data)
+        {
+            foreach (Address address in userAddresses)
+            {
+                Friend f = FriendList.getFriend(address);
+                if (f != null)
+                {
+                    StreamProcessor.sendAppProtocolData(f, protocolId, data);
                 }
                 else
                 {
@@ -256,6 +286,15 @@ namespace SPIXI
             {
                 // TODO TODO TODO probably a different encoding should be used for data
                 Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkData", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            });
+        }
+
+        public void networkProtocolDataReceived(Address sender_address, string protocol_name, byte[] data)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // TODO TODO TODO probably a different encoding should be used for data
+                Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkProtocolData", sender_address.ToString(), protocol_name, UTF8Encoding.UTF8.GetString(data));
             });
         }
 

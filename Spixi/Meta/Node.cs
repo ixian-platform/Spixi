@@ -98,7 +98,8 @@ namespace SPIXI.Meta
             FriendList.loadContacts();
 
             // Prepare the stream processor
-            streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications));
+            StreamCapabilities caps = StreamCapabilities.Incoming | StreamCapabilities.Outgoing | StreamCapabilities.IPN | StreamCapabilities.Apps;
+            streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications), caps);
 
             OfflinePushMessages.init(Config.pushServiceUrl, streamProcessor);
         }

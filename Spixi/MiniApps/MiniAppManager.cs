@@ -441,6 +441,24 @@ namespace SPIXI.MiniApps
             }
         }
 
+
+        public MiniAppPage getAppPageByProtocol(Address sender_address, byte[] protocol_id)
+        {
+            lock (appPages)
+            {
+                foreach (var kv in appPages)
+                {
+                    var page = kv.Value;
+                    if (page.hasUser(sender_address)
+                        && getApp(page.appId).hasProtocol(protocol_id))
+                    {
+                        return page;
+                    }
+                }
+                return null;
+            }
+        }
+
         public MiniAppPage getAppPage(Address sender_address, string app_id)
         {
             lock (appPages)

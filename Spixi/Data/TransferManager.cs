@@ -610,7 +610,12 @@ namespace SPIXI
                         return;
 
                     ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
-                    ulong fp = (packet_number - 1) * 100 / totalPackets;
+                    ulong fp = 0;
+                    if (packet_number > 0
+                        && totalPackets > 0)
+                    {
+                        fp = (packet_number - 1) * 100 / totalPackets;
+                    }
                     chat_page.updateFile(uid, fp.ToString(), false);
                 }
             }

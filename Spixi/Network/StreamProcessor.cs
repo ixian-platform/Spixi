@@ -10,12 +10,13 @@ using SPIXI.Meta;
 using SPIXI.Network;
 using SPIXI.VoIP;
 using System.Text;
+using IXICore.Streaming.Models;
 
 namespace SPIXI
 {    
     class StreamProcessor : CoreStreamProcessor
     {
-        public StreamProcessor(PendingMessageProcessor pendingMessageProcessor) : base(pendingMessageProcessor)
+        public StreamProcessor(PendingMessageProcessor pendingMessageProcessor, StreamCapabilities streamCapabilities) : base(pendingMessageProcessor, streamCapabilities)
         {
         }
 
@@ -400,7 +401,7 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.msgReaction:
-                        var reaction = new SpixiMessageReaction(spixi_message.data);
+                        var reaction = new ReactionMessage(spixi_message.data);
                         UIHelpers.updateReactions(friend, channel, reaction.msgId);
                         break;
 
@@ -419,6 +420,16 @@ namespace SPIXI
                         {
                             UIHelpers.shouldRefreshContacts = true;
                         }
+                        break;
+
+                    case SpixiMessageCode.appProtocols:
+                        handleAppProtocols(sender_address, new AppProtocolsMessage(spixi_message.data));
+                        break;
+
+                    case SpixiMessageCode.appProtocolData:
+                        // app data received, find the protocol id of the app and forward the data to it
+                        handleAppProtocolData(sender_address, spixi_message.data);
+                        return rdr;
                         break;
                 }
             }catch(Exception e)
@@ -445,10 +456,23 @@ namespace SPIXI
             Utils.getChatPage(friend)?.showTyping();
         }
 
+        private static void handleAppProtocols(Address sender_address, AppProtocolsMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender_address);
+            if (friend == null)
+            {
+                Logging.error("Received app protocols from an unknown contact.");
+                return;
+            }
+
+            friend.supportedProtocols = data.protocolIds;
+            friend.save();
+        }
+
         private static void handleAppData(Address sender_address, byte[] app_data_raw)
         {
-            // TODO use channels and drop SpixiAppData
-            SpixiAppData app_data = new SpixiAppData(app_data_raw);
+            // TODO use channels and drop AppDataMessage
+            AppDataMessage app_data = new AppDataMessage(app_data_raw);
             if (VoIPManager.hasSession(app_data.sessionId))
             {
                 VoIPManager.onData(app_data.sessionId, app_data.data);
@@ -463,95 +487,27 @@ namespace SPIXI
             app_page.networkDataReceived(sender_address, app_data.data);
         }
 
-        public static StreamMessage sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
+
+        private static void handleAppProtocolData(Address sender_address, byte[] app_data_raw)
         {
-            // TODO use channels and drop SpixiAppData
+            // TODO use channels and drop AppDataMessage
+            AppDataMessage app_data = new AppDataMessage(app_data_raw);
+            MiniAppPage app_page = Node.MiniAppManager.getAppPageByProtocol(sender_address, app_data.sessionId);
+            if (app_page == null)
+            {
+                Logging.error("App with protocol id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
+                return;
+            }
+            string protocol_name = Node.MiniAppManager.getApp(app_page.appId).getProtocolName(app_data.sessionId);
+            app_page.networkProtocolDataReceived(sender_address, protocol_name, app_data.data);
+        }
+
+        private static StreamMessage sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
+        {
             string app_install_url = Node.MiniAppManager.getAppInstallURL(app_id);
             string app_name = Node.MiniAppManager.getAppName(app_id);
             string app_info = Node.MiniAppManager.getAppInfo(app_id);
-
-            SpixiMessage spixi_msg = new SpixiMessage();
-            spixi_msg.type = SpixiMessageCode.appRequest;
-            spixi_msg.data = new SpixiAppData(session_id, data, app_info).getBytes();
-
-            StreamMessage new_msg = new StreamMessage(friend.protocolVersion);
-            new_msg.type = StreamMessageCode.data;
-            new_msg.recipient = friend.walletAddress;
-            new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            new_msg.data = spixi_msg.getBytes();
-
-            CoreStreamProcessor.sendMessage(friend, new_msg);
-
-            return new_msg;
-        }
-
-        public static void sendAppRequestAccept(Friend friend, byte[] session_id, byte[] data = null)
-        {
-            // TODO use channels and drop SpixiAppData
-            SpixiMessage spixi_msg = new SpixiMessage();
-            spixi_msg.type = SpixiMessageCode.appRequestAccept;
-            spixi_msg.data = new SpixiAppData(session_id, data).getBytes();
-
-            StreamMessage new_msg = new StreamMessage(friend.protocolVersion);
-            new_msg.type = StreamMessageCode.data;
-            new_msg.recipient = friend.walletAddress;
-            new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            new_msg.data = spixi_msg.getBytes();
-
-            CoreStreamProcessor.sendMessage(friend, new_msg, true, false, false);
-        }
-
-        public static void sendAppRequestReject(Friend friend, byte[] session_id, byte[] data = null)
-        {
-            // TODO use channels and drop SpixiAppData
-            SpixiMessage spixi_msg = new SpixiMessage();
-            spixi_msg.type = SpixiMessageCode.appRequestReject;
-            spixi_msg.data = new SpixiAppData(session_id, data).getBytes();
-
-            StreamMessage new_msg = new StreamMessage(friend.protocolVersion);
-            new_msg.type = StreamMessageCode.data;
-            new_msg.recipient = friend.walletAddress;
-            new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            new_msg.data = spixi_msg.getBytes();
-
-            CoreStreamProcessor.sendMessage(friend, new_msg);
-        }
-
-        public static void sendAppData(Friend friend, byte[] session_id, byte[] data)
-        {
-            // TODO use channels and drop SpixiAppData
-            SpixiMessage spixi_msg = new SpixiMessage();
-            spixi_msg.type = SpixiMessageCode.appData;
-            spixi_msg.data = (new SpixiAppData(session_id, data)).getBytes();
-
-            StreamMessage msg = new StreamMessage(friend.protocolVersion);
-            msg.type = StreamMessageCode.data;
-            msg.recipient = friend.walletAddress;
-            msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            msg.data = spixi_msg.getBytes();
-
-            CoreStreamProcessor.sendMessage(friend, msg, false, false, false);
-        }
-
-        public static void sendAppEndSession(Friend friend, byte[] session_id, byte[] data = null)
-        {
-            // TODO use channels and drop SpixiAppData
-            SpixiMessage spixi_msg = new SpixiMessage();
-            spixi_msg.type = SpixiMessageCode.appEndSession;
-            spixi_msg.data = (new SpixiAppData(session_id, data)).getBytes();
-
-            if (friend == null)
-            {
-                return;
-            }
-
-            StreamMessage msg = new StreamMessage(friend.protocolVersion);
-            msg.type = StreamMessageCode.data;
-            msg.recipient = friend.walletAddress;
-            msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            msg.data = spixi_msg.getBytes();
-
-            CoreStreamProcessor.sendMessage(friend, msg, true, true, false, false);
+            return sendAppRequest(friend, app_id, session_id, data, app_info);
         }
 
         private static void handleAppRequest(byte[] messageId, Address sender_address, Address recipient_address, byte[] app_data_raw)
@@ -570,8 +526,8 @@ namespace SPIXI
                 return;
             }
 
-            // TODO use channels and drop SpixiAppData
-            SpixiAppData app_data = new SpixiAppData(app_data_raw);
+            // TODO use channels and drop AppDataMessage
+            AppDataMessage app_data = new AppDataMessage(app_data_raw);
             
             if(app_data.sessionId == null)
             {
@@ -636,8 +592,8 @@ namespace SPIXI
 
         private static void handleAppRequestAccept(Address sender_address, byte[] app_data_raw)
         {
-            // TODO use channels and drop SpixiAppData
-            SpixiAppData app_data = new SpixiAppData(app_data_raw);
+            // TODO use channels and drop AppDataMessage
+            AppDataMessage app_data = new AppDataMessage(app_data_raw);
 
             if (VoIPManager.hasSession(app_data.sessionId))
             {
@@ -662,8 +618,8 @@ namespace SPIXI
 
         public static void handleAppRequestReject(Address sender_address, byte[] app_data_raw)
         {
-            // TODO use channels and drop SpixiAppData
-            SpixiAppData app_data = new SpixiAppData(app_data_raw);
+            // TODO use channels and drop AppDataMessage
+            AppDataMessage app_data = new AppDataMessage(app_data_raw);
             byte[] session_id = app_data.sessionId;
 
             if (VoIPManager.hasSession(session_id))
@@ -688,7 +644,7 @@ namespace SPIXI
         public static void handleAppEndSession(Address sender_address, byte[] app_data_raw)
         {
             // TODO use channels and drop SpixiAppData
-            SpixiAppData app_data = new SpixiAppData(app_data_raw);
+            AppDataMessage app_data = new AppDataMessage(app_data_raw);
             byte[] session_id = app_data.sessionId;
 
             if (VoIPManager.hasSession(session_id))

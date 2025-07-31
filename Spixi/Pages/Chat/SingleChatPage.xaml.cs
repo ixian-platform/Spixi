@@ -776,8 +776,8 @@ namespace SPIXI
                 return;
             }
 
-            var msg = StreamProcessor.sendAppRequest(friend, app_id, session_id, null);
             var app_info = Node.MiniAppManager.getAppInfo(app_id);
+            var msg = StreamProcessor.sendAppRequest(friend, app_id, session_id, null, app_info);
             Node.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
         }
 
@@ -886,7 +886,7 @@ namespace SPIXI
                             nick = friend.users.getUser(sender_address).getNick();
                         }
                         string modal_title = String.Format(SpixiLocalization._SL("chat-modal-tip-title"), nick);
-                        if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
+                        if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new ReactionMessage(msg_id, "tip:" + tx.id), selectedChannel))
                         {
                             updateReactions(msg_id, selectedChannel);
                             StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
@@ -948,7 +948,7 @@ namespace SPIXI
                     break;
 
                 case "like":
-                    if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
+                    if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new ReactionMessage(msg_id, "like:"), selectedChannel))
                     {
                         updateReactions(msg_id, selectedChannel);
                         StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
