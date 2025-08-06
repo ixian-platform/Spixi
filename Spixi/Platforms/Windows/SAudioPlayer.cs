@@ -164,7 +164,7 @@ namespace Spixi
                 {
                     case PlaybackCatchupType.Drop:
                         {
-                            if (1 + Random.Shared.NextDouble() < catchup.Speed + 0.10)
+                            if (Random.Shared.NextDouble() < catchup.Speed - 1.0 + 0.10)
                             {
                                 Logging.warn($"VoIP Dropping frame, avg {playbackCatchupController.GetAverageLatency() * 1000:F0}ms");
                                 shouldDrop = true;
@@ -173,7 +173,7 @@ namespace Spixi
                         break;
                     case PlaybackCatchupType.SpeedUp:
                         {
-                            if (1 + Random.Shared.NextDouble() < catchup.Speed)
+                            if (Random.Shared.NextDouble() < catchup.Speed - 1.0)
                             {
                                 Logging.warn($"VoIP Dropping frame, avg {playbackCatchupController.GetAverageLatency() * 1000:F0}ms");
                                 shouldDrop = true;

@@ -276,12 +276,15 @@ namespace Spixi
 
             var catchup = playbackCatchupController.Update(queuedSeconds);
             bool shouldDrop = false;
+
             switch (catchup.Type)
             {
                 case PlaybackCatchupType.Drop:
                     if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
                     {
-                        audioPlayer.PlaybackParams.SetSpeed(catchup.Speed);
+                        var pp = audioPlayer.PlaybackParams;
+                        pp.SetSpeed(catchup.Speed);
+                        audioPlayer.PlaybackParams = pp;
                     }
                     if (Random.Shared.NextDouble() < 0.10)
                     {
@@ -293,9 +296,11 @@ namespace Spixi
                 case PlaybackCatchupType.SpeedUp:
                     if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
                     {
-                        audioPlayer.PlaybackParams.SetSpeed(catchup.Speed);
+                        var pp = audioPlayer.PlaybackParams;
+                        pp.SetSpeed(catchup.Speed);
+                        audioPlayer.PlaybackParams = pp;
                     }
-                    else if (1 + Random.Shared.NextDouble() < catchup.Speed)
+                    else if (Random.Shared.NextDouble() < catchup.Speed - 1.0)
                     {
                         shouldDrop = true;
                     }
@@ -304,7 +309,9 @@ namespace Spixi
                 case PlaybackCatchupType.Normal:
                     if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
                     {
-                        audioPlayer.PlaybackParams.SetSpeed(1.0f);
+                        var pp = audioPlayer.PlaybackParams;
+                        pp.SetSpeed(1.0f);
+                        audioPlayer.PlaybackParams = pp;
                     }
                     break;
             }
