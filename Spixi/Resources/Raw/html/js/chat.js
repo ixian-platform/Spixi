@@ -900,7 +900,7 @@ function updateFile(id, progress, complete) {
     }
 }
 
-function updateMessage(id, message, sent, confirmed, read, paid) {
+function updateMessage(id, message, sent, confirmed, read, paid, errorSending) {
     message = message.replace(/\n/g, "<br>");
 
     var msgEl = document.getElementById("msg_" + id);
@@ -923,6 +923,10 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
 
         if (paid == "True") {
             additionalClasses += " paid";
+        }
+
+        if (errorSending == "True") {
+            additionalClasses += " error-sending";
         }
 
         if (msgEl.className.indexOf("spixi-payment-request") > -1) {

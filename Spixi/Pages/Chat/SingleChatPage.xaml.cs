@@ -1470,7 +1470,7 @@ namespace SPIXI
             {
                 paid = true;
             }
-            Utils.sendUiCommand(this, "updateMessage", Crypto.hashToString(message.id), message.message, message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
+            Utils.sendUiCommand(this, "updateMessage", Crypto.hashToString(message.id), message.message, message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString(), message.errorSending.ToString());
         }
 
         public void updateFile(string uid, string progress, bool complete)

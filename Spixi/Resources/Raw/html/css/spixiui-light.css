@@ -2468,6 +2468,10 @@ img.emoji {
     display: inherit !important;
 }
 
+.spixi-bubble.error-sending {
+    border: red;
+}
+
 .spixi-bubble .title {
     background-color: var(--colors-surface-01);
     color: var(--colors-text-01);
