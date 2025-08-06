@@ -220,7 +220,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BouncyCastle.Cryptography" Version="2.6.1" />
+		<PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
 		<PackageReference Include="Concentus" Version="2.2.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />

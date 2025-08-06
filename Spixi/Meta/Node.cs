@@ -177,7 +177,6 @@ namespace SPIXI.Meta
 
             string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
             SPushService.setTag(tag);
-            SPushService.clearNotifications();
 
             if (Config.apiBinds.Count != 0)
             {
