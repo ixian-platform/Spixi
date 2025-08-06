@@ -4842,12 +4842,15 @@ img.emoji {
 }
 
 .spixi-contact-details-header-user {
+    width: 100%;
+    max-width: 556px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 16px;
     position: relative;
     color: var(--colors-text-01);
+    overflow: hidden;
 }
 
 .spixi-contact-details-username {
@@ -4862,10 +4865,18 @@ img.emoji {
     }
 }
 
+.spixi-contact-details-username #nickname{
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .spixi-contact-details-header-actions {
     display: flex;
     gap: 68px;
     width: 100%;
+    max-width: 556px;
     flex-wrap: wrap;
     justify-content: center;
     color: var(--colors-text-01);
