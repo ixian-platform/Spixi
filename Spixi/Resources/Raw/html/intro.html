@@ -6,7 +6,8 @@
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
     <title>Onboarding</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+        <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+<!--    <link rel="stylesheet" type="text/css" href="css/spixiui-dark.css">-->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
@@ -21,7 +22,7 @@
                 Terms of Use
             </div>
 
-            <div class="spixi-modal-details scrollable-div" style="text-align: left;">
+            <div class="spixi-modal-details scrollable-div" style="text-align: left;padding: 0 16px">
                 <h4>1. Introduction</h4>
                 <p>Spixi is a decentralised chat app powered by the Ixian Platform (the "Platform"), which utilises the
                     Ixian S2 network and Ixian DLT (blockchain component) to facilitate peer-to-peer communication, data
@@ -155,24 +156,51 @@
         <img src="img/spixi-logo-full.svg" alt="spixi logo full"/>
         <div class="language-choose-container">
             <span class="label-lg s-text-01">*SL{onboarding-choose-language}</span>
-            <div class="select">
-                <select class="label-sm" id="languageSelect">
-                    <option value="" disabled selected>Select language</option>
-                    <option value="en-us" class="label-sm s-text-01">English</option>
-                    <option value="cn-cn" class="label-sm s-text-01">中文</option>
-                    <option value="es-co" class="label-sm s-text-01">Español</option>
-                    <option value="de-de" class="label-sm s-text-01">Deutsch</option>
-                    <option value="id-id" class="label-sm s-text-01">Bahasa Indonesia</option>
-                    <option value="fr-fr" class="label-sm s-text-01">Français</option>
-                    <option value="it-it" class="label-sm s-text-01">Italiano</option>
-                    <option value="ja-jp" class="label-sm s-text-01">日本語</option>
-                    <option value="lt-lt" class="label-sm s-text-01">Lietuvių</option>
-                    <option value="pt-br" class="label-sm s-text-01">Português (Brasil)</option>
-                    <option value="ru-ru" class="label-sm s-text-01">Slovenščina</option>
-                    <option value="sl-si" class="label-sm s-text-01">Srpski</option>
-                </select>
+            <div class="custom-select-language" id="customSelect">
+                <div class="selected-option label-sm" id="selectedOption">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="flag" class="flag">
+                    <span>English</span>
+                    <i class="fa fa-caret-down arrow" id="arrow"></i>
+                </div>
+                <div class="options label-sm" id="lang-options">
+                    <div data-value="en-us" data-flag="gb"><img src="https://flagcdn.com/w40/gb.png" class="flag">
+                        English
+                    </div>
+                    <div data-value="cn-cn" data-flag="cn"><img src="https://flagcdn.com/w40/cn.png" class="flag"> 中文
+                    </div>
+                    <div data-value="es-co" data-flag="co"><img src="https://flagcdn.com/w40/co.png" class="flag">
+                        Español
+                    </div>
+                    <div data-value="de-de" data-flag="de"><img src="https://flagcdn.com/w40/de.png" class="flag">
+                        Deutsch
+                    </div>
+                    <div data-value="id-id" data-flag="id"><img src="https://flagcdn.com/w40/id.png" class="flag">
+                        Bahasa Indonesia
+                    </div>
+                    <div data-value="fr-fr" data-flag="fr"><img src="https://flagcdn.com/w40/fr.png" class="flag">
+                        Français
+                    </div>
+                    <div data-value="it-it" data-flag="it"><img src="https://flagcdn.com/w40/it.png" class="flag">
+                        Italiano
+                    </div>
+                    <div data-value="ja-jp" data-flag="jp"><img src="https://flagcdn.com/w40/jp.png" class="flag"> 日本語
+                    </div>
+                    <div data-value="lt-lt" data-flag="lt"><img src="https://flagcdn.com/w40/lt.png" class="flag">
+                        Lietuvių
+                    </div>
+                    <div data-value="pt-br" data-flag="br"><img src="https://flagcdn.com/w40/br.png" class="flag">
+                        Português (Brasil)
+                    </div>
+                    <div data-value="ru-ru" data-flag="ru"><img src="https://flagcdn.com/w40/ru.png" class="flag">
+                        Slovenščina
+                    </div>
+                    <div data-value="sl-si" data-flag="si"><img src="https://flagcdn.com/w40/si.png" class="flag">
+                        Srpski
+                    </div>
+                </div>
             </div>
-            <div class="spixi-flat-button label-sm" style="width: 100%" onclick="onGetStarted()">*SL{onboarding-get-started} <i
+            <div class="spixi-flat-button label-sm" style="width: 100%" onclick="onGetStarted()">
+                *SL{onboarding-get-started} <i
                     class="fas fa-arrow-right"></i>
             </div>
         </div>
@@ -181,7 +209,8 @@
 
     <section class="onboarding-section" id="onboardingSection" style="display: none">
         <div class="onboarding-stepper-header label-lg s-text-link-02">
-            <span class="back" id="stepperBack" onclick="prevStep()" style="display: none">*SL{onboarding-step-back}</span>
+            <span class="back" id="stepperBack" onclick="prevStep()"
+                  style="display: none">*SL{onboarding-step-back}</span>
             <span class="skip" id="stepperSkip" onclick="location.href='ixian:create'">*SL{onboarding-step-skip}</span>
         </div>
         <div id="step1" class="single-step active">
@@ -206,9 +235,11 @@
         </div>
         <div class="onboarding-stepper-footer">
             <div id="step-nav"></div>
-            <div id="stepperNext" onclick="nextStep()" class="spixi-flat-button label-sm" style="width: 100%">*SL{onboarding-step-next} <i
+            <div id="stepperNext" onclick="nextStep()" class="spixi-flat-button label-sm" style="width: 100%">
+                *SL{onboarding-step-next} <i
                     class="fa fa-arrow-right"></i></div>
-            <div onclick="location.href='ixian:create'" id="stepperGetStarted" class="spixi-flat-button label-sm" style="width: 100%;display: none">*SL{onboarding-get-started}
+            <div onclick="location.href='ixian:create'" id="stepperGetStarted" class="spixi-flat-button label-sm"
+                 style="width: 100%;display: none">*SL{onboarding-get-started}
                 <i class="fa fa-arrow-right"></i></div>
         </div>
     </section>
@@ -219,6 +250,41 @@
     const steps = Array.from(document.querySelectorAll('.single-step'));
     let currentStep = 1;
     const navContainer = document.getElementById('step-nav');
+    let selectedLang = 'en-us'; // Default language
+    let isSelectOpen = false;
+
+    const selectedOption = document.getElementById('selectedOption');
+    const options = document.getElementById('lang-options');
+    const arrow = document.getElementById('arrow');
+
+    selectedOption.addEventListener('click', () => {
+        isSelectOpen = !isSelectOpen;
+        options.style.display = isSelectOpen ? 'block' : 'none';
+        arrow.classList.toggle('open', isSelectOpen);
+        selectedOption.classList.toggle('open', isSelectOpen);
+    });
+
+
+        options.querySelectorAll('div').forEach(option => {
+            option.addEventListener('click', () => {
+                const value = option.getAttribute('data-value');
+                const flagCode = option.getAttribute('data-flag');
+                const label = option.textContent.trim();
+
+                selectedLang = value;
+                selectedOption.innerHTML = `
+        <img src="https://flagcdn.com/w40/${flagCode}.png" class="flag" alt="flag" />
+        <span>${label}</span>
+        <i class="fa fa-caret-down arrow ${isSelectOpen ? 'open' : ''}" id="arrow"></i>
+      `;
+
+                arrow.classList.toggle('open', false);
+                selectedOption.classList.toggle('open', false);
+
+                isSelectOpen = false;
+                options.style.display = 'none';
+            });
+        });
 
     steps.forEach((_, index) => {
         const dot = document.createElement('div');
@@ -283,7 +349,8 @@
     }
 
     function showTerms() {
-        document.getElementById("termsModal").style.display = "block";
+        document.getElementById("termsModal").style.display = "flex";
+        document.getElementById("termsModal").style.justifyContent = "center";
     }
 
     document.getElementById("terms_accept").onclick = function () {
@@ -292,24 +359,21 @@
     }
 
     function onGetStarted() {
-        const selectEl = document.getElementById('languageSelect');
-        const selectedValue = selectEl.value;
-
-        if (!selectedValue) {
+        if (!selectedLang) {
             return;
         }
 
-        changeLanguage(selectedValue)
+        changeLanguage(selectedLang)
 
     }
 
-    function showOnboardingSection(){
+    function showOnboardingSection() {
         document.getElementById("languageSection").style.display = "none";
         document.getElementById("onboardingSection").style.display = "flex";
     }
 
     function initialAppearance(id) {
-        if (id === "1"){
+        if (id === "1") {
             document.getElementById("darkTheme").style.display = "block";
             document.getElementById("lightTheme").style.display = "none";
         } else {
@@ -318,15 +382,15 @@
         }
     }
 
-    function toggleTheme(node){
-        if(node && node.id === "darkTheme"){
+    function toggleTheme(node) {
+        if (node && node.id === "darkTheme") {
             location.href = "ixian:appearance:" + 2;
         } else if (node && node.id === "lightTheme") {
             location.href = "ixian:appearance:" + 1;
         }
     }
 
-    function reloadPage(){
+    function reloadPage() {
         location.href = "ixian:introload";
     }
 </script>

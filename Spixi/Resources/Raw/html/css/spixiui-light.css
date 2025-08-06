@@ -4285,7 +4285,7 @@ img.emoji {
         color: var(--colors-icon-on-disabled);
     }
 
-    .modal-remove-icon{
+    .modal-remove-icon {
         color: var(--colors-icon-error);
     }
 }
@@ -4989,6 +4989,7 @@ img.emoji {
     i {
         cursor: pointer;
         display: none;
+        color: var(--colors-icon-01);
     }
 }
 
@@ -5009,33 +5010,90 @@ img.emoji {
 
 
 /*CUSTOM SELECT STYLES*/
-
-select {
-    box-sizing: border-box;
+.custom-select-language {
     width: 100%;
-    border-radius: 12px;
-    border: 1px solid var(--colors-outline-inverse);
-    flex: 1;
-    padding: 12px;
-    color: var(--colors-text-01);
-    cursor: pointer;
-    background: #fff;
-    transition: 0.4s;
+    position: relative;
 }
 
-
-.select {
-    position: relative;
+.selected-option {
+    border: 1px solid var(--colors-outline-inverse);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    background-color: transparent;
     display: flex;
-    width: 100%;
-    min-height: 48px;
-    overflow: hidden;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    color: var(--colors-text-01);
+}
+
+.selected-option.open {
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    border-color: var(--colors-outline-action);
+}
+
+.arrow {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+}
+
+.arrow.open {
+    transform: rotate(180deg);
+}
+
+.options {
+    background: var(--colors-surface-01);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid var(--colors-outline-action);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: none;
+    z-index: 100;
+    color: var(--colors-text-01);
+
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
+.options::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.options div {
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    :hover {
+        opacity: 0.9;
+    }
+}
+
+.flag {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--colors-outline-inverse);
 }
 
 .terms-container {
+    background: var(--colors-surface-02) !important;
+    color: var(--colors-text-01) !important;
     width: fit-content !important;
+    max-width: 640px !important;
     margin: 0 24px !important;
     border-radius: 16px !important;
+    gap: 24px;
 }
 
 .onboarding-section {
@@ -5087,6 +5145,7 @@ select {
     text-align: center;
     width: 100%;
     max-width: 480px;
+    color: var(--colors-text-01);
 
     img {
         max-width: 264px;
