@@ -1,9 +1,6 @@
 ﻿using Concentus;
 using Concentus.Enums;
 using IXICore.Meta;
-using Org.BouncyCastle.Crypto.Digests;
-using System;
-using System.Threading;
 
 namespace SPIXI.VoIP
 {
@@ -26,27 +23,24 @@ namespace SPIXI.VoIP
         short[] inputBuffer = null;
         int inputBufferPos = 0;
 
-        byte[] frameOutputBuffer = new byte[1275];
+        private const int maxOpusPacketSize = 1275;
+        byte[] frameOutputBuffer = new byte[maxOpusPacketSize];
 
-        public OpusEncoder(int samples, int bit_rate, int channels, OpusApplication application, IAudioEncoderCallback encoder_callback)
+        public OpusEncoder(int samples, int bitRate, int channels, OpusApplication application, IAudioEncoderCallback encoder_callback)
         {
             this.samples = samples;
-            bitRate = bit_rate;
+            this.bitRate = bitRate;
             this.channels = channels;
             opusApplication = application;
-            frameSize = CodecTools.getPcmFrameByteSize(samples, 16, channels) * 20;
+            frameSize = CodecTools.getPcmFrameSize(samples, 20); // 20ms frame
             encodedDataCallback = encoder_callback;
         }
 
         private short[] bytesToShorts(byte[] data, int offset, int size)
         {
-            short[] output = new short[size / 2];
-            for (int c = 0; c < output.Length; c++)
-            {
-                output[c] = (short)(((int)data[(c * 2) + offset]) << 0);
-                output[c] += (short)(((int)data[(c * 2) + 1 + offset]) << 8);
-            }
-
+            int sampleCount = size / 2;
+            short[] output = new short[sampleCount];
+            Buffer.BlockCopy(data, offset, output, 0, size);
             return output;
         }
 
@@ -59,19 +53,17 @@ namespace SPIXI.VoIP
 
             lock (inputBuffer)
             {
-                if (size > inputBuffer.Length - inputBufferPos)
+                int spaceLeft = inputBuffer.Length - inputBufferPos;
+                if (size > spaceLeft)
                 {
-                    size = 0;
+                    size = spaceLeft;
                 }
-                if (size == 0)
+                if (size > 0)
                 {
-                    return;
+                    Array.Copy(data, offset, inputBuffer, inputBufferPos, size);
+                    inputBufferPos += size;
                 }
-                Array.Copy(data, offset, inputBuffer, inputBufferPos, size);
-                inputBufferPos += size;
             }
-
-            return;
         }
 
         public void encode(byte[] data, int offset, int size)
@@ -81,22 +73,8 @@ namespace SPIXI.VoIP
                 return;
             }
 
-            lock(inputBuffer)
-            {
-                if(size > inputBuffer.Length - inputBufferPos)
-                {
-                    size = 0;
-                }
-                if(size == 0)
-                {
-                    return;
-                }
-                short[] shorts = bytesToShorts(data, offset, size);
-                Array.Copy(shorts, 0, inputBuffer, inputBufferPos, shorts.Length);
-                inputBufferPos += shorts.Length;
-            }
-
-            return;
+            short[] shorts = bytesToShorts(data, offset, size);
+            encode(shorts, 0, shorts.Length);
         }
 
         public void start()
@@ -125,8 +103,12 @@ namespace SPIXI.VoIP
             }
             running = false;
 
+            encodeThread?.Join();
+            encodeThread = null;
+
             lock (inputBuffer)
             {
+                encoder?.Dispose();
                 encoder = null;
 
                 inputBuffer = null;
@@ -155,41 +137,50 @@ namespace SPIXI.VoIP
 
         private void encodeLoop()
         {
-            short[] tmp_buffer = new short[inputBuffer.Length];
+            short[] tmpBuffer = new short[inputBuffer.Length];
+
             while (running)
             {
-                int tmp_buffer_size = 0;
+                int tmpBufferSize = 0;
+
                 lock (inputBuffer)
                 {
-                    int frame_count = (int)Math.Floor((decimal)inputBufferPos / frameSize);
-                    if(frame_count > 0)
+                    int frameCount = inputBufferPos / frameSize;
+                    if (frameCount > 0)
                     {
-                        tmp_buffer_size = frame_count * frameSize;
-                        Array.Copy(inputBuffer, tmp_buffer, tmp_buffer_size);
-                        inputBufferPos = inputBufferPos - tmp_buffer_size;
-                        if (inputBufferPos > 0)
+                        tmpBufferSize = frameCount * frameSize;
+                        Array.Copy(inputBuffer, 0, tmpBuffer, 0, tmpBufferSize);
+
+                        // Move remaining samples to front
+                        int remaining = inputBufferPos - tmpBufferSize;
+                        if (remaining > 0)
                         {
-                            Array.Copy(inputBuffer, tmp_buffer_size, inputBuffer, 0, inputBufferPos);
+                            Array.Copy(inputBuffer, tmpBufferSize, inputBuffer, 0, remaining);
                         }
+                        inputBufferPos = remaining;
                     }
                 }
-                int encoded_bytes = 0;
-                while (running && encoded_bytes + frameSize <= tmp_buffer_size)
+
+                int processed = 0;
+                while (running && processed + frameSize <= tmpBufferSize)
                 {
                     try
                     {
-                        byte[] data = encodeFrame(tmp_buffer, encoded_bytes);
-                        encodedDataCallback.onEncodedData(data);
+                        byte[] encoded = encodeFrame(tmpBuffer, processed);
+                        if (encoded.Length > 0)
+                        {
+                            encodedDataCallback?.onEncodedData(encoded);
+                        }
                     }
                     catch (Exception e)
                     {
-                        Logging.error("Exception occured while encoding audio stream: " + e);
+                        Logging.error("Exception during encoding: " + e);
                     }
-                    encoded_bytes += frameSize;
+                    processed += frameSize;
                 }
+
                 Thread.Sleep(5);
             }
-            encodeThread = null;
         }
     }
 }

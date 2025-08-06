@@ -1,6 +1,7 @@
 ﻿using Android.Media;
 using Android.OS;
 using IXICore.Meta;
+using Spixi.VoIP;
 using SPIXI.VoIP;
 
 namespace Spixi
@@ -16,10 +17,13 @@ namespace Spixi
 
         string codec = "opus";
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
-        int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+        int bitsPerSample = SPIXI.Meta.Config.VoIP_bitsPerSample;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
         private static SAudioPlayer _singletonInstance;
+
+        private PlaybackCatchupController playbackCatchupController = new PlaybackCatchupController();
+        private long totalFramesWritten = 0;
         public static SAudioPlayer Instance()
         {
             if (_singletonInstance == null)
@@ -55,7 +59,7 @@ namespace Spixi
 
             bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, encoding);
             Logging.info("Min. buffer size " + bufferSize);
-            int new_buffer_size = CodecTools.getPcmFrameByteSize(sampleRate, bitRate, channels) * 100;
+            int new_buffer_size = CodecTools.getPcmFrameByteSize(sampleRate, bitsPerSample, channels) * 100;
             if (bufferSize < new_buffer_size)
             {
                 bufferSize = (int)(Math.Ceiling((decimal)new_buffer_size / bufferSize) * bufferSize);
@@ -162,6 +166,8 @@ namespace Spixi
 
             running = false;
 
+            totalFramesWritten = 0;
+
             MainActivity.Instance.VolumeControlStream = Android.Media.Stream.NotificationDefault;
 
             if (audioPlayer != null)
@@ -220,27 +226,95 @@ namespace Spixi
 
         public void setVolume(float volume)
         {
-            // do nothing
-        }
-
-        public void onDecodedData(short[] data)
-        {
-            if (!running)
+            if (audioPlayer == null)
             {
                 return;
             }
 
-            audioPlayer.Write(data, 0, data.Length);
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+            float clamped = Math.Clamp(volume, 0f, 1f);
+
+            try
             {
-                if (audioPlayer.BufferSizeInFrames > 5000)
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
                 {
-                    audioPlayer.PlaybackParams.SetSpeed(1.25f);
+                    audioPlayer.SetVolume(clamped);
                 }
-                else if (audioPlayer.BufferSizeInFrames < 2500)
+                else
                 {
-                    audioPlayer.PlaybackParams.SetSpeed(1.00f);
+                    // Legacy support: balance both channels equally
+                    audioPlayer.SetStereoVolume(clamped, clamped);
                 }
+            }
+            catch (Exception e)
+            {
+                Logging.error("Failed to set volume: " + e.Message);
+            }
+        }
+
+        public void onDecodedData(short[] data)
+        {
+            if (!running || audioPlayer == null)
+            {
+                return;
+            }
+
+            // Get how many frames have been played back
+            long framesPlayed = 0;
+            try
+            {
+                framesPlayed = audioPlayer.PlaybackHeadPosition;
+            }
+            catch
+            {
+                // fallback, assume minimal playback progress
+                framesPlayed = totalFramesWritten;
+            }
+
+            // Calculate queued audio in seconds
+            long queuedFrames = Math.Max(0, totalFramesWritten - framesPlayed);
+            double queuedSeconds = (double)queuedFrames / sampleRate;
+
+            var catchup = playbackCatchupController.Update(queuedSeconds);
+            bool shouldDrop = false;
+            switch (catchup.Type)
+            {
+                case PlaybackCatchupType.Drop:
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                    {
+                        audioPlayer.PlaybackParams.SetSpeed(catchup.Speed);
+                    }
+                    if (Random.Shared.NextDouble() < 0.10)
+                    {
+                        Logging.warn($"VoIP Dropping frame, avg {playbackCatchupController.GetAverageLatency() * 1000:F0}ms");
+                        shouldDrop = true;
+                    }
+                    break;
+
+                case PlaybackCatchupType.SpeedUp:
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                    {
+                        audioPlayer.PlaybackParams.SetSpeed(catchup.Speed);
+                    }
+                    else if (1 + Random.Shared.NextDouble() < catchup.Speed)
+                    {
+                        Logging.warn($"VoIP Dropping frame, avg {playbackCatchupController.GetAverageLatency() * 1000:F0}ms");
+                        shouldDrop = true;
+                    }
+                    break;
+
+                case PlaybackCatchupType.Normal:
+                    if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                    {
+                        audioPlayer.PlaybackParams.SetSpeed(1.0f);
+                    }
+                    break;
+            }
+
+            if (!shouldDrop)
+            {
+                audioPlayer.Write(data, 0, data.Length);
+                // Update written frames
+                totalFramesWritten += data.Length / channels;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using AVFoundation;
 using Foundation;
 using IXICore.Meta;
+using Spixi.VoIP;
 using SPIXI.VoIP;
 using System.Runtime.InteropServices;
 
@@ -17,10 +18,14 @@ namespace Spixi
         private bool running = false;
 
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
-        int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+        int bitsPerSample = SPIXI.Meta.Config.VoIP_bitsPerSample;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
         private static SAudioPlayer _singletonInstance;
+
+        private PlaybackCatchupController playbackCatchupController = new PlaybackCatchupController();
+        private AVAudioUnitTimePitch timePitchNode;
+        private long totalFramesWritten = 0;
         public static SAudioPlayer Instance()
         {
             if (_singletonInstance == null)
@@ -57,10 +62,17 @@ namespace Spixi
 
             audioPlayer = new AVAudioPlayerNode();
             setVolume(AVAudioSession.SharedInstance().OutputVolume);
-            inputAudioFormat = new AVAudioFormat(AVAudioCommonFormat.PCMFloat32, sampleRate, (uint)channels, false);
-
+            inputAudioFormat = new AVAudioFormat(AVAudioCommonFormat.PCMFloat32, sampleRate, (uint)channels, true);
+            
+            timePitchNode = new AVAudioUnitTimePitch();
+            timePitchNode.Rate = 1.0f;
+            
             audioEngine.AttachNode(audioPlayer);
-            audioEngine.Connect(audioPlayer, audioEngine.MainMixerNode, inputAudioFormat);
+            audioEngine.AttachNode(timePitchNode);
+
+            audioEngine.Connect(audioPlayer, timePitchNode, inputAudioFormat);
+            audioEngine.Connect(timePitchNode, audioEngine.MainMixerNode, inputAudioFormat);
+
             audioEngine.Prepare();
             if (!audioEngine.StartAndReturnError(out error))
             {
@@ -111,6 +123,7 @@ namespace Spixi
 
             running = false;
 
+            totalFramesWritten = 0;
             AVAudioSession.SharedInstance().SetActive(false);
 
             if (audioPlayer != null)
@@ -187,28 +200,83 @@ namespace Spixi
 
         public void onDecodedData(float[] data)
         {
-            if (!running)
+            if (!running || audioPlayer == null)
             {
                 return;
             }
 
-            if (audioPlayer != null)
+            int frames = data.Length / channels;
+            if (frames <= 0)
             {
-                AVAudioPcmBuffer buffer = new AVAudioPcmBuffer(inputAudioFormat, (uint)data.Length);
-                IntPtr int_data = Marshal.AllocHGlobal(data.Length * sizeof(float));
-                Marshal.Copy(data, 0, int_data, data.Length);
+                return;
+            }
 
-                buffer.AudioBufferList.SetData(0, int_data, data.Length);
-                buffer.FrameLength = (uint)data.Length;
+            var buffer = new AVAudioPcmBuffer(inputAudioFormat, (uint)frames)
+            {
+                FrameLength = (uint)frames
+            };
 
-                audioPlayer.ScheduleBuffer(buffer, () => {
-                    Marshal.FreeHGlobal(int_data);
+            var basePtr = buffer.FloatChannelData;
+            if (basePtr == IntPtr.Zero)
+            {
+                buffer.Dispose();
+                return;
+            }
+
+            IntPtr channelPtr = Marshal.ReadIntPtr(basePtr, 0);
+
+            Marshal.Copy(data, 0, channelPtr, data.Length);
+
+            long playedFrames = 0;
+            var lastRenderTime = audioEngine.OutputNode.LastRenderTime;
+            if (lastRenderTime != null)
+            {
+                var playerTime = audioPlayer.GetPlayerTimeFromNodeTime(lastRenderTime);
+                if (playerTime != null)
+                    playedFrames = playerTime.SampleTime;
+            }
+
+            long queuedFrames = Math.Max(totalFramesWritten - playedFrames, 0);
+            double queuedSeconds = (double)queuedFrames / sampleRate;
+
+            var catchup = playbackCatchupController.Update(queuedSeconds);
+            bool shouldDrop = false;
+
+            switch (catchup.Type)
+            {
+                case PlaybackCatchupType.Drop:
+                    timePitchNode.Rate = catchup.Speed;
+                    if (Random.Shared.NextDouble() < 0.10)
+                    {
+                        Logging.warn($"VoIP Dropping frame, avg {playbackCatchupController.GetAverageLatency() * 1000:F0}ms");
+                        shouldDrop = true;
+                    }
+                    break;
+
+                case PlaybackCatchupType.SpeedUp:
+                    timePitchNode.Rate = catchup.Speed;
+                    break;
+
+                case PlaybackCatchupType.Normal:
+                    timePitchNode.Rate = 1.0f;
+                    break;
+            }
+
+            if (!shouldDrop)
+            {
+                audioPlayer.ScheduleBuffer(buffer, () =>
+                {
                     buffer.Dispose();
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
                 });
+
+                totalFramesWritten += buffer.FrameLength;
+            }
+            else
+            {
+                buffer.Dispose();
             }
         }
+
 
         public void onDecodedData(short[] data)
         {

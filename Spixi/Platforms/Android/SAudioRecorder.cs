@@ -4,11 +4,6 @@ using Android.Media.Audiofx;
 using Android.OS;
 using IXICore.Meta;
 using SPIXI.VoIP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Spixi
 {
@@ -53,7 +48,7 @@ namespace Spixi
         Thread senderThread = null;
 
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
-        int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+        int bitsPerSample = SPIXI.Meta.Config.VoIP_bitsPerSample;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
         private static SAudioRecorder _singletonInstance;

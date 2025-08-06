@@ -17,7 +17,7 @@ namespace Spixi
         private bool running = false;
 
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
-        int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+        int bitsPerSample = SPIXI.Meta.Config.VoIP_bitsPerSample;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
         private static SAudioPlayer _singletonInstance;

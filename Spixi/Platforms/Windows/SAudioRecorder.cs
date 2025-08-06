@@ -1,12 +1,6 @@
 ﻿using IXICore.Meta;
-using Microsoft.UI.Xaml.Controls;
 using NAudio.Wave;
 using SPIXI.VoIP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Spixi
 {
@@ -24,7 +18,6 @@ namespace Spixi
         Thread recordThread = null;
 
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
-        int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
         private static SAudioRecorder _singletonInstance;
@@ -77,7 +70,7 @@ namespace Spixi
             }
 
             audioRecorder = new WaveIn(WaveCallbackInfo.FunctionCallback());
-            audioRecorder.WaveFormat = new WaveFormat(sampleRate, bitRate, channels);
+            audioRecorder.WaveFormat = new WaveFormat(sampleRate, 16, channels);
             audioRecorder.DataAvailable += onDataAvailable;
 
             audioRecorder.BufferMilliseconds = 40;
@@ -222,7 +215,7 @@ namespace Spixi
                     total_size += buf.Length;
                 }
 
-                if (total_size >= 300)
+                if (total_size >= 150)
                 {
                     data_to_send = new byte[total_size];
                     int data_written = 0;

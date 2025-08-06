@@ -21,7 +21,7 @@ namespace Spixi
         Thread recordThread = null;
 
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
-        int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+        int bitsPerSample = SPIXI.Meta.Config.VoIP_bitsPerSample;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
         private static SAudioRecorder _singletonInstance;
@@ -66,7 +66,7 @@ namespace Spixi
             AVAudioSession.SharedInstance().SetCategory(AVAudioSessionCategory.PlayAndRecord, AVAudioSessionCategoryOptions.InterruptSpokenAudioAndMixWithOthers);
             AVAudioSession.SharedInstance().SetActive(true);
             AVAudioFormat recording_format = new AVAudioFormat(AVAudioCommonFormat.PCMInt16, sampleRate, (uint)channels, false);
-            uint buffer_size = (uint)CodecTools.getPcmFrameByteSize(sampleRate, bitRate, channels) * 1000;
+            uint buffer_size = (uint)CodecTools.getPcmFrameByteSize(sampleRate, bitsPerSample, channels) * 1000;
             audioRecorder.InputNode.InstallTapOnBus(0, buffer_size, recording_format, onDataAvailable);
             audioRecorder.Prepare();
             if (!audioRecorder.StartAndReturnError(out error))

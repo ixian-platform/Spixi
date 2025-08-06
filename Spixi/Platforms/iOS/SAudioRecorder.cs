@@ -22,7 +22,7 @@ namespace Spixi
         Thread recordThread = null;
 
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
-        int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+        int bitsPerSample = SPIXI.Meta.Config.VoIP_bitsPerSample;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
         AVAudioFormat desiredFormat;
@@ -238,7 +238,7 @@ namespace Spixi
                     total_size += buf.Length;
                 }
 
-                if (total_size >= 300)
+                if (total_size >= 150)
                 {
                     data_to_send = new byte[total_size];
                     int data_written = 0;
