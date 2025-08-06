@@ -6,7 +6,6 @@
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
     <title>Create Account</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <!--    TODO: change later-->
     <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 
@@ -16,8 +15,8 @@
 <body onload="onload()">
 <div id="wrap" class="onboarding-container">
     <section class="create-account-start-section" id="createAccountStart">
+        <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full" class="intro-new-start-logo"/>
         <div class="details">
-            <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full"/>
             <span class="heading-xs">*SL{create-account-title}</span>
             <div class="body-sm">*SL{create-account-description}</div>
             <img src="" data-theme-src="img/create-account/create-start.svg" alt="create-start"/>
@@ -38,11 +37,12 @@
         </div>
         <div class="create-account-stepper-header">
             <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full"/>
-            <div class="step-number label-sm">*SL{create-account-step} <span id="stepNumberSpan">1</span>
-                *SL{create-account-step-of} <span
-                        id="stepTotalSpan">2</span></div>
+
         </div>
         <div id="step1" class="single-step create-step active">
+            <div class="step-number label-sm">*SL{create-account-step} <span class="stepNumberSpan">1</span>
+                *SL{create-account-step-of} <span
+                        class="stepTotalSpan">2</span></div>
             <span class="label-lg">*SL{create-account-step-1-title}</span>
             <div class="body-md">*SL{create-account-step-1-subtitle}</div>
             <div class="upload-img-container" onclick="location='ixian:avatar'">
@@ -54,6 +54,9 @@
                    placeholder="*SL{create-account-step-1-nickname-placeholder}"/>
         </div>
         <div id="step2" class="single-step create-step">
+            <div class="step-number label-sm">*SL{create-account-step} <span class="stepNumberSpan">1</span>
+                *SL{create-account-step-of} <span
+                        class="stepTotalSpan">2</span></div>
             <span class="label-lg">*SL{create-account-step-2-title}</span>
             <div class="body-md">*SL{create-account-step-2-subtitle}</div>
             <div class="password-inputs">
@@ -118,13 +121,13 @@
         document.getElementById("version").innerHTML = version;
     }
 
-    document.getElementById("stepTotalSpan").innerText = steps.length.toString();
-    document.getElementById("stepNumberSpan").innerText = currentStep.toString();
+    document.getElementsByName("stepTotalSpan").innerText = steps.length.toString();
+    document.getElementsByName("stepNumberSpan").innerText = currentStep.toString();
 
     function toggleStep() {
         steps.forEach(el => el.classList.remove('active'));
         document.getElementById(`step${currentStep}`).classList.add('active');
-        document.getElementById("stepNumberSpan").innerText = currentStep.toString();
+        document.getElementsByName("stepNumberSpan").innerText = currentStep.toString();
         if (currentStep === steps.length) {
             document.getElementById("stepperNext").style.display = "none";
             document.getElementById("finishSetup").style.display = "flex";

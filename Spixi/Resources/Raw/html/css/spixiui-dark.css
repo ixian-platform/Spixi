@@ -5144,6 +5144,10 @@ img.emoji {
     gap: 24px;
 }
 
+.onboarding-section.restore{
+    gap: 64px;
+}
+
 .onboarding-stepper-footer {
     display: flex;
     align-items: center;
@@ -5221,13 +5225,12 @@ img.emoji {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     height: 100%;
     margin: 0 auto;
-    gap: 8px;
+    gap: 64px;
 
     .details {
-        margin-top: 64px;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -5238,9 +5241,12 @@ img.emoji {
         img {
             margin-top: 8px;
             max-width: 264px;
-            margin-bottom: calc(64px - 8px)
         }
     }
+}
+
+.intro-new-start-logo{
+    padding-top: 32px;
 }
 
 .create-account-start-actions {
@@ -5250,7 +5256,6 @@ img.emoji {
     width: 100%;
     max-width: 342px;
     align-items: center;
-    padding-bottom: 64px;
 
     div:first-child {
         margin-bottom: 8px;
@@ -5258,20 +5263,16 @@ img.emoji {
 }
 
 .create-account-stepper-header {
-    height: 100%;
     display: flex;
-    flex-direction: column;
     gap: 24px;
-    justify-content: space-between;
-    padding-top: 54px;
     align-items: center;
+}
 
-    .step-number {
-        background: var(--colors-surface-05);
-        padding: 4px 12px;
-        border-radius: 8px;
-        color: var(--colors-text-01);
-    }
+.step-number {
+    background: var(--colors-surface-05);
+    padding: 4px 12px;
+    border-radius: 8px;
+    color: var(--colors-text-01);
 }
 
 .upload-img-container {
@@ -5295,7 +5296,6 @@ img.emoji {
 .create-step {
     max-width: 350px;
     gap: 8px;
-    margin-bottom: 120px;
 }
 
 .create-account-username {
