@@ -4410,7 +4410,7 @@ img.emoji {
 }
 
 .loading-modal-container {
-    background: var(--colors-surface-01);
+    background: transparent;
     width: 100%;
     padding: 16px;
     display: flex;
@@ -5194,6 +5194,8 @@ img.emoji {
         flex-direction: column;
         gap: 8px;
         align-items: center;
+        color: var(--colors-text-01);
+        text-align: center;
 
         img {
             margin-top: 8px;
@@ -5248,12 +5250,14 @@ img.emoji {
 
     img {
         max-width: 80px;
+        border: 2px solid var(--colors-outline-action);
     }
 }
 
 .create-step {
     max-width: 350px;
     gap: 8px;
+    margin-bottom: 120px;
 }
 
 .create-account-username {
@@ -5263,6 +5267,8 @@ img.emoji {
     max-height: 44px;
     padding: 12px;
     outline: none;
+    background: transparent;
+    color: var(--colors-text-01);
 }
 
 .create-account-username:focus-visible,
@@ -5355,6 +5361,7 @@ input.create-account-username[type="password"] {
     align-items: center;
     text-align: center;
     margin-bottom: 40px;
+    color: var(--colors-text-01);
 }
 
 .join-footer {
