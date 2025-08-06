@@ -151,7 +151,7 @@
             <i id="darkTheme" class="fa fa-moon" onclick="toggleTheme(this)"></i>
             <i id="lightTheme" class="fa fa-sun" onclick="toggleTheme(this)"></i>
         </div>
-        <img src="img/spixi-logo-full.svg" alt="spixi logo full"/>
+        <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full" />
         <div class="language-choose-container">
             <span class="label-lg s-text-01">*SL{onboarding-choose-language}</span>
             <div class="custom-select-language" id="customSelect">
@@ -212,22 +212,22 @@
             <span class="skip" id="stepperSkip" onclick="location.href='ixian:create'">*SL{onboarding-step-skip}</span>
         </div>
         <div id="step1" class="single-step active">
-            <img src="img/onboarding/step1.svg" alt="step-1"/>
+            <img src="" data-theme-src="img/onboarding/step1.svg" alt="step-1"/>
             <span class="heading-xs">*SL{onboarding-step-1-title}</span>
             <div class="body-sm">*SL{onboarding-step-1-subtitle}</div>
         </div>
         <div id="step2" class="single-step">
-            <img src="img/onboarding/step2.svg" alt="step-2"/>
+            <img src="" data-theme-src="img/onboarding/step2.svg" alt="step-2"/>
             <span class="heading-xs">*SL{onboarding-step-2-title}</span>
             <div class="body-sm">*SL{onboarding-step-2-subtitle}</div>
         </div>
         <div id="step3" class="single-step">
-            <img src="img/onboarding/step3.svg" alt="step-3"/>
+            <img src="" data-theme-src="img/onboarding/step3.svg" alt="step-3"/>
             <span class="heading-xs">*SL{onboarding-step-3-title}</span>
             <div class="body-sm">*SL{onboarding-step-3-subtitle}</div>
         </div>
         <div id="step4" class="single-step">
-            <img src="img/onboarding/step4.svg" alt="step-4"/>
+            <img src="" data-theme-src="img/onboarding/step4.svg" alt="step-4"/>
             <span class="heading-xs">*SL{onboarding-step-4-title}</span>
             <div class="body-sm">*SL{onboarding-step-4-subtitle}</div>
         </div>
@@ -245,6 +245,9 @@
 
 <script src="js/spixi.js"></script>
 <script type="text/javascript">
+    // Function to apply the theme on data-theme-src images
+    applyThemeOnDataThemeSrcImages();
+
     const steps = Array.from(document.querySelectorAll('.single-step'));
     let currentStep = 1;
     const navContainer = document.getElementById('step-nav');
@@ -374,22 +377,22 @@
         if (id === "1") {
             document.getElementById("darkTheme").style.display = "block";
             document.getElementById("lightTheme").style.display = "none";
+            localStorage.setItem('theme', 'light');
         } else {
             document.getElementById("darkTheme").style.display = "none";
             document.getElementById("lightTheme").style.display = "block";
+            localStorage.setItem('theme', 'dark');
         }
     }
 
     function toggleTheme(node) {
         if (node && node.id === "darkTheme") {
             location.href = "ixian:appearance:" + 2;
+            localStorage.setItem('theme', 'dark');
         } else if (node && node.id === "lightTheme") {
             location.href = "ixian:appearance:" + 1;
+            localStorage.setItem('theme', 'light');
         }
-    }
-
-    function reloadPage() {
-        location.href = "ixian:introload";
     }
 </script>
 </body>

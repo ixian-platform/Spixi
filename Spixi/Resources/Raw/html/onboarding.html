@@ -15,7 +15,7 @@
 <body class="body">
 <div id="wrap" class="onboarding-container">
     <section class="join-community-section">
-        <img src="img/join-community-img.svg" alt="community"/>
+        <img src="" data-theme-src="img/join-community-img.svg" alt="community"/>
         <div class="join-text">
             <span class="heading-xs">*SL{onboarding-bot-title}</span>
             <span class="body-sm">*SL{onboarding-bot-subtitle}</span>
@@ -33,6 +33,8 @@
 
 <script src="js/spixi.js"></script>
 <script type="text/javascript">
+    // Function to apply the theme on data-theme-src images
+    applyThemeOnDataThemeSrcImages();
 
     function onJoinCommunityClick() {
         location.href = "ixian:joinbot";

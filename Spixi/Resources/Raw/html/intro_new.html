@@ -17,10 +17,10 @@
 <div id="wrap" class="onboarding-container">
     <section class="create-account-start-section" id="createAccountStart">
         <div class="details">
-            <img src="img/spixi-logo-full.svg" alt="spixi logo full"/>
+            <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full"/>
             <span class="heading-xs">*SL{create-account-title}</span>
             <div class="body-sm">*SL{create-account-description}</div>
-            <img src="img/create-account/create-start.svg" alt="create-start"/>
+            <img src="" data-theme-src="img/create-account/create-start.svg" alt="create-start"/>
         </div>
         <div class="create-account-start-actions">
             <div class="spixi-flat-button label-sm" style="width: 100%" onclick="onNewAccountClick()">
@@ -37,7 +37,7 @@
             <span class="back" id="stepperBack" onclick="prevStep()">*SL{onboarding-step-back}</span>
         </div>
         <div class="create-account-stepper-header">
-            <img src="img/spixi-logo-full.svg" alt="spixi logo full"/>
+            <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full"/>
             <div class="step-number label-sm">*SL{create-account-step} <span id="stepNumberSpan">1</span>
                 *SL{create-account-step-of} <span
                         id="stepTotalSpan">2</span></div>
@@ -90,7 +90,7 @@
 
     <section class="create-account-start-section" id="creatingAccount" style="display: none">
         <div class="loading-modal-container">
-            <img src="img/spixi-logo-full.svg" alt="spixi logo full" style="margin-bottom: 64px;"/>
+            <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full" style="margin-bottom: 64px;"/>
             <span class="spixi-loader loader-create-acc"></span>
             <div class="new-modal-texts">
                 <span class="label-lg">*SL{create-account-creating}</span>
@@ -102,6 +102,9 @@
 
 <script src="js/spixi.js"></script>
 <script type="text/javascript">
+    // Function to apply the theme on data-theme-src images
+    applyThemeOnDataThemeSrcImages();
+
     const steps = Array.from(document.querySelectorAll('.single-step'));
     let currentStep = 1;
     let nickname = "";
