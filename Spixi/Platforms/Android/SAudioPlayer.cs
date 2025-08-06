@@ -297,7 +297,6 @@ namespace Spixi
                     }
                     else if (1 + Random.Shared.NextDouble() < catchup.Speed)
                     {
-                        Logging.warn($"VoIP Dropping frame, avg {playbackCatchupController.GetAverageLatency() * 1000:F0}ms");
                         shouldDrop = true;
                     }
                     break;
