@@ -545,51 +545,48 @@ namespace SPIXI
                 return;
             }
 
-            Task.Run(async () =>
+            if (friend.bot)
             {
-                if (friend.bot)
+                if (friend.metaData.botInfo.cost > 0)
                 {
-                    if (friend.metaData.botInfo.cost > 0)
+                    IxiNumber message_cost = friend.getMessagePrice(str.Length);
+                    if (message_cost > 0)
                     {
-                        IxiNumber message_cost = friend.getMessagePrice(str.Length);
-                        if (message_cost > 0)
+                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.forceTransactionPrice, friend.walletAddress, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
+                        IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
+                        if (tx.amount + tx.fee > balance)
                         {
-                            Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.forceTransactionPrice, friend.walletAddress, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
-                            IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
-                            if (tx.amount + tx.fee > balance)
-                            {
-                                string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), tx.amount + tx.fee, balance);
-                                await displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
-                                return;
-                            }
+                            string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), tx.amount + tx.fee, balance);
+                            displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
+                            return;
                         }
                     }
                 }
+            }
 
-                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str), selectedChannel);
-                byte[] spixi_msg_bytes = spixi_message.getBytes();
-                
-                // store the message and display it
-                FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str), selectedChannel);
+            byte[] spixi_msg_bytes = spixi_message.getBytes();
 
-                // Finally, clear the input field
-                Utils.sendUiCommand(this, "clearInput");
+            // store the message and display it
+            FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
 
-                StreamMessage message = new StreamMessage(friend.protocolVersion);
-                message.type = StreamMessageCode.data;
-                message.recipient = friend.walletAddress;
-                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                message.data = spixi_msg_bytes;
-                message.id = friend_message.id;
+            // Finally, clear the input field
+            Utils.sendUiCommand(this, "clearInput");
 
-                if (friend.bot)
-                {
-                    message.encryptionType = StreamMessageEncryptionCode.none;
-                    message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
-                }
+            StreamMessage message = new StreamMessage(friend.protocolVersion);
+            message.type = StreamMessageCode.data;
+            message.recipient = friend.walletAddress;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.data = spixi_msg_bytes;
+            message.id = friend_message.id;
 
-                StreamProcessor.sendMessage(friend, message);
-            });
+            if (friend.bot)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.none;
+                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+            }
+
+            StreamProcessor.sendMessage(friend, message);
         }
 
         public async Task onSendFile()
