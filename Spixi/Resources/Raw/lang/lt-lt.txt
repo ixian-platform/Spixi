@@ -211,6 +211,12 @@ contact-details-removedcontact-text = Kontaktas ištrintas.
 contact-details-deletehistory = Ištrinti istoriją
 contact-details-deletedhistory-title = Ištrinta
 contact-details-deletedhistory-text = Žinučių istorija ištrinta.
+contact‑details‑delete‑history‑modal‑title = Išvalyti pokalbių istoriją?
+contact‑details‑delete‑history‑modal‑subtitle = Visa pokalbio istorija bus pašalinta.
+contact‑details‑delete‑history‑modal‑confirm = Taip, išvalyti pokalbius
+contact‑details‑delete‑contact‑modal‑title = Pašalinti iš kontaktų
+contact‑details‑delete‑contact‑modal‑subtitle = Tai pašalins kontaktą iš jūsų sąrašo. Nebelauksite ir siųsti žinučių, kol vėl jo nepridėsite.
+contact‑details‑delete‑contact‑modal‑confirm = Taip, pašalinti kontaktą
 
 ; New Contact Screen
 contact-new-title = Pridėti naują kontaktą
@@ -305,62 +311,59 @@ index-backup-prompt-create = Taip, sukurti atsarginę kopiją
 index-backup-prompt-not-now = Dabar ne
 index-backup-prompt-note = Rekomenduojama atlikti atsarginę kopiją kiekvieną kartą pridėjus naują kontaktą.
 
-; Intro Screen
-intro-title = Sveiki atvykę į Spixi,
-intro-subtitle = Sveiki atvykę į vieną saugiausių pokalbių programėlių pasaulyje.
-intro-headline = Pradėkime!
-intro-language-text = Kokią kalbą kalbate?
-intro-text = Norėdami tęsti, sukurkite arba atkurkite<br/>Spixi paskyrą.
-intro-create-account = Nauja paskyra
-intro-restore-account = Jau turite paskyrą?
-intro-restore-link = Spustelėkite čia, kad atkurtumėte.
-intro-tip-title = Ar žinojote?
-intro-tip-body = Spixi nenaudoja serverių, visos žinutės yra visiškai šifruotos ir siunčiamos tiesiai jūsų kontaktams.
-intro-continue = Tęsti
-intro-step-1 = 1 žingsnis iš 2
-intro-step-2 = 2 žingsnis iš 2
+; Onboarding Screen
+onboarding‑choose‑language = Pasirinkite savo kalbą
+onboarding‑get‑started = Pradėti
+onboarding‑step‑skip = Praleisti
+onboarding‑step‑back = Atgal
+onboarding‑step‑next = Toliau
+onboarding‑step‑1‑title = Jūsų pokalbis, jūsų įrenginys, jūsų taisyklės.
+onboarding‑step‑1‑subtitle = Spixi nenaudoja serverių. Žinutės lieka įrenginyje ir tik užšifruotos siunčiamos tiesiogiai kontaktui.
+onboarding‑step‑2‑title = Jūsų adresas – vienintelis jūsų ID.
+onboarding‑step‑2‑subtitle = Spixi nereikalauja telefono numerio ar el. pašto. Jūsų unikalus Spixi adresas – vienintelis, ko reikia prisijungti.
+onboarding‑step‑3‑title = Siųskite ir gaukite IXI mokėjimus.
+onboarding‑step‑3‑subtitle = Naudokite integruotą piniginę siųsti arba gauti IXI monetas tiesiog programėlės pokalbyje. Tai taip paprasta kaip žinutės siuntimas.
+onboarding‑step‑4‑title = Atraskite mini programėles savo pokalbiuose.
+onboarding‑step‑4‑subtitle = Spixi mini programėlės leidžia žaisti žaidimus, naudoti įrankius ar atrakinti naujas funkcijas – tiesiogiai jūsų pokalbiuose.
 
-; Intro New Screen
-intro-new-description-1 = Pasirinkite slapyvardį ir profilio nuotrauką.
-intro-new-description-2 = Slapyvardis ir profilio nuotrauka bus rodomi jūsų kontaktams.
-intro-new-name-placeholder = Slapyvardis
-intro-new-change-image = Palieskite, norėdami pakeisti profilio nuotrauką.
-intro-new-next = Toliau
-intro-new-step-1 = 1 žingsnis iš 2
-intro-new-step-2 = 2 žingsnis iš 2
-intro-new-description-3 = Jūs beveik baigėte.
-intro-new-description-4 = Tai jūsų pagrindinis slaptažodis. Jei kada nors reikės atgauti prieigą prie šios paskyros, jums reikės slaptažodžio ir atsarginės kopijos failo.
-intro-new-description-5 = Šis slaptažodis yra svarbus. Jo reikės norint atgauti prieigą prie jūsų paskyros.
-intro-new-password = Įveskite slaptažodį...
-intro-new-password-2 = Pakartokite slaptažodį...
-intro-new-finish = BAIGTI
-intro-new-create-title = Kuriama jūsų Spixi paskyra...
-intro-new-create-description = Šis procesas gali užtrukti lėtesniuose įrenginiuose.
-intro-new-password10 = Slaptažodis turi turėti bent 10 simbolių.
-intro-new-passwordconf = Pakartokite slaptažodį
-intro-new-passwordnomatch = Slaptažodžiai nesutampa
-intro-new-passwordmatch = Slaptažodžiai sutampa
-intro-new-emptynick-title = Netinkamas slapyvardis
-intro-new-emptynick-text = Prašome įvesti slapyvardį.
-intro-new-avatarerror-title = profilio nuotraukos klaida
-intro-new-walleterror-title = Klaida
-intro-new-walleterror-text = Nepavyko sugeneruoti piniginės. Bandykite dar kartą.
+; Onboarding Create Account Screen
+create‑account‑title = Pradėkime.
+create‑account‑description = Sukurkite naują paskyrą arba atstatykite jau turimą naudodami atsarginę kopiją.
+create‑account‑new = Nauja paskyra
+create‑account‑already = Jau turite paskyrą?
+create‑account‑restore = Atkurti paskyrą
+create‑account‑step = Žingsnis
+create‑account‑step‑of = iš
+create‑account‑step‑1‑title = Nustatykite slapyvardį ir nuotrauką
+create‑account‑step‑1‑subtitle = Jūsų slapyvardis ir avataras bus matomi jūsų kontaktams. Galite juos pakeisti bet kada.
+create‑account‑step‑1‑tap = bakstelėkite, kad įkelti
+create‑account‑step‑1‑nickname‑placeholder = Įveskite slapyvardį
+create‑account‑step‑2‑title = Sukurkite atsarginį slaptažodį
+create‑account‑step‑2‑subtitle = Jums reikės šio slaptažodžio, kad galėtumėte atkurti Spixi paskyrą iš atsarginės kopijos. Saugokite ją gerai.
+create‑account‑step‑2‑password‑placeholder = Įveskite slaptažodį
+create‑account‑step‑2‑password‑confirm = Patvirtinkite slaptažodį
+create‑account‑step‑2‑password‑confirm‑note = Slaptažodis turi būti ne trumpesnis kaip 10 simbolių.
+create‑account‑step‑2‑password‑confirm‑note‑success = Slaptažodžiai sutampa
+create‑account‑step‑2‑password‑confirm‑note‑error = Slaptažodžiai turi sutapti
+create‑account‑step‑2‑note‑title = Spixi nepaiso šio slaptažodžio saugojimo.
+create‑account‑step‑2‑note‑subtitle = Be jo arba atsarginės kopijos, jūsų paskyra ir piniginė negali būti atkurta.
+create‑account‑finish‑setup = Baigti nustatymus
+create‑account‑creating = Kuriama jūsų paskyra…
+create‑account‑creating‑description = Tai neužtruks. Jūsų paskyra yra apsaugoma.
 
 ; Intro Restore Screen
-intro-restore-description-1 = Atkurkite savo Spixi paskyrą
-intro-restore-description-2 = Jums reikės Spixi atsarginės kopijos failo ir slaptažodžio, kad galėtumėte tęsti.
-intro-restore-password = Įveskite slaptažodį...
-intro-restore-selectfile = Pridėti atsarginės kopijos failą
-intro-restore-backupdescription = Pridėkite atsarginės kopijos failą, susietą su jūsų slaptažodžiu.
-intro-restore-action = Atkurti mano paskyrą
-intro-restore-title = Atkuriama prieiga prie jūsų Spixi paskyros
-intro-restore-info = Tai gali užtrukti
-intro-restore-file-error-title = Failo klaida
-intro-restore-file-selecterror-text = Įvyko klaida pridedant atkūrimo failą.
-intro-restore-file-readerror-text = Įvyko klaida skaitant piniginės failą.
-intro-restore-file-writeerror-text = Įvyko klaida išsaugant piniginę.
-intro-restore-file-invalidpassword-title = Neteisingas slaptažodis
-intro-restore-file-invalidpassword-text = Nepavyko iššifruoti piniginės, bandykite dar kartą.
+intro‑restore‑title = Atkurti paskyrą
+intro‑restore‑subtitle = Pasirinkite atsarginės kopijos failą, kad pradėtumėte atkurti Spixi paskyrą.
+intro‑restore‑select‑file = Pasirinkite atsarginės kopijos failą
+intro‑restore‑pass‑title = Įveskite atsarginį slaptažodį
+intro‑restore‑pass‑subtitle = Norėdami atkurti Spixi paskyrą, įveskite slaptažodį, kuriuo apsaugotas atsarginės kopijos failas.
+intro‑restore‑pass‑placeholder = Įveskite slaptažodį
+intro‑restore‑note‑title = Spixi neįrašo šio slaptažodžio.
+intro‑restore‑note‑subtitle = Tik jūs galite atrakinti šį atsarginės kopijos failą.
+intro‑restore‑button = Atkurti paskyrą
+intro‑restoring‑title = Atkuriama jūsų paskyra…
+intro‑restoring‑subtitle = Palaukite. Mes saugiai atrakintame jūsų paskyrą.
+intro‑restore‑pass‑error = Netinkamas slaptažodis. Bandykite dar kartą.
 
 ; Intro Retry Screen
 intro-retry-description-1 = Pakartokite slaptažodį
@@ -574,10 +577,10 @@ wallet-error-balance-title = Nepakankamas balansas
 wallet-error-balance-text = Balansas per mažas šiai operacijai. Bendra operacijos kaina yra {0}, o dabartinis balansas yra {1}.
 
 ; Onboarding join official bot
-onboarding-bot-title = Prisijunkite prie oficialios Spixi bendruomenės
-onboarding-bot-text = Grupinis pokalbis, kuriame galite pasidalinti savo nuomone apie Spixi ir sekti naujienas.
-onboarding-bot-join-button = Prisijungti dabar
-onboarding-bot-dont-join-button = Praleisti kol kas
+onboarding‑bot‑title = Tapkite Spixi kelionės dalimi
+onboarding‑bot‑subtitle = Prisijunkite prie mūsų oficialios grupės susirašinėjimo, pasidalinkite atsiliepimais, bendraukite su komanda ir sužinokite apie naujausias funkcijas.
+onboarding‑bot‑join‑button = Prisijunkite prie bendruomenės
+onboarding‑bot‑skip = Praleisti dabar
 
 ; Onboarding 1
 onboarding-screen1-title = Bendravimas su pasitikėjimu

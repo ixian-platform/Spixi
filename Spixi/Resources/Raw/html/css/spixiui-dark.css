@@ -1821,6 +1821,11 @@ img.emoji {
     cursor: pointer;
 }
 
+#menu_nickname,
+#user-address {
+    color: var(--colors-text-01);
+}
+
 .spixi-sidebar-avatar {
     max-width: 64px;
     max-height: 64px;
@@ -5071,7 +5076,7 @@ img.emoji {
 }
 
 .options {
-    background: radial-gradient(54.59% 54.59% at 50% 45.41%, #182735 0%, #0B1013 80.77%);
+    background: var(--colors-surface-01);
     position: absolute;
     top: 100%;
     left: 0;

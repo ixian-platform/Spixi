@@ -376,7 +376,7 @@ function limitToTwoDecimals(inputAsString) {
 }
 
 function checkThemePath(path) {
-    const theme = localStorage.getItem('theme');
+    const theme = localStorage.getItem('theme') || 'light';
     if (theme === 'dark') {
         return path.replace('img/', 'img/dark/');
     }

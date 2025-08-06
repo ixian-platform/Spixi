@@ -670,12 +670,16 @@ function addText(id, address, nick, avatar, text, time, className) {
         }
         var avatarHtml = avatarEl.outerHTML;
         avatarEl.onclick = function (e) {
-            if (nick == "") {
-                address = userAddress;
-                nick = userNick;
+            if(!isBot){
+                showBotDetails()
+            } else{
+                if (nick == "") {
+                    address = userAddress;
+                    nick = userNick;
+                }
+                showUserDetails(avatarHtml + " " + nick, address);
+                e.preventDefault;
             }
-            showUserDetails(avatarHtml + " " + nick, address);
-            e.preventDefault;
         };
 
         bubbleEl.appendChild(avatarEl);

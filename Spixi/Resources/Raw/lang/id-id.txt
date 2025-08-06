@@ -211,6 +211,12 @@ contact-details-removedcontact-text = Kontak dihapus dari daftar.
 contact-details-deletehistory = HAPUS RIWAYAT
 contact-details-deletedhistory-title = Dihapus
 contact-details-deletedhistory-text = Riwayat pesan telah dihapus.
+contact‑details‑delete‑history‑modal‑title = Bersihkan Riwayat Obrolan?
+contact‑details‑delete‑history‑modal‑subtitle = Seluruh riwayat obrolan akan dihapus.
+contact‑details‑delete‑history‑modal‑confirm = Ya, Bersihkan Obrolan
+contact‑details‑delete‑contact‑modal‑title = Hapus dari kontak
+contact‑details‑delete‑contact‑modal‑subtitle = Ini akan menghapus kontak dari daftar Anda. Anda tidak dapat mengirim atau menerima pesan kecuali Anda menambahkannya kembali.
+contact‑details‑delete‑contact‑modal‑confirm = Ya, Hapus Kontak
 
 ; New Contact Screen
 contact-new-title = Kontak Baru
@@ -305,62 +311,59 @@ index-backup-prompt-create = Ya, buat cadangan
 index-backup-prompt-not-now = Tidak Sekarang
 index-backup-prompt-note = Disarankan untuk mencadangkan setiap kali Anda menambahkan kontak baru.
 
-; Intro Screen
-intro-title = Selamat datang di Spixi,
-intro-subtitle = Selamat datang di salah satu aplikasi obrolan paling aman di dunia.
-intro-headline = Mari kita mulai!
-intro-language-text = Bahasa apa yang Anda gunakan?
-intro-text = Harap buat atau pulihkan akun<br/>Spixi Anda untuk melanjutkan
-intro-create-account = Akun Baru
-intro-restore-account = Sudah punya akun?
-intro-restore-link = Klik di sini untuk memulihkan.
-intro-tip-title = Tahukah Anda?
-intro-tip-body = Spixi tidak menggunakan server, semua pesan dikirim langsung ke rekan Anda, sambil dienkripsi sepenuhnya.
-intro-continue = Lanjutkan
-intro-step-1 = Langkah 1 dari 2
-intro-step-2 = Langkah 2 dari 2
+; Onboarding Screen
+onboarding‑choose‑language = Pilih bahasa Anda
+onboarding‑get‑started = Mulai
+onboarding‑step‑skip = Lewati
+onboarding‑step‑back = Kembali
+onboarding‑step‑next = Berikutnya
+onboarding‑step‑1‑title = Obrolan Anda, perangkat Anda, aturan Anda.
+onboarding‑step‑1‑subtitle = Spixi tidak menggunakan server. Pesan tetap ada di perangkat Anda dan hanya dikirim ketika dienkripsi, langsung ke kontak Anda.
+onboarding‑step‑2‑title = Alamat Anda adalah satu‑satunya ID Anda.
+onboarding‑step‑2‑subtitle = Spixi tidak membutuhkan nomor telepon atau email Anda. Alamat Spixi unik Anda saja yang dibutuhkan untuk terhubung.
+onboarding‑step‑3‑title = Kirim dan terima pembayaran IXI.
+onboarding‑step‑3‑subtitle = Gunakan dompet bawaan untuk mengirim atau menerima koin IXI langsung di dalam obrolan Anda. Semudah mengirim pesan.
+onboarding‑step‑4‑title = Temukan Mini Apps di dalam obrolan Anda.
+onboarding‑step‑4‑subtitle = Aplikasi mini Spixi memungkinkan Anda bermain game, menggunakan alat, atau membuka fitur baru, semua langsung di dalam percakapan Anda.
 
-; Intro New Screen
-intro-new-description-1 = Tetapkan nama panggilan dan foto milik Anda
-intro-new-description-2 = Nama panggilan dan gambar profil Anda akan ditampilkan ke dalam kontak Anda.
-intro-new-name-placeholder = Nama Panggilan Anda
-intro-new-change-image = Ketuk avatar untuk mengubah gambar profil Anda.
-intro-new-next = BERIKUTNYA
-intro-new-step-1 = Langkah 1 dari 2
-intro-new-step-2 = Langkah 2 dari 2
-intro-new-description-3 = Anda Hampir Selesai.
-intro-new-description-4 = Ini adalah kata sandi utama Anda. Jika Anda perlu mendapatkan kembali akses ke akun Anda, Anda akan memerlukan kata sandi ini dan menggunakannya dengan file cadangan.
-intro-new-description-5 = Kata sandi Anda sangat penting karena akan memungkinkan Anda untuk masuk kembali ke akun Spixi Anda jika Anda perlu memulihkan akses ke akun tersebut. 
-intro-new-password = Ketikkan kata sandi Anda...
-intro-new-password-2 = Ketik ulang kata sandi Anda...
-intro-new-finish = SELESAI
-intro-new-create-title = Membuat Akun Spixi Anda...
-intro-new-create-description = Proses ini mungkin memerlukan waktu beberapa saat pada perangkat yang lebih lambat.
-intro-new-password10 = Kata sandi harus mengandung setidaknya 10 karakter
-intro-new-passwordconf = Masukkan konfirmasi kata sandi
-intro-new-passwordnomatch = Kata sandi tidak cocok
-intro-new-passwordmatch = Kata sandi cocok
-intro-new-emptynick-title = Nama panggilan tidak valid
-intro-new-emptynick-text = Harap masukkan nama panggilan Anda.
-intro-new-avatarerror-title = Kesalahan avatar
-intro-new-walleterror-title = Kesalahan
-intro-new-walleterror-text = Tidak dapat membuat dompet. Silakan coba lagi.
+; Onboarding Create Account Screen
+create‑account‑title = Mari kita mulai.
+create‑account‑description = Buat akun baru, atau pulihkan akun menggunakan cadangan Anda.
+create‑account‑new = Akun Baru
+create‑account‑already = Sudah punya akun?
+create‑account‑restore = Pulihkan Akun
+create‑account‑step = Langkah
+create‑account‑step‑of = dari
+create‑account‑step‑1‑title = Atur nama panggilan dan foto Anda
+create‑account‑step‑1‑subtitle = Nama panggilan dan avatar Anda akan terlihat oleh kontak Anda. Anda dapat mengubahnya kapan saja.
+create‑account‑step‑1‑tap = ketuk untuk mengunggah
+create‑account‑step‑1‑nickname‑placeholder = Masukkan Nama Panggilan
+create‑account‑step‑2‑title = Buat kata sandi cadangan
+create‑account‑step‑2‑subtitle = Anda akan memerlukan kata sandi ini untuk memulihkan akun Spixi dari file cadangan. Jaga agar tetap aman.
+create‑account‑step‑2‑password‑placeholder = Masukkan kata sandi
+create‑account‑step‑2‑password‑confirm = Konfirmasi kata sandi
+create‑account‑step‑2‑password‑confirm‑note = Kata sandi harus minimal 10 karakter.
+create‑account‑step‑2‑password‑confirm‑note‑success = Kata sandi cocok
+create‑account‑step‑2‑password‑confirm‑note‑error = Kata sandi harus sama
+create‑account‑step‑2‑note‑title = Spixi tidak menyimpan kata sandi ini.
+create‑account‑step‑2‑note‑subtitle = Tanpa itu atau file cadangan Anda, akun dan dompet Anda tidak dapat dipulihkan.
+create‑account‑finish‑setup = Selesaikan Pengaturan
+create‑account‑creating = Membuat akun Anda…
+create‑account‑creating‑description = Ini tidak akan lama. Akun Anda sedang diamankan.
 
 ; Intro Restore Screen
-intro-restore-description-1 = Pulihkan akses ke akun Spixi milik Anda
-intro-restore-description-2 = Anda memerlukan file cadangan Spixi dan kata sandi milik Anda untuk melanjutkan.
-intro-restore-password = Ketik kata sandi Anda...
-intro-restore-selectfile = Pilih file cadangan
-intro-restore-backupdescription = Tetapkan File Cadangan yang terkait dengan Kata Sandi Enkripsi
-intro-restore-action = Pulihkan akun milik saya
-intro-restore-title = Memulihkan Akses ke Akun Spixi Anda
-intro-restore-info = Ini mungkin memerlukan waktu beberapa saat
-intro-restore-file-error-title = Kesalahan File
-intro-restore-file-selecterror-text = Kesalahan terjadi saat memilih file pemulihan.
-intro-restore-file-readerror-text = Kesalahan terjadi saat membaca file dompet.
-intro-restore-file-writeerror-text = Kesalahan terjadi saat menyimpan dompet. 
-intro-restore-file-invalidpassword-title = Kata sandi tidak valid
-intro-restore-file-invalidpassword-text = Tidak dapat mendekripsi dompet, silakan coba lagi.
+intro‑restore‑title = Pulihkan Akun
+intro‑restore‑subtitle = Pilih file cadangan Anda untuk memulai pemulihan akun Spixi.
+intro‑restore‑select‑file = Pilih File Cadangan
+intro‑restore‑pass‑title = Masukkan Kata Sandi Cadangan
+intro‑restore‑pass‑subtitle = Untuk memulihkan akun Spixi Anda, masukkan kata sandi yang digunakan untuk melindungi file cadangan Anda.
+intro‑restore‑pass‑placeholder = Masukkan kata sandi
+intro‑restore‑note‑title = Spixi tidak menyimpan kata sandi ini.
+intro‑restore‑note‑subtitle = Hanya Anda yang dapat membuka file cadangan ini.
+intro‑restore‑button = Pulihkan Akun
+intro‑restoring‑title = Memulihkan akun Anda…
+intro‑restoring‑subtitle = Harap tunggu. Kami sedang membuka akun Anda dengan aman.
+intro‑restore‑pass‑error = Kata sandi salah. Silakan coba lagi.
 
 ; Intro Retry Screen
 intro-retry-description-1 = Ketikan kembali Kata Sandi Enkripsi milik Anda
@@ -574,10 +577,10 @@ wallet-error-balance-title = Saldo tidak mencukupi
 wallet-error-balance-text = Saldo milik Anda terlalu rendah untuk transaksi ini. Total biaya transaksi adalah {0}, sedangkan saldo milik Anda adalah {1}.
 
 ; Onboarding join official bot
-onboarding-bot-title = Bergabunglah dengan Komunitas resmi Spixi milik kami
-onboarding-bot-text = Obrolan grup, tempat Anda dapat memberi tahu kami pendapat Anda tentang Spixi dan mengikuti perkembangan terkini.
-onboarding-bot-join-button = Bergabunglah sekarang
-onboarding-bot-dont-join-button = Lewati untuk saat ini
+onboarding‑bot‑title = Jadilah bagian dari perjalanan Spixi
+onboarding‑bot‑subtitle = Bergabunglah dengan grup obrolan resmi kami untuk berbagi masukan, terhubung dengan tim, dan tetap mendapatkan fitur terbaru.
+onboarding‑bot‑join‑button = Bergabung dengan Komunitas
+onboarding‑bot‑skip = Lewati dulu
 
 ; Onboarding 1
 onboarding-screen1-title = Terhubung dengan Percaya Diri
