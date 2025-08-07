@@ -13,6 +13,10 @@ var userAddress = "";
 
 const attachBar = document.getElementById("attach-bar");
 
+const messagesEl = document.getElementById("messages");
+const chatHolderEl = document.getElementById("chatholder");
+const wrapEl = document.getElementById("wrap");
+
 function onChatScreenLoad() {
     document.getElementById("chat_input").focus();
 
@@ -103,9 +107,9 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "table";
 
         if (isPaid) {
-            document.getElementById("messages").style.height = "calc(100vh - 175px)";
+            messagesEl.style.height = "calc(100vh - 175px)";
         } else {
-            document.getElementById("messages").style.height = "calc(100vh - 150px)";
+            messagesEl.style.height = "calc(100vh - 150px)";
         }
 
     } else {
@@ -159,6 +163,11 @@ function setInitialStickyDate() {
 }
 
 function onChatScreenLoaded() {
+    debouncedScrollToBottom();
+    if (SL_Platform == "Xamarin-iOS") {
+        debouncedIOSFixer();
+    }
+
     document.getElementById("chat_input").focus();
     updateChatInputPlaceholder();
 
@@ -328,9 +337,8 @@ var chatInput = document.getElementById("chat_input");
 
 function scrollToBottom() {
     if (shouldScroll()) {
-        var messagesDiv = document.getElementById('messages');
         requestAnimationFrame(function () {
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            messagesEl.scrollTop = messagesEl.scrollHeight;
         });
     }
 }
@@ -343,12 +351,12 @@ $("#chat_input").focus(function (event) {
     if (shouldScroll()) {
         setTimeout(function () {			
             //document.getElementById("chatholder").scrollIntoView(false);
-            var messagesDiv = document.getElementById('messages');
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            var messagesEl = document.getElementById('messages');
+            messagesEl.scrollTop = messagesEl.scrollHeight;
             // Hack for slow devices
             setTimeout(function () {
                 //document.getElementById("chatholder").scrollIntoView(false);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                messagesEl.scrollTop = messagesEl.scrollHeight;
             }, 800);
         }, 200);
     }*/
@@ -400,9 +408,6 @@ function clearInput() {
     document.getElementById("chat_input").innerHTML = "";
     document.getElementById("chat_send").className = "chatbar-sendbutton";
 }
-
-var messagesEl = document.getElementById("messages");
-var chatHolderEl = document.getElementById("chatholder");
 
 let scrollTimeout;
 
@@ -463,7 +468,6 @@ function addReactions(id, reactions) {
         reactionsEl.parentNode.removeChild(reactionsEl);
     }
 
-    const messagesEl = document.getElementById("messages");
     if (messagesEl) {
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
@@ -702,7 +706,6 @@ function addText(id, address, nick, avatar, text, time, className) {
 
 // TODO: optimize and merge this function with addText
 function adjustLastestBubbles() {
-    var messagesEl = document.getElementById("messages");
     var bubbles = messagesEl.querySelectorAll(".spixi-bubble");
 
     if (bubbles.length < 2) {
@@ -868,7 +871,7 @@ function addCall(id, message, declined, time) {
 
 
     if (append) {
-        document.getElementById("messages").appendChild(bubbleEl);
+        messagesEl.appendChild(bubbleEl);
     }
 
     scrollToBottom();
@@ -1777,40 +1780,68 @@ function getCaretPosition(editableDiv) {
 }
 
 // Fix for iOS toolbar offscreen issue when soft keyboard is shown
-var initialOffset = window.outerHeight - window.innerHeight;
-var msgHeight = document.getElementById("messages").style.height;
+const initialOffset = window.outerHeight - window.innerHeight;
+let updatedOffset = initialOffset;
+let msgHeight = messagesEl.style.height || (window.innerHeight - 120) + "px";
 
-function iosFixer() {
-    var newOffset = window.outerHeight - window.innerHeight;
+function iosFixer(overshoot = 0) {
+    const newOffset = window.outerHeight - window.innerHeight;
 
-    if (newOffset > initialOffset) {
-        var diff = newOffset - initialOffset;
-        document.getElementById("wrap").style.maxHeight = "${window.innerHeight}px";
-        document.getElementById("wrap").style.top = diff + "px";
-        msgHeight = document.getElementById("messages").style.height;
+    if (newOffset >= updatedOffset) {
+        const diff = newOffset - initialOffset;
+        requestAnimationFrame(function () {
+            wrapEl.style.transition = "top 0.20s ease-out";
+            messagesEl.style.transition = "height 0.20s ease-out";
 
-        document.getElementById("messages").style.height = (window.innerHeight - 120) + "px"; // ${newDiff}px";// (msgHeight - diff + 20) + "px";
+            wrapEl.style.top = `${diff + overshoot}px`;
+            messagesEl.style.height = `${window.innerHeight - overshoot - 120}px`;
+            debouncedScrollToBottom();
+        });
+    } else if (newOffset < updatedOffset && wrapEl.style.top != "0px") {
+        requestAnimationFrame(function () {
+            wrapEl.style.transition = "top 0.20s ease-out";
+            messagesEl.style.transition = "height 0.20s ease-out";
 
-        scrollToBottom();
-    } else if (newOffset < initialOffset) {
-        document.getElementById("wrap").style.maxHeight = '';
-        document.getElementById("wrap").style.top = "0px";
-        document.getElementById("messages").style.height = msgHeight;
+            wrapEl.style.top = "0px";
+            messagesEl.style.height = msgHeight;
+            debouncedScrollToBottom();
+        });
     }
-    initialOffset = newOffset;
+    updatedOffset = newOffset;
 }
 
+const throttle = (fn, delay) => {
+    let lastCall = 0;
+    return (...args) => {
+        const now = Date.now();
+        if (now - lastCall >= delay) {
+            lastCall = now;
+            fn(...args);
+        }
+    };
+};
+
+const debounce = (fn, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+    };
+};
+
+const debouncedScrollToBottom = debounce(scrollToBottom, 200);
+const debouncedIOSFixer = debounce(iosFixer, 25);
 
 // Mobile only logic
 if (SL_Platform != "Xamarin-WPF") {
-
     if (SL_Platform == "Xamarin-iOS") {
         window.visualViewport.addEventListener('resize', () => {
-            iosFixer();
+            debouncedIOSFixer();
+            debouncedScrollToBottom();
+        });
+    } else {
+        window.addEventListener('resize', function () {
+            debouncedScrollToBottom();
         });
     }
-
-    window.addEventListener('resize', function () {
-        scrollToBottom();
-    });
 }
