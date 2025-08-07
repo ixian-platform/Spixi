@@ -1790,8 +1790,8 @@ function iosFixer(overshoot = 0) {
     if (newOffset >= updatedOffset) {
         const diff = newOffset - initialOffset;
         requestAnimationFrame(function () {
-            wrapEl.style.transition = "top 0.20s ease-out";
-            messagesEl.style.transition = "height 0.20s ease-out";
+            //wrapEl.style.transition = "top 0.20s ease-out";
+            //messagesEl.style.transition = "height 0.20s ease-out";
 
             wrapEl.style.top = `${diff + overshoot}px`;
             messagesEl.style.height = `${window.innerHeight - overshoot - 120}px`;
@@ -1799,8 +1799,8 @@ function iosFixer(overshoot = 0) {
         });
     } else if (newOffset < updatedOffset && wrapEl.style.top != "0px") {
         requestAnimationFrame(function () {
-            wrapEl.style.transition = "top 0.20s ease-out";
-            messagesEl.style.transition = "height 0.20s ease-out";
+            //wrapEl.style.transition = "top 0.20s ease-out";
+            //messagesEl.style.transition = "height 0.20s ease-out";
 
             wrapEl.style.top = "0px";
             messagesEl.style.height = msgHeight;
