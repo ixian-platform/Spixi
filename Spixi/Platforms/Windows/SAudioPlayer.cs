@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using IXICore.Meta;
 using Spixi.VoIP;
+using NAudio.CoreAudioApi;
 
 namespace Spixi
 {
@@ -20,7 +21,12 @@ namespace Spixi
 
         private static SAudioPlayer? _singletonInstance;
 
-        private PlaybackCatchupController playbackCatchupController = new PlaybackCatchupController();
+        private PlaybackCatchupController playbackCatchupController = new PlaybackCatchupController()
+        {
+            DropThreshold = 1.50,
+            SpeedThreshold = 1.00
+        };
+
         public static SAudioPlayer Instance()
         {
             if (_singletonInstance == null)
@@ -55,7 +61,7 @@ namespace Spixi
                 DiscardOnBufferOverflow = false
             };
 
-            audioPlayer = new WaveOutEvent();
+            audioPlayer = new WaveOut(WaveCallbackInfo.FunctionCallback());
             audioPlayer.Init(provider);
             audioPlayer.Play();
         }

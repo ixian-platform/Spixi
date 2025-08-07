@@ -35,8 +35,8 @@
         private double avgQueuedSeconds = 0;
 
         // thresholds
-        private const double DropThreshold = 0.50;   // > 500ms
-        private const double SpeedThreshold = 0.25; // > 250ms
+        public double DropThreshold = 0.50;   // > 500ms
+        public double SpeedThreshold = 0.25; // > 250ms
         private const float MaxSpeedup = 1.15f;     // max 15% faster
         private const float MinSpeedup = 1.05f;     // min 5% faster
 

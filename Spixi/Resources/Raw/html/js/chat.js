@@ -18,9 +18,9 @@ const chatHolderEl = document.getElementById("chatholder");
 const wrapEl = document.getElementById("wrap");
 
 function onChatScreenLoad() {
-    document.getElementById("chat_input").focus();
 
     if (SL_Platform == "Xamarin-WPF") {
+        document.getElementById("chat_input").focus();
         messagesEl.oncontextmenu = function (e) {
             hideContextMenus();
             displayContextMenu(e);
@@ -166,9 +166,10 @@ function onChatScreenLoaded() {
     debouncedScrollToBottom();
     if (SL_Platform == "Xamarin-iOS") {
         debouncedIOSFixer();
+    } else if (SL_Platform == "Xamarin-WPF") {
+        document.getElementById("chat_input").focus();
     }
 
-    document.getElementById("chat_input").focus();
     updateChatInputPlaceholder();
 
     //TODO: this is just an example for adding session/invite banner in chat screen
