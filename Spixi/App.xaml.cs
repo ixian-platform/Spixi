@@ -247,7 +247,6 @@ public partial class App : Application
         {
             Thread.Sleep(10);
         }
-        Environment.Exit(0);
     }
 
     private static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs unobservedTaskExceptionEventArgs)

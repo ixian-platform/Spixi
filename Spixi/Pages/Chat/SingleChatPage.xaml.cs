@@ -445,7 +445,7 @@ namespace SPIXI
         {
             Utils.sendUiCommand(this, "onChatScreenReady", friend.walletAddress.ToString());
 
-            if(homePage != null)
+            if (homePage != null)
             {
                 Utils.sendUiCommand(this, "hideBackButton");
             }
@@ -467,7 +467,7 @@ namespace SPIXI
 
                 string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.metaData.botInfo.cost.ToString() + " IXI");
                 bool send_notification = friend.metaData.botInfo.sendNotification;
-                    
+
                 Utils.sendUiCommand(this, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
                 setChannelSelectorUnread();
 
@@ -489,33 +489,15 @@ namespace SPIXI
                 {
                     selectedChannel = 0;
                 }
-            }else
+            } else
             {
                 Utils.sendUiCommand(this, "setBotMode", "False", "0.00000000", "", "False");
             }
-            new Thread(() =>
-            {
-                Thread.CurrentThread.IsBackground = true;
 
-                if (SSpixiCodecInfo.getSupportedAudioCodecs().Count > 0 && friend.state == FriendState.Approved)
-                {
-                    Utils.sendUiCommand(this, "showCallButton", "");
-                }
-
-                loadApps();
-            }).Start();
+            UIHelpers.refreshAppRequests = true;
 
             // Execute timer-related functionality immediately
             updateScreen();
-
-            loadMessages();
-
-            Utils.sendUiCommand(this, "onChatScreenLoaded");
-
-            if (FriendList.getUnreadMessageCount() == 0)
-            {
-                SPushService.clearNotifications();
-            }
 
             if (!friend.bot)
             {
@@ -526,16 +508,32 @@ namespace SPIXI
                 }
             }
 
-            if (!Preferences.Default.ContainsKey("rating_action"))
-            {
-                Preferences.Default.Set("rating_action", "show");
-            }
-
-            UIHelpers.refreshAppRequests = true;
-
             webView.FadeTo(1, 150);
-
             webView.Focus();
+
+            Task.Run(() =>
+            {
+                if (SSpixiCodecInfo.getSupportedAudioCodecs().Count > 0 && friend.state == FriendState.Approved)
+                {
+                    Utils.sendUiCommand(this, "showCallButton", "");
+                }
+
+                loadMessages();
+
+                Utils.sendUiCommand(this, "onChatScreenLoaded");
+
+                loadApps();
+
+                if (!Preferences.Default.ContainsKey("rating_action"))
+                {
+                    Preferences.Default.Set("rating_action", "show");
+                }
+
+                if (FriendList.getUnreadMessageCount() == 0)
+                {
+                    SPushService.clearNotifications();
+                }
+            });
         }
 
         public void onSend(string str)
