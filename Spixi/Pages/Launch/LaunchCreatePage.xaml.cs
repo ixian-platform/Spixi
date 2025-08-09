@@ -23,6 +23,11 @@ namespace SPIXI
             loadPage(webView, "intro_new.html");
         }
 
+        private void onLoad()
+        {
+            Utils.sendUiCommand(this, "setVersion", Config.version);
+        }
+
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
 
@@ -32,6 +37,10 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            {
+                onLoad();
+            }
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
                 popPageAsync();
@@ -56,6 +65,10 @@ namespace SPIXI
             else if (current_url.Equals("ixian:avatar", StringComparison.Ordinal))
             {
                 _ = onChangeAvatarAsync(sender, e);
+            }
+            else if (current_url.Equals("ixian:restore", StringComparison.Ordinal))
+            {
+                Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
             }
             else
             {
