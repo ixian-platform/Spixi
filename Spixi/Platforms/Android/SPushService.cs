@@ -44,7 +44,7 @@ namespace Spixi
             OneSignal.Debug.AlertLevel = LogLevel.NONE;
 
             OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
-
+            
             OneSignal.Notifications.Clicked += handleNotificationOpened;
             OneSignal.Notifications.WillDisplay += handleNotificationReceived;
 
@@ -80,6 +80,7 @@ namespace Spixi
                 {
                     clearNotificationsAfterInit = true;
                     Logging.warn("Cannot clear notifications, OneSignal is not initialized yet.");
+                    return;
                 }
             }
             catch (Exception e)

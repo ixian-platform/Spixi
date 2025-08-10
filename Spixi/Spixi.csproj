@@ -223,7 +223,7 @@
 		<PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
 		<PackageReference Include="Concentus" Version="2.2.2" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.93" />
 		<PackageReference Include="NAudio" Version="2.2.1" Condition="$(TargetFramework.Contains('-windows'))"></PackageReference>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="OneSignalSDK.DotNet" Version="5.2.1" />
@@ -387,7 +387,7 @@
 	</ProjectExtensions>
 
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
+	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.93" />
 	</ItemGroup>
 	
 	<!-- Fix for https://github.com/dotnet/runtime/issues/96872 -->

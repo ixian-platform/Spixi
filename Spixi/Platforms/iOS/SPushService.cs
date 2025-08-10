@@ -6,11 +6,16 @@ using OneSignalSDK.DotNet.Core.Debug;
 using SPIXI;
 using UIKit;
 using UserNotifications;
+using OneSignalNative = Com.OneSignal.iOS.OneSignal;
 
 namespace Spixi
 {
     public class SPushService
     {
+        private static bool isInitializing = false;
+        private static bool isInitialized = false;
+
+        private static bool clearNotificationsAfterInit = false;
         public class NotificationDelegate : UNUserNotificationCenterDelegate
         {
             public override void DidReceiveNotificationResponse(UNUserNotificationCenter center, UNNotificationResponse response, Action completionHandler)
@@ -22,9 +27,7 @@ namespace Spixi
                         var fa = response.Notification.Request.Content.UserInfo[(NSString)"fa"];
                         if (fa != null)
                         {
-                            App.startingScreen = Convert.ToString(fa);
-                            HomePage.Instance().onChat(App.startingScreen, null);
-                            App.startingScreen = "";
+                            HomePage.Instance().onChat(Convert.ToString(fa), null);
                         }
                     }
                 }
@@ -32,20 +35,54 @@ namespace Spixi
                 {
                     Logging.error("Exception occured in DidReceiveNotificationResponse: {0}", ex);
                 }
+                finally
+                {
+                    completionHandler();
+                }
             }
         }
 
         public static void initialize()
         {
+            if (isInitializing
+                || isInitialized)
+            {
+                return;
+            }
+
+            isInitializing = true;
             OneSignal.Debug.LogLevel = LogLevel.WARN;
             OneSignal.Debug.AlertLevel = LogLevel.NONE;
-
+            UNUserNotificationCenter.Current.Delegate = new NotificationDelegate();
             OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
 
-            OneSignal.Notifications.RequestPermissionAsync(true);
 
-            OneSignal.Notifications.Clicked += handleNotificationOpened;
-            OneSignal.Notifications.WillDisplay += handleNotificationReceived;
+            OneSignal.Notifications.RequestPermissionAsync(true).ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Logging.error("RequestPermissionAsync failed: {0}", task.Exception?.Flatten().InnerException?.Message);
+                }
+                else if (task.IsCanceled)
+                {
+                    Logging.warn("RequestPermissionAsync was canceled.");
+                }
+                else
+                {
+                    Logging.info("RequestPermissionAsync succeeded.");
+                }
+
+                OneSignal.Notifications.Clicked += handleNotificationOpened;
+                OneSignal.Notifications.WillDisplay += handleNotificationReceived;
+
+                isInitialized = true;
+
+                if (clearNotificationsAfterInit)
+                {
+                    clearNotificationsAfterInit = false;
+                    clearNotifications();
+                }
+            });
         }
 
         public static void setTag(string tag)
@@ -55,8 +92,24 @@ namespace Spixi
 
         public static void clearNotifications()
         {
+            if (!isInitialized)
+            {
+                clearNotificationsAfterInit = true;
+                Logging.warn("Cannot clear notifications, OneSignal is not initialized yet.");
+                return;
+            }
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
+                try
+                {
+                    OneSignalNative.Notifications.ClearAll();
+                    UNUserNotificationCenter.Current.RemoveAllDeliveredNotifications();
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception while clearing all notifications: {0}.", e);
+                }
                 if (UIDevice.CurrentDevice.CheckSystemVersion(16, 0))
                 {
                     // For iOS 16+, use UNUserNotificationCenter
@@ -96,7 +149,6 @@ namespace Spixi
 
                 var trigger = UNTimeIntervalNotificationTrigger.CreateTrigger(0.25, false);
                 var request = UNNotificationRequest.FromIdentifier(data, content, trigger);
-                UNUserNotificationCenter.Current.Delegate = new NotificationDelegate();
 
                 UNUserNotificationCenter.Current.AddNotificationRequest(request, (err) =>
                 {
