@@ -18,7 +18,7 @@
         <div class="onboarding-stepper-header label-lg s-text-02 typing">
             <span class="back" id="stepperBack" onclick="prevStep()">*SL{onboarding-step-back}</span>
         </div>
-        <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full"/>
+        <img src="img/*SL{SpixiThemeName}/spixi-logo-full.svg" alt="spixi logo full"/>
         <div id="step1" class="single-step create-step active">
             <span class="label-lg">*SL{intro-restore-title}</span>
             <div class="body-md">*SL{intro-restore-subtitle}</div>
@@ -30,7 +30,7 @@
                 <div class="body-md"><i class="fa fa-check s-text-success"></i> <span id="selectedFilenameSpan">file</span></div>
                 <i onclick="removeSelectedFile()" class="fa fa-times body-md"></i>
             </div>
-            <img src="" data-theme-src="img/restore-account/restore-1.svg" alt="restore-1"/>
+            <img src="img/*SL{SpixiThemeName}/restore-account/restore-1.svg" alt="restore-1"/>
         </div>
         <div id="step2" class="single-step create-step restore-step-2">
             <span class="label-lg">*SL{intro-restore-pass-title}</span>
@@ -44,7 +44,7 @@
                 </div>
                 <span class="label-xs s-text-error" id="passwordError" style="display: none">*SL{intro-restore-pass-error}</span>
             </div>
-            <img src="" data-theme-src="img/restore-account/restore-2.svg" alt="restore-2"/>
+            <img src="img/*SL{SpixiThemeName}/restore-account/restore-2.svg" alt="restore-2"/>
             <div class="create-password-note">
                 <span class="label-sm s-text-01">*SL{intro-restore-note-title}</span>
                 <span class="body-sm s-text-01">*SL{intro-restore-note-subtitle}</span>
@@ -63,7 +63,7 @@
 
     <section class="create-account-start-section" id="restoringAccount" style="display: none">
         <div class="loading-modal-container">
-            <img src="" data-theme-src="img/spixi-logo-full.svg" alt="spixi logo full" style="margin-bottom: 64px;"/>
+            <img src="img/*SL{SpixiThemeName}/spixi-logo-full.svg" alt="spixi logo full" style="margin-bottom: 64px;"/>
             <span class="spixi-loader loader-create-acc"></span>
             <div class="new-modal-texts">
                 <span class="label-lg">*SL{intro-restoring-title}</span>
@@ -75,9 +75,6 @@
 
 <script src="js/spixi.js"></script>
 <script type="text/javascript">
-    // Function to apply the theme on data-theme-src images
-    applyThemeOnDataThemeSrcImages();
-
     let selectedFile = null;
     const steps = Array.from(document.querySelectorAll('.single-step'));
     let currentStep = 1;

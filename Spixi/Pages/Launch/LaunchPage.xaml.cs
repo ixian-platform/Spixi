@@ -23,9 +23,6 @@ namespace SPIXI
 
         private void onLoad()
         {
-            selectedAppearance = ThemeManager.getActiveAppearance();
-            int activeAppearanceIdx = (int)selectedAppearance;
-            Utils.sendUiCommand(this, "initialAppearance", activeAppearanceIdx.ToString());
             Utils.sendUiCommand(this, "setVersion", Config.version);
             if(!acceptedTerms)
             {

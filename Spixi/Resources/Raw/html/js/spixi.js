@@ -374,23 +374,3 @@ function limitToTwoDecimals(inputAsString) {
     if (isNaN(parsedNum)) return parsedNum;
     return parsedNum.toFixed(2);
 }
-
-function checkThemePath(path) {
-    const theme = localStorage.getItem('theme') || 'light';
-    if (theme === 'dark') {
-        return path.replace('img/', 'img/dark/');
-    }
-    return path;
-}
-
-function applyThemeOnDataThemeSrcImages(){
-    document.addEventListener('DOMContentLoaded', () => {
-        const images = document.querySelectorAll('img[data-theme-src]');
-        images.forEach(img => {
-            const originalSrc = img.getAttribute('data-theme-src');
-            if (originalSrc) {
-                img.src = checkThemePath(originalSrc);
-            }
-        });
-    })
-}

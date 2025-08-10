@@ -58,8 +58,6 @@ namespace SPIXI.Meta
             Logging.info("Initing node constructor");
             Instance = this;
 
-            CoreConfig.simultaneousConnectedNeighbors = 6;
-
             IxianHandler.init(Config.version, this, Config.networkType, false, Config.checksumLock);
 
             PeerStorage.init(Config.spixiUserFolder);

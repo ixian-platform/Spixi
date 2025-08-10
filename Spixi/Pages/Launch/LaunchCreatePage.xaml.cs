@@ -17,7 +17,7 @@ namespace SPIXI
 	{
 		public LaunchCreatePage ()
 		{
-			InitializeComponent ();
+            InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
             loadPage(webView, "intro_new.html");
@@ -40,8 +40,7 @@ namespace SPIXI
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();
-            }
-            if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            }else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
                 popPageAsync();
             }

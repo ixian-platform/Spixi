@@ -578,8 +578,8 @@
     }
 
     // MINI APPS FUNCTIONS
-    const isMiniAppsStartNoteHidden = localStorage.getItem("miniAppsStartNoteHidden");
-    if (isMiniAppsStartNoteHidden) {
+    const isMiniAppsStartNoteHidden = "*SL{miniAppsStartNoteHidden}";
+    if (isMiniAppsStartNoteHidden == "true") {
         document.getElementById("miniAppsStartNote").style.display = "none";
     } else {
         document.getElementById("miniAppsStartNote").style.display = "flex";
@@ -588,7 +588,7 @@
     function hideMiniAppsStartNote() {
         const startNote = document.getElementById("miniAppsStartNote");
         startNote.style.display = "none";
-        localStorage.setItem("miniAppsStartNoteHidden", true);
+        window.location.href = "ixian:miniAppsStartNoteHidden";
     }
 
     function clearApps() {

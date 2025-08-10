@@ -27,6 +27,7 @@ namespace SPIXI
             activeAppearance = appearance;
 
             Preferences.Default.Set("appearance", (int)activeAppearance);
+            SpixiLocalization.addCustomString("SpixiThemeName", appearance_name);
             SpixiLocalization.addCustomString("SpixiThemeMode", name + "-" + appearance_name + ".css");
 
             return true;
