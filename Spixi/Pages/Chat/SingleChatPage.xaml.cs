@@ -495,6 +495,10 @@ namespace SPIXI
             }
 
             UIHelpers.refreshAppRequests = true;
+            warningDisplayed = false;
+            unreadIndicatorDisplayed = false;
+            setNickname = "";
+            setOnlineStatus = false;
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -508,8 +512,15 @@ namespace SPIXI
                 }
             }
 
-            webView.FadeTo(1, 150);
-            webView.Focus();
+            try
+            {
+                webView.FadeTo(1, 150);
+                webView.Focus();
+            }
+            catch (Exception ex)
+            {
+                Logging.warn("Exception: " + ex);
+            }
 
             Task.Run(() =>
             {

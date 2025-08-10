@@ -23,8 +23,6 @@ public partial class App : Application
     }
     public static bool isInForeground { get; set; } = false;
 
-    Node node = null;
-
     public static Window appWindow { get; private set; } = null;
 
     public static string startingScreen = ""; // Which screen to start on
@@ -122,9 +120,9 @@ public partial class App : Application
 
                 UIHelpers.reloadAllPages();
             };
-            
+
             // Start Ixian code
-            node = new Node();
+            _ = new Node();
 
             // Attempt to load a pre-existing wallet
             bool wallet_found = Node.checkForExistingWallet();
@@ -171,7 +169,6 @@ public partial class App : Application
         else
         {
             // Already started before
-            node = Node.Instance;
         }
     }
 
@@ -223,11 +220,6 @@ public partial class App : Application
             window.Title = "Spixi IM";
             if (appWindow == null)
             {
-                window.Destroying += (s, e) =>
-                {
-                    Shutdown();
-                };
-
                 window.Resumed += (s, e) =>
                 {
                     if (Config.enablePushNotifications && IxianHandler.wallets.Count > 0)
@@ -240,12 +232,19 @@ public partial class App : Application
         return window;
     }
 
-    public static void Shutdown()
+    public static async Task Shutdown()
     {
-        IxianHandler.shutdown();
-        while (IxianHandler.status != NodeStatus.stopped)
+        try
         {
-            Thread.Sleep(10);
+            IxianHandler.shutdown();
+            while (IxianHandler.status != NodeStatus.stopped)
+            {
+                await Task.Delay(10);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.error("Exception during Shutdown: {0}", ex);
         }
     }
 
@@ -273,6 +272,32 @@ public partial class App : Application
         catch
         {
 
+        }
+    }
+
+    public static void EnsureNodeRunning()
+    {
+        try
+        {
+            if (Instance == null)
+            {
+                Logging.info("EnsureNodeRunning: Node.Instance is null, creating new Node");
+                _ = new Node();
+            }
+            else if (IxianHandler.status == NodeStatus.stopped)
+            {
+                Logging.info("EnsureNodeRunning: Node exists but is stopped");
+                //preStart();
+                //start();
+            }
+            else
+            {
+                Logging.info("EnsureNodeRunning: Node is already running");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.error("EnsureNodeRunning exception: {0}", ex);
         }
     }
 

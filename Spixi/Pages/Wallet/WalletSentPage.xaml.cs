@@ -56,7 +56,14 @@ namespace SPIXI
                 Utils.sendUiCommand(this, "hideBackButton");
             }
 
-            webView.FadeTo(1, 150);
+            try
+            {
+                webView.FadeTo(1, 150);
+            }
+            catch (Exception e)
+            {
+                Logging.warn("Exception: " + e);
+            }
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

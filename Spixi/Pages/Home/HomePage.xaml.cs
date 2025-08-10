@@ -577,18 +577,13 @@ namespace SPIXI
             try
             {
                 updateScreen();
-            }catch(Exception ex)
+                webView.FadeTo(1, 150);
+            }
+            catch(Exception ex)
             {
                 Logging.error("Exception occured in updateScreen call from onLoaded: {0}", ex);
             }
 
-            if (App.startingScreen != "")
-            {
-                onChat(App.startingScreen, null);
-                App.startingScreen = "";
-            }
-
-            webView.FadeTo(1, 250);
             checkForRating();
         }
 
@@ -630,14 +625,28 @@ namespace SPIXI
 
             if (rightContent.IsVisible)
             {
-                await rightContent.Content.FadeTo(0, 50);
+                try
+                {
+                    await rightContent.Content.FadeTo(0, 50);
+                }
+                catch (Exception ex)
+                {
+                    Logging.warn("Exception: " + ex);
+                }
                 removeDetailContent(false);
                 detailContent = new WalletSentPage(transaction, true, this);
                 rightContent.Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
                 rightContent.Content.Opacity = 0;
                 rightContent.Content = detailContent.Content;
-                await rightContent.Content.FadeTo(1, 150);
+                try
+                {
+                    await rightContent.Content.FadeTo(1, 150);
+                }
+                catch (Exception ex)
+                {
+                    Logging.warn("Exception: " + ex);
+                }
 
                 Utils.sendUiCommand(this, "selectTx", transaction.getTxIdString());
                 return;
@@ -647,7 +656,7 @@ namespace SPIXI
             Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
         }
 
-        public async void onChat(string friend_address, WebNavigatingEventArgs e)
+        public async void onChat(string friend_address, WebNavigatingEventArgs ev)
         {
             Address id_bytes = new Address(friend_address);
 
@@ -655,32 +664,46 @@ namespace SPIXI
 
             if (friend == null)
             {
-                if (e != null)
+                if (ev != null)
                 {
-                    e.Cancel = true;
+                    ev.Cancel = true;
                 }
                 return;
             }
 
 
             if (rightContent.IsVisible)
-            {        
-                
-                await rightContent.Content.FadeTo(0, 50);
+            {
+
+                try
+                {
+                    await rightContent.Content.FadeTo(0, 50);
+                }
+                catch (Exception ex)
+                {
+                    Logging.warn("Exception: " + ex);
+                }
                 removeDetailContent(false);
                 detailContent = new SingleChatPage(friend, this);
                 rightContent.Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
                 rightContent.Content.Opacity = 0;
-                rightContent.Content = detailContent.Content;               
-                await rightContent.Content.FadeTo(1, 150);
+                rightContent.Content = detailContent.Content;
+                try
+                {
+                    await rightContent.Content.FadeTo(1, 150);
+                }
+                catch (Exception ex)
+                {
+                    Logging.warn("Exception: " + ex);
+                }
 
                 Utils.sendUiCommand(this, "selectChat", friend.walletAddress.ToString());
                 return;
             }
 
             fromChat = true;
-            bool animated = e != null && Config.defaultXamarinAnimations;
+            bool animated = ev != null && Config.defaultXamarinAnimations;
 
             MainThread.BeginInvokeOnMainThread(async () =>
             {
@@ -1075,8 +1098,12 @@ namespace SPIXI
 
             try
             {
+                string cur_version = Config.version.Substring(Config.version.IndexOf('-') + 1);
+
                 string new_version = checkForUpdate();
-                if (!new_version.StartsWith("(") && new_version.Substring(new_version.IndexOf('-') + 1).CompareTo(Config.version.Substring(Config.version.IndexOf('-') + 1)) > 0)
+                new_version = new_version.StartsWith("(") ? new_version.Substring(new_version.IndexOf('-') + 1).TrimEnd(')') : cur_version;
+
+                if (UpdateVerify.compareVersionsWithSuffix(new_version, cur_version) > 0)
                 {
                     Utils.sendUiCommand(this, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
                 }
@@ -1107,6 +1134,12 @@ namespace SPIXI
             {
                 Utils.sendUiCommand(this, "loadAvatar", IxianHandler.localStorage.getOwnAvatarPath());
                 Node.changedSettings = false;
+            }
+
+            if (App.startingScreen != "")
+            {
+                onChat(App.startingScreen, null);
+                App.startingScreen = "";
             }
 
             SPushService.clearNotifications();

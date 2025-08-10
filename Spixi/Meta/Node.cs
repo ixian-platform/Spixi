@@ -68,6 +68,10 @@ namespace SPIXI.Meta
             networkClientManagerStatic = new NetworkClientManagerStatic(Config.maxRelaySectorNodesToConnectTo);
             NetworkClientManager.init(networkClientManagerStatic);
 
+            // Prepare the stream processor
+            StreamCapabilities caps = StreamCapabilities.Incoming | StreamCapabilities.Outgoing | StreamCapabilities.IPN | StreamCapabilities.Apps;
+            streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications), caps);
+
             // Init TIV
             tiv = new TransactionInclusion(new SpixiTransactionInclusionCallbacks(), false);
 
@@ -81,13 +85,21 @@ namespace SPIXI.Meta
 
             FriendList.init(Config.spixiUserFolder);
 
-            Logging.info("Node init done");
+            UpdateVerify.init(Config.checkVersionUrl, Config.checkVersionSeconds);
+
+            OfflinePushMessages.init(Config.pushServiceUrl, streamProcessor);
 
             string backup_file_name = Path.Combine(Config.spixiUserFolder, "spixi.account.backup.ixi");
             if (File.Exists(backup_file_name))
             {
                 File.Delete(backup_file_name);
             }
+
+            InventoryCache.init(new InventoryCacheClient(tiv));
+
+            RelaySectors.init(CoreConfig.relaySectorLevels, null);
+
+            Logging.info("Node init done");
         }
 
         static public void preStart()
@@ -96,12 +108,6 @@ namespace SPIXI.Meta
             IxianHandler.localStorage.start();
 
             FriendList.loadContacts();
-
-            // Prepare the stream processor
-            StreamCapabilities caps = StreamCapabilities.Incoming | StreamCapabilities.Outgoing | StreamCapabilities.IPN | StreamCapabilities.Apps;
-            streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications), caps);
-
-            OfflinePushMessages.init(Config.pushServiceUrl, streamProcessor);
         }
 
         static public void start()
@@ -114,7 +120,6 @@ namespace SPIXI.Meta
 
             running = true;
 
-            UpdateVerify.init(Config.checkVersionUrl, Config.checkVersionSeconds);
             UpdateVerify.start();
 
             ulong block_height = 0;
@@ -147,9 +152,7 @@ namespace SPIXI.Meta
             // Start the network queue
             NetworkQueue.start();
 
-            InventoryCache.init(new InventoryCacheClient(tiv));
-
-            RelaySectors.init(CoreConfig.relaySectorLevels, null);
+            streamProcessor.start();
 
             // Start the keepalive thread
             PresenceList.startKeepAlive();
@@ -387,7 +390,7 @@ namespace SPIXI.Meta
             running = false;
 
             // Stop the stream processor
-            streamProcessor.uninitialize();
+            streamProcessor.stop();
 
             IxianHandler.localStorage.stop();
 
