@@ -398,7 +398,7 @@ namespace SPIXI.Network
         {
             byte[] hash = CryptoManager.lib.sha3_512sqTrunc(data);
 
-            InventoryCache.Instance.setProcessedFlag(InventoryItemTypes.keepAlive, hash, true);
+            InventoryCache.Instance.setProcessedFlag(InventoryItemTypes.keepAlive, hash);
 
             Address address = null;
             long last_seen = 0;
@@ -555,15 +555,14 @@ namespace SPIXI.Network
                         ulong len = reader.ReadIxiVarUInt();
                         byte[] item_bytes = reader.ReadBytes((int)len);
                         InventoryItem item = InventoryCache.decodeInventoryItem(item_bytes);
-                        if (item.type == InventoryItemTypes.transaction)
-                        {
-                            PendingTransactions.increaseReceivedCount(item.hash, endpoint.presence.wallet);
-                        }
-                        PendingInventoryItem pii = InventoryCache.Instance.add(item, endpoint);
 
-                        // First update endpoint blockheights
+                        // First update endpoint blockheights and pending transactions
                         switch (item.type)
                         {
+                            case InventoryItemTypes.transaction:
+                                PendingTransactions.increaseReceivedCount(item.hash, endpoint.presence.wallet);
+                                break;
+
                             case InventoryItemTypes.block:
                                 var iib = ((InventoryItemBlock)item);
                                 if (iib.blockNum > endpoint.blockHeight)
@@ -572,6 +571,8 @@ namespace SPIXI.Network
                                 }
                                 break;
                         }
+
+                        PendingInventoryItem pii = InventoryCache.Instance.add(item, endpoint, false);
 
                         if (!pii.processed && pii.lastRequested == 0)
                         {
@@ -600,7 +601,7 @@ namespace SPIXI.Network
                                     var iib = ((InventoryItemBlock)item);
                                     if (iib.blockNum <= last_accepted_block_height)
                                     {
-                                        InventoryCache.Instance.setProcessedFlag(iib.type, iib.hash, true);
+                                        InventoryCache.Instance.setProcessedFlag(iib.type, iib.hash);
                                         continue;
                                     }
 
@@ -630,9 +631,8 @@ namespace SPIXI.Network
         static void requestNextBlock(ulong blockNum, byte[] blockHash, RemoteEndpoint endpoint)
         {
             InventoryItemBlock iib = new InventoryItemBlock(blockHash, blockNum);
-            PendingInventoryItem pii = InventoryCache.Instance.add(iib, endpoint);
-            if (!pii.processed
-                && pii.lastRequested == 0)
+            PendingInventoryItem pii = InventoryCache.Instance.add(iib, endpoint, true);
+            if (pii.lastRequested == 0)
             {
                 pii.lastRequested = Clock.getTimestamp();
                 InventoryCache.Instance.processInventoryItem(pii);
