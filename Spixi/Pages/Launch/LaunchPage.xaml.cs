@@ -11,6 +11,7 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LaunchPage : SpixiContentPage
 	{
+	    ThemeAppearance selectedAppearance = ThemeAppearance.automatic;
         private bool acceptedTerms = false;
 		public LaunchPage ()
 		{
@@ -22,6 +23,9 @@ namespace SPIXI
 
         private void onLoad()
         {
+            selectedAppearance = ThemeManager.getActiveAppearance();
+            int activeAppearanceIdx = (int)selectedAppearance;
+            Utils.sendUiCommand(this, "initialAppearance", activeAppearanceIdx.ToString());
             Utils.sendUiCommand(this, "setVersion", Config.version);
             if(!acceptedTerms)
             {
@@ -62,7 +66,18 @@ namespace SPIXI
                     Preferences.Default.Set("language", lang);
                 }
                 loadPage(webView, "intro.html");
+                Utils.sendUiCommand(this, "showOnboardingSection");
             }
+            else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
+                {
+                    string appearanceString = current_url.Substring("ixian:appearance:".Length);
+                    selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
+
+                    if (ThemeManager.changeAppearance(selectedAppearance))
+                    {
+                        loadPage(webView, "intro.html");
+                    }
+                }
             else
             {
                 // Otherwise it's just normal navigation
