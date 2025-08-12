@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" Condition="$(TargetFramework.Contains('-ios'))">
   <PropertyGroup>
-    <TargetFrameworks>net8.0-ios</TargetFrameworks>
+    <TargetFrameworks>net9.0-ios</TargetFrameworks>
     <OutputType>Library</OutputType>
 
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
@@ -13,7 +13,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
-    <SupportedOSPlatformVersion>17.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,14 +21,10 @@
     <IsWatchExtension>False</IsWatchExtension>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
-	<ProvisioningType>manual</ProvisioningType>
-	<CodesignKey>iPhone Developer</CodesignKey>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
     <CodesignKey>iPhone Developer</CodesignKey>
     <ProvisioningType>manual</ProvisioningType>
+    <CodesignProvision></CodesignProvision>
   </PropertyGroup>
 
     <PropertyGroup Condition="!$(TargetFramework.Contains('-ios'))">

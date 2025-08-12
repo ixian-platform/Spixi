@@ -5,6 +5,7 @@
 
 using CommunityToolkit.Maui;
 using IXICore.Meta;
+using Microsoft.Maui.Controls.Compatibility;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
 using Microsoft.Maui.LifecycleEvents;
 
@@ -12,6 +13,9 @@ namespace Spixi;
 
 public static class MauiProgram
 {
+    public static int ActiveActivityCount;
+    private static CancellationTokenSource _shutdownCts;
+
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -40,21 +44,51 @@ public static class MauiProgram
 #if ANDROID
                 events.AddAndroid(android =>
                 {
-                    // Shutdown logic
-                    android.OnDestroy(async (activity) =>
+                    android.OnCreate((activity, bundle) =>
                     {
-                        if (!activity.IsChangingConfigurations)
+                        Interlocked.Increment(ref ActiveActivityCount);
+                        Logging.info($"{activity.GetType().Name} created. Active count = {ActiveActivityCount}");
+
+                        // Cancel any pending shutdown if a new activity starts
+                        _shutdownCts?.Cancel();
+                    });
+
+                    android.OnDestroy((activity) =>
+                    {
+                        var count = Math.Max(0, Interlocked.Decrement(ref ActiveActivityCount));
+                        Logging.info($"{activity.GetType().Name} destroyed. Active count = {count}");
+
+                        if (count <= 0 && !activity.IsChangingConfigurations)
                         {
-                            Logging.info("Android OnDestroy real exit, shutting down Node");
-                            await App.Shutdown();
+                            Logging.info("Last activity destroyed - scheduling delayed shutdown");
+
+                            _shutdownCts = new CancellationTokenSource();
+                            var token = _shutdownCts.Token;
+
+                            Task.Run(async () =>
+                            {
+                                try
+                                {
+                                    await Task.Delay(1000, token); // 1 second debounce
+                                    if (!token.IsCancellationRequested)
+                                    {
+                                        Logging.info("No new activity started - shutting down Node");
+                                        await App.Shutdown();
+                                    }
+                                }
+                                catch (TaskCanceledException)
+                                {
+                                    Logging.info("Shutdown canceled - new activity started");
+                                }
+                            }, token);
                         }
                         else
                         {
-                            Logging.info("Android OnDestroy ignored due to IsChangingConfigurations=true");
+                            Logging.info($"OnDestroy ignored - remaining activities: {count}, " +
+                                         $"IsChangingConfigurations={activity.IsChangingConfigurations}");
                         }
                     });
 
-                    // Restart logic when activity comes back to foreground
                     android.OnResume((activity) =>
                     {
                         Logging.info("Android OnResume - ensuring Node is running");
