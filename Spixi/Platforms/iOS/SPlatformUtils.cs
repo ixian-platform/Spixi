@@ -136,5 +136,10 @@ namespace Spixi
             }
         }
 
+        public static void setEdgeToEdge()
+        {
+
+        }
+
     }
 }

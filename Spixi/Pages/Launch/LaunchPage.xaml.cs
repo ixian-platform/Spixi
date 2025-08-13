@@ -1,9 +1,6 @@
-﻿using IXICore.Meta;
-using SPIXI.Interfaces;
+﻿using Spixi;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using System;
-using System.IO;
 using System.Web;
 
 namespace SPIXI
@@ -66,15 +63,16 @@ namespace SPIXI
                 Utils.sendUiCommand(this, "showOnboardingSection");
             }
             else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
-                {
-                    string appearanceString = current_url.Substring("ixian:appearance:".Length);
-                    selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
+            {
+                string appearanceString = current_url.Substring("ixian:appearance:".Length);
+                selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
 
-                    if (ThemeManager.changeAppearance(selectedAppearance))
-                    {
-                        loadPage(webView, "intro.html");
-                    }
+                if (ThemeManager.changeAppearance(selectedAppearance))
+                {
+                    SPlatformUtils.setEdgeToEdge();
+                    loadPage(webView, "intro.html");
                 }
+            }
             else
             {
                 // Otherwise it's just normal navigation

@@ -2,7 +2,9 @@
 using Android.Content;
 using Android.Media;
 using Android.OS;
+using AndroidX.Core.View;
 using IXICore.Meta;
+using SPIXI;
 using SPIXI.Interfaces;
 
 namespace Spixi
@@ -167,6 +169,26 @@ namespace Spixi
                 Logging.error("Error playing sound: " + e);
             }
             return player;
+        }
+
+        public static void setEdgeToEdge()
+        {
+            // Get the root content view that MAUI uses
+            var rootView = MainActivity.Instance.FindViewById(Android.Resource.Id.Content);
+
+            if (rootView != null)
+            {
+                Android.Graphics.Color bgColor;
+                if (ThemeManager.getActiveAppearance() == ThemeAppearance.light)
+                {
+                    bgColor = Android.Graphics.Color.ParseColor("#223766");
+                }
+                else
+                {
+                    bgColor = Android.Graphics.Color.ParseColor("#0B1219");
+                }
+                rootView.SetBackgroundColor(bgColor);
+            }
         }
     }
 

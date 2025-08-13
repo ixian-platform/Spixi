@@ -144,6 +144,10 @@ namespace Spixi
             return player;
         }
 
+        public static void setEdgeToEdge()
+        {
+
+        }
     }
 
     public class LoopStream : WaveStream

@@ -194,6 +194,7 @@ namespace SPIXI
 
             if (ThemeManager.changeAppearance(selectedAppearance))
             {
+                SPlatformUtils.setEdgeToEdge();
                 HomePage.Instance().reload();
             }
 
