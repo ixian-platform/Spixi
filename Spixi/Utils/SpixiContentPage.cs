@@ -6,6 +6,7 @@ using SPIXI.Meta;
 using SPIXI.VoIP;
 using Spixi;
 using IXICore.Streaming;
+
 #if WINDOWS
 using Microsoft.Web.WebView2.Core;
 #endif
@@ -60,7 +61,11 @@ namespace SPIXI
                 return;
 
             MainThread.BeginInvokeOnMainThread(() => {
-                _webView.EvaluateJavaScriptAsync("try{ " + script + " }catch(e){  }");
+                try
+                {
+                    _webView.EvaluateJavaScriptAsync("try{ " + script + " }catch(e){  }");
+                }
+                catch { }
             });
         }
 

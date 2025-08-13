@@ -18,16 +18,25 @@ namespace Spixi
         private static bool clearNotificationsAfterInit = false;
         public class NotificationDelegate : UNUserNotificationCenterDelegate
         {
-            public override void DidReceiveNotificationResponse(UNUserNotificationCenter center, UNNotificationResponse response, Action completionHandler)
+            public override void DidReceiveNotificationResponse(
+                UNUserNotificationCenter center,
+                UNNotificationResponse response,
+                Action completionHandler)
             {
                 try
                 {
-                    if (response.Notification.Request.Content.UserInfo.ContainsKey((NSString)"fa"))
+                    var userInfo = response.Notification.Request.Content.UserInfo;
+
+                    if (userInfo.ContainsKey((NSString)"fa"))
                     {
-                        var fa = response.Notification.Request.Content.UserInfo[(NSString)"fa"];
+                        var fa = userInfo[(NSString)"fa"];
                         if (fa != null)
                         {
-                            HomePage.Instance().onChat(Convert.ToString(fa), null);
+                            MainThread.BeginInvokeOnMainThread(() =>
+                            {
+                                App.startingScreen = Convert.ToString(fa);
+                                HomePage.Instance().updateScreen();
+                            });
                         }
                     }
                 }
@@ -39,6 +48,15 @@ namespace Spixi
                 {
                     completionHandler();
                 }
+            }
+
+            public override void WillPresentNotification(
+                UNUserNotificationCenter center,
+                UNNotification notification,
+                Action<UNNotificationPresentationOptions> completionHandler)
+            {
+                // Show the notification even when the app is in the foreground
+                completionHandler(UNNotificationPresentationOptions.Banner | UNNotificationPresentationOptions.Sound);
             }
         }
 
@@ -53,27 +71,30 @@ namespace Spixi
             isInitializing = true;
             OneSignal.Debug.LogLevel = LogLevel.WARN;
             OneSignal.Debug.AlertLevel = LogLevel.NONE;
-            UNUserNotificationCenter.Current.Delegate = new NotificationDelegate();
-            OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
 
+            UNUserNotificationCenter.Current.Delegate = new NotificationDelegate();
+
+            OneSignal.Notifications.Clicked += handleNotificationOpened;
+            OneSignal.Notifications.WillDisplay += handleNotificationReceived;
+
+            OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
 
             OneSignal.Notifications.RequestPermissionAsync(true).ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
                     Logging.error("RequestPermissionAsync failed: {0}", task.Exception?.Flatten().InnerException?.Message);
+                    return Task.CompletedTask;
                 }
                 else if (task.IsCanceled)
                 {
                     Logging.warn("RequestPermissionAsync was canceled.");
+                    return Task.CompletedTask;
                 }
                 else
                 {
                     Logging.info("RequestPermissionAsync succeeded.");
                 }
-
-                OneSignal.Notifications.Clicked += handleNotificationOpened;
-                OneSignal.Notifications.WillDisplay += handleNotificationReceived;
 
                 isInitialized = true;
 
@@ -82,6 +103,7 @@ namespace Spixi
                     clearNotificationsAfterInit = false;
                     clearNotifications();
                 }
+                return Task.CompletedTask;
             });
         }
 
@@ -161,7 +183,7 @@ namespace Spixi
             });
         }
 
-        static void handleNotificationReceived(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationWillDisplayEventArgs e)
+        static void handleNotificationReceived(object? sender, OneSignalSDK.DotNet.Core.Notifications.NotificationWillDisplayEventArgs e)
         {
             try
             {
@@ -179,7 +201,7 @@ namespace Spixi
             e.Notification.display();
         }
 
-        static void handleNotificationOpened(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationClickedEventArgs e)
+        static void handleNotificationOpened(object? sender, OneSignalSDK.DotNet.Core.Notifications.NotificationClickedEventArgs e)
         {
             try
             {
@@ -188,7 +210,11 @@ namespace Spixi
                     var fa = e.Notification.AdditionalData["fa"];
                     if (fa != null)
                     {
-                        App.startingScreen = Convert.ToString(fa);
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            App.startingScreen = Convert.ToString(fa);
+                            HomePage.Instance().popToRootAsync();
+                        });
                     }
                 }
             }

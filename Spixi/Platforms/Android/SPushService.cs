@@ -43,21 +43,29 @@ namespace Spixi
             OneSignal.Debug.LogLevel = LogLevel.WARN;
             OneSignal.Debug.AlertLevel = LogLevel.NONE;
 
-            OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
-            
             OneSignal.Notifications.Clicked += handleNotificationOpened;
             OneSignal.Notifications.WillDisplay += handleNotificationReceived;
 
+            OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
+
             // RequestPermissionAsync will show the notification permission prompt.
-            OneSignal.Notifications.RequestPermissionAsync(true);
-
-            isInitialized = true;
-
-            if (clearNotificationsAfterInit)
+            OneSignal.Notifications.RequestPermissionAsync(true).ContinueWith(task =>
             {
-                clearNotificationsAfterInit = false;
-                clearNotifications();
-            }
+                if (task.IsCompletedSuccessfully)
+                {
+                    isInitialized = true;
+
+                    if (clearNotificationsAfterInit)
+                    {
+                        clearNotificationsAfterInit = false;
+                        clearNotifications();
+                    }
+                }
+                else
+                {
+                    Logging.warn("Notification permission request failed or was cancelled.");
+                }
+            });
         }
 
         public static void setTag(string tag)
@@ -99,6 +107,7 @@ namespace Spixi
             messageId++;
 
             Intent intent = new Intent(Android.App.Application.Context, typeof(MainActivity));
+            intent.SetAction(data);
             intent.PutExtra(TitleKey, title);
             intent.PutExtra(MessageKey, message);
             intent.PutExtra("fa", data);
@@ -112,7 +121,8 @@ namespace Spixi
                 .SetPriority(1)
                 .SetLargeIcon(BitmapFactory.DecodeResource(Android.App.Application.Context.Resources, Resource.Drawable.statusicon))
                 .SetSmallIcon(Resource.Drawable.statusicon)
-                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
+                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
+                .SetAutoCancel(true);
 
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
@@ -169,11 +179,12 @@ namespace Spixi
                 if (e.Notification.AdditionalData.ContainsKey("fa"))
                 {
                     var fa = e.Notification.AdditionalData["fa"];
-                    if (fa != null)
+                    if (!string.IsNullOrEmpty("fa"))
                     {
-
-                        App.startingScreen = Convert.ToString(fa);
-
+                        Intent intent = new Intent(Android.App.Application.Context, typeof(MainActivity));
+                        intent.PutExtra("fa", Convert.ToString(fa));
+                        intent.SetFlags(ActivityFlags.NewTask | ActivityFlags.ClearTop | ActivityFlags.SingleTop);
+                        Android.App.Application.Context.StartActivity(intent);
                     }
                 }
             }

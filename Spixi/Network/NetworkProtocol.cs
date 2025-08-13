@@ -616,6 +616,7 @@ namespace SPIXI.Network
 
                                 default:
                                     Logging.warn("Unhandled inventory item {0}", item.type);
+                                    InventoryCache.Instance.setProcessedFlag(item.type, item.hash);
                                     break;
                             }
                         }

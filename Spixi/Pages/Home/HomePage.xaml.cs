@@ -61,9 +61,8 @@ namespace SPIXI
         }
         private static List<contactStatusCacheItem> contactStatusCache = new List<contactStatusCacheItem>();
 
-
         private HomePage ()
-		{
+        {
             Node.preStart();
 
             InitializeComponent();
@@ -72,33 +71,32 @@ namespace SPIXI
             this.Title = "SPIXI";
             webView.Opacity = 0;
 
-            if (Preferences.Default.ContainsKey("hidebalance"))
-            {
-                hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
-            }
+            hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
+            SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
 
             loadPage(webView, "index.html");
 
             rightContent.Content = defaultDetailContent.Content;
 
-            this.SizeChanged += OnPageSizeChanged;
+            SizeChanged += OnPageSizeChanged;
 
             if (!running)
             {
                 running = true;
 
-                new Thread(() =>
+                Task.Run(() =>
                 {
                     try
                     {
                         Node.start();
                         Node.connectToNetwork();
-                    }catch(Exception e)
+                    }
+                    catch (Exception e)
                     {
                         Logging.error("Fatal error has occured: " + e);
                         displaySpixiAlert("Fatal exception", "Fatal exception has occured, please send the log files to the developers." + e.Message, "OK");
                     }
-                }).Start();
+                });
 
                 // Setup a timer to handle UI updates
                 IDispatcherTimer timer = Dispatcher.CreateTimer();
@@ -383,6 +381,11 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:explorer"))
             {
                 Browser.Default.OpenAsync(new Uri(Config.explorerUrl + "index.php?p=address&id=" + IxianHandler.primaryWalletAddress));
+            }
+            else if (current_url.StartsWith("ixian:miniAppsStartNoteHidden", StringComparison.Ordinal))
+            {
+                Preferences.Default.Set("miniAppsStartNoteHidden", true);
+                SpixiLocalization.addCustomString("miniAppsStartNoteHidden", "true");
             }
             else
             {
@@ -707,6 +710,13 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(async () =>
             {
+                if (Utils.getChatPage(friend) != null)
+                {
+                    // Prevent duplicates
+                    Logging.warn("Chat page for {0} already open.", friend.ToString());
+                    return;
+                }
+
                 if (Navigation.NavigationStack.Count > 1)
                 {
                     popToRootAsync();
@@ -1086,6 +1096,21 @@ namespace SPIXI
         {
             base.updateScreen();
 
+            if (App.startingScreen != "")
+            {
+                string startingScreen = App.startingScreen;
+                App.startingScreen = "";
+                try
+                {
+                    onChat(startingScreen, null);
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Error in home update screen: " + e);
+                }
+                return;
+            }
+
             displayBackupReminder();
 
             loadApps();
@@ -1120,7 +1145,8 @@ namespace SPIXI
                     }
 
                 }
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Logging.error("Exception occurred in HomePage.UpdateScreen: " + e);
             }
@@ -1130,16 +1156,10 @@ namespace SPIXI
             Utils.sendUiCommand(this, "setBalance", balance, fiatBalance, IxianHandler.localStorage.nickname);
 
             // Check if we should reload certain elements
-            if(Node.changedSettings == true)
+            if (Node.changedSettings == true)
             {
                 Utils.sendUiCommand(this, "loadAvatar", IxianHandler.localStorage.getOwnAvatarPath());
                 Node.changedSettings = false;
-            }
-
-            if (App.startingScreen != "")
-            {
-                onChat(App.startingScreen, null);
-                App.startingScreen = "";
             }
 
             SPushService.clearNotifications();
