@@ -1126,7 +1126,7 @@ namespace SPIXI
                 string cur_version = Config.version.Substring(Config.version.IndexOf('-') + 1);
 
                 string new_version = checkForUpdate();
-                new_version = new_version.StartsWith("(") ? new_version.Substring(new_version.IndexOf('-') + 1).TrimEnd(')') : cur_version;
+                new_version = !new_version.StartsWith("(") ? new_version.Substring(new_version.IndexOf('-') + 1) : cur_version;
 
                 if (UpdateVerify.compareVersionsWithSuffix(new_version, cur_version) > 0)
                 {
