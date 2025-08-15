@@ -211,12 +211,12 @@ contact-details-removedcontact-text = Kontakt je izbrisan.
 contact-details-deletehistory = Izbriši istoriju
 contact-details-deletedhistory-title = Izbrisano
 contact-details-deletedhistory-text = Istorija poruka je izbrisana.
-contact‑details‑delete‑history‑modal‑title = Obrisati istoriju četa?
-contact‑details‑delete‑history‑modal‑subtitle = Cela istorija četa će biti uklonjena.
-contact‑details‑delete‑history‑modal‑confirm = Da, obriši čet
-contact‑details‑delete‑contact‑modal‑title = Ukloniti iz kontakata
-contact‑details‑delete‑contact‑modal‑subtitle = Ovo će kontakt ukloniti sa vaše liste. Nećete moći slati ni primati poruke dok ga ponovo ne dodate.
-contact‑details‑delete‑contact‑modal‑confirm = Da, ukloni kontakt
+contact-details-delete-history-modal-title = Obrisati istoriju četa?
+contact-details-delete-history-modal-subtitle = Cela istorija četa će biti uklonjena.
+contact-details-delete-history-modal-confirm = Da, obriši čet
+contact-details-delete-contact-modal-title = Ukloniti iz kontakata
+contact-details-delete-contact-modal-subtitle = Ovo će kontakt ukloniti sa vaše liste. Nećete moći slati ni primati poruke dok ga ponovo ne dodate.
+contact-details-delete-contact-modal-confirm = Da, ukloni kontakt
 
 ; New Contact Screen
 contact-new-title = Dodaj novi kontakt
@@ -312,58 +312,58 @@ index-backup-prompt-not-now = Ne sada
 index-backup-prompt-note = Preporučuje se da napravite rezervnu kopiju svaki put kada dodate novi kontakt.
 
 ; Onboarding Screen
-onboarding‑choose‑language = Izaberite jezik
-onboarding‑get‑started = Započni
-onboarding‑step‑skip = Preskoči
-onboarding‑step‑back = Nazad
-onboarding‑step‑next = Sledeće
-onboarding‑step‑1‑title = Vaš čet, vaš uređaj, vaša pravila.
-onboarding‑step‑1‑subtitle = Spixi ne koristi servere. Poruke ostaju na vašem uređaju i šalju se samo nakon enkripcije, direktno kontaktu.
-onboarding‑step‑2‑title = Vaša adresa je vaš jedini ID.
-onboarding‑step‑2‑subtitle = Spixi ne zahteva vaš broj telefona ili email. Jedinstvena Spixi adresa je sve što vam treba da se povežete.
-onboarding‑step‑3‑title = Slanje i primanje IXI uplata.
-onboarding‑step‑3‑subtitle = Koristite ugrađeni novčanik za slanje ili primanje IXI kovanica direktno u četu. Jednostavno kao slanje poruke.
-onboarding‑step‑4‑title = Otkrijte Mini aplikacije unutar četa.
-onboarding‑step‑4‑subtitle = Spixi Mini aplikacije vam omogućavaju igranje igara, korišćenje alata ili otključavanje novih funkcija, sve unutar razgovora.
+onboarding-choose-language = Izaberite jezik
+onboarding-get-started = Započni
+onboarding-step-skip = Preskoči
+onboarding-step-back = Nazad
+onboarding-step-next = Sledeće
+onboarding-step-1-title = Vaš čet, vaš uređaj, vaša pravila.
+onboarding-step-1-subtitle = Spixi ne koristi servere. Poruke ostaju na vašem uređaju i šalju se samo nakon enkripcije, direktno kontaktu.
+onboarding-step-2-title = Vaša adresa je vaš jedini ID.
+onboarding-step-2-subtitle = Spixi ne zahteva vaš broj telefona ili email. Jedinstvena Spixi adresa je sve što vam treba da se povežete.
+onboarding-step-3-title = Slanje i primanje IXI uplata.
+onboarding-step-3-subtitle = Koristite ugrađeni novčanik za slanje ili primanje IXI kovanica direktno u četu. Jednostavno kao slanje poruke.
+onboarding-step-4-title = Otkrijte Mini aplikacije unutar četa.
+onboarding-step-4-subtitle = Spixi Mini aplikacije vam omogućavaju igranje igara, korišćenje alata ili otključavanje novih funkcija, sve unutar razgovora.
 
 ; Onboarding Create Account Screen
-create‑account‑title = Hajde da počnemo.
-create‑account‑description = Napravite novi nalog, ili ga vratite koristeći rezervnu kopiju.
-create‑account‑new = Novi nalog
-create‑account‑already = Već imate nalog?
-create‑account‑restore = Vrati nalog
-create‑account‑step = Korak
-create‑account‑step‑of = od
-create‑account‑step‑1‑title = Podesite nadimak i fotografiju
-create‑account‑step‑1‑subtitle = Vaš nadimak i avatar će biti vidljivi vašim kontaktima. Možete ih promeniti u bilo kom trenutku.
-create‑account‑step‑1‑tap = dodirnite za učitavanje
-create‑account‑step‑1‑nickname‑placeholder = Unesite nadimak
-create‑account‑step‑2‑title = Kreirajte rezervnu lozinku
-create‑account‑step‑2‑subtitle = Trebaće vam ova lozinka da vratite Spixi nalog iz rezervne kopije. Čuvajte je na sigurnom.
-create‑account‑step‑2‑password‑placeholder = Unesite lozinku
-create‑account‑step‑2‑password‑confirm = Potvrdite lozinku
-create‑account‑step‑2‑password‑confirm‑note = Lozinka mora imati najmanje 10 karaktera.
-create‑account‑step‑2‑password‑confirm‑note‑success = Lozinke se poklapaju
-create‑account‑step‑2‑password‑confirm‑note‑error = Lozinke moraju biti iste
-create‑account‑step‑2‑note‑title = Spixi ne čuva ovu lozinku.
-create‑account‑step‑2‑note‑subtitle = Bez nje ili vaše rezervne kopije, vaš nalog i novčanik ne mogu biti vraćeni.
-create‑account‑finish‑setup = Završite podešavanje
-create‑account‑creating = Kreiranje vašeg naloga…
-create‑account‑creating‑description = Neće potrajati. Vaš nalog se bezbedno kreira.
+create-account-title = Hajde da počnemo.
+create-account-description = Napravite novi nalog, ili ga vratite koristeći rezervnu kopiju.
+create-account-new = Novi nalog
+create-account-already = Već imate nalog?
+create-account-restore = Vrati nalog
+create-account-step = Korak
+create-account-step-of = od
+create-account-step-1-title = Podesite nadimak i fotografiju
+create-account-step-1-subtitle = Vaš nadimak i avatar će biti vidljivi vašim kontaktima. Možete ih promeniti u bilo kom trenutku.
+create-account-step-1-tap = dodirnite za učitavanje
+create-account-step-1-nickname-placeholder = Unesite nadimak
+create-account-step-2-title = Kreirajte rezervnu lozinku
+create-account-step-2-subtitle = Trebaće vam ova lozinka da vratite Spixi nalog iz rezervne kopije. Čuvajte je na sigurnom.
+create-account-step-2-password-placeholder = Unesite lozinku
+create-account-step-2-password-confirm = Potvrdite lozinku
+create-account-step-2-password-confirm-note = Lozinka mora imati najmanje 10 karaktera.
+create-account-step-2-password-confirm-note-success = Lozinke se poklapaju
+create-account-step-2-password-confirm-note-error = Lozinke moraju biti iste
+create-account-step-2-note-title = Spixi ne čuva ovu lozinku.
+create-account-step-2-note-subtitle = Bez nje ili vaše rezervne kopije, vaš nalog i novčanik ne mogu biti vraćeni.
+create-account-finish-setup = Završite podešavanje
+create-account-creating = Kreiranje vašeg naloga…
+create-account-creating-description = Neće potrajati. Vaš nalog se bezbedno kreira.
 
 ; Intro Restore Screen
-intro‑restore‑title = Vrati nalog
-intro‑restore‑subtitle = Izaberite rezervnu kopiju da počnete vraćanje vašeg Spixi naloga.
-intro‑restore‑select‑file = Izaberite rezervnu kopiju
-intro‑restore‑pass‑title = Unesite rezervnu lozinku
-intro‑restore‑pass‑subtitle = Da biste vratili svoj Spixi nalog, unesite lozinku kojom je rezervna kopija zaštićena.
-intro‑restore‑pass‑placeholder = Unesite lozinku
-intro‑restore‑note‑title = Spixi ne čuva ovu lozinku.
-intro‑restore‑note‑subtitle = Samo vi možete otključati ovu rezervnu kopiju.
-intro‑restore‑button = Vrati nalog
-intro‑restoring‑title = Vraćanje vašeg naloga…
-intro‑restoring‑subtitle = Sačekajte. Sigurno otključavamo vaš nalog.
-intro‑restore‑pass‑error = Pogrešna lozinka. Pokušajte ponovo.
+intro-restore-title = Vrati nalog
+intro-restore-subtitle = Izaberite rezervnu kopiju da počnete vraćanje vašeg Spixi naloga.
+intro-restore-select-file = Izaberite rezervnu kopiju
+intro-restore-pass-title = Unesite rezervnu lozinku
+intro-restore-pass-subtitle = Da biste vratili svoj Spixi nalog, unesite lozinku kojom je rezervna kopija zaštićena.
+intro-restore-pass-placeholder = Unesite lozinku
+intro-restore-note-title = Spixi ne čuva ovu lozinku.
+intro-restore-note-subtitle = Samo vi možete otključati ovu rezervnu kopiju.
+intro-restore-button = Vrati nalog
+intro-restoring-title = Vraćanje vašeg naloga…
+intro-restoring-subtitle = Sačekajte. Sigurno otključavamo vaš nalog.
+intro-restore-pass-error = Pogrešna lozinka. Pokušajte ponovo.
 
 ; Intro Retry Screen
 intro-retry-description-1 = Ponovo unesite šifru
@@ -577,10 +577,10 @@ wallet-error-balance-title = Nedovoljan iznos na stanju
 wallet-error-balance-text = Nemate dovoljno sredstava za ovu transakciju. Ukupni trošak transakcije je {0}, a vaše trenutno stanje je {1}.
 
 ; Onboarding join official bot
-onboarding‑bot‑title = Postanite deo Spixi priče
-onboarding‑bot‑subtitle = Pridružite se našoj zvaničnoj grupi za čet, podelite povratne informacije, povežite se sa timom i ostanite u toku sa najnovijim funkcijama.
-onboarding‑bot‑join‑button = Pridružite se zajednici
-onboarding‑bot‑skip = Preskočite za sada
+onboarding-bot-title = Postanite deo Spixi priče
+onboarding-bot-subtitle = Pridružite se našoj zvaničnoj grupi za čet, podelite povratne informacije, povežite se sa timom i ostanite u toku sa najnovijim funkcijama.
+onboarding-bot-join-button = Pridružite se zajednici
+onboarding-bot-skip = Preskočite za sada
 
 ; Onboarding 1
 onboarding-screen1-title = Povežite se sa sigurnošću

@@ -211,12 +211,12 @@ contact-details-removedcontact-text = 联系人已删除。
 contact-details-deletehistory = 删除历史记录
 contact-details-deletedhistory-title = 已删除
 contact-details-deletedhistory-text = 消息历史记录已删除。
-contact‑details‑delete‑history‑modal‑title = 清除聊天记录？
-contact‑details‑delete‑history‑modal‑subtitle = 整个聊天记录将被清除。
-contact‑details‑delete‑history‑modal‑confirm = 是，清除聊天
-contact‑details‑delete‑contact‑modal‑title = 从联系人中移除
-contact‑details‑delete‑contact‑modal‑subtitle = 这将把联系人从您的列表中移除。在您重新添加之前，将无法发送或接收消息。
-contact‑details‑delete‑contact‑modal‑confirm = 是，移除联系人
+contact-details-delete-history-modal-title = 清除聊天记录？
+contact-details-delete-history-modal-subtitle = 整个聊天记录将被清除。
+contact-details-delete-history-modal-confirm = 是，清除聊天
+contact-details-delete-contact-modal-title = 从联系人中移除
+contact-details-delete-contact-modal-subtitle = 这将把联系人从您的列表中移除。在您重新添加之前，将无法发送或接收消息。
+contact-details-delete-contact-modal-confirm = 是，移除联系人
 
 ; New Contact Screen
 contact-new-title = 添加新联系人
@@ -312,58 +312,58 @@ index-backup-prompt-not-now = 暂不备份
 index-backup-prompt-note = 建议每次添加新联系人后都进行备份。
 
 ; Onboarding Screen
-onboarding‑choose‑language = 选择语言
-onboarding‑get‑started = 开始体验
-onboarding‑step‑skip = 跳过
-onboarding‑step‑back = 返回
-onboarding‑step‑next = 下一步
-onboarding‑step‑1‑title = 您的聊天，您的设备，您的规则。
-onboarding‑step‑1‑subtitle = Spixi 不使用服务器。消息保留在您的设备上，并仅在加密后直接发送给您的联系人。
-onboarding‑step‑2‑title = 您的地址是您的唯一 ID。
-onboarding‑step‑2‑subtitle = Spixi 不需要您的电话号码或电子邮件。您唯一需要连接的内容就是您独特的 Spixi 地址。
-onboarding‑step‑3‑title = 在聊天内发送和接收 IXI 支付。
-onboarding‑step‑3‑subtitle = 使用内置钱包，在聊天中直接发送或接收 IXI 币。就像发送消息一样简单。
-onboarding‑step‑4‑title = 在聊天中发现迷你应用。
-onboarding‑step‑4‑subtitle = Spixi 微型应用让您可以玩游戏、使用工具或解锁新功能，全部直接在对话中完成。
+onboarding-choose-language = 选择语言
+onboarding-get-started = 开始体验
+onboarding-step-skip = 跳过
+onboarding-step-back = 返回
+onboarding-step-next = 下一步
+onboarding-step-1-title = 您的聊天，您的设备，您的规则。
+onboarding-step-1-subtitle = Spixi 不使用服务器。消息保留在您的设备上，并仅在加密后直接发送给您的联系人。
+onboarding-step-2-title = 您的地址是您的唯一 ID。
+onboarding-step-2-subtitle = Spixi 不需要您的电话号码或电子邮件。您唯一需要连接的内容就是您独特的 Spixi 地址。
+onboarding-step-3-title = 在聊天内发送和接收 IXI 支付。
+onboarding-step-3-subtitle = 使用内置钱包，在聊天中直接发送或接收 IXI 币。就像发送消息一样简单。
+onboarding-step-4-title = 在聊天中发现迷你应用。
+onboarding-step-4-subtitle = Spixi 微型应用让您可以玩游戏、使用工具或解锁新功能，全部直接在对话中完成。
 
 ; Onboarding Create Account Screen
-create‑account‑title = 开始您的体验吧。
-create‑account‑description = 创建新账户，或使用备份恢复现有账户。
-create‑account‑new = 新账户
-create‑account‑already = 已有账户？
-create‑account‑restore = 恢复账户
-create‑account‑step = 步骤
-create‑account‑step‑of = 共
-create‑account‑step‑1‑title = 设置您的昵称和头像
-create‑account‑step‑1‑subtitle = 您的昵称和头像将显示给您的联系人，您可随时更改。
-create‑account‑step‑1‑tap = 点击上传
-create‑account‑step‑1‑nickname‑placeholder = 输入昵称
-create‑account‑step‑2‑title = 创建备份密码
-create‑account‑step‑2‑subtitle = 您需要此密码才能从备份文件恢复 Spixi 账户。请妥善保管。
-create‑account‑step‑2‑password‑placeholder = 输入密码
-create‑account‑step‑2‑password‑confirm = 确认密码
-create‑account‑step‑2‑password‑confirm‑note = 密码必须至少有 10 个字符。
-create‑account‑step‑2‑password‑confirm‑note‑success = 密码匹配
-create‑account‑step‑2‑password‑confirm‑note‑error = 密码必须匹配
-create‑account‑step‑2‑note‑title = Spixi 不会存储此密码。
-create‑account‑step‑2‑note‑subtitle = 没有它或您的备份文件，您的账户和钱包将无法恢复。
-create‑account‑finish‑setup = 完成设置
-create‑account‑creating = 正在创建您的账户…
-create‑account‑creating‑description = 这不会花太久。您的账户正在被加固。
+create-account-title = 开始您的体验吧。
+create-account-description = 创建新账户，或使用备份恢复现有账户。
+create-account-new = 新账户
+create-account-already = 已有账户？
+create-account-restore = 恢复账户
+create-account-step = 步骤
+create-account-step-of = 共
+create-account-step-1-title = 设置您的昵称和头像
+create-account-step-1-subtitle = 您的昵称和头像将显示给您的联系人，您可随时更改。
+create-account-step-1-tap = 点击上传
+create-account-step-1-nickname-placeholder = 输入昵称
+create-account-step-2-title = 创建备份密码
+create-account-step-2-subtitle = 您需要此密码才能从备份文件恢复 Spixi 账户。请妥善保管。
+create-account-step-2-password-placeholder = 输入密码
+create-account-step-2-password-confirm = 确认密码
+create-account-step-2-password-confirm-note = 密码必须至少有 10 个字符。
+create-account-step-2-password-confirm-note-success = 密码匹配
+create-account-step-2-password-confirm-note-error = 密码必须匹配
+create-account-step-2-note-title = Spixi 不会存储此密码。
+create-account-step-2-note-subtitle = 没有它或您的备份文件，您的账户和钱包将无法恢复。
+create-account-finish-setup = 完成设置
+create-account-creating = 正在创建您的账户…
+create-account-creating-description = 这不会花太久。您的账户正在被加固。
 
 ; Intro Restore Screen
-intro‑restore‑title = 恢复账户
-intro‑restore‑subtitle = 选择您的备份文件以开始恢复 Spixi 账户。
-intro‑restore‑select‑file = 选择备份文件
-intro‑restore‑pass‑title = 输入备份密码
-intro‑restore‑pass‑subtitle = 要恢复您的 Spixi 账户，请输入用于保护您的备份文件的密码。
-intro‑restore‑pass‑placeholder = 输入密码
-intro‑restore‑note‑title = Spixi 不会存储此密码。
-intro‑restore‑note‑subtitle = 只有您可以解锁此备份文件。
-intro‑restore‑button = 恢复账户
-intro‑restoring‑title = 正在恢复您的账户…
-intro‑restoring‑subtitle = 请稍候。我们正在安全地解锁您的账户。
-intro‑restore‑pass‑error = 密码不正确。请重试。
+intro-restore-title = 恢复账户
+intro-restore-subtitle = 选择您的备份文件以开始恢复 Spixi 账户。
+intro-restore-select-file = 选择备份文件
+intro-restore-pass-title = 输入备份密码
+intro-restore-pass-subtitle = 要恢复您的 Spixi 账户，请输入用于保护您的备份文件的密码。
+intro-restore-pass-placeholder = 输入密码
+intro-restore-note-title = Spixi 不会存储此密码。
+intro-restore-note-subtitle = 只有您可以解锁此备份文件。
+intro-restore-button = 恢复账户
+intro-restoring-title = 正在恢复您的账户…
+intro-restoring-subtitle = 请稍候。我们正在安全地解锁您的账户。
+intro-restore-pass-error = 密码不正确。请重试。
 
 ; Intro Retry Screen
 intro-retry-description-1 = 请重新输入密码
@@ -577,10 +577,10 @@ wallet-error-balance-title = 余额不足
 wallet-error-balance-text = 您的余额不足以完成此交易。交易总费用为 {0}，您的当前余额为 {1}。
 
 ; Onboarding join official bot
-onboarding‑bot‑title = 加入 Spixi 的旅程
-onboarding‑bot‑subtitle = 加入我们的官方群聊，分享反馈、与团队交流，并随时了解最新功能。
-onboarding‑bot‑join‑button = 加入社区
-onboarding‑bot‑skip = 暂时跳过
+onboarding-bot-title = 加入 Spixi 的旅程
+onboarding-bot-subtitle = 加入我们的官方群聊，分享反馈、与团队交流，并随时了解最新功能。
+onboarding-bot-join-button = 加入社区
+onboarding-bot-skip = 暂时跳过
 
 ; Onboarding 1
 onboarding-screen1-title = 安全连接

@@ -211,12 +211,12 @@ contact-details-removedcontact-text = 連絡先が削除されました。
 contact-details-deletehistory = 履歴を削除
 contact-details-deletedhistory-title = 削除済み
 contact-details-deletedhistory-text = メッセージ履歴が削除されました。
-contact‑details‑delete‑history‑modal‑title = チャット履歴を消去しますか？
-contact‑details‑delete‑history‑modal‑subtitle = チャットの全履歴が削除されます。
-contact‑details‑delete‑history‑modal‑confirm = はい、チャットを消去
-contact‑details‑delete‑contact‑modal‑title = 連絡先から削除
-contact‑details‑delete‑contact‑modal‑subtitle = これにより相手が連絡先リストから削除されます。再追加するまでメッセージの送受信はできません。
-contact‑details‑delete‑contact‑modal‑confirm = はい、連絡先を削除
+contact-details-delete-history-modal-title = チャット履歴を消去しますか？
+contact-details-delete-history-modal-subtitle = チャットの全履歴が削除されます。
+contact-details-delete-history-modal-confirm = はい、チャットを消去
+contact-details-delete-contact-modal-title = 連絡先から削除
+contact-details-delete-contact-modal-subtitle = これにより相手が連絡先リストから削除されます。再追加するまでメッセージの送受信はできません。
+contact-details-delete-contact-modal-confirm = はい、連絡先を削除
 
 ; New Contact Screen
 contact-new-title = 新しい連絡先を追加
@@ -312,58 +312,58 @@ index-backup-prompt-not-now = 今はしない
 index-backup-prompt-note = 新しい連絡先を追加するたびにバックアップを作成することをお勧めします。
 
 ; Onboarding Screen
-onboarding‑choose‑language = 言語を選択
-onboarding‑get‑started = はじめよう
-onboarding‑step‑skip = スキップ
-onboarding‑step‑back = 戻る
-onboarding‑step‑next = 次へ
-onboarding‑step‑1‑title = あなたのチャット、あなたのデバイス、あなたのルール。
-onboarding‑step‑1‑subtitle = Spixi はサーバーを使用しません。メッセージは端末に保存され、暗号化されたうえで直接連絡先に送信されます。
-onboarding‑step‑2‑title = アドレスがあなたの唯一の ID。
-onboarding‑step‑2‑subtitle = Spixi は電話番号やメールを必要としません。接続にはあなたの一意な Spixi アドレスだけで十分です。
-onboarding‑step‑3‑title = IXI 決済を送受信
-onboarding‑step‑3‑subtitle = 内蔵ウォレットを使って、チャット内で直接 IXI コインを送受信できます。メッセージを送るような感覚で簡単です。
-onboarding‑step‑4‑title = チャット内でミニアプリを見つけよう
-onboarding‑step‑4‑subtitle = Spixi ミニアプリでは、チャット内でゲームをしたりツールを使ったり、新機能をすぐに利用したりできます。
+onboarding-choose-language = 言語を選択
+onboarding-get-started = はじめよう
+onboarding-step-skip = スキップ
+onboarding-step-back = 戻る
+onboarding-step-next = 次へ
+onboarding-step-1-title = あなたのチャット、あなたのデバイス、あなたのルール。
+onboarding-step-1-subtitle = Spixi はサーバーを使用しません。メッセージは端末に保存され、暗号化されたうえで直接連絡先に送信されます。
+onboarding-step-2-title = アドレスがあなたの唯一の ID。
+onboarding-step-2-subtitle = Spixi は電話番号やメールを必要としません。接続にはあなたの一意な Spixi アドレスだけで十分です。
+onboarding-step-3-title = IXI 決済を送受信
+onboarding-step-3-subtitle = 内蔵ウォレットを使って、チャット内で直接 IXI コインを送受信できます。メッセージを送るような感覚で簡単です。
+onboarding-step-4-title = チャット内でミニアプリを見つけよう
+onboarding-step-4-subtitle = Spixi ミニアプリでは、チャット内でゲームをしたりツールを使ったり、新機能をすぐに利用したりできます。
 
 ; Onboarding Create Account Screen
-create‑account‑title = はじめましょう。
-create‑account‑description = 新しいアカウントを作成するか、バックアップから復元します。
-create‑account‑new = 新規アカウント
-create‑account‑already = すでにアカウントをお持ちですか？
-create‑account‑restore = アカウントを復元
-create‑account‑step = ステップ
-create‑account‑step‑of = ／
-create‑account‑step‑1‑title = ニックネームと写真を設定
-create‑account‑step‑1‑subtitle = あなたのニックネームとアバターは連絡先に表示されます。いつでも変更可能です。
-create‑account‑step‑1‑tap = タップしてアップロード
-create‑account‑step‑1‑nickname‑placeholder = ニックネームを入力
-create‑account‑step‑2‑title = バックアップ用パスワードを作成
-create‑account‑step‑2‑subtitle = バックアップファイルから Spixi アカウントを復元するには、このパスワードが必要です。安全に保管してください。
-create‑account‑step‑2‑password‑placeholder = パスワードを入力
-create‑account‑step‑2‑password‑confirm = パスワードを確認
-create‑account‑step‑2‑password‑confirm‑note = パスワードは10文字以上である必要があります。
-create‑account‑step‑2‑password‑confirm‑note‑success = パスワードが一致しました
-create‑account‑step‑2‑password‑confirm‑note‑error = パスワードが一致しません
-create‑account‑step‑2‑note‑title = Spixi はこのパスワードを保存しません。
-create‑account‑step‑2‑note‑subtitle = これまたはバックアップファイルがなければ、アカウントやウォレットを復元できません。
-create‑account‑finish‑setup = 設定を完了
-create‑account‑creating = アカウントを作成中…
-create‑account‑creating‑description = もうすぐ完了します。アカウントを安全に構築中です。
+create-account-title = はじめましょう。
+create-account-description = 新しいアカウントを作成するか、バックアップから復元します。
+create-account-new = 新規アカウント
+create-account-already = すでにアカウントをお持ちですか？
+create-account-restore = アカウントを復元
+create-account-step = ステップ
+create-account-step-of = ／
+create-account-step-1-title = ニックネームと写真を設定
+create-account-step-1-subtitle = あなたのニックネームとアバターは連絡先に表示されます。いつでも変更可能です。
+create-account-step-1-tap = タップしてアップロード
+create-account-step-1-nickname-placeholder = ニックネームを入力
+create-account-step-2-title = バックアップ用パスワードを作成
+create-account-step-2-subtitle = バックアップファイルから Spixi アカウントを復元するには、このパスワードが必要です。安全に保管してください。
+create-account-step-2-password-placeholder = パスワードを入力
+create-account-step-2-password-confirm = パスワードを確認
+create-account-step-2-password-confirm-note = パスワードは10文字以上である必要があります。
+create-account-step-2-password-confirm-note-success = パスワードが一致しました
+create-account-step-2-password-confirm-note-error = パスワードが一致しません
+create-account-step-2-note-title = Spixi はこのパスワードを保存しません。
+create-account-step-2-note-subtitle = これまたはバックアップファイルがなければ、アカウントやウォレットを復元できません。
+create-account-finish-setup = 設定を完了
+create-account-creating = アカウントを作成中…
+create-account-creating-description = もうすぐ完了します。アカウントを安全に構築中です。
 
 ; Intro Restore Screen
-intro‑restore‑title = アカウントを復元
-intro‑restore‑subtitle = バックアップファイルを選択して Spixi アカウントの復元を開始します。
-intro‑restore‑select‑file = バックアップファイルを選択
-intro‑restore‑pass‑title = バックアップパスワードを入力
-intro‑restore‑pass‑subtitle = Spixi アカウントを復元するには、バックアップファイルを保護したパスワードを入力してください。
-intro‑restore‑pass‑placeholder = パスワードを入力
-intro‑restore‑note‑title = Spixi はこのパスワードを保存しません。
-intro‑restore‑note‑subtitle = あなた以外にこのバックアップファイルを解錠できる人はいません。
-intro‑restore‑button = アカウントを復元
-intro‑restoring‑title = アカウントを復元中…
-intro‑restoring‑subtitle = 少々お待ちください。安全にアカウントを解除しています。
-intro‑restore‑pass‑error = パスワードが誤っています。もう一度お試しください。
+intro-restore-title = アカウントを復元
+intro-restore-subtitle = バックアップファイルを選択して Spixi アカウントの復元を開始します。
+intro-restore-select-file = バックアップファイルを選択
+intro-restore-pass-title = バックアップパスワードを入力
+intro-restore-pass-subtitle = Spixi アカウントを復元するには、バックアップファイルを保護したパスワードを入力してください。
+intro-restore-pass-placeholder = パスワードを入力
+intro-restore-note-title = Spixi はこのパスワードを保存しません。
+intro-restore-note-subtitle = あなた以外にこのバックアップファイルを解錠できる人はいません。
+intro-restore-button = アカウントを復元
+intro-restoring-title = アカウントを復元中…
+intro-restoring-subtitle = 少々お待ちください。安全にアカウントを解除しています。
+intro-restore-pass-error = パスワードが誤っています。もう一度お試しください。
 
 ; Intro Retry Screen
 intro-retry-description-1 = パスワードを再入力してください
@@ -577,10 +577,10 @@ wallet-error-balance-title = 残高不足
 wallet-error-balance-text = この取引を完了するための残高が不足しています。取引の総額は {0}、現在の残高は {1} です。
 
 ; Onboarding join official bot
-onboarding‑bot‑title = Spixi の旅に参加しよう
-onboarding‑bot‑subtitle = 公式グループチャットに参加して、フィードバックを共有し、チームとつながり、最新機能を知りましょう。
-onboarding‑bot‑join‑button = コミュニティに参加
-onboarding‑bot‑skip = 今はスキップ
+onboarding-bot-title = Spixi の旅に参加しよう
+onboarding-bot-subtitle = 公式グループチャットに参加して、フィードバックを共有し、チームとつながり、最新機能を知りましょう。
+onboarding-bot-join-button = コミュニティに参加
+onboarding-bot-skip = 今はスキップ
 
 ; Onboarding 1
 onboarding-screen1-title = 安全な接続

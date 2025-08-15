@@ -49,7 +49,7 @@
     --colors-text-error: #F76A53;
     --colors-text-on-action: #0E0F0F;
     --colors-text-on-disabled: #A4A6A8;
-    --colors-text-inverse: #1E1F1F;
+    --colors-text-inverse: #fafafa;
     --colors-text-select: #0BFFF3;
 
     /* Surface Colors */
@@ -4987,6 +4987,7 @@ img.emoji {
     border: unset;
     border-radius: 12px;
     padding: 12px;
+    width: 100%;
 
     &::selection,
     &:active,
