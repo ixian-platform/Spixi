@@ -4,6 +4,7 @@
 #endif
 
 using CommunityToolkit.Maui;
+using IXICore;
 using IXICore.Meta;
 using Microsoft.Maui.Controls.Compatibility;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
@@ -93,6 +94,7 @@ public static class MauiProgram
                     {
                         Logging.info("Android OnResume - ensuring Node is running");
                         App.isInForeground = true;
+                        PeerStorage.resetInitialConnectionCount();
                         App.EnsureNodeRunning();
                     });
                 });
@@ -111,6 +113,7 @@ public static class MauiProgram
                     {
                         Logging.info("iOS OnActivated ensuring Node is running");
                         App.isInForeground = true;
+                        PeerStorage.resetInitialConnectionCount();
                         App.EnsureNodeRunning();
                     });
                 });

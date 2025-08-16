@@ -202,6 +202,7 @@ public partial class App : Application
     protected override void OnResume()
     {
         isInForeground = true;
+        PeerStorage.resetInitialConnectionCount();
     }
     protected override void OnSleep()
     {

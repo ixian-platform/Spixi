@@ -36,6 +36,7 @@
     /* Text Colors */
     --colors-text-01: #0e0f0f;
     --colors-text-02: #434343;
+    --colors-text-03: #fafafa;
     --colors-text-action: #0456a9;
     --colors-text-action-hover: #003d79;
     --colors-text-action-focus: #0565c7;
@@ -3763,6 +3764,10 @@ img.emoji {
 
 .s-text-02.typing {
     color: var(--colors-text-action);
+}
+
+.s-text-03 {
+    color: var(--colors-text-03);
 }
 
 .s-text-link {

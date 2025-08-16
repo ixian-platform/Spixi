@@ -36,6 +36,7 @@
     /* Text Colors */
     --colors-text-01: #FAFAFA;
     --colors-text-02: #A4A6A8;
+    --colors-text-03: #FAFAFA;
     --colors-text-action: #3898FA;
     --colors-text-action-hover: #6AB2FB;
     --colors-text-action-focus: #067FF9;
@@ -49,7 +50,7 @@
     --colors-text-error: #F76A53;
     --colors-text-on-action: #0E0F0F;
     --colors-text-on-disabled: #A4A6A8;
-    --colors-text-inverse: #fafafa;
+    --colors-text-inverse: #1E1F1F;
     --colors-text-select: #0BFFF3;
 
     /* Surface Colors */
@@ -3775,6 +3776,10 @@ img.emoji {
 
 .s-text-02.typing {
     color: var(--colors-text-action);
+}
+
+.s-text-03 {
+    color: var(--colors-text-03);
 }
 
 .s-text-link {

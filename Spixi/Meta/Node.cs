@@ -162,13 +162,6 @@ namespace SPIXI.Meta
 
             startCounter++;
 
-            if (mainLoopThread != null)
-            {
-                mainLoopThread.Interrupt();
-                mainLoopThread.Join();
-                mainLoopThread = null;
-            }
-
             mainLoopThread = new Thread(mainLoop);
             mainLoopThread.Name = "Main_Loop_Thread";
             mainLoopThread.Start();
@@ -289,50 +282,57 @@ namespace SPIXI.Meta
                 getBalanceBytes = mw.ToArray();
             }
 
-            while (running)
+            try
             {
-                try
+                while (running)
                 {
-                    if (Config.enablePushNotifications)
-                        OfflinePushMessages.fetchPushMessages();
-
-                    // Update the friendlist
-                    updateFriendStatuses();
-
-                    // Cleanup the presence list
-                    // TODO: optimize this by using a different thread perhaps
-                    PresenceList.performCleanup();
-
-                    Balance balance = IxianHandler.balances.First();
-                    // Request initial wallet balance
-                    if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
+                    try
                     {
-                        CoreProtocolMessage.broadcastProtocolMessage(['M', 'H', 'R'], ProtocolMessageCode.getBalance2, getBalanceBytes, null);
-                        CoreProtocolMessage.fetchSectorNodes(IxianHandler.primaryWalletAddress, CoreConfig.maxRelaySectorNodesToRequest);
-                        //ProtocolMessage.fetchAllFriendsSectorNodes(10);
-                        //StreamProcessor.fetchAllFriendsPresences(10);
-                    }
+                        if (Config.enablePushNotifications)
+                            OfflinePushMessages.fetchPushMessages();
 
-                    // Check price if enough time passed
-                    if (lastPriceUpdate + Config.checkPriceSeconds < Clock.getTimestamp())
+                        // Update the friendlist
+                        updateFriendStatuses();
+
+                        // Cleanup the presence list
+                        // TODO: optimize this by using a different thread perhaps
+                        PresenceList.performCleanup();
+
+                        Balance balance = IxianHandler.balances.First();
+                        // Request initial wallet balance
+                        if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
+                        {
+                            CoreProtocolMessage.broadcastProtocolMessage(['M', 'H', 'R'], ProtocolMessageCode.getBalance2, getBalanceBytes, null);
+                            CoreProtocolMessage.fetchSectorNodes(IxianHandler.primaryWalletAddress, CoreConfig.maxRelaySectorNodesToRequest);
+                            //ProtocolMessage.fetchAllFriendsSectorNodes(10);
+                            //StreamProcessor.fetchAllFriendsPresences(10);
+                        }
+
+                        // Check price if enough time passed
+                        if (lastPriceUpdate + Config.checkPriceSeconds < Clock.getTimestamp())
+                        {
+                            checkPrice();
+                        }
+
+                        connectToBotNodes();
+
+                        if (VoIPManager.currentCallStartedTime == 0
+                            && VoIPManager.currentCallInitiated != 0
+                            && Clock.getTimestamp() - VoIPManager.currentCallInitiated > 60)
+                        {
+                            VoIPManager.hangupCall(null, true);
+                        }
+                    }
+                    catch (Exception e)
                     {
-                        checkPrice();
+                        Logging.error("Exception occured in mainLoop: " + e);
                     }
-
-                    connectToBotNodes();
-
-                    if (VoIPManager.currentCallStartedTime == 0
-                        && VoIPManager.currentCallInitiated != 0
-                        && Clock.getTimestamp() - VoIPManager.currentCallInitiated > 60)
-                    {
-                        VoIPManager.hangupCall(null, true);
-                    }
+                    Thread.Sleep(2500);
                 }
-                catch (Exception e)
-                {
-                    Logging.error("Exception occured in mainLoop: " + e);
-                }
-                Thread.Sleep(2500);
+            }
+            catch (ThreadInterruptedException)
+            {
+
             }
         }
 
@@ -417,6 +417,13 @@ namespace SPIXI.Meta
             StreamClientManager.stop();
 
             UpdateVerify.stop();
+
+            if (mainLoopThread != null)
+            {
+                mainLoopThread.Interrupt();
+                mainLoopThread.Join();
+                mainLoopThread = null;
+            }
 
             IxianHandler.status = NodeStatus.stopped;
 
