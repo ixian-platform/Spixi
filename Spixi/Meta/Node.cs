@@ -334,6 +334,10 @@ namespace SPIXI.Meta
             {
 
             }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured in mainLoop: " + e);
+            }
         }
 
         static public void updateFriendStatuses()

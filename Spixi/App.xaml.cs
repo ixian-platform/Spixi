@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Network;
 using IXICore.Streaming;
 using SPIXI;
 using SPIXI.Lang;
@@ -202,7 +203,8 @@ public partial class App : Application
     protected override void OnResume()
     {
         isInForeground = true;
-        PeerStorage.resetInitialConnectionCount();
+        NetworkClientManager.wakeReconnectLoop();
+        StreamClientManager.wakeReconnectLoop();
     }
     protected override void OnSleep()
     {
