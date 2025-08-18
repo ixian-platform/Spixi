@@ -1,28 +1,45 @@
-# Spixi
-Spixi is a multiplatform, decentralized and privacy-oriented chat application that brings together users from different platforms. Because Spixi operates on top of Ixian S2 and DLT networks, it includes a set of distinctive features:
+﻿# Spixi
 
-* Decentralized architecture ensures practically no downtime. Backend is based on the Ixian DLT and Ixian S2 streaming network to provide ultimate decentralization and security.
-* Cryptographically secure (dual end-to-end encryption), which means that only the intended recipient can read messages.
-* Multi-platform (PC, iOS, Android, others)
-* Ixian DLT integration, which enables cryptocurrency wallet features right in the IM client.
-* Messages are not stored in any one country or central location. There is no legal or corporate entity that possesses all of the messages, so no entity can meaningfully demand or obtain decryption keys.
+**Spixi** is a decentralized, privacy-first **communications app** built on the [Ixian Platform](https://www.ixian.io).
+It combines **messaging, voice calls, file sharing, crypto wallet functionality, and Mini Apps** in a single,
+cross-platform experience - with Post-Quantum Cryptography (PQC) and no central servers.
 
+Unlike traditional messengers that rely on central servers to store keys and mediate authentication, Spixi users **hold and
+control their own encryption keys locally**. Every conversation is uniquely encrypted, and identities are proven cryptographically
+without passwords, central accounts, or third-party trust.
 
-## Development branches
+---
 
-There are two main development branches:
-* **master**: This branch is used to build the binaries for the latest stable release of Spixi. It should change slowly and be quite well-tested. This is also the default branch for anyone who wishes to build their Ixian software from source.
-* **development**: This is the main development branch. The branch might not always be kept bug-free, if an extensive new feature is being worked on. If you are simply looking to build a current binary yourself, please use one of the release tags which will be associated with the master branch.
+## 🚀 Why Spixi?
 
-## Documentation
+* ⚛️ **Post-Quantum Resistant Security** - Hybrid key exchange (`RSA + ECDH + Kyber/ML-KEM`) ensures confidentiality even against
+future quantum threats.
+* 🔒 **True End-to-End Encryption** - Dual encryption (AES + ChaCha20-Poly1305). Keys never leave the user's device, and each
+contact-pair uses unique cryptographic keys. Only the sender and intended recipient can ever decrypt a message.
+* 🧬 **Self-Authentication, Not Server Authentication** - In centralized systems, a username and password authenticate you to a
+server, which then manages or even stores your keys. In Ixian, **your cryptographic address is your identity**, and you sign
+messages yourself with your private key. No servers vouch for you - your identity and communication security are entirely under
+your control.
+* 🕸️ **Decentralized by Design** - Runs peer-to-peer over Ixian's **DLT** and **S2 overlay network**. Client discovery works
+via cryptographic addresses and signed presence packets (not DNS, IP, or certificate authorities), ensuring authenticity and
+privacy.
+* 📱 **Cross-Platform** - Works on Android, iOS, Windows, and macOS.
+* 💬 **Rich Communication** - Chat, group messaging, voice calls, reactions, emojis, and file sharing.
+* 💸 **Built-In Crypto Wallet** - Send and receive IXI transactions directly inside the app.
+* 🧩 **Extensible with Mini Apps** - Developers can build secure, in-app extensions and workflows within Spixi.
 
-You can find documentation on how to build, APIs and other documents on [Ixian Documentation Pages](https://docs.ixian.io).
+---
 
-## Build Instructions
+## 📚 Documentation
+
+Developer documentation, build guides, and API references are available at:
+👉 [docs.ixian.io](https://docs.ixian.io)
+
+---
+
+## 🛠️ Build Instructions
 
 ### Prerequisites
-
-Before you start, ensure you have the following prerequisites installed:
 
 - .NET 8 SDK or later
 - Visual Studio 2022 or later (with .NET MAUI workload installed)
@@ -33,7 +50,7 @@ Before you start, ensure you have the following prerequisites installed:
 First, you need to clone the repository to your local machine. Open your terminal or Git Bash and run the following command:
 
 ```bash
-git clone https://github.com/ProjectIxian/Spixi.git
+git clone https://github.com/ixian-platform/Spixi.git
 cd Spixi
 ```
 
@@ -90,37 +107,48 @@ cd Spixi
 ### Additional Notes
 
 - For detailed guidance on setting up your development environment, refer to the official [Microsoft .NET MAUI documentation](https://docs.microsoft.com/en-us/dotnet/maui/).
-- If you encounter any issues, please check the [issues](https://github.com/ProjectIxian/Spixi/issues) section on the repository for existing solutions or open a new issue.
+- If you encounter any issues, please check the [issues](https://github.com/ixian-platform/Spixi/issues) section on the repository for existing solutions or open a new issue.
 - **For iOS Development:**
   - You need a Mac to build and run the application on iOS.
   - Follow the .NET MAUI documentation to set up your Mac environment. This includes enabling remote access, installing Xcode, and setting up Xcode command line tools.
   - Detailed instructions can be found in the [official .NET MAUI documentation for iOS setup](https://learn.microsoft.com/en-us/dotnet/maui/ios/pair-to-mac?view=net-maui-8.0).
 
+---
 
-## Get in touch / Contributing
+## 🌱 Development Branches
 
-If you feel like you can contribute to the project, or have questions or comments, you can get in touch with the team through Discord: https://discord.gg/pdJNVhv
+* **master** - Stable, production-ready releases
+* **development** - Active development, may contain unfinished features
 
-## Pull requests
+For reproducible builds, always use the latest **release tag** on `master`.
 
-If you would like to send an improvement or a bug fix to this repository, but without permanently joining the team, follow these approximate steps:
+---
+
+## 🤝 Contributing
+
+We welcome contributions from developers, integrators, and builders.
 
 1. Fork this repository
-2. Create a branch from **development** branch (preferably with a name that describes the change)
-3. Create commits (the commit messages should contain some information on what and why was changed)
-4. Create a pull request to this repository's **development** branch for review and inclusion
+2. Create a feature branch (`feature/my-change`)
+3. Commit with descriptive messages
+4. Open a Pull Request against `development`
 
+Join the community on **[Discord](https://discord.gg/pdJNVhv)**.
 
-## About Ixian
+---
 
-Ixian DLT is a revolutionary blockchain that brings several innovative advantages, such as processing a high volume of micro-transactions quickly while consuming a low amount of processing power, disk space and energy.
+## 🌍 Community & Links
 
-**Homepage**: https://www.ixian.io
+* **Spixi Website**: [www.spixi.io](https://www.spixi.io)
+* **Ixian Website**: [www.ixian.io](https://www.ixian.io)
+* **Docs**: [docs.ixian.io](https://docs.ixian.io)
+* **Discord**: [discord.gg/pdJNVhv](https://discord.gg/pdJNVhv)
+* **Telegram**: [t.me/ixian\_official\_ENG](https://t.me/ixian_official_ENG)
+* **Bitcointalk**: [Forum Thread](https://bitcointalk.org/index.php?topic=4631942.0)
+* **GitHub**: [ixian-platform](https://www.github.com/ixian-platform)
 
-**Discord**: https://discord.gg/pdJNVhv
+---
 
-**Bitcointalk**: https://bitcointalk.org/index.php?topic=4631942.0
+## 📜 License
 
-**Documentation**: https://docs.ixian.io
-
-**GitHub**: https://www.github.com/ProjectIxian
+Licensed under the [MIT License](LICENSE).
