@@ -50,6 +50,7 @@ Developer documentation, build guides, and API references are available at:
 First, you need to clone the repository to your local machine. Open your terminal or Git Bash and run the following command:
 
 ```bash
+git clone https://github.com/ixian-platform/Ixian-Core.git
 git clone https://github.com/ixian-platform/Spixi.git
 cd Spixi
 ```
