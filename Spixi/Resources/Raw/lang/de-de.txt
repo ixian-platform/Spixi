@@ -427,6 +427,8 @@ settings-deleted-error-title = Fehler
 settings-deleted-error-text = Ein unbekannter Fehler ist aufgetreten.
 settings-emptynick-title = Ungültiger Spitzname
 settings-emptynick-text = Bitte gib einen Spitznamen ein.
+settings-unsaved-changes-modal-title = Nicht gespeicherte Änderungen
+settings-unsaved-changes-modal-subtitle = Wenn Sie jetzt verlassen, gehen Ihre Änderungen verloren. Möchten Sie fortfahren?
 
 ; Settings Backup Screen
 settings-backup-title = Konto sichern

@@ -428,6 +428,8 @@ settings-deleted-error-title = Error
 settings-deleted-error-text = Unknown error has occurred.
 settings-emptynick-title = Invalid nickname
 settings-emptynick-text = Please enter nickname.
+settings-unsaved-changes-modal-title = Unsaved changes
+settings-unsaved-changes-modal-subtitle = If you leave now, your changes will be lost. Do you want to continue?
 
 ; Settings Backup Screen
 settings-backup-title = Backup Account

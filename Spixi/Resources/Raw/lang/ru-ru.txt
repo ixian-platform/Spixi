@@ -427,6 +427,8 @@ settings-deleted-error-title = Ошибка
 settings-deleted-error-text = Обнаружена неизвестная ошибка.
 settings-emptynick-title = Неправильный никнейм
 settings-emptynick-text = Введите никнейм.
+settings-unsaved-changes-modal-title = Несохранённые изменения
+settings-unsaved-changes-modal-subtitle = Если вы выйдете сейчас, изменения будут потеряны. Продолжить?
 
 ; Settings Backup Screen
 settings-backup-title = Сохранить аккаунт

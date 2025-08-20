@@ -427,6 +427,8 @@ settings-deleted-error-title = Errore
 settings-deleted-error-text = Si è verificato un errore sconosciuto.
 settings-emptynick-title = Nickname non valido
 settings-emptynick-text = Inserisci un nickname.
+settings-unsaved-changes-modal-title = Modifiche non salvate
+settings-unsaved-changes-modal-subtitle = Se esci ora, le modifiche andranno perse. Vuoi continuare?
 
 ; Schermata Backup Impostazioni
 settings-backup-title = Backup Account

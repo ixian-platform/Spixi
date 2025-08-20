@@ -15,6 +15,12 @@ namespace SPIXI
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
 
+            string lang = "en-us";
+            if (SpixiLocalization.loadLanguage(lang))
+            {
+                Preferences.Default.Set("language", lang);
+            }
+
             loadPage(webView, "intro.html");
         }
 

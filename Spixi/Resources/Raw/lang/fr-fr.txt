@@ -427,6 +427,8 @@ settings-deleted-error-title = Erreur
 settings-deleted-error-text = Une erreur inconnue est survenue.
 settings-emptynick-title = Nom invalide
 settings-emptynick-text = Veuillez entrer un nom.
+settings-unsaved-changes-modal-title = Modifications non enregistrées
+settings-unsaved-changes-modal-subtitle = Si vous quittez maintenant, vos modifications seront perdues. Voulez-vous continuer ?
 
 ; Settings Backup Screen
 settings-backup-title = Sauvegarde du compte

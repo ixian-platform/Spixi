@@ -427,6 +427,8 @@ settings-deleted-error-title = Greška
 settings-deleted-error-text = Došlo je do nepoznate greške.
 settings-emptynick-title = Nevažeći nadimak
 settings-emptynick-text = Molimo unesite nadimak.
+settings-unsaved-changes-modal-title = Nesačuvane izmene
+settings-unsaved-changes-modal-subtitle = Ako sada izađete, izmene će biti izgubljene. Da li želite da nastavite?
 
 ; Settings Backup Screen
 settings-backup-title = Rezervna kopija naloga

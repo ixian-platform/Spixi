@@ -76,7 +76,14 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                OnBackButtonPressed();
+                var source_file_path = Path.Combine(IxianHandler.localStorage.avatarsPath, "avatar-tmp.jpg");
+                // Delete the temporary avatar image
+                if (File.Exists(source_file_path))
+                {
+                    File.Delete(source_file_path);
+                }
+                resetLanguage();
+                popPageAsync();
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -128,6 +135,7 @@ namespace SPIXI
                 if (SpixiLocalization.loadLanguage(lang))
                 {
                     selectedLanguage = lang;
+                    Preferences.Default.Set("language", selectedLanguage);
                     loadPage(webView, "settings.html");
                 }
                 else
@@ -150,14 +158,18 @@ namespace SPIXI
                     var lockPage = new LockPage(true);
                     lockPage.authSucceeded += HandleAuthSucceeded;
                     Navigation.PushModalAsync(lockPage);
-
-
                 }
             }
             else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
             {
                 string appearanceString = current_url.Substring("ixian:appearance:".Length);
                 selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
+
+                if (ThemeManager.changeAppearance(selectedAppearance))
+                {
+                    SPlatformUtils.setEdgeToEdge();
+                    loadPage(webView, "settings.html");
+                }
             }
             else
             {
@@ -392,10 +404,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            resetLanguage();
-
-            popPageAsync();
-
+            Utils.sendUiCommand(this, "onBack");
             return true;
         }
     }

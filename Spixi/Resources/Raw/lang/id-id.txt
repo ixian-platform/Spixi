@@ -427,6 +427,8 @@ settings-deleted-error-title = Kesalahan
 settings-deleted-error-text = Telah terjadi kesalahan yang tidak diketahui.
 settings-emptynick-title = Nama panggilan tidak valid
 settings-emptynick-text = Harap masukkan nama panggilan Anda.
+settings-unsaved-changes-modal-title = Perubahan belum disimpan
+settings-unsaved-changes-modal-subtitle = Jika Anda keluar sekarang, perubahan akan hilang. Lanjutkan?
 
 ; Settings Backup Screen
 settings-backup-title = Cadangkan Akun

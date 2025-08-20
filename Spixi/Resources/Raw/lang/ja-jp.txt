@@ -427,6 +427,8 @@ settings-deleted-error-title = エラー
 settings-deleted-error-text = 不明なエラーが発生しました。
 settings-emptynick-title = 無効なニックネーム
 settings-emptynick-text = ニックネームを入力してください。
+settings-unsaved-changes-modal-title = 保存されていない変更
+settings-unsaved-changes-modal-subtitle = このまま移動すると、変更内容は失われます。続行しますか？
 
 ; Settings Backup Screen
 settings-backup-title = アカウントのバックアップ

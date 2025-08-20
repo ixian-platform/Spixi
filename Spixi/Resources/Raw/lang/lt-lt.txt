@@ -427,6 +427,8 @@ settings-deleted-error-title = Klaida
 settings-deleted-error-text = Įvyko nežinoma klaida.
 settings-emptynick-title = Netinkamas slapyvardis
 settings-emptynick-text = Prašome įvesti slapyvardį.
+settings-unsaved-changes-modal-title = Neišsaugoti pakeitimai
+settings-unsaved-changes-modal-subtitle = Jei dabar išeisite, pakeitimai bus prarasti. Ar norite tęsti?
 
 ; Settings Backup Screen
 settings-backup-title = Paskyros atsarginė kopija

@@ -427,6 +427,8 @@ settings-deleted-error-title = 错误
 settings-deleted-error-text = 发生未知错误。
 settings-emptynick-title = 无效昵称
 settings-emptynick-text = 请输入昵称。
+settings-unsaved-changes-modal-title = 未保存的更改
+settings-unsaved-changes-modal-subtitle = 如果现在离开，您的更改将会丢失。确定要继续吗？
 
 ; Settings Backup Screen
 settings-backup-title = 账户备份

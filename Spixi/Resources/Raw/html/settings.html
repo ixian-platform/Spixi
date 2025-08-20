@@ -172,26 +172,6 @@
         </div>
 
         <div class="spixi-holder-40"></div>
-        <div id="lockModal" class="spixi-modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-
-                <div class="spixi-modal-text">
-                    *SL{settings-lock-confirm-text}
-                </div>
-
-                <hr class="spixi-separator noheightmargins fullwidth" />
-                <div class="spixi-modal-footer">
-                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
-
-                    <div id="confirmlock" class="spixi-modal-confirm">*SL{settings-confirm}</div>
-
-                </div>
-
-            </div>
-        </div>
-
-
 
         <hr class="spixi-separator-main" />
         <div class="spixi-textsection-holder spixi-textsection-header">
@@ -293,18 +273,48 @@
 
     </div>
 
+    <!--Unsaved Changes Modal-->
+    <div class="new-modal-wrapper" id="unsavedChangesModal" style="display: none;">
+        <div class="new-modal-container">
+            <!--<i class="fa fa-user-times modal-remove-icon"></i>-->
+            <div class="new-modal-texts">
+                <span class="label-lg">*SL{settings-unsaved-changes-modal-title}</span>
+                <span class="body-sm">*SL{settings-unsaved-changes-modal-subtitle}</span>
+            </div>
+            <div class="new-modal-buttons">
+                <div class="spixi-flat-button label-sm" onclick="document.getElementById('unsavedChangesModal').style.display = 'none';">
+                    *SL{settings-cancel}
+                </div>
+                <div class="spixi-flat-button label-sm button outline"
+                     onclick="location.href = 'ixian:back';">
+                    *SL{settings-confirm}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript">
+        var nickname = "";
+        var settingsChanged = false;
+
         var deleteWalletModal = document.getElementById('deleteWalletModal');
         var deleteAccountModal = document.getElementById('deleteAccountModal');
         var deleteHistoryModal = document.getElementById('deleteHistoryModal');
         var deleteDownloadsModal = document.getElementById('deleteDownloadsModal');
-        var lockModal = document.getElementById('lockModal');
+        var unsavedChangesModal = document.getElementById('unsavedChangesModal');
 
         var lockSwitch = document.getElementById("lockSwitch");
 
+        function onBack() {
+            if (settingsChanged) {
+                unsavedChangesModal.style.display = "flex";
+            } else {
+                location.href = "ixian:back";
+            }
+        }
 
         document.getElementById("backbtn").onclick = function () {
-            location.href = "ixian:back";
+            onBack();
         }
 
         document.getElementById("savebtn").onclick = function () {
@@ -343,8 +353,8 @@
             else if (event.target == deleteDownloadsModal) {
                 deleteDownloadsModal.style.display = "none";
             }
-            else if (event.target == lockModal) {
-                lockModal.style.display = "none";
+            else if (event.target == unsavedChangesModal) {
+                unsavedChangesModal.style.display = "none";
             }
         }
 
@@ -352,23 +362,21 @@
             deleteAccountModal.style.display = "none";
         }
         document.getElementsByClassName("spixi-modal-footer")[1].onclick = function () {
-            lockModal.style.display = "none";
-        }
-        document.getElementsByClassName("spixi-modal-footer")[2].onclick = function () {
             deleteWalletModal.style.display = "none";
         }
-        document.getElementsByClassName("spixi-modal-footer")[3].onclick = function () {
+        document.getElementsByClassName("spixi-modal-footer")[2].onclick = function () {
             deleteHistoryModal.style.display = "none";
         }
-        document.getElementsByClassName("spixi-modal-footer")[4].onclick = function () {
+        document.getElementsByClassName("spixi-modal-footer")[3].onclick = function () {
             deleteDownloadsModal.style.display = "none";
         }
 
 
         document.getElementById("avatar").onclick = function () {
+            settingsChanged = true;
             location.href = "ixian:avatar";
         }
-        
+
         function loadAvatar(avatar_path) {
             avatar_path = avatar_path.replace(/&#92;/g, '\\');
 
@@ -378,6 +386,7 @@
         }
 
         function setNickname(nick) {
+            nickname = nick;
             document.getElementById("nicknameInput").value = nick;
         }
 
@@ -390,14 +399,13 @@
             }
         }
 
-        function setLanguage(lang)
-        {
+        function setLanguage(lang) {
             document.getElementById("SelectedLanguage").innerHTML = lang;
         }
 
-        function changeLanguage(langEl)
-        {
-            document.getElementById('LanguageDropDown').style.display='none';
+        function changeLanguage(langEl) {
+            settingsChanged = true;
+            document.getElementById('LanguageDropDown').style.display = 'none';
             setLanguage(langEl.innerHTML);
             location.href = "ixian:language:" + langEl.getAttribute("lang-data");
             return false;
@@ -413,6 +421,7 @@
         }
 
         function changeAppearance(appEl) {
+            settingsChanged = true;
             document.getElementById('AppearanceDropDown').style.display = 'none';
             var attr = appEl.getAttribute("app-data");
             setAppearance(attr);
@@ -428,22 +437,23 @@
                 lockSwitch.className = "spixi-switch off";
             }
         }
-        
-        lockSwitch.onclick = function () {
-            if (lockSwitch.classList.contains("off")) {
-                lockModal.style.display = "block";
 
+        lockSwitch.onclick = function () {
+            settingsChanged = true;
+            if (lockSwitch.classList.contains("off")) {
+                lockSwitch.className = "spixi-switch";
+                location.href = "ixian:lock:on";
                 return;
             }
+            lockSwitch.className = "spixi-switch off";
             location.href = "ixian:lock:off";
         }
-        document.getElementById("confirmlock").onclick = function () {
-            lockModal.style.display = "none";
-            lockSwitch.className = "spixi-switch";
-            location.href = "ixian:lock:on";
-        }
-                
 
+        document.getElementById("nicknameInput").onblur = function () {
+            if (nickname != document.getElementById("nicknameInput").value) {
+                settingsChanged = true;
+            }
+        }
     </script>
 </body>
 </html>

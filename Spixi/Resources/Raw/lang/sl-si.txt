@@ -427,6 +427,8 @@ settings-deleted-error-title = Napaka
 settings-deleted-error-text = Prišlo je do neznane napake.
 settings-emptynick-title = Neveljaven vzdevek
 settings-emptynick-text = Prosimo, vnesite vzdevek.
+settings-unsaved-changes-modal-title = Neshranjene spremembe
+settings-unsaved-changes-modal-subtitle = Vse spremembe bodo izgubljene. Ali želite nadaljevati?
 
 ; Settings Backup Screen
 settings-backup-title = Varnostna kopija računa
