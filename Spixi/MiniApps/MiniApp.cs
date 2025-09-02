@@ -253,6 +253,24 @@ namespace SPIXI.MiniApps
             }
             return str;
         }
+        public string getProtocolsAsString()
+        {
+            string str = "";
+            if (protocols == null)
+            {
+                return "";
+            }
+
+            foreach (var proto in protocols)
+            {
+                if (str != "")
+                {
+                    str += ", ";
+                }
+                str += proto.Value.ToString();
+            }
+            return str;
+        }
 
         public void writeAppInfoFile(string filePath)
         {
@@ -270,6 +288,8 @@ namespace SPIXI.MiniApps
             sb.AppendLine($"checksum = {checksum}");
             var capabilities_str = getCapabilitiesAsString();
             sb.AppendLine($"capabilities = {capabilities_str}");
+            var protocols_str = getProtocolsAsString();
+            sb.AppendLine($"protocols = {protocols_str}");
             sb.AppendLine($"minUsers = {minUsers}");
             sb.AppendLine($"maxUsers = {maxUsers}");
 
