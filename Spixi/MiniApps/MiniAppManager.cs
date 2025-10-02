@@ -101,11 +101,6 @@ namespace SPIXI.MiniApps
                 }
 
                 byte[] data = await httpClient.GetByteArrayAsync(url);
-                if (data.Length != contentLength)
-                {
-                    Logging.error("Downloaded app data size mismatch: expected " + contentLength + " bytes, but got " + data.Length + " bytes");
-                    return null;
-                }
 
                 string content = Encoding.UTF8.GetString(data);
                 string[] app_info = content.Replace("\r\n", "\n").Split('\n');
