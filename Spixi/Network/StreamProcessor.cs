@@ -326,6 +326,12 @@ namespace SPIXI
                         }
                         break;
 
+                    case SpixiMessageCode.keys2:
+                        {
+                            CoreStreamProcessor.fetchFriendsPresence(friend);
+                        }
+                        break;
+
                     case SpixiMessageCode.acceptAddBot:
                         {
                             Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));

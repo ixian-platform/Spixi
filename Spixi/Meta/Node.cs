@@ -241,7 +241,7 @@ namespace SPIXI.Meta
             NetworkClientManager.start(2);
 
             // Start the s2 client manager
-            StreamClientManager.start(Config.maxConnectedStreamingNodes);
+            StreamClientManager.start(Config.maxConnectedStreamingNodes, true);
         }
 
         private static void connectToBotNodes()
@@ -288,6 +288,8 @@ namespace SPIXI.Meta
                 {
                     try
                     {
+                        PeerStorage.savePeersFile();
+
                         if (Config.enablePushNotifications)
                             OfflinePushMessages.fetchPushMessages();
 
@@ -390,6 +392,8 @@ namespace SPIXI.Meta
 
             Logging.info("Stopping node...");
             running = false;
+
+            PeerStorage.savePeersFile(true);
 
             // Stop the stream processor
             streamProcessor.stop();

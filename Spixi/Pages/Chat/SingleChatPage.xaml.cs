@@ -54,10 +54,7 @@ namespace SPIXI
 
             homePage = home;
 
-            if (!friend.online)
-            {
-                StreamProcessor.fetchFriendsPresence(friend);
-            }
+            StreamProcessor.fetchFriendsPresence(friend);
         }
 
         public override void recalculateLayout()
