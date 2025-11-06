@@ -713,11 +713,6 @@ namespace SPIXI.Meta
             return friend_message;
         }
 
-        public override void onSignerSolutionFound()
-        {
-            throw new NotImplementedException();
-        }
-
         static public Transaction sendTransaction(Address address, IxiNumber amount)
         {
             // TODO add support for sending funds from multiple addreses automatically based on remaining balance
@@ -729,7 +724,7 @@ namespace SPIXI.Meta
         static public (Transaction transaction, List<Address> relayNodeAddresses) prepareTransactionFrom(Address fromAddress, Address toAddress, IxiNumber amount)
         {
             IxiNumber fee = ConsensusConfig.forceTransactionPrice;
-            SortedDictionary<Address, ToEntry> to_list = new(new AddressComparer());
+            Dictionary<Address, ToEntry> to_list = new(new AddressComparer());
             Balance address_balance = IxianHandler.balances.FirstOrDefault(addr => addr.address.addressNoChecksum.SequenceEqual(fromAddress.addressNoChecksum));
             Address pubKey = new(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
@@ -739,7 +734,7 @@ namespace SPIXI.Meta
                 return (null, null);
             }
 
-            SortedDictionary<byte[], IxiNumber> from_list = new(new ByteArrayComparer())
+            Dictionary<byte[], IxiNumber> from_list = new(new ByteArrayComparer())
             {
                 { IxianHandler.getWalletStorage().getAddress(fromAddress).nonce, amount }
             };
