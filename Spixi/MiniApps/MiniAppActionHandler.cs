@@ -7,6 +7,7 @@ using IXICore.Utils;
 using static IXICore.Transaction;
 using IXICore.RegNames;
 using System.Text;
+using IXICore.Network;
 
 namespace SPIXI.MiniApps
 {
@@ -19,6 +20,7 @@ namespace SPIXI.MiniApps
         public const string UPDATE_CAPACITY = "updateCapacity";
         public const string ALLOW_SUBNAMES = "allowSubnames";
         public const string TRANSFER_NAME = "transferName";
+        public const string SEND_PAYMENT = "sendPayment";
     }
 
     public static class MiniAppActionHandler
@@ -55,6 +57,10 @@ namespace SPIXI.MiniApps
                 case MiniAppCommands.TRANSFER_NAME:
                     resp = processTransferName(actionData);
                     break;*/
+
+                case MiniAppCommands.SEND_PAYMENT:
+                    resp = processSendPayment(actionData, NetworkClientManager.getRandomConnectedClientAddresses(3));
+                    break;
             }
             return resp;
         }
@@ -246,5 +252,46 @@ namespace SPIXI.MiniApps
             };
             return JsonConvert.SerializeObject(txResponse);
         }*/
+
+        public static string processSendPayment(string paymentData, List<Address> relayPeers)
+        {
+            SendPayment sendTx = JsonConvert.DeserializeObject<SendPayment>(paymentData);
+            var recipients = sendTx.recipients;
+
+            IxiNumber feePerKb = ConsensusConfig.forceTransactionPrice;
+            IxiNumber fee = feePerKb;
+            Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
+            Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
+
+            var toList = new Dictionary<Address, ToEntry>(new AddressComparer());
+
+            foreach (var recipient in recipients)
+            {
+                toList.Add(recipient.Key, new ToEntry(Transaction.maxVersion, recipient.Value));
+            }
+
+            foreach (var peer in relayPeers)
+            {
+                toList.Add(peer, new ToEntry(Transaction.maxVersion, fee));
+            }
+
+            Transaction tx = new Transaction((int)Transaction.Type.Normal, feePerKb, toList, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+            while (tx.fee != fee)
+            {
+                fee = tx.fee;
+                foreach (var peer in relayPeers)
+                {
+                    toList[peer].amount = fee;
+                }
+                tx = new Transaction((int)Transaction.Type.Normal, feePerKb, toList, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+            }
+
+            TransactionResponse txResponse = new TransactionResponse()
+            {
+                tx = Crypto.hashToString(tx.getBytes()),
+                requestId = sendTx.requestId
+            };
+            return JsonConvert.SerializeObject(txResponse);
+        }
     }
 }

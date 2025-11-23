@@ -199,6 +199,7 @@ namespace SPIXI
                 Node.loadWallet();
                 Directory.Delete(tmpDirectory, true);
                 File.Delete(source_path);
+                IxianHandler.localStorage.accountRestored = true;
                 Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
                 removePage(this);
                 return true;

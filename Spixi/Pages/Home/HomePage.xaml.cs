@@ -73,6 +73,7 @@ namespace SPIXI
 
             hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
             SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
+            SpixiLocalization.addCustomString("devMode", Preferences.Default.Get("devMode", false) ? "true" : "false");
 
             loadPage(webView, "index.html");
 
@@ -323,7 +324,7 @@ namespace SPIXI
             else if (current_url.Equals("ixian:copy", StringComparison.Ordinal))
             {
             }
-            else if(current_url.StartsWith("ixian:viewLog"))
+            else if(current_url.StartsWith("ixian:sendLog"))
             {
                 // TODO perhaps move this whole functionality to Logging class and delete spixi.log.zip on start if exists
 
@@ -386,6 +387,15 @@ namespace SPIXI
             {
                 Preferences.Default.Set("miniAppsStartNoteHidden", true);
                 SpixiLocalization.addCustomString("miniAppsStartNoteHidden", "true");
+            }
+            else if (current_url.StartsWith("ixian:enableDevMode", StringComparison.Ordinal))
+            {
+                Preferences.Default.Set("devMode", true);
+                SpixiLocalization.addCustomString("devMode", "true");
+            }
+            else if (current_url.StartsWith("ixian:dev", StringComparison.Ordinal))
+            {
+                Navigation.PushModalAsync(new DevPage());
             }
             else
             {
@@ -1431,7 +1441,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app, remoteUserAddresses), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, null, true, remoteUserAddresses), Config.defaultXamarinAnimations);
             });
         }
 

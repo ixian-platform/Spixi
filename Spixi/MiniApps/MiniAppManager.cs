@@ -11,7 +11,7 @@ namespace SPIXI.MiniApps
     class MiniAppManager
     {
         string appsPath = "Apps";
-        string tmpPath = "Tmp";
+        public string tmpPath { get; private set; } = "Tmp";
 
         Dictionary<string, MiniApp> appList = new Dictionary<string, MiniApp>();
 
@@ -54,6 +54,12 @@ namespace SPIXI.MiniApps
                         continue;
                     }
                     MiniApp app = new MiniApp(File.ReadAllLines(app_info_path));
+                    if (app.id == "")
+                    {
+                        Logging.error("App id is empty for {0}", app_info_path);
+                        continue;
+                    }
+
                     appList.Add(app.id, app);
                 }
             }
@@ -105,7 +111,12 @@ namespace SPIXI.MiniApps
                 string content = Encoding.UTF8.GetString(data);
                 string[] app_info = content.Replace("\r\n", "\n").Split('\n');
 
-                return new MiniApp(app_info, url);
+                var app = new MiniApp(app_info, url);
+                if (app.id == "")
+                {
+                    return null;
+                }
+                return app;
             }
             catch (HttpRequestException e)
             {
@@ -118,7 +129,8 @@ namespace SPIXI.MiniApps
 
             return null;
         }
-        public string install(MiniApp fetchedAppInfo)
+
+        public string installFromUrl(MiniApp fetchedAppInfo)
         {
             // Check for contentUrl first
             if (string.IsNullOrWhiteSpace(fetchedAppInfo.contentUrl) || !Uri.TryCreate(fetchedAppInfo.contentUrl, UriKind.Absolute, out Uri uri) || uri.Scheme != Uri.UriSchemeHttps)
@@ -129,7 +141,7 @@ namespace SPIXI.MiniApps
 
             string app_name = "";
 
-            string file_name = Path.GetRandomFileName();
+            string file_name = fetchedAppInfo.contentUrl.Split('/').Last();
             string source_app_file_path = Path.Combine(tmpPath, file_name);
             using (HttpClient client = new HttpClient())
             {
@@ -157,115 +169,82 @@ namespace SPIXI.MiniApps
                 }
             }
 
-            string source_app_path = Path.Combine(tmpPath, file_name + ".dir");
-            string target_app_path = "";
-            try
+            app_name = installFromPath(source_app_file_path, fetchedAppInfo.contentUrl);
+            if (File.Exists(source_app_file_path))
             {
-                using (ZipArchive archive = ZipFile.Open(source_app_file_path, ZipArchiveMode.Read))
-                {
-                    if (Directory.Exists(source_app_path))
-                    {
-                        Directory.Delete(source_app_path, true);
-                    }
-                    Directory.CreateDirectory(source_app_path);
-
-                    // extract the app to tmp location
-                    archive.ExtractToDirectory(source_app_path);
-
-                    // read app info
-                    string app_info_path = Path.Combine(source_app_path, "appinfo.spixi");
-
-                    fetchedAppInfo.writeAppInfoFile(app_info_path);
-
-
-                    MiniApp app = new MiniApp(File.ReadAllLines(app_info_path));
-
-                    if (appList.ContainsKey(app.id))
-                    {
-                        // TODO except when updating - version check
-                        Logging.warn("App {0} already installed.", app.id);
-                        if (File.Exists(source_app_file_path))
-                        {
-                            File.Delete(source_app_file_path);
-                        }
-
-                        if (Directory.Exists(source_app_path))
-                        {
-                            Directory.Delete(source_app_path, true);
-                        }
-                        return null;
-                    }
-
-                    app_name = app.name;
-
-                    // TODO sig check
-
-                    target_app_path = Path.Combine(appsPath, app.id);
-
-                    // move to apps directory
-                    Directory.Move(source_app_path, target_app_path);
-
-                    lock (appList)
-                    {
-                        // add app to the list
-                        appList.Add(app.id, app);
-                    }
-                }
                 File.Delete(source_app_file_path);
-            }
-            catch (Exception e)
-            {
-                Logging.error("Error installing app: " + e);
-
-                if (File.Exists(source_app_file_path))
-                {
-                    File.Delete(source_app_file_path);
-                }
-
-                if (Directory.Exists(source_app_path))
-                {
-                    Directory.Delete(source_app_path, true);
-                }
-
-                if (target_app_path != "" && Directory.Exists(target_app_path))
-                {
-                    Directory.Delete(target_app_path, true);
-                }
-
-                return null;
             }
 
             return app_name;
         }
 
-        public string install(string url)
+        public MiniApp extractAppInfo(string source_path, string? url = null)
         {
-            string file_name = Path.GetRandomFileName();
-            string source_app_file_path = Path.Combine(tmpPath, file_name);
-            using (HttpClient client = new HttpClient())
-            {
-                try
-                {
-                    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MustRevalidate = true };
-                    File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(url).Result);
-                }
-                catch (Exception e)
-                {
-                    Logging.error("Exception occured while downloading file: " + e);
-                    if(File.Exists(source_app_file_path))
-                    {
-                        File.Delete(source_app_file_path);
-                    }
-                    return null;
-                }
-            }
             string app_name = "";
 
-            string source_app_path = Path.Combine(tmpPath, file_name + ".dir");
+            try
+            {
+                using (ZipArchive archive = ZipFile.Open(source_path, ZipArchiveMode.Read))
+                {
+                    // extract the app to tmp location
+                    var entry = archive.GetEntry("appinfo.spixi");
+                    if (entry == null)
+                    {
+                        return null;
+                    }
+                    var app_info_path = Path.Combine(tmpPath, "appinfo.spixi.tmp");
+                    entry.ExtractToFile(app_info_path, true);
+
+                    entry = archive.GetEntry("icon.png");
+                    if (entry == null)
+                    {
+                        return null;
+                    }
+                    var icon_png_path = Path.Combine(tmpPath, "icon.png");
+                    entry.ExtractToFile(icon_png_path, true);
+
+                    // read app info
+                    MiniApp app = new MiniApp(File.ReadAllLines(app_info_path), url);
+                    File.Delete(app_info_path);
+                    if (app.id == "")
+                    {
+                        return null;
+                    }
+
+                    if (appList.ContainsKey(app.id))
+                    {
+                        if (UpdateVerify.compareVersionsWithSuffix(appList[app.id].version, app.version) > 0)
+                        {
+                            Logging.warn("Newer version of app {0} already installed.", app.id);
+                            return null;
+                        }
+                    }
+
+                    app.contentSize = new FileInfo(source_path).Length;
+                    app.checksum = Crypto.sha256OfFile(source_path);
+                    app.image = icon_png_path;
+                    app_name = app.name;
+
+                    return app;
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.error("Error extracting app info: " + e);
+
+                return null;
+            }
+        }
+
+        public string installFromPath(string source_path, string? url = null)
+        {
+            string app_name = "";
+
+            string source_app_path = Path.Combine(tmpPath, source_path.Split('/').Last().Split('\\').Last() + ".dir");
             string target_app_path = "";
             try
             {
-                using (ZipArchive archive = ZipFile.Open(source_app_file_path, ZipArchiveMode.Read))
+                using (ZipArchive archive = ZipFile.Open(source_path, ZipArchiveMode.Read))
                 {
                     if (Directory.Exists(source_app_path))
                     {
@@ -277,24 +256,33 @@ namespace SPIXI.MiniApps
                     archive.ExtractToDirectory(source_app_path);
 
                     // read app info
-                    MiniApp app = new MiniApp(File.ReadAllLines(Path.Combine(source_app_path, "appinfo.spixi")));
-
-                    if (appList.ContainsKey(app.id))
+                    MiniApp app = new MiniApp(File.ReadAllLines(Path.Combine(source_app_path, "appinfo.spixi")), url);
+                    if (app.id == "")
                     {
-                        // TODO except when updating - version check
-                        Logging.warn("App {0} already installed.", app.id);
-                        if (File.Exists(source_app_file_path))
-                        {
-                            File.Delete(source_app_file_path);
-                        }
-
-                        if (Directory.Exists(source_app_path))
-                        {
-                            Directory.Delete(source_app_path, true);
-                        }
                         return null;
                     }
+                    
+                    if (appList.ContainsKey(app.id))
+                    {
+                        if (UpdateVerify.compareVersionsWithSuffix(appList[app.id].version, app.version) > 0)
+                        {
+                            Logging.warn("Newer version of app {0} already installed.", app.id);
 
+                            if (Directory.Exists(source_app_path))
+                            {
+                                Directory.Delete(source_app_path, true);
+                            }
+                            return null;
+                        }
+                        else
+                        {
+                            Logging.warn("Older version of app {0} already installed, updating...", app.id);
+                            remove(app.id);
+                        }
+                    }
+
+                    app.contentSize = new FileInfo(source_path).Length;
+                    app.checksum = Crypto.sha256OfFile(source_path);
                     app_name = app.name;
 
                     // TODO sig check
@@ -310,16 +298,10 @@ namespace SPIXI.MiniApps
                         appList.Add(app.id, app);
                     }
                 }
-                File.Delete(source_app_file_path);
             }
             catch (Exception e)
             {
                 Logging.error("Error installing app: " + e);
-
-                if (File.Exists(source_app_file_path))
-                {
-                    File.Delete(source_app_file_path);
-                }
 
                 if (Directory.Exists(source_app_path))
                 {

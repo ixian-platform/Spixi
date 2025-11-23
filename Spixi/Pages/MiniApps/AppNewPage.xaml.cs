@@ -1,4 +1,6 @@
-﻿using SPIXI.Lang;
+﻿using IXICore.Meta;
+using Spixi;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
 using System.Web;
@@ -69,10 +71,9 @@ namespace SPIXI
                 string url = current_url.Substring("ixian:fetch:".Length);
                 onFetch(url);
             }
-            else if (current_url.StartsWith("ixian:install:"))
+            else if (current_url.StartsWith("ixian:selectAppFile"))
             {
-                string url = current_url.Substring("ixian:install:".Length);
-                onInstall(url);
+                onSelectAppFile();
             }
             else
             {
@@ -133,34 +134,77 @@ namespace SPIXI
 
         }
 
-        private async void onFetch(string path)
+        private async void onSelectAppFile()
         {
-            MiniApp? app = await Node.MiniAppManager.fetch(path);
+            string name = "";
+            byte[] _data = null;
+            try
+            {
+                SpixiImageData fileData = await SFilePicker.PickFileAsync();
+                if (fileData == null)
+                    return; // User canceled file picking
+
+                var stream = fileData.stream;
+                _data = new byte[stream.Length];
+                stream.Read(_data, 0, (int)stream.Length);
+                name = fileData.name;
+            }
+            catch (Exception ex)
+            {
+                Utils.sendUiCommand(this, "showUrlError");
+                return;
+            }
+
+            if (_data == null)
+            {
+                Utils.sendUiCommand(this, "showUrlError");
+                return;
+            }
+
+            string filepath = Path.Combine(Node.MiniAppManager.tmpPath, name + ".tmp");
+            try
+            {
+                File.WriteAllBytes(filepath, _data);
+                MiniApp app = Node.MiniAppManager.extractAppInfo(filepath);
+                if (app != null)
+                {
+                    Navigation.PushAsync(new AppDetailsPage(app, filepath, true), Config.defaultXamarinAnimations);
+                    removePage(this);
+                }
+                else
+                {
+                    Utils.sendUiCommand(this, "showUrlError");
+                    if (File.Exists(filepath))
+                    {
+                        File.Delete(filepath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Exception caught in process: {0}", ex);
+                Utils.sendUiCommand(this, "showUrlError");
+
+                if (File.Exists(filepath))
+                {
+                    File.Delete(filepath);
+                }
+            }
+        }
+
+        private async void onFetch(string url)
+        {
+            MiniApp? app = await Node.MiniAppManager.fetch(url);
             if (app == null)
             {
                 Utils.sendUiCommand(this, "showUrlError");
                 return;
             }
 
-            app.url = path;
+            app.url = url;
             
-            Navigation.PushAsync(new AppDetailsPage(app), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new AppDetailsPage(app, null, true), Config.defaultXamarinAnimations);
             removePage(this);
-        }
-
-        private void onInstall(string path)
-        {
-            string app_name = Node.MiniAppManager.install(path);
-            if (app_name != null)
-            {
-                UIHelpers.shouldRefreshApps = true;
-                displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), string.Format(SpixiLocalization._SL("app-new-dialog-installed-text"), app_name), SpixiLocalization._SL("global-dialog-ok"));
-                popPageAsync();
-            }
-            else
-            {
-                displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), SpixiLocalization._SL("app-new-dialog-installfailed-text"), SpixiLocalization._SL("global-dialog-ok"));
-            }
         }
 
         private void onBack()

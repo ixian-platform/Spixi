@@ -574,17 +574,13 @@ namespace SPIXI.Meta
                         {
                             NetworkClientManager.sendToClient(address, ProtocolMessageCode.transactionData2, t.getBytes(true, true), null);
                         }
+                        CoreProtocolMessage.broadcastGetTransaction(t.id, 0);
                         entry.addedTimestamp = cur_time;
                     }
 
                     if (entry.confirmedNodeList.Count() >= 2) // already received 2+ feedback
                     {
                         continue;
-                    }
-
-                    if (cur_time - tx_time > 30) // if the transaction is pending for over 30 seconds, send inquiry
-                    {
-                        CoreProtocolMessage.broadcastGetTransaction(t.id, 0);
                     }
 
                     idx++;

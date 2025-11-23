@@ -823,7 +823,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app, [friend.walletAddress]), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, null, true, [friend.walletAddress]), Config.defaultXamarinAnimations);
             });
         }
 
@@ -1025,6 +1025,11 @@ namespace SPIXI
                         Logging.error("Error loading message: {0}", e);
                     }
                     updateReactions(message);
+                }
+                if (friend.metaData.unreadMessageCount > 0)
+                {
+                    friend.metaData.unreadMessageCount = 0;
+                    friend.saveMetaData();
                 }
             }
         }
@@ -1645,12 +1650,12 @@ namespace SPIXI
         {
             base.onResume();
 
-            if(FriendList.getUnreadMessageCount() == 0)
+            updateMessagesReadStatus();
+
+            if (FriendList.getUnreadMessageCount() == 0)
             {
                 SPushService.clearNotifications();
             }
-
-            updateMessagesReadStatus();
         }
     }
 }

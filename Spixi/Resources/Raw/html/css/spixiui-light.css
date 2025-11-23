@@ -5420,3 +5420,10 @@ input.create-account-username[type="password"] {
         cursor: pointer;
     }
 }
+
+.dev-page {
+    white-space: pre;
+    color: white;
+    padding: 10px;
+    font-size: 13px;
+}

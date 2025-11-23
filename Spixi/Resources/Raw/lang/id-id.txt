@@ -46,6 +46,7 @@ apps-add-note = Ingin mencoba Mini App baru? Cukup masukkan URL atau pindai kode
 apps-add-url-placeholder = Silakan masukkan URL tempat Mini App berada...
 apps-get-from-url = Dapatkan Aplikasi dari URL
 apps-scan = Pindai
+apps-file = Pasang Dari File
 apps-what-is-title = Mini Apps adalah aplikasi JavaScript ringan yang berjalan dengan aman di dalam Spixi.
 apps-what-is-description = Pasang hanya dari sumber yang Anda percayai. Anda selalu mengendalikan.
 apps-what-is-learn = Pelajari lebih lanjut
@@ -97,6 +98,8 @@ app-action-error-sending-title = Kesalahan saat mengirimkan respons tindakan
 app-action-error-sending = Kesalahan saat mengirimkan respons tindakan ke layanan {0}.
 app-action-sent = Tindakan aplikasi terkirim
 app-action-response-confirmation = Apakah Anda ingin mengirimkan data berikut ke layanan? {0}
+app-action-response-payment-user-confirmation = {0} meminta pembayaran sebesar {1}. Apakah Anda ingin mengotorisasi pembayaran ini?
+app-action-response-payment-service-confirmation = {0} meminta pembayaran sebesar {1}. Apakah Anda ingin mengotorisasi pembayaran ini?
 
 ; Chat Screen
 chat-sent-contact-request = telah mengirim permintaan kontak
@@ -286,6 +289,7 @@ index-side-about = Tentang
 index-side-contributors = Kontributor
 index-side-howtouse = Cara menggunakan Spixi
 index-side-sendlog = Kirim Log
+index-side-dev = Developer
 index-devmode = Mode pengembang diaktifkan
 index-excerpt-payment-request-sent = Permintaan Pembayaran Terkirim
 index-excerpt-payment-request-received = Permintaan Pembayaran Diterima

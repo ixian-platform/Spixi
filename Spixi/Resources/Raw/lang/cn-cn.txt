@@ -46,6 +46,7 @@ apps-add-note = 想尝试新的迷你应用？只需输入其 URL 或扫描二�
 apps-add-url-placeholder = 请输入迷你应用的地址 URL...
 apps-get-from-url = 从 URL 获取应用
 apps-scan = 扫描
+apps-file = 或选择文件
 apps-what-is-title = 什么是迷你应用？
 apps-what-is-description = 迷你应用是在 Spixi 中安全运行的轻量级 JavaScript 应用。
 apps-what-is-learn = 了解更多
@@ -97,6 +98,8 @@ app-action-error-sending-title = 发送操作响应时出错
 app-action-error-sending = 向服务 {0} 发送操作响应时出错。
 app-action-sent = 应用操作已发送
 app-action-response-confirmation = 您是否要将以下数据发送给服务？{0}
+app-action-response-payment-user-confirmation = {0} 正在请求支付 {1}。您是否要授权此付款？
+app-action-response-payment-service-confirmation = {0} 正在请求支付 {1}。您是否要授权此付款？
 
 ; Chat Screen
 chat-sent-contact-request = 发送了联系人请求
@@ -286,6 +289,7 @@ index-side-about = 关于
 index-side-contributors = 贡献者
 index-side-howtouse = 如何使用 Spixi
 index-side-sendlog = 发送应用日志
+index-side-dev = Developer
 index-devmode = 开发者模式已启用
 index-excerpt-payment-request-sent = 付款请求已发送
 index-excerpt-payment-request-received = 收到付款请求

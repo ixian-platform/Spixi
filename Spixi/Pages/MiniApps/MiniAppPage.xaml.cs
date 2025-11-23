@@ -8,6 +8,7 @@ using SPIXI.Meta;
 using System.Text;
 using System.Web;
 using IXICore.Streaming;
+using SPIXI.MiniApps.ActionResponseModels;
 
 
 namespace SPIXI
@@ -150,44 +151,110 @@ namespace SPIXI
             try
             {
                 MiniAppActionBase jsonResult = JsonConvert.DeserializeObject<MiniAppActionBase>(action);
-                if (await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-description"), jsonResult.responseUrl, jsonResult.command), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
+                /*if (!await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-description"), jsonResult.responseUrl, jsonResult.command), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
                 {
-                    string? actionResponse = MiniAppActionHandler.processAction(jsonResult.command, action);
+                    return;
+                }*/
+                string? actionResponse = MiniAppActionHandler.processAction(jsonResult.command, action);
 
-                    if (actionResponse == null)
+                if (actionResponse == null)
+                {
+                    await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-unknown"), SpixiLocalization._SL("global-dialog-ok"));
+                    return;
+                }
+
+                if (jsonResult.command == MiniAppCommands.EXTEND_NAME
+                    || jsonResult.command == MiniAppCommands.TRANSFER_NAME
+                    || jsonResult.command == MiniAppCommands.REGISTER_NAME
+                    || jsonResult.command == MiniAppCommands.UPDATE_CAPACITY
+                    || jsonResult.command == MiniAppCommands.UPDATE_NAME
+                    || jsonResult.command == MiniAppCommands.ALLOW_SUBNAMES)
+                {
+                    if (!await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-response-confirmation"), actionResponse), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
                     {
-                        await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-unknown"), SpixiLocalization._SL("global-dialog-ok"));
                         return;
                     }
-                    HttpResponseMessage? response = null;
-                    using (HttpClient client = new HttpClient())
+                }
+                else if (jsonResult.command == MiniAppCommands.SEND_PAYMENT)
+                {
+                    TransactionResponse txResponse = JsonConvert.DeserializeObject<TransactionResponse>(actionResponse);
+                    Transaction tx = new Transaction(Crypto.stringToHash(txResponse.tx));
+
+                    Friend friend = FriendList.getFriend(new Address(tx.toList.Keys.First()));
+                    string nick = tx.toList.Keys.First().ToString();
+                    if (friend != null)
                     {
-                        try
+                        nick = friend.nickname + " (" + nick + ")";
+                    }
+
+                    if (!await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-response-payment-user-confirmation"), nick, tx.toList.Values.First().amount.ToString() + " IXI"), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
+                    {
+                        return;
+                    }
+                    if (string.IsNullOrEmpty(jsonResult.responseUrl))
+                    {
+                        IxianHandler.addTransaction(tx, tx.toList.Keys.Skip(1).ToList(), true);
+
+                        // Send message to recipients
+                        foreach (var entry in tx.toList)
                         {
-                            if (await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-response-confirmation"), actionResponse), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
+                            friend = FriendList.getFriend(entry.Key);
+
+                            if (friend != null)
                             {
-                                HttpContent httpContent = new StringContent(actionResponse, Encoding.UTF8, "application/x-www-form-urlencoded");
-                                response = client.PostAsync(jsonResult.responseUrl, httpContent).Result;
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-sent"), SpixiLocalization._SL("global-dialog-ok"));
-                                    return;
-                                }
+                                FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, tx.getTxIdString(), true);
+
+                                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, tx.id);
+
+                                StreamMessage message = new StreamMessage(friend.protocolVersion);
+                                message.type = StreamMessageCode.info;
+                                message.recipient = friend.walletAddress;
+                                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+                                message.data = spixi_message.getBytes();
+                                message.id = friend_message.id;
+
+                                CoreStreamProcessor.sendMessage(friend, message);
                             }
                         }
-                        catch (Exception e)
+
+                        await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-sent"), SpixiLocalization._SL("global-dialog-ok"));
+                        return;
+                    }
+
+                }
+                else
+                {
+                    if (!await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-response-confirmation"), actionResponse), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
+                    {
+                        return;
+                    }
+                }
+
+                HttpResponseMessage? response = null;
+                using (HttpClient client = new HttpClient())
+                {
+                    try
+                    {
+                        HttpContent httpContent = new StringContent(actionResponse, Encoding.UTF8, "application/x-www-form-urlencoded");
+                        response = client.PostAsync(jsonResult.responseUrl, httpContent).Result;
+                        if (response.IsSuccessStatusCode)
                         {
-                            Logging.error("Exception occured in handleActionPageResponse while sending response to service: " + e);
+                            await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-sent"), SpixiLocalization._SL("global-dialog-ok"));
+                            return;
                         }
                     }
-                    if (response != null)
+                    catch (Exception e)
                     {
-                        await displaySpixiAlert(SpixiLocalization._SL("app-action-error-sending-title"), string.Format(SpixiLocalization._SL("app-action-error-sending"), "(" + response.StatusCode + "): " + (await response.Content.ReadAsStringAsync())), SpixiLocalization._SL("global-dialog-ok"));
+                        Logging.error("Exception occured in handleActionPageResponse while sending response to service: " + e);
                     }
-                    else
-                    {
-                        await displaySpixiAlert(SpixiLocalization._SL("app-action-error-sending-title"), string.Format(SpixiLocalization._SL("app-action-error-sending"), ""), SpixiLocalization._SL("global-dialog-ok"));
-                    }
+                }
+                if (response != null)
+                {
+                    await displaySpixiAlert(SpixiLocalization._SL("app-action-error-sending-title"), string.Format(SpixiLocalization._SL("app-action-error-sending"), "(" + response.StatusCode + "): " + (await response.Content.ReadAsStringAsync())), SpixiLocalization._SL("global-dialog-ok"));
+                }
+                else
+                {
+                    await displaySpixiAlert(SpixiLocalization._SL("app-action-error-sending-title"), string.Format(SpixiLocalization._SL("app-action-error-sending"), ""), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
             catch (Exception e)

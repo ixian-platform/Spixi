@@ -19,24 +19,32 @@ namespace SPIXI
 
         private bool shouldReloadDetailView = false;
 
-        public AppDetailsPage(string app_id)
+        private string? path = null;
+
+        private bool installing = false;
+
+        public AppDetailsPage(string app_id, string? path = null, bool installing = false)
         {
             InitializeComponent();
 
             appId = app_id;
+            this.path = path;
+            this.installing = installing;
 
             NavigationPage.SetHasNavigationBar(this, false);
 
             loadPage(webView, "app_details.html");
         }
 
-        public AppDetailsPage(MiniApp app, Address[] remoteContactAddresses = null, bool shouldReloadDetailView = false)
+        public AppDetailsPage(MiniApp app, string? path = null, bool installing = false, Address[] remoteContactAddresses = null, bool shouldReloadDetailView = false)
         {
             InitializeComponent();
 
             this.remoteContactAddresses = remoteContactAddresses;
             this.shouldReloadDetailView = shouldReloadDetailView;
             fetchedApp = app;
+            this.path = path;
+            this.installing = installing;
 
             NavigationPage.SetHasNavigationBar(this, false);
 
@@ -150,7 +158,7 @@ namespace SPIXI
                 appId,
                 app.hasCapability(MiniAppCapabilities.SingleUser).ToString(),
                 app.hasCapability(MiniAppCapabilities.MultiUser).ToString(), 
-                app_installed.ToString(),
+                installing ? "false" : app_installed.ToString(),
                 app_verified.ToString(),
                 (true).ToString());
 
@@ -166,19 +174,40 @@ namespace SPIXI
             }
 
             Utils.sendUiCommand(this, "showInstalling");
-
-            string app_name = Node.MiniAppManager.install(fetchedApp);
-            if (app_name != null)
+            Task.Run(() =>
             {
-                UIHelpers.shouldRefreshApps = true;
-                Utils.sendUiCommand(this, "showInstallSuccess");
-                
-            }
-            else
-            {               
-                Utils.sendUiCommand(this, "showInstallFailed");
-            }
+                if (path == null)
+                {
+                    string app_name = Node.MiniAppManager.installFromUrl(fetchedApp);
+                    if (app_name != null)
+                    {
+                        UIHelpers.shouldRefreshApps = true;
+                        Utils.sendUiCommand(this, "showInstallSuccess");
+                    }
+                    else
+                    {
+                        Utils.sendUiCommand(this, "showInstallFailed");
+                    }
+                }
+                else
+                {
+                    string app_name = Node.MiniAppManager.installFromPath(path);
+                    if (app_name != null)
+                    {
+                        UIHelpers.shouldRefreshApps = true;
+                        Utils.sendUiCommand(this, "showInstallSuccess");
+                    }
+                    else
+                    {
+                        Utils.sendUiCommand(this, "showInstallFailed");
+                    }
 
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                }
+            });
         }
 
         private void onUninstall()
@@ -204,7 +233,7 @@ namespace SPIXI
                 return;
             }
             
-            Navigation.PushAsync(new AppDetailsPage(app, remoteContactAddresses, true), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);
             removePage(this);          
         }
 

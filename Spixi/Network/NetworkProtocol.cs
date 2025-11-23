@@ -112,13 +112,14 @@ namespace SPIXI.Network
                                 if (node_type == 'R')
                                 {
                                     string[] connected_servers = StreamClientManager.getConnectedClients(true);
-                                    if (connected_servers.Count() == 1 || !connected_servers.Contains(StreamClientManager.primaryS2Address))
+                                    if (connected_servers.Count() > 0
+                                        && !connected_servers.Contains(StreamClientManager.primaryS2Address))
                                     {
                                         // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
                                         StreamClientManager.primaryS2Address = endpoint.getFullAddress(true);
                                         // TODO TODO do not set if directly connectable
-                                        IxianHandler.publicIP = endpoint.address;
                                         IxianHandler.publicPort = endpoint.incomingPort;
+                                        IxianHandler.publicIP = endpoint.address;
                                         PresenceList.forceSendKeepAlive = true;
                                         Logging.info("Forcing KA from networkprotocol");
                                     } else

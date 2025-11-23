@@ -46,6 +46,7 @@ apps-add-note = Vuoi provare una nuova Mini App? Basta inserire il suo URL o sca
 apps-add-url-placeholder = Inserisci l'URL dove si trova la Mini App...
 apps-get-from-url = Ottieni App da URL
 apps-scan = Scansiona
+apps-file = Installa da File
 apps-what-is-title = Le Mini App sono applicazioni JavaScript leggere che funzionano in modo sicuro all'interno di Spixi.
 apps-what-is-description = Installa solo da fonti di cui ti fidi. Sei sempre in controllo.
 apps-what-is-learn = Scopri di più
@@ -97,6 +98,8 @@ app-action-error-sending-title = Errore nell'invio della risposta all'azione
 app-action-error-sending = Errore nell'invio della risposta dell'azione al servizio {0}.
 app-action-sent = Azione dell'app inviata
 app-action-response-confirmation = Vuoi inviare i seguenti dati al servizio? {0}
+app-action-response-payment-user-confirmation = L'utente sta richiedendo un pagamento di {0}. Vuoi inviare questo pagamento?
+app-action-response-payment-service-confirmation = Il servizio sta richiedendo un pagamento di {0}. Vuoi inviare questo pagamento?
 
 ; Schermata Chat
 chat-sent-contact-request = ha inviato una richiesta di contatto
@@ -286,6 +289,7 @@ index-side-about = Informazioni
 index-side-contributors = Contributori
 index-side-howtouse = Come Usare Spixi
 index-side-sendlog = Invia Log App
+index-side-dev = Developer
 index-devmode = Modalità Sviluppatore Attiva
 index-excerpt-payment-request-sent = Richiesta di Pagamento Inviata
 index-excerpt-payment-request-received = Richiesta di Pagamento Ricevuta

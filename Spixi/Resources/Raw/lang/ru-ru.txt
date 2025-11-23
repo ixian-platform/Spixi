@@ -46,6 +46,7 @@ apps-add-note = Хотите попробовать новое мини-прил
 apps-add-url-placeholder = Введите URL, где находится мини-приложение...
 apps-get-from-url = Загрузить приложение по URL
 apps-scan = Сканировать
+apps-file = Установить из файла
 apps-what-is-title = Мини-приложения — это лёгкие JavaScript-приложения, работающие безопасно внутри Spixi.
 apps-what-is-description = Устанавливайте только из доверенных источников. Вы всегда контролируете процесс.
 apps-what-is-learn = Подробнее
@@ -97,6 +98,8 @@ app-action-error-sending-title = Ошибка отправки ответа
 app-action-error-sending = Ошибка при отправке ответа службе {0}.
 app-action-sent = Действие приложения отправлено
 app-action-response-confirmation = Вы хотите отправить следующие данные в службу? {0}
+app-action-response-payment-user-confirmation = {0} запрашивает платёж на сумму {1}. Вы хотите авторизовать этот платёж?
+app-action-response-payment-service-confirmation = {0} запрашивает платёж на сумму {1}. Вы хотите авторизовать этот платёж?
 
 ; Chat Screen
 chat-sent-contact-request = отправлен запрос на добавление в контакты
@@ -286,6 +289,7 @@ index-side-about = О проекте
 index-side-contributors = Участники
 index-side-howtouse = Как пользоваться Spixi
 index-side-sendlog = Отправить Отчёт
+index-side-dev = Developer
 index-devmode = Режим разработчика активирован
 index-excerpt-payment-request-sent = Запрос на оплату отправлен
 index-excerpt-payment-request-received = Запрос на оплату получен

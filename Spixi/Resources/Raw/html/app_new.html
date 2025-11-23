@@ -57,6 +57,10 @@
                 <div class="spixi-outline-button label-sm" onclick="scanAppCode()">
                     <i class="fas fa-qrcode"></i>&nbsp; *SL{apps-scan}
                 </div>
+                <span class="body-sm s-text-01">or</span>
+                <div class="spixi-outline-button label-sm" onclick="selectAppFile()">
+                    <i class="fas fa-file"></i>&nbsp; *SL{apps-file}
+                </div>
             </div>
 
             <div class="important-notice-container extended push-to-bottom">
@@ -87,6 +91,10 @@
                 addressInput.className = "spixi-textfield add-mini-app-url-input add-mini-app-url-input-error"
                 errLabel.style.display = 'block';
             }
+        }
+
+        function selectAppFile() {
+            location.href = "ixian:selectAppFile";
         }
 
         function scanAppCode() {

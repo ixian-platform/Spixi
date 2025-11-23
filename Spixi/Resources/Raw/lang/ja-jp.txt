@@ -46,6 +46,7 @@ apps-add-note = 新しいミニアプリを試したいですか？URLを入力�
 apps-add-url-placeholder = ミニアプリがあるURLを入力してください...
 apps-get-from-url = URLからアプリを取得
 apps-scan = スキャン
+apps-file = ファイルからインストール
 apps-what-is-title = ミニアプリはSpixi内で安全に動作する軽量なJavaScriptアプリです。
 apps-what-is-description = 信頼できるソースからのみインストールしてください。あなたが常にコントロールします。
 apps-what-is-learn = 詳しくはこちら
@@ -97,6 +98,8 @@ app-action-error-sending-title = アクションの応答送信中にエラー�
 app-action-error-sending = サービス {0} へのアクション応答送信中にエラーが発生しました。
 app-action-sent = アプリのアクションが送信されました
 app-action-response-confirmation = 次のデータをサービスに送信しますか？ {0}
+app-action-response-payment-user-confirmation = ユーザーが{0}の支払いをリクエストしています。この支払いを送信しますか？
+app-action-response-payment-service-confirmation = サービスが{0}の支払いをリクエストしています。この支払いを送信しますか？
 
 ; Chat Screen
 chat-sent-contact-request = 連絡先リクエストを送信しました
@@ -286,6 +289,7 @@ index-side-about = Spixi について
 index-side-contributors = 貢献者
 index-side-howtouse = Spixi の使い方
 index-side-sendlog = アプリのログを送信
+index-side-dev = Developer
 index-devmode = 開発者モードが有効
 index-excerpt-payment-request-sent = 支払いリクエストを送信しました
 index-excerpt-payment-request-received = 支払いリクエストを受信しました

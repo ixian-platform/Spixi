@@ -46,6 +46,7 @@ apps-add-note = Želite da isprobate novu mini aplikaciju? Unesite URL adresu il
 apps-add-url-placeholder = Unesite URL na kojem se nalazi mini aplikacija...
 apps-get-from-url = Preuzmi aplikaciju sa URL-a
 apps-scan = Skeniraj
+apps-file = instaliraj iz datoteke
 apps-what-is-title = Mini aplikacije su lagane JavaScript aplikacije koje bezbedno rade unutar Spixi-ja.
 apps-what-is-description = Instalirajte samo iz pouzdanih izvora. Uvek imate kontrolu.
 apps-what-is-learn = Saznaj više
@@ -97,6 +98,8 @@ app-action-error-sending-title = Greška pri slanju odgovora
 app-action-error-sending = Došlo je do greške pri slanju odgovora servisu {0}.
 app-action-sent = Akcija aplikacije je poslata
 app-action-response-confirmation = Želite li da pošaljete sledeće podatke servisu? {0}
+app-action-response-payment-user-confirmation = {0} zahteva uplatu u iznosu od {1}. Da li želite da odobrite ovu uplatu?
+app-action-response-payment-service-confirmation = {0} zahteva uplatu u iznosu od {1}. Da li želite da odobrite ovu uplatu?
 
 ; Chat Screen
 chat-sent-contact-request = je poslao/la zahtev za kontakt
@@ -286,6 +289,7 @@ index-side-about = O aplikaciji
 index-side-contributors = Doprinosioci
 index-side-howtouse = Kako koristiti Spixi
 index-side-sendlog = Pošalji log aplikacije
+index-side-dev = Developer
 index-devmode = Aktiviran režim za programere
 index-excerpt-payment-request-sent = Zahtev za uplatu poslat
 index-excerpt-payment-request-received = Primljen zahtev za uplatu

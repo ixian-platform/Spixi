@@ -487,12 +487,21 @@
                 </div>
                 <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
             </div>
-            <div class="spixi-sidebar-single-item" id="SendLogMenuItem" onclick="selectMenuOption('viewLog');"
+            <div class="spixi-sidebar-single-item" id="SendLogMenuItem" onclick="selectMenuOption('sendLog');"
                  style="display: none;">
                 <div class="spixi-sidebar-icon"><i class="fa fa-circle-info"></i></div>
                 <div class="spixi-sidebar-single-item-text">
                     <span class="body-sm s-text-01">*SL{index-side-sendlog}</span>
                     <span class="body-xs s-text-02">*SL{index-side-sendlog-subtitle}</span>
+                </div>
+                <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
+            </div>
+            <div class="spixi-sidebar-single-item" id="DevMenuItem" onclick="selectMenuOption('dev');"
+                 style="display: none;">
+                <div class="spixi-sidebar-icon"><i class="fa fa-circle-info"></i></div>
+                <div class="spixi-sidebar-single-item-text">
+                    <span class="body-sm s-text-01">*SL{index-side-dev}</span>
+                    <span class="body-xs s-text-02">*SL{index-side-dev-subtitle}</span>
                 </div>
                 <i class="fa fa-chevron-right spixi-sidebar-single-item-chevron-right"></i>
             </div>
@@ -583,6 +592,15 @@
         document.getElementById("miniAppsStartNote").style.display = "none";
     } else {
         document.getElementById("miniAppsStartNote").style.display = "flex";
+    }
+
+    const isDevModeEnabled = "*SL{devMode}";
+    if (isDevModeEnabled == "true") {
+        document.getElementById("SendLogMenuItem").style.display = "";
+        document.getElementById("DevMenuItem").style.display = "";
+    } else {
+        document.getElementById("SendLogMenuItem").style.display = "none";
+        document.getElementById("DevMenuItem").style.display = "none";
     }
 
     function hideMiniAppsStartNote() {

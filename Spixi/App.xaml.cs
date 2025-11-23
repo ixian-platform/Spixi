@@ -202,16 +202,44 @@ public partial class App : Application
 
     protected override void OnResume()
     {
+        base.OnResume();
         isInForeground = true;
+
         NetworkClientManager.wakeReconnectLoop();
         StreamClientManager.wakeReconnectLoop();
+
+        // Popup the lockscreen if necessary
+        // Allow a 5 second cooldown after unlock
+        TimeSpan ts = DateTime.Now - unlockedDate;
+        if (isLockEnabled() && ts.Seconds > 5 && MainPage != null && ((NavigationPage)MainPage).CurrentPage.GetType() != typeof(LockPage) && !isLockScreenActive)
+        {
+            // Show the lock screen
+            isLockScreenActive = true;
+            OfflinePushMessages.resetCooldown();
+            var lockPage = new LockPage(true);
+            lockPage.authSucceeded += onUnlock;
+            MainPage.Navigation.PushModalAsync(lockPage);
+            return;
+        }
+
+        if (MainPage != null && ((NavigationPage)MainPage).CurrentPage != null && ((NavigationPage)MainPage).CurrentPage is SpixiContentPage)
+        {
+            SpixiContentPage p = (SpixiContentPage)((NavigationPage)MainPage).CurrentPage;
+            p.onResume();
+        }
+        OfflinePushMessages.resetCooldown();
     }
+
     protected override void OnSleep()
     {
+        base.OnSleep();
         isInForeground = false;
+        IxianHandler.localStorage.flush();
     }
+
     protected override void OnStart()
     {
+        base.OnStart();
         isInForeground = true;
     }
 

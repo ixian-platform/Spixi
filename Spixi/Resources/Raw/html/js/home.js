@@ -581,5 +581,6 @@ function countLogoClick()
     {
         document.getElementById("SendLogMenuItem").style.display = "";
         alert(SL_DevMode);
+        location.href = "ixian:enableDevMode";
     }
 }

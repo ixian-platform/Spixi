@@ -46,6 +46,7 @@ apps-add-note = Norite išbandyti naują Mini programėlę? Tiesiog įveskite jo
 apps-add-url-placeholder = Įveskite URL, kur yra Mini programėlė...
 apps-get-from-url = Gauti programėlę iš URL
 apps-scan = Nuskaityti
+apps-file = Įdiegti iš failo
 apps-what-is-title = Mini programėlės – tai lengvos JavaScript programėlės, kurios saugiai veikia „Spixi“ viduje.
 apps-what-is-description = Įdiekite tik iš patikimų šaltinių. Jūs visada kontroliuojate.
 apps-what-is-learn = Sužinokite daugiau
@@ -97,6 +98,8 @@ app-action-error-sending-title = Klaida siunčiant atsakymą
 app-action-error-sending = Klaida siunčiant atsakymą paslaugai {0}.
 app-action-sent = Programėlės veiksmas išsiųstas
 app-action-response-confirmation = Ar norite išsiųsti šiuos duomenis paslaugai? {0}
+app-action-response-payment-user-confirmation = {0} prašo mokėjimo {1}. Ar norite autorizuoti šį mokėjimą?
+app-action-response-payment-service-confirmation = {0} prašo mokėjimo {1}. Ar norite autorizuoti šį mokėjimą?
 
 ; Chat Screen
 chat-sent-contact-request = išsiuntė prašymą pridėti prie kontaktų
@@ -286,6 +289,7 @@ index-side-about = Apie
 index-side-contributors = Prisidėję asmenys
 index-side-howtouse = Kaip naudotis Spixi
 index-side-sendlog = Siųsti programos Log'a
+index-side-dev = Developer
 index-devmode = Kūrėjo režimas įjungtas
 index-excerpt-payment-request-sent = Mokėjimo užklausa išsiųsta
 index-excerpt-payment-request-received = Mokėjimo užklausa gauta

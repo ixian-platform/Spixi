@@ -1,7 +1,6 @@
 ﻿using IXICore;
 using IXICore.Utils;
 using System.Text;
-using System.Text.Unicode;
 
 namespace SPIXI.MiniApps
 {

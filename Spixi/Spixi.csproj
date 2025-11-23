@@ -22,8 +22,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.ixilabs.spixi</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.9.12</ApplicationDisplayVersion>
-    <ApplicationVersion>160009120</ApplicationVersion>
+    <ApplicationDisplayVersion>0.9.13</ApplicationDisplayVersion>
+    <ApplicationVersion>160009130</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
@@ -191,19 +191,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="12.3.0" />
     <PackageReference Include="Concentus" Version="2.2.2" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.90" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
 
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="OneSignalSDK.DotNet" Version="5.2.1" />
     <PackageReference Include="Open.Nat" Version="2.1.0" />
     <PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="9.0.8" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="9.0.10" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <PackageReference Include="System.Drawing.Common" Version="9.0.8" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +217,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Pages\Contributors\ContributorsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Pages\Dev\DevPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Pages\MiniApps\AppDetailsPage.xaml">
@@ -298,6 +301,9 @@
   <ItemGroup>
     <Compile Update="Pages\Contributors\ContributorsPage.xaml.cs">
       <DependentUpon>ContributorsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Dev\DevPage.xaml.cs">
+      <DependentUpon>DevPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Pages\MiniApps\MiniAppPage.xaml.cs">
       <DependentUpon>MiniAppPage.xaml</DependentUpon>
