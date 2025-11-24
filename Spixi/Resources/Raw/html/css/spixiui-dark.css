@@ -2460,14 +2460,38 @@ img.emoji {
     margin-top: -16px;
 }
 
+.spixi-bubble .statusText {
+    display: none;
+}
+
 .spixi-bubble.myself .statusIndicator {
     display: none;
     float: right;
 }
 
+.spixi-bubble.default .statusText {
+    color: var(--colors-icon-on-disabled);
+    display: flex;
+    padding-right: 16px;
+}
+
+.spixi-bubble.default .time {
+    display: none;
+}
+
 .spixi-bubble.default .statusIndicator {
     color: var(--colors-icon-on-disabled);
     display: inline-block;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .spixi-bubble.sent .statusIndicator {
@@ -2897,6 +2921,7 @@ img.emoji {
 
 .spixi-chat-default-indicator {
     color: var(--colors-icon-on-disabled);
+    animation: rotate 2s linear infinite;
 }
 
 .spixi-chat-payable-bar {

@@ -649,7 +649,7 @@ function addText(id, address, nick, avatar, text, time, className) {
         if (className.includes("sent")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
         } else if (className.includes("default")) {
-            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-clock\"></i>";
+            bubbleContentWrapEl.innerHTML += "<div class=\"statusText\">sending</div><i class=\"statusIndicator fas fa-clock\"></i>";
         } else if (className.includes("read")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check-double\"></i>";
         } else {
