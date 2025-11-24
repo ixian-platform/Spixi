@@ -1050,15 +1050,16 @@ img.emoji {
 .spixi-toastbar {
     visibility: hidden;
     min-width: 250px;
-    margin-left: -125px;
+    max-width: 90%;
     background-color: var(--colors-surface-04);
     color: var(--colors-text-01);
     text-align: center;
     border-radius: 8px;
     padding: 12px 24px;
-    position: absolute;
+    position: fixed;
     z-index: 2001;
     left: 50%;
+    transform: translate(-50%, 0);
     top: 24px;
     font-size: 14px;
     font-weight: 600;
@@ -1314,7 +1315,7 @@ img.emoji {
     font-size: 14px;
     font-weight: 600;
     color: var(--colors-text-action);
-    padding-top: 12px;
+    padding-top: 10px;
     margin: 16px auto;
     width: calc(100% - 32px);
     max-width: 640px;

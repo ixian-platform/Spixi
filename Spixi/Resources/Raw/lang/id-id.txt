@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Terjadi kesalahan saat memasang aplikasi.
 apps-title = Aplikasi Spixi
 apps-empty = Anda tidak memiliki aplikasi yang terpasang.
 apps-apps-text = Aplikasi
-apps-not-sure-text = Tidak tahu harus mulai dari mana? Coba salah satu aplikasi pilihan kami di bawah ini.
+apps-not-sure-text = Tidak yakin harus mulai dari mana? Kunjungi <a href="ixian:spixiAppsLink">{0}</a> untuk menjelajahi Mini Apps Spixi.
 apps-launch = Luncurkan
 apps-launch-app = Luncurkan Aplikasi
 apps-remove-app = Hapus Aplikasi Ini

@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Med nameščanjem aplikacije je prišlo do n
 apps-title = Mini Aplikacije
 apps-empty = Nimate nameščenih aplikacij.
 apps-apps-text = Aplikacije
-apps-not-sure-text = Ne veste, kje začeti? Poskusite eno izmed naših priporočenih aplikacij spodaj.
+apps-not-sure-text = Niste prepričani, kje začeti? Obiščite <a href="ixian:spixiAppsLink">{0}</a> za raziskovanje Spixi Mini aplikacij.
 apps-launch = Zaženi
 apps-launch-app = Zaženi aplikacijo
 apps-remove-app = Odstrani to aplikacijo

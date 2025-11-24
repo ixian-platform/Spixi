@@ -24,6 +24,7 @@ namespace SPIXI.Meta
 
             TransactionCache.addTransaction(tx);
             Friend friend = FriendList.getFriend(tx.pubKey);
+            bool myTransaction = IxianHandler.isMyAddress(tx.pubKey);
             if (friend == null)
             {
                 foreach (var toEntry in tx.toList)
@@ -37,10 +38,27 @@ namespace SPIXI.Meta
             }
             if (friend != null)
             {
-                SingleChatPage page = Utils.getChatPage(friend);
-                if (page != null)
+                SingleChatPage chatPage = Utils.getChatPage(friend);
+                if (chatPage != null)
                 {
-                    page.updateTransactionStatus(Transaction.getTxIdString(txid), verified);
+                    chatPage.updateTransactionStatus(Transaction.getTxIdString(txid), verified);
+                }
+
+                IxiNumber amount = tx.toList.First().Value.amount;
+                MiniAppPage page = Node.MiniAppManager.getAppPage(friend.walletAddress);
+                if (page == null)
+                {
+                    Logging.info("App session does not exist.");
+                    return;
+                }
+
+                if (myTransaction)
+                {
+                    page.paymentSent(friend.walletAddress, amount, tx.getTxIdString(), tx.getBytes(true, true), verified);
+                }
+                else
+                {
+                    page.transactionReceived(friend.walletAddress, amount, tx.getTxIdString(), tx.getBytes(true, true), verified);
                 }
             }
 

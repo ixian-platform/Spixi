@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = При установке приложени
 apps-title = Приложения Spixi
 apps-empty = У Вас пока нет установленных приложений.
 apps-apps-text = Приложения
-apps-not-sure-text = Не знаете, с чего начать? Попробуйте одно из рекомендованных приложений ниже.
+apps-not-sure-text = Не знаете, с чего начать? Посетите <a href="ixian:spixiAppsLink">{0}</a>, чтобы изучить мини-приложения Spixi.
 apps-launch = Запустить
 apps-launch-app = Запустить приложение
 apps-remove-app = Удалить это приложение

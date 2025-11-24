@@ -72,7 +72,7 @@ namespace SPIXI
             webView.Opacity = 0;
 
             hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
-            SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
+            //SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
             SpixiLocalization.addCustomString("devMode", Preferences.Default.Get("devMode", false) ? "true" : "false");
 
             loadPage(webView, "index.html");
@@ -396,6 +396,10 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:dev", StringComparison.Ordinal))
             {
                 Navigation.PushModalAsync(new DevPage());
+            }
+            else if (current_url.StartsWith("ixian:spixiAppsLink", StringComparison.Ordinal))
+            {
+                Browser.Default.OpenAsync(new Uri(Config.spixiAppsUrl));
             }
             else
             {

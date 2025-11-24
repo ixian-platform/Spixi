@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Došlo je do greške prilikom instalacije ap
 apps-title = Mini aplikacije
 apps-empty = Nemate instaliranih aplikacija.
 apps-apps-text = Aplikacije
-apps-not-sure-text = Niste sigurni odakle da počnete? Isprobajte neku od naših preporučenih aplikacija ispod.
+apps-not-sure-text = Niste sigurni odakle početi? Posetite <a href="ixian:spixiAppsLink">{0}</a> da istražite Spixi mini aplikacije.
 apps-launch = Pokreni
 apps-launch-app = Pokreni aplikaciju
 apps-remove-app = Ukloni ovu aplikaciju

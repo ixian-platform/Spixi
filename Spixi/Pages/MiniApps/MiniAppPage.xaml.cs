@@ -392,6 +392,22 @@ namespace SPIXI
             });
         }
 
+        public void transactionReceived(Address sender_address, IxiNumber amount, string txid, byte[] data, bool verified)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Utils.sendUiCommand(this, "SpixiAppSdk.onTransactionReceived", sender_address.ToString(), amount.ToString(), txid, Crypto.hashToString(data), verified.ToString());
+            });
+        }
+
+        public void paymentSent(Address sender_address, IxiNumber amount, string txid, byte[] data, bool verified)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Utils.sendUiCommand(this, "SpixiAppSdk.onPaymentSent", sender_address.ToString(), amount.ToString(), txid, Crypto.hashToString(data), verified.ToString());
+            });
+        }
+
         public bool hasUser(Address user)
         {
             return userAddresses.Any(x => x.addressNoChecksum.SequenceEqual(user.addressNoChecksum));

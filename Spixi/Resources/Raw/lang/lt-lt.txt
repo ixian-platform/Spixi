@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Įvyko klaida diegiant programą.
 apps-title = Spixi programos
 apps-empty = Jūs neturite įdiegtų programų.
 apps-apps-text = Programėlės
-apps-not-sure-text = Nežinote, nuo ko pradėti? Išbandykite vieną iš mūsų rekomenduojamų programėlių žemiau.
+apps-not-sure-text = Nežinote, nuo ko pradėti? Apsilankykite <a href="ixian:spixiAppsLink">{0}</a>, kad išbandytumėte Spixi Mini programėles.
 apps-launch = Pradėti
 apps-launch-app = Pradėti programėlę
 apps-remove-app = Pašalinti šią programėlę

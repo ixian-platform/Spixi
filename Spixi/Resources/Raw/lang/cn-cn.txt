@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = 安装应用时发生错误。
 apps-title = Spixi 应用
 apps-empty = 您没有已安装的应用。
 apps-apps-text = 应用
-apps-not-sure-text = 不确定从哪里开始？试试下面的精选应用。
+apps-not-sure-text = 不确定从哪里开始？访问 <a href="ixian:spixiAppsLink">{0}</a> 探索 Spixi 迷你应用。
 apps-launch = 启动
 apps-launch-app = 启动应用
 apps-remove-app = 移除此应用

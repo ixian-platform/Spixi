@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Si è verificato un errore durante l'install
 apps-title = Spixi Apps
 apps-empty = Non hai alcuna app installata.
 apps-apps-text = App
-apps-not-sure-text = Non sai da dove iniziare? Prova una delle nostre app in evidenza qui sotto.
+apps-not-sure-text = Non sai da dove iniziare? Visita <a href="ixian:spixiAppsLink">{0}</a> per esplorare le Mini App di Spixi.
 apps-launch = Avvia
 apps-launch-app = Avvia App
 apps-remove-app = Rimuovi Questa App

@@ -449,6 +449,19 @@ namespace SPIXI.MiniApps
             }
         }
 
+        public MiniAppPage getAppPage(Address sender_address)
+        {
+            lock (appPages)
+            {
+                var pages = appPages.Values.Where(x => x.hasUser(sender_address));
+                if (pages.Any())
+                {
+                    return getAppPage(sender_address, pages.First().sessionId);
+                }
+                return null;
+            }
+        }
+
         public Dictionary<byte[], MiniAppPage> getAppPages()
         {
             return appPages;
