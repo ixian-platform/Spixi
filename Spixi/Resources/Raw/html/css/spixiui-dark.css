@@ -4269,6 +4269,12 @@ img.emoji {
     gap: 12px;
 }
 
+.primary-guide-container a {
+    color: var(--colors-text-link);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .add-new-app-floating-btn {
     width: 56px;
     height: 56px;

@@ -74,6 +74,7 @@ namespace SPIXI
             hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
             //SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
             SpixiLocalization.addCustomString("devMode", Preferences.Default.Get("devMode", false) ? "true" : "false");
+            SpixiLocalization.addCustomString("apps-not-sure-text", string.Format(SpixiLocalization.getLocalizedString("apps-not-sure-text"), Config.spixiAppsUrl));
 
             loadPage(webView, "index.html");
 

@@ -36,6 +36,9 @@ namespace SPIXI.Meta
                     }
                 }
             }
+
+            IxianHandler.balances.First().lastUpdate = 0;
+
             if (friend != null)
             {
                 SingleChatPage chatPage = Utils.getChatPage(friend);
@@ -61,8 +64,6 @@ namespace SPIXI.Meta
                     page.transactionReceived(friend.walletAddress, amount, tx.getTxIdString(), tx.getBytes(true, true), verified);
                 }
             }
-
-            IxianHandler.balances.First().lastUpdate = 0;
         }
 
         public void receivedBlockHeader(Block block_header, bool verified)
