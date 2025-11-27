@@ -283,6 +283,7 @@ namespace SPIXI.MiniApps
 
                     app.contentSize = new FileInfo(source_path).Length;
                     app.checksum = Crypto.sha256OfFile(source_path);
+                    app.url = url;
                     app_name = app.name;
 
                     // TODO sig check
@@ -297,6 +298,8 @@ namespace SPIXI.MiniApps
                         // add app to the list
                         appList.Add(app.id, app);
                     }
+
+                    app.writeAppInfoFile(Path.Combine(target_app_path, "appinfo.spixi"));
                 }
             }
             catch (Exception e)

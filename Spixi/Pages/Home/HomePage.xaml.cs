@@ -1364,6 +1364,11 @@ namespace SPIXI
                     Utils.sendUiCommand(this, "addApp", app.id, app.name, icon, app.publisher, app.hasCapability(MiniAppCapabilities.SingleUser).ToString(), app.hasCapability(MiniAppCapabilities.MultiUser).ToString());
                 }
             }
+
+            foreach (var p in Utils.getChatPages())
+            {
+                p.reloadScreen();
+            }
         }
 
         private void onStartApp(string appId)

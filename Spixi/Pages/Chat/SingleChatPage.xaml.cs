@@ -65,6 +65,7 @@ namespace SPIXI
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            reloadScreen();
         }
 
 
@@ -1534,23 +1535,17 @@ namespace SPIXI
                 HomePage.Instance().onChat(friend.walletAddress.ToString(), null);
             }
         }
+
+        public void reloadScreen()
+        {
+            loadApps();
+            loadMessages();
+        }
         
         // Executed every second
         public override void updateScreen()
         {
             base.updateScreen();
-
-            if (UIHelpers.shouldRefreshApps)
-            {
-                if (homePage == null)
-                {
-                    UIHelpers.shouldRefreshApps = false;
-                }
-
-                loadApps();
-                loadMessages();
-            }
-
 
             if (setNickname != friend.nickname)
             {

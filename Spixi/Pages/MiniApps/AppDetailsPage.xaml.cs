@@ -232,8 +232,10 @@ namespace SPIXI
             {
                 return;
             }
-            
-            Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);
+
+            app.image = Node.MiniAppManager.getAppIconPath(appId);
+
+            Navigation.PushAsync(new AppDetailsPage(app, null, false, remoteContactAddresses, true), Config.defaultXamarinAnimations);
             removePage(this);          
         }
 

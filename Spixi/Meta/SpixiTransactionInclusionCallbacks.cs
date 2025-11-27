@@ -7,19 +7,17 @@ namespace SPIXI.Meta
 {
     internal class SpixiTransactionInclusionCallbacks : TransactionInclusionCallbacks
     {
-        public void receivedTIVResponse(byte[] txid, bool verified)
+        public void receivedTIVResponse(Transaction tx, bool verified)
         {
-            // TODO implement error
-            // TODO implement blocknum
-            Transaction tx = TransactionCache.getUnconfirmedTransaction(txid);
-            if (tx == null)
-            {
-                return;
-            }
-
             if (!verified)
             {
                 tx.applied = 0;
+                //Node.activityStorage.updateStatus(tx.id, ActivityStatus.Error, 0);
+                return;
+            }
+            else
+            {
+                PendingTransactions.remove(tx.id);
             }
 
             TransactionCache.addTransaction(tx);
@@ -44,7 +42,7 @@ namespace SPIXI.Meta
                 SingleChatPage chatPage = Utils.getChatPage(friend);
                 if (chatPage != null)
                 {
-                    chatPage.updateTransactionStatus(Transaction.getTxIdString(txid), verified);
+                    chatPage.updateTransactionStatus(Transaction.getTxIdString(tx.id), verified);
                 }
 
                 IxiNumber amount = tx.toList.First().Value.amount;

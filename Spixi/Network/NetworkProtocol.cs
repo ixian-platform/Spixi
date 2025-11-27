@@ -325,19 +325,47 @@ namespace SPIXI.Network
 
         private static void handleTransactionData(byte[] data, RemoteEndpoint endpoint)
         {
-            // TODO: check for errors/exceptions
             Transaction tx = new Transaction(data, true, true);
 
-            if (endpoint.presenceAddress.type == 'M'
-                || endpoint.presenceAddress.type == 'H'
-                || endpoint.presenceAddress.type == 'R')
+            bool myTransaction = IxianHandler.isMyAddress(tx.pubKey);
+            if (!myTransaction)
             {
-                PendingTransactions.increaseReceivedCount(tx.id, endpoint.presence.wallet);
+                foreach (var toEntry in tx.toList.Keys)
+                {
+                    if (IxianHandler.isMyAddress(toEntry))
+                    {
+                        myTransaction = true;
+                        break;
+                    }
+                }
             }
 
-            TransactionCache.addUnconfirmedTransaction(tx);
+            Logging.info("Received new transaction {0}", tx.getTxIdString());
 
-            Node.tiv.receivedNewTransaction(tx);
+            if (myTransaction)
+            {
+                var localTx = TransactionCache.getTransaction(tx.id);
+                var localUnconfirmedTx = TransactionCache.getUnconfirmedTransaction(tx.id);
+                if (localTx == null)
+                {
+                    if (endpoint.presenceAddress.type == 'M'
+                        || endpoint.presenceAddress.type == 'H'
+                        || endpoint.presenceAddress.type == 'R')
+                    {
+                        PendingTransactions.increaseReceivedCount(tx.id, endpoint.presence.wallet);
+                    }
+
+                    Node.tiv.receivedNewTransaction(tx);
+
+                    if (localUnconfirmedTx == null)
+                    {
+                        if (TransactionCache.addUnconfirmedTransaction(tx))
+                        {
+                            //Node.addTransactionToActivityStorage(tx);
+                        }
+                    }
+                }
+            }
         }
 
         public static void handleKeepAlivesChunk(byte[] data, RemoteEndpoint endpoint)
@@ -509,13 +537,26 @@ namespace SPIXI.Network
                     case RejectedCode.TransactionInvalid:
                     case RejectedCode.TransactionInsufficientFee:
                     case RejectedCode.TransactionDust:
-                        Logging.error("Transaction {0} was rejected with code: {1}", Crypto.hashToString(rej.data), rej.code);
-                        PendingTransactions.remove(rej.data);
-                        // TODO flag transaction as invalid
+                        if (endpoint.presenceAddress.type != 'M'
+                            && endpoint.presenceAddress.type != 'H'
+                            && endpoint.presenceAddress.type != 'R')
+                        {
+                            Logging.error("Received 'rejected' message {0} {1} from non-master {2}", rej.code, Transaction.getTxIdString(rej.data), endpoint.getFullAddress());
+                            return;
+                        }
+                        Logging.error("Transaction {0} was rejected with code: {1}", Transaction.getTxIdString(rej.data), rej.code);
+                        PendingTransactions.increaseRejectedCount(rej.data, endpoint.serverWalletAddress);
                         break;
 
                     case RejectedCode.TransactionDuplicate:
-                        Logging.warn("Transaction {0} already sent.", Crypto.hashToString(rej.data), rej.code);
+                        if (endpoint.presenceAddress.type != 'M'
+                            && endpoint.presenceAddress.type != 'H'
+                            && endpoint.presenceAddress.type != 'R')
+                        {
+                            Logging.error("Received 'rejected' message {0} {1} from non-master {2}", rej.code, Transaction.getTxIdString(rej.data), endpoint.getFullAddress());
+                            return;
+                        }
+                        Logging.warn("Transaction {0} already sent.", Transaction.getTxIdString(rej.data), rej.code);
                         // All good
                         PendingTransactions.increaseReceivedCount(rej.data, endpoint.serverWalletAddress);
                         break;

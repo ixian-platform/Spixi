@@ -33,8 +33,6 @@ namespace SPIXI.Meta
 
         public static StreamProcessor streamProcessor = null;
 
-        public static bool generatedNewWallet = false;
-
         public static NetworkClientManagerStatic networkClientManagerStatic = null;
 
         // Private data
@@ -124,20 +122,16 @@ namespace SPIXI.Meta
             byte[] block_checksum = null;
 
             string headers_path;
-            if (IxianHandler.isTestNet)
-            {
-                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
-            }
-            else
+            if (IxianHandler.networkType == NetworkType.main)
             {
                 headers_path = Path.Combine(Config.spixiUserFolder, "headers");
-                if (generatedNewWallet || !checkForExistingWallet())
-                {
-                    generatedNewWallet = false;
-                }
 
                 block_height = CoreConfig.bakedBlockHeight;
                 block_checksum = CoreConfig.bakedBlockChecksum;
+            }
+            else
+            {
+                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
             }
 
             // TODO: replace the TIV with a liteclient-optimized implementation
@@ -486,14 +480,16 @@ namespace SPIXI.Meta
 
         public override bool addTransaction(Transaction tx, List<Address> relayNodeAddresses, bool force_broadcast)
         {
-            // TODO Send to peer if directly connectable
             foreach (var address in relayNodeAddresses)
             {
                 NetworkClientManager.sendToClient(address, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
             }
-            //CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'R' }, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
-            PendingTransactions.addPendingLocalTransaction(tx, relayNodeAddresses);
-            return true;
+            if (PendingTransactions.addPendingLocalTransaction(tx, relayNodeAddresses))
+            {
+                //addTransactionToActivityStorage(tx);
+                return true;
+            }
+            return false;
         }
 
         public override Block getLastBlock()
@@ -538,37 +534,55 @@ namespace SPIXI.Meta
 
         public static void processPendingTransactions()
         {
-            // TODO TODO improve to include failed transactions
             ulong last_block_height = IxianHandler.getLastBlockHeight();
             lock (PendingTransactions.pendingTransactions)
             {
                 long cur_time = Clock.getTimestamp();
-                List<PendingTransaction> tmp_pending_transactions = new List<PendingTransaction>(PendingTransactions.pendingTransactions);
-                int idx = 0;
+                List<PendingTransaction> tmp_pending_transactions = new(PendingTransactions.pendingTransactions);
                 foreach (var entry in tmp_pending_transactions)
                 {
+                    long tx_time = entry.addedTimestamp;
+
+                    if (entry.transaction.blockHeight > last_block_height)
+                    {
+                        // not ready yet, syncing to the network
+                        continue;
+                    }
+
                     Transaction t = TransactionCache.getTransaction(entry.transaction.id);
                     if (t == null)
                     {
                         t = entry.transaction;
                     }
-                    long tx_time = entry.addedTimestamp;
-
-                    if (t.applied != 0)
+                    else
                     {
-                        PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
-                        continue;
+                        if (t.applied != 0)
+                        {
+                            PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
+                            continue;
+                        }
                     }
 
                     // if transaction expired, remove it from pending transactions
-                    if (last_block_height > ConsensusConfig.getRedactedWindowSize() && t.blockHeight < last_block_height - ConsensusConfig.getRedactedWindowSize())
+                    if (last_block_height > ConsensusConfig.getRedactedWindowSize()
+                        && t.blockHeight < last_block_height - ConsensusConfig.getRedactedWindowSize())
                     {
                         Logging.error("Error sending the transaction {0}", t.getTxIdString());
+                        //activityStorage.updateStatus(t.id, ActivityStatus.Error, 0);
                         PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
                         continue;
                     }
 
-                    if (cur_time - tx_time > 40) // if the transaction is pending for over 40 seconds, resend
+                    if (entry.rejectedNodeList.Count() > 3
+                        && entry.rejectedNodeList.Count() > entry.confirmedNodeList.Count())
+                    {
+                        Logging.warn("Transaction {0} pending for a while, resending", t.getTxIdString());
+                        //activityStorage.updateStatus(t.id, ActivityStatus.Error, 0);
+                        PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
+                        continue;
+                    }
+
+                    if (cur_time - tx_time > 60) // if the transaction is pending for over 60 seconds, resend
                     {
                         foreach (var address in entry.relayNodeAddresses)
                         {
@@ -576,14 +590,9 @@ namespace SPIXI.Meta
                         }
                         CoreProtocolMessage.broadcastGetTransaction(t.id, 0);
                         entry.addedTimestamp = cur_time;
+                        entry.confirmedNodeList.Clear();
+                        entry.rejectedNodeList.Clear();
                     }
-
-                    if (entry.confirmedNodeList.Count() >= 2) // already received 2+ feedback
-                    {
-                        continue;
-                    }
-
-                    idx++;
                 }
             }
         }

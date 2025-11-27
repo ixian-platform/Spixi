@@ -129,8 +129,6 @@ namespace SPIXI
 
                 if (Node.generateWallet(pass))
                 {
-                    Node.generatedNewWallet = true;
-
                     Node.start();
 
                     IxianHandler.localStorage.nickname = nick;
