@@ -2474,6 +2474,7 @@ img.emoji {
     color: var(--colors-icon-on-disabled);
     display: flex;
     padding-right: 16px;
+    justify-content: flex-end;
 }
 
 .spixi-bubble.default .time {
