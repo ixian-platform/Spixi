@@ -5,7 +5,7 @@ namespace SPIXI.Notifications
 {
     public class BackgroundTask
     {
-        public async Task Run(CancellationToken token)
+        /*public async Task Run(CancellationToken token)
         {
             await Task.Run(async () => {
 
@@ -24,6 +24,6 @@ namespace SPIXI.Notifications
                     });
                 }
             }, token);
-        }
+        }*/
     }
 }

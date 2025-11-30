@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);__MOBILE__</DefineConstants>
-    <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-    <!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
+    <!-- <TargetFrameworks>$(TargetFrameworks);net10.0-tizen</TargetFrameworks> -->
     <!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
@@ -60,19 +60,19 @@
     <WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-windows10.0.19041.0|x64'">
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' and '$(IsPublish)' == 'true'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-ios' and '$(IsPublish)' == 'true'">
     <CodesignKey>iPhone Distribution</CodesignKey>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|x64'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|arm64'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|arm64'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
   <!-- strip exited with code 139 workaround - https://github.com/xamarin/xamarin-macios/issues/19157 -->
@@ -191,19 +191,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="12.3.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
     <PackageReference Include="Concentus" Version="2.2.2" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.11" />
 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="OneSignalSDK.DotNet" Version="5.2.1" />
     <PackageReference Include="Open.Nat" Version="2.1.0" />
     <PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="9.0.10" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using IXICore.Meta;
+using Spixi.Platform.iOS;
 using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace Spixi
 
         public static async Task<SpixiImageData> PickFileAsync()
         {
-            FileResult fileData = await FilePicker.PickAsync();
+            FileResult fileData = (await MauiFilePicker.PickAsync(new PickOptions(), false)).FirstOrDefault();
             if (fileData == null)
                 return null; // User canceled file picking
 

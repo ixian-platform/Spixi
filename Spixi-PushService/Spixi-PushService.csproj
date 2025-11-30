@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" Condition="$(TargetFramework.Contains('-ios'))">
   <PropertyGroup>
-    <TargetFrameworks>net9.0-ios</TargetFrameworks>
+    <TargetFrameworks>net10.0-ios</TargetFrameworks>
     <OutputType>Library</OutputType>
 
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
@@ -21,7 +21,7 @@
     <IsWatchExtension>False</IsWatchExtension>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
     <CodesignKey>iPhone Developer</CodesignKey>
     <ProvisioningType>manual</ProvisioningType>
     <CodesignProvision></CodesignProvision>
