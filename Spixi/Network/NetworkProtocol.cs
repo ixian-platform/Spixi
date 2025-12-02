@@ -413,12 +413,16 @@ namespace SPIXI.Network
             if (f != null)
             {
                 var pa = p.addresses[0];
-                // TODO use actual wallet address once Presence hostname contains such address
-                f.relayNode = new Peer(pa.address, null, pa.lastSeenTime, 0, 0, 0);
-                f.updatedStreamingNodes = pa.lastSeenTime;
-                if (UIHelpers.isChatScreenDisplayed(f))
+                if (f.lastSeenTime < pa.lastSeenTime)
                 {
-                    StreamClientManager.connectTo(f.relayNode.hostname, f.relayNode.walletAddress);
+                    // TODO use actual wallet address once Presence hostname contains such address
+                    f.relayNode = new Peer(pa.address, null, pa.lastSeenTime, 0, 0, 0);
+                    f.updatedStreamingNodes = pa.lastSeenTime;
+                    f.lastSeenTime = pa.lastSeenTime;
+                    if (UIHelpers.isChatScreenDisplayed(f))
+                    {
+                        StreamClientManager.connectTo(f.relayNode.hostname, f.relayNode.walletAddress);
+                    }
                 }
             }
         }
@@ -444,12 +448,16 @@ namespace SPIXI.Network
             if (f != null)
             {
                 var pa = p.addresses[0];
-                // TODO use actual wallet address once Presence hostname contains such address
-                f.relayNode = new Peer(pa.address, null, pa.lastSeenTime, 0, 0, 0);
-                f.updatedStreamingNodes = pa.lastSeenTime;
-                if (UIHelpers.isChatScreenDisplayed(f))
+                if (f.lastSeenTime < pa.lastSeenTime)
                 {
-                    StreamClientManager.connectTo(f.relayNode.hostname, f.relayNode.walletAddress);
+                    // TODO use actual wallet address once Presence hostname contains such address
+                    f.relayNode = new Peer(pa.address, null, pa.lastSeenTime, 0, 0, 0);
+                    f.updatedStreamingNodes = pa.lastSeenTime;
+                    f.lastSeenTime = pa.lastSeenTime;
+                    if (UIHelpers.isChatScreenDisplayed(f))
+                    {
+                        StreamClientManager.connectTo(f.relayNode.hostname, f.relayNode.walletAddress);
+                    }
                 }
             }
         }
@@ -522,7 +530,7 @@ namespace SPIXI.Network
             var friends = FriendList.getFriendsBySectorPrefix(prefix);
             foreach(var friend in friends)
             {
-                friend.updatedSectorNodes = Clock.getNetworkTimestamp();
+                friend.updatedSectorNodes = Clock.getTimestamp();
                 friend.sectorNodes = peers;
             }
         }

@@ -7,20 +7,18 @@ using IXICore.Meta;
 using IXICore.Streaming;
 using OneSignalSDK.DotNet;
 using OneSignalSDK.DotNet.Core.Debug;
-using SPIXI;
 using OneSignalNative = Com.OneSignal.Android.OneSignal;
 
 namespace Spixi
 {
     public class SPushService
     {
-        const string channelId = "default";
-        const string channelName = "Default";
+        const string channelId = "f26a515e-a46b-45c5-9f29-57abc841e54e";
+        const string channelName = "New Messages";
         const string channelDescription = "Spixi local notifications channel.";
         const int pendingIntentId = 0;
 
         static bool channelInitialized = false;
-        static int messageId = -1;
         static NotificationManager manager;
         public const string TitleKey = "title";
         public const string MessageKey = "message";
@@ -28,7 +26,7 @@ namespace Spixi
         private static bool isInitializing = false;
         private static bool isInitialized = false;
 
-        private static bool clearNotificationsAfterInit = false;
+        private static bool clearRemoteNotificationsAfterInit = false;
 
         public static void initialize()
         {
@@ -55,10 +53,10 @@ namespace Spixi
                 {
                     isInitialized = true;
 
-                    if (clearNotificationsAfterInit)
+                    if (clearRemoteNotificationsAfterInit)
                     {
-                        clearNotificationsAfterInit = false;
-                        clearNotifications();
+                        clearRemoteNotificationsAfterInit = false;
+                        clearRemoteNotifications(0);
                     }
                 }
                 else
@@ -73,11 +71,8 @@ namespace Spixi
             OneSignal.User.AddTag("ixi", tag);
         }
 
-        public static void clearNotifications()
+        public static void clearRemoteNotifications(int unreadCount)
         {
-            var notificationManager = NotificationManagerCompat.From(Android.App.Application.Context);
-            notificationManager.CancelAll();
-
             try
             {
                 if (isInitialized)
@@ -86,7 +81,7 @@ namespace Spixi
                 }
                 else
                 {
-                    clearNotificationsAfterInit = true;
+                    clearRemoteNotificationsAfterInit = true;
                     Logging.warn("Cannot clear notifications, OneSignal is not initialized yet.");
                     return;
                 }
@@ -94,17 +89,31 @@ namespace Spixi
             catch (Exception e)
             {
                 Logging.error("Exception while clearing all notifications: {0}.", e);
+                clearRemoteNotificationsAfterInit = true;
             }
         }
 
-        public static void showLocalNotification(string title, string message, string data)
+        public static void clearNotifications(int unreadCount)
+        {
+            if (manager != null)
+            {
+                manager.CancelAll();
+            }
+            else
+            {
+                var notificationManager = NotificationManagerCompat.From(Android.App.Application.Context);
+                notificationManager?.CancelAll();
+            }
+
+            clearRemoteNotifications(unreadCount);
+        }
+
+        public static void showLocalNotification(int messageId, string title, string message, string data, bool alert, int unreadCount)
         {
             if (!channelInitialized)
             {
                 CreateNotificationChannel();
             }
-
-            messageId++;
 
             Intent intent = new Intent(Android.App.Application.Context, typeof(MainActivity));
             intent.SetAction(data);
@@ -121,12 +130,20 @@ namespace Spixi
                 .SetPriority(1)
                 .SetLargeIcon(BitmapFactory.DecodeResource(Android.App.Application.Context.Resources, Resource.Drawable.statusicon))
                 .SetSmallIcon(Resource.Drawable.statusicon)
-                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
                 .SetAutoCancel(true);
+
+            if (alert)
+            {
+                builder.SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
+            }
+            else
+            {
+                builder.SetSilent(true);
+            }
 
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
-                builder.SetGroup("NEWMSGL");
+                builder.SetGroup(data);
             }
 
             var notification = builder.Build();
@@ -139,14 +156,14 @@ namespace Spixi
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                NotificationChannelGroup group = new("NEWMSGL", "New Message");
+                NotificationChannelGroup group = new("Social", "Social");
                 manager.CreateNotificationChannelGroup(group);
 
                 var channelNameJava = new Java.Lang.String(channelName);
                 var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.High)
                 {
                     Description = channelDescription,
-                    Group = "NEWMSGL"
+                    Group = "Social"
                 };
                 manager.CreateNotificationChannel(channel);
             }
@@ -154,7 +171,7 @@ namespace Spixi
             channelInitialized = true;
         }
 
-        static void handleNotificationReceived(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationWillDisplayEventArgs e)
+        static void handleNotificationReceived(object? sender, OneSignalSDK.DotNet.Core.Notifications.NotificationWillDisplayEventArgs e)
         {
             try
             {
@@ -172,7 +189,7 @@ namespace Spixi
             e.Notification.display();
         }
 
-        static void handleNotificationOpened(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationClickedEventArgs e)
+        static void handleNotificationOpened(object? sender, OneSignalSDK.DotNet.Core.Notifications.NotificationClickedEventArgs e)
         {
             try
             {

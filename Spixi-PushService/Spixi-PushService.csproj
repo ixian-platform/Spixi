@@ -37,6 +37,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OneSignalSDK.DotNet" Version="5.2.1" />
+    <PackageReference Include="OneSignalSDK.DotNet" Version="5.2.2" />
   </ItemGroup>
 </Project>

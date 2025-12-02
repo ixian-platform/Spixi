@@ -57,8 +57,8 @@ namespace SPIXI.VoIP
 
             string codecs = String.Join("|", SSpixiCodecInfo.getSupportedAudioCodecs());
 
-            Node.addMessageWithType(currentCallSessionId, FriendMessageType.voiceCall, friend.walletAddress, 0, "", true, null, 0, false);
-            StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs), "spixi.voip");
+            var sm = StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs), "spixi.voip");
+            Node.addMessageWithType(sm.id, FriendMessageType.voiceCall, friend.walletAddress, 0, "", true, null, 0, false);
             ((SpixiContentPage)Application.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-dialing") + " " + friend.nickname + "...", 0);
             
             aquirePowerLocks();
