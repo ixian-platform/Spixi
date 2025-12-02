@@ -29,7 +29,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '10.0.x'
 
     - name: Install MAUI workload
       run: dotnet workload install maui
@@ -38,7 +38,7 @@ jobs:
       run: dotnet restore
 
     - name: Building Spixi
-      run: dotnet build Spixi/Spixi.csproj -f net9.0-windows10.0.19041.0 -p:Platform=x64 -v:n
+      run: dotnet build Spixi/Spixi.csproj -f net10.0-windows10.0.19041.0 -p:Platform=x64 -v:n
 
     #- name: Running Unit Tests
     #  run: dotnet test UnitTests\bin\Debug\unittests.dll --verbosity normal
