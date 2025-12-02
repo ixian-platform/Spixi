@@ -538,15 +538,17 @@ namespace SPIXI
                     Preferences.Default.Set("rating_action", "show");
                 }
 
-                if (FriendList.getUnreadMessageCount() == 0)
+                int unreadCount = FriendList.getUnreadMessageCount();
+                if (unreadCount == 0)
                 {
-                    SPushService.clearNotifications();
+                    SPushService.clearNotifications(unreadCount);
                 }
             });
         }
 
         public void onSend(string str)
         {
+            str = str.Trim(new char[] { ' ', '\t', '\r', '\n' });
             if (str.Length < 1)
             {
                 return;
@@ -575,7 +577,7 @@ namespace SPIXI
             byte[] spixi_msg_bytes = spixi_message.getBytes();
 
             // store the message and display it
-            FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
+            FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, true, spixi_msg_bytes.Length);
 
             // Finally, clear the input field
             Utils.sendUiCommand(this, "clearInput");
@@ -1647,9 +1649,10 @@ namespace SPIXI
 
             updateMessagesReadStatus();
 
-            if (FriendList.getUnreadMessageCount() == 0)
+            int unreadCount = FriendList.getUnreadMessageCount();
+            if (unreadCount == 0)
             {
-                SPushService.clearNotifications();
+                SPushService.clearNotifications(unreadCount);
             }
         }
     }

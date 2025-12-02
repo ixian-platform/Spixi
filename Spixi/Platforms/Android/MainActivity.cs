@@ -37,7 +37,7 @@ public class MainActivity : MauiAppCompatActivity
 
     public TaskCompletionSource<SpixiImageData> PickImageTaskCompletionSource { set; get; }
     internal static MainActivity Instance { get; private set; }
-    protected override void OnCreate(Bundle bundle)
+    protected override void OnCreate(Bundle? bundle)
     {
         Instance = this;
 
@@ -68,7 +68,7 @@ public class MainActivity : MauiAppCompatActivity
         handleNotificationIntent(Intent);
     }
 
-    protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
+    protected override void OnActivityResult(int requestCode, Result resultCode, Intent? intent)
     {
         base.OnActivityResult(requestCode, resultCode, intent);
 
@@ -113,7 +113,7 @@ public class MainActivity : MauiAppCompatActivity
         }
     }
 
-    protected override void OnNewIntent(Intent intent)
+    protected override void OnNewIntent(Intent? intent)
     {
         base.OnNewIntent(intent);
 
@@ -124,11 +124,11 @@ public class MainActivity : MauiAppCompatActivity
         });
     }
 
-    void handleNotificationIntent(Intent intent)
+    void handleNotificationIntent(Intent? intent)
     {
         if (intent?.Extras != null && intent.Extras.ContainsKey("fa"))
         {
-            string chatId = intent.Extras.GetString("fa");
+            string? chatId = intent.Extras.GetString("fa");
             if (!string.IsNullOrEmpty(chatId))
             {
                 App.startingScreen = chatId;
@@ -140,7 +140,7 @@ public class MainActivity : MauiAppCompatActivity
     // Fix Edge to Edge
     private class InsetsListener : Java.Lang.Object, AndroidX.Core.View.IOnApplyWindowInsetsListener
     {
-        public WindowInsetsCompat OnApplyWindowInsets(View v, WindowInsetsCompat insets)
+        public WindowInsetsCompat? OnApplyWindowInsets(View? v, WindowInsetsCompat? insets)
         {
             // Get system bars (status + navigation) and IME (keyboard) insets
             var sysInsets = insets.GetInsets(WindowInsetsCompat.Type.SystemBars());
@@ -156,9 +156,9 @@ public class MainActivity : MauiAppCompatActivity
         }
 
         // Optional override for older Android versions
-        public WindowInsets OnApplyWindowInsets(View v, WindowInsets insets)
+        public WindowInsets? OnApplyWindowInsets(View? v, WindowInsets? insets)
         {
-            return v.OnApplyWindowInsets(insets);
+            return v?.OnApplyWindowInsets(insets);
         }
     }
 

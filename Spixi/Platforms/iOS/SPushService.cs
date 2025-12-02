@@ -16,6 +16,7 @@ namespace Spixi
         private static bool isInitialized = false;
 
         private static bool clearNotificationsAfterInit = false;
+        private static bool clearRemoteNotificationsAfterInit = false;
         public class NotificationDelegate : UNUserNotificationCenterDelegate
         {
             public override void DidReceiveNotificationResponse(
@@ -55,8 +56,28 @@ namespace Spixi
                 UNNotification notification,
                 Action<UNNotificationPresentationOptions> completionHandler)
             {
-                // Show the notification even when the app is in the foreground
-                completionHandler(UNNotificationPresentationOptions.Banner | UNNotificationPresentationOptions.Sound);
+                var userInfo = notification.Request.Content.UserInfo;
+                bool showAlert = false;
+
+                if (userInfo.ContainsKey((NSString)"alert"))
+                {
+                    var alertValue = userInfo[(NSString)"alert"];
+                    if (alertValue != null && bool.TryParse(alertValue.ToString(), out bool alertBool))
+                    {
+                        showAlert = alertBool;
+                    }
+                }
+
+                if (showAlert)
+                {
+                    // Show the notification even when the app is in the foreground
+                    completionHandler(UNNotificationPresentationOptions.Banner | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.List);
+                }
+                else
+                {
+                    // Only show in notification center (List), no banner or sound
+                    completionHandler(UNNotificationPresentationOptions.List);
+                }
             }
         }
 
@@ -101,7 +122,12 @@ namespace Spixi
                 if (clearNotificationsAfterInit)
                 {
                     clearNotificationsAfterInit = false;
-                    clearNotifications();
+                    clearNotifications(0);
+                }
+                else if (clearRemoteNotificationsAfterInit)
+                {
+                    clearRemoteNotificationsAfterInit = false;
+                    clearRemoteNotifications(0);
                 }
                 return Task.CompletedTask;
             });
@@ -112,10 +138,49 @@ namespace Spixi
             OneSignal.User.AddTag("ixi", tag);
         }
 
-        public static void clearNotifications()
+        public static void clearRemoteNotifications(int unreadCount)
+        {
+            return;
+            if (!isInitialized)
+            {
+                clearRemoteNotificationsAfterInit = true;
+                Logging.warn("Cannot clear notifications, OneSignal is not initialized yet.");
+                return;
+            }
+
+            try
+            {
+                OneSignalNative.Notifications.ClearAll();
+
+                if (UIDevice.CurrentDevice.CheckSystemVersion(16, 0))
+                {
+                    // For iOS 16+, use UNUserNotificationCenter
+                    UNUserNotificationCenter.Current.SetBadgeCount(unreadCount, (err) =>
+                    {
+                        if (err != null)
+                        {
+                            Logging.warn("Set badge count failed");
+                            Logging.warn(err.ToString());
+                        }
+                    });
+                }
+                else
+                {
+                    // For older versions, use UIApplication
+                    UIApplication.SharedApplication.ApplicationIconBadgeNumber = unreadCount;
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception while clearing all notifications: {0}.", e);
+            }
+        }
+
+        public static void clearNotifications(int unreadCount)
         {
             if (!isInitialized)
             {
+                clearRemoteNotificationsAfterInit = true;
                 clearNotificationsAfterInit = true;
                 Logging.warn("Cannot clear notifications, OneSignal is not initialized yet.");
                 return;
@@ -135,7 +200,7 @@ namespace Spixi
                 if (UIDevice.CurrentDevice.CheckSystemVersion(16, 0))
                 {
                     // For iOS 16+, use UNUserNotificationCenter
-                    UNUserNotificationCenter.Current.SetBadgeCount(0, (err) =>
+                    UNUserNotificationCenter.Current.SetBadgeCount(unreadCount, (err) =>
                     {
                         if (err != null)
                         {
@@ -147,12 +212,12 @@ namespace Spixi
                 else
                 {
                     // For older versions, use UIApplication
-                    UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
+                    UIApplication.SharedApplication.ApplicationIconBadgeNumber = unreadCount;
                 }
             });
         }
 
-        public static void showLocalNotification(string title, string message, string data)
+        public static void showLocalNotification(int messageId, string title, string message, string data, bool alert, int unreadCount)
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -160,17 +225,24 @@ namespace Spixi
                 {
                     Title = title,
                     Body = message,
-                    Badge = 1,
-                    Sound = UNNotificationSound.Default
+                    Badge = unreadCount,
+                    ThreadIdentifier = data
                 };
+
+                if (alert)
+                {
+                    content.Sound = UNNotificationSound.Default;
+                }
 
                 content.UserInfo = new NSMutableDictionary
                 {
-                    { (NSString) "fa", (NSString) data }
+                    { (NSString) "fa", (NSString) data },
+                    { (NSString) "alert", (NSString) alert.ToString() }
                 };
 
                 var trigger = UNTimeIntervalNotificationTrigger.CreateTrigger(0.25, false);
-                var request = UNNotificationRequest.FromIdentifier(data, content, trigger);
+                string identifier = messageId.ToString();
+                var request = UNNotificationRequest.FromIdentifier(identifier, content, trigger);
 
                 UNUserNotificationCenter.Current.AddNotificationRequest(request, (err) =>
                 {
@@ -180,6 +252,24 @@ namespace Spixi
                         Logging.warn(err.ToString());
                     }
                 });
+
+                if (UIDevice.CurrentDevice.CheckSystemVersion(16, 0))
+                {
+                    // For iOS 16+, use UNUserNotificationCenter
+                    UNUserNotificationCenter.Current.SetBadgeCount(unreadCount, (err) =>
+                    {
+                        if (err != null)
+                        {
+                            Logging.warn("Set badge count failed");
+                            Logging.warn(err.ToString());
+                        }
+                    });
+                }
+                else
+                {
+                    // For older versions, use UIApplication
+                    UIApplication.SharedApplication.ApplicationIconBadgeNumber = unreadCount;
+                }
             });
         }
 

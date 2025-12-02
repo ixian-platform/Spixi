@@ -1,4 +1,5 @@
-﻿using IXICore;
+﻿using Force.Crc32;
+using IXICore;
 using IXICore.Inventory;
 using IXICore.Meta;
 using IXICore.Network;
@@ -278,6 +279,7 @@ namespace SPIXI.Meta
 
             try
             {
+                bool fireLocalNotification = OperatingSystem.IsAndroid();
                 while (running)
                 {
                     try
@@ -285,7 +287,10 @@ namespace SPIXI.Meta
                         PeerStorage.savePeersFile();
 
                         if (Config.enablePushNotifications)
-                            OfflinePushMessages.fetchPushMessages();
+                        {
+                            OfflinePushMessages.fetchPushMessages(false, fireLocalNotification, false);
+                            fireLocalNotification = false;
+                        }
 
                         // Update the friendlist
                         updateFriendStatuses();
@@ -357,7 +362,8 @@ namespace SPIXI.Meta
 
                     if (presence != null)
                     {
-                        if (friend.online == false)
+                        if (friend.online == false
+                            && friend.relayNode != null)
                         {
                             friend.online = true;
                             UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
@@ -656,7 +662,7 @@ namespace SPIXI.Meta
             return b.blockChecksum;
         }
 
-        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address sender_address = null, long timestamp = 0, bool fire_local_notification = true, bool alert = true, int payable_data_len = 0)
         {
             FriendMessage friend_message = FriendList.addMessageWithType(id, type, wallet_address, channel, message, local_sender, sender_address, timestamp, fire_local_notification, payable_data_len);
             if (friend_message != null)
@@ -706,7 +712,9 @@ namespace SPIXI.Meta
                                 if (friend.bot == false
                                     || (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification))
                                 {
-                                    SPushService.showLocalNotification("Spixi", "New Message", friend.walletAddress.ToString());
+                                    int unreadCount = FriendList.getUnreadMessageCount();
+                                    SPushService.showLocalNotification((int)Crc32Algorithm.Compute(friend_message.id), "Spixi", "New Message", friend.walletAddress.ToString(), alert, unreadCount);
+                                    SPushService.clearRemoteNotifications(unreadCount);
                                 }
                             }
                         }

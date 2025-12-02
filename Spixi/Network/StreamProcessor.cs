@@ -177,9 +177,9 @@ namespace SPIXI
         }*/
 
         // Called when receiving S2 data from clients
-        public override ReceiveDataResponse receiveData(byte[] bytes, RemoteEndpoint endpoint, bool fireLocalNotification = true)
+        public override ReceiveDataResponse receiveData(byte[] bytes, RemoteEndpoint endpoint, bool fireLocalNotification = true, bool alert = true)
         {
-            ReceiveDataResponse rdr = base.receiveData(bytes, endpoint, fireLocalNotification);
+            ReceiveDataResponse rdr = base.receiveData(bytes, endpoint);
             if (rdr == null)
             {
                 return rdr;
@@ -377,7 +377,7 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.chat:
-                        Node.addMessageWithType(message.id, FriendMessageType.standard, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), false, real_sender_address, message.timestamp, fireLocalNotification);
+                        Node.addMessageWithType(message.id, FriendMessageType.standard, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), false, real_sender_address, message.timestamp, fireLocalNotification, alert, 0);
                         break;
 
                     case SpixiMessageCode.msgReceived:
@@ -580,7 +580,7 @@ namespace SPIXI
                         {
                             if (VoIPManager.onReceivedCall(friend, app_data.sessionId, app_data.data))
                             {
-                                Node.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, 0, "");
+                                Node.addMessageWithType(messageId, FriendMessageType.voiceCall, sender_address, 0, "");
                             }
                             UIHelpers.refreshAppRequests = true;
                         }

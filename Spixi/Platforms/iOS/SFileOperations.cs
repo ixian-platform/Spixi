@@ -27,8 +27,14 @@ namespace Spixi
     {
         public static void open(string filepath)
         {
+            var viewController = GetVisibleViewController();
+            if (viewController == null)
+            {
+                return;
+            }
+
             var previewController = UIDocumentInteractionController.FromUrl(NSUrl.FromFilename(filepath));
-            previewController.Delegate = new FileInteractionDelegate(GetVisibleViewController());
+            previewController.Delegate = new FileInteractionDelegate(viewController);
             previewController.PresentPreview(true);
         }
 
@@ -54,24 +60,30 @@ namespace Spixi
             return Task.FromResult(true);
         }
 
-        static UIViewController GetVisibleViewController()
+        static UIViewController? GetVisibleViewController()
         {
-            var rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
-
-            if (rootController.PresentedViewController == null)
-                return rootController;
-
-            if (rootController.PresentedViewController is UINavigationController)
+            if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
             {
-                return ((UINavigationController)rootController.PresentedViewController).TopViewController;
+                var windowScene = UIApplication.SharedApplication.ConnectedScenes
+                    .OfType<UIWindowScene>()
+                    .FirstOrDefault(x => x.ActivationState == UISceneActivationState.ForegroundActive);
+
+                var keyWindow = windowScene?.Windows?.FirstOrDefault(x => x.IsKeyWindow);
+                if (keyWindow?.RootViewController is UINavigationController navController)
+                {
+                    return navController.VisibleViewController ?? navController.TopViewController;
+                }
+            }
+            else
+            {
+                var keyWindow = UIApplication.SharedApplication.KeyWindow;
+                if (keyWindow?.RootViewController is UINavigationController fallbackNavController)
+                {
+                    return fallbackNavController.VisibleViewController ?? fallbackNavController.TopViewController;
+                }
             }
 
-            if (rootController.PresentedViewController is UITabBarController)
-            {
-                return ((UITabBarController)rootController.PresentedViewController).SelectedViewController;
-            }
-
-            return rootController.PresentedViewController;
+            return null;
         }
 
     }

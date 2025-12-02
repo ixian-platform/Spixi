@@ -67,7 +67,7 @@ namespace SPIXI.Lang
                 return false;
             }
 
-            Dictionary<string, string> localized_strings = new(customStrings);
+            Dictionary<string, string> localized_strings = new();
 
             StreamReader sr = new(file_stream);
             string last_key = "";
@@ -105,7 +105,12 @@ namespace SPIXI.Lang
             file_stream.Close();
             file_stream.Dispose();
 
-            if(!success)
+            foreach (var customString in customStrings)
+            {
+                localized_strings.AddOrReplace(customString.Key, customString.Value);
+            }
+
+            if (!success)
             {
                 return false;
             }

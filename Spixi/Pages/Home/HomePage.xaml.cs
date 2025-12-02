@@ -1177,7 +1177,7 @@ namespace SPIXI
                 Node.changedSettings = false;
             }
 
-            SPushService.clearNotifications();
+            SPushService.clearNotifications(FriendList.getUnreadMessageCount());
         }
 
         private void onUpdateUI(/*object source, ElapsedEventArgs e*/)

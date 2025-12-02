@@ -18,12 +18,17 @@ namespace Spixi
 
         }
 
-        public static void clearNotifications()
+        public static void clearRemoteNotifications(int unreadCount)
         {
 
         }
 
-        public static void showLocalNotification(string title, string message, string data)
+        public static void clearNotifications(int unreadCount)
+        {
+
+        }
+
+        public static void showLocalNotification(int messageId, string title, string message, string data, bool alert, int unreadCount)
         {
 
         }

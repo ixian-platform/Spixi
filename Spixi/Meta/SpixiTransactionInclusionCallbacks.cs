@@ -49,7 +49,6 @@ namespace SPIXI.Meta
                 MiniAppPage page = Node.MiniAppManager.getAppPage(friend.walletAddress);
                 if (page == null)
                 {
-                    Logging.info("App session does not exist.");
                     return;
                 }
 
