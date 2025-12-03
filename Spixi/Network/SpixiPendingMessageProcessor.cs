@@ -13,7 +13,6 @@ namespace SPIXI.Network
 
         protected override void onMessageSent(Friend friend, int channel, StreamMessage msg)
         {
-            // TODO trigger sent from pending message, not just offline?
             friend.setMessageSent(channel, msg.id);
             UIHelpers.shouldRefreshContacts = true;
             var fm = friend.getMessage(channel, msg.id);
