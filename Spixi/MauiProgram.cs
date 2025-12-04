@@ -1,4 +1,4 @@
-﻿#if ANDROID
+#if ANDROID
     using Android.App;
     using Android.OS;
 #endif
@@ -28,6 +28,10 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+	    .ConfigureMauiHandlers(handlers =>
+            {
+     		 handlers.AddHandler(typeof(Editor), typeof(Spixi.Platforms.iOS.NoAccessoryEditorHandler));
+            });
             .UseMauiCompatibility()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
