@@ -23,10 +23,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-	    .ConfigureMauiHandlers(handlers =>
-            {
-     		 handlers.AddHandler(typeof(Editor), typeof(Spixi.Platforms.iOS.NoAccessoryEditorHandler));
-            });
             .UseMauiCompatibility()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
@@ -42,8 +38,12 @@ public static class MauiProgram
 #endif
 
 #if IOS
-                handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.iOS.iOSWebViewHandler));
+    handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.iOS.iOSWebViewHandler));
+
+    // Remove iOS keyboard accessory bar for Editor
+    handlers.AddHandler(typeof(Editor), typeof(Spixi.Platforms.iOS.NoAccessoryEditorHandler));
 #endif
+
             })
             .ConfigureLifecycleEvents(events =>
             {
