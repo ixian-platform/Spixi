@@ -41,7 +41,7 @@ public static class MauiProgram
                 handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.iOS.iOSWebViewHandler));
 
                 // Remove iOS keyboard accessory bar for Editor
-                handlers.AddHandler(typeof(Editor),typeof(Spixi.Platforms.iOS.NoAccessoryEditorHandler));
+                handlers.AddHandler(typeof(Editor), typeof(Spixi.Platforms.iOS.NoAccessoryEditorHandler));
 #endif
             })
             .ConfigureLifecycleEvents(events =>
