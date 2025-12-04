@@ -41,7 +41,7 @@ public static class MauiProgram
             })
             .ConfigureMauiHandlers((handlers) =>
             {
-#if ANDROID
+#if ANDROID 
                 //handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.Android.Renderers.MyWebViewHandler));
                 handlers.AddCompatibilityRenderer(typeof(WebView), typeof(Spixi.Platforms.Android.Renderers.SpixiWebviewRenderer2));
 #endif
