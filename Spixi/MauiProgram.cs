@@ -1,4 +1,4 @@
-﻿#if ANDROID
+#if ANDROID
     using Android.App;
     using Android.OS;
 #endif
@@ -32,13 +32,16 @@ public static class MauiProgram
             })
             .ConfigureMauiHandlers((handlers) =>
             {
-#if ANDROID
+#if ANDROID 
                 //handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.Android.Renderers.MyWebViewHandler));
                 handlers.AddCompatibilityRenderer(typeof(WebView), typeof(Spixi.Platforms.Android.Renderers.SpixiWebviewRenderer2));
 #endif
 
 #if IOS
                 handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.iOS.iOSWebViewHandler));
+
+                // Remove iOS keyboard accessory bar for Editor
+                handlers.AddHandler(typeof(Editor), typeof(Spixi.Platforms.iOS.NoAccessoryEditorHandler));
 #endif
             })
             .ConfigureLifecycleEvents(events =>
