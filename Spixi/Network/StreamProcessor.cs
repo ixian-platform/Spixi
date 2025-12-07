@@ -588,7 +588,7 @@ namespace SPIXI
                         {
                             if (VoIPManager.onReceivedCall(friend, app_data.sessionId, app_data.data))
                             {
-                                Node.addMessageWithType(messageId, FriendMessageType.voiceCall, sender_address, 0, "");
+                                Node.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, 0, "");
                             }
                             UIHelpers.refreshAppRequests = true;
                         }
@@ -599,7 +599,7 @@ namespace SPIXI
                         Logging.error("App with id {0} is not installed.", app_id);
                     }
                 }
-                Node.addMessageWithType(messageId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
+                Node.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
 
             });
         }

@@ -1,8 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Media;
-using Android.OS;
-using AndroidX.Core.View;
 using IXICore.Meta;
 using SPIXI;
 using SPIXI.Interfaces;
@@ -11,6 +9,8 @@ namespace Spixi
 {
     public class SPlatformUtils
     {
+        static object ringtoneLock = new object();
+
         static MediaPlayer? ringtone = null;
         static MediaPlayer? dialtonePlayer = null;
 
@@ -43,68 +43,74 @@ namespace Spixi
 
         public static void startRinging()
         {
-            if (ringtone != null)
+            lock (ringtoneLock)
             {
-                return;
-            }
-
-            try
-            {
-                bool ring = true;
-
-                NotificationManager nm = (NotificationManager)MainActivity.Instance.GetSystemService(Context.NotificationService)!;
-                InterruptionFilter int_filter = nm.CurrentInterruptionFilter;
-                if (int_filter != InterruptionFilter.Priority && int_filter != InterruptionFilter.All)
+                if (ringtone != null)
                 {
-                   ring = false;
-                }
-                
-
-                AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService)!;
-                if (am.RingerMode != RingerMode.Normal)
-                {
-                    ring = false;
+                    return;
                 }
 
-                MainActivity.Instance.VolumeControlStream = Android.Media.Stream.Ring;
-
-                if (ring)
+                try
                 {
-                    ringtone = playSoundFromAssets("sounds/default_ringtone.mp3");
-                    ringtone.Looping = true;
-                    ringtone.Start();
+                    bool ring = true;
+
+                    NotificationManager nm = (NotificationManager)MainActivity.Instance.GetSystemService(Context.NotificationService)!;
+                    InterruptionFilter int_filter = nm.CurrentInterruptionFilter;
+                    if (int_filter != InterruptionFilter.Priority && int_filter != InterruptionFilter.All)
+                    {
+                        ring = false;
+                    }
+
+
+                    AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService)!;
+                    if (am.RingerMode != RingerMode.Normal)
+                    {
+                        ring = false;
+                    }
+
+                    MainActivity.Instance.VolumeControlStream = Android.Media.Stream.Ring;
+
+                    if (ring)
+                    {
+                        ringtone = playSoundFromAssets("sounds/default_ringtone.mp3");
+                        ringtone.Looping = true;
+                        ringtone.Start();
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Logging.error("Exception occurred in startRinging: " + e);
-                ringtone = null;
+                catch (Exception e)
+                {
+                    Logging.error("Exception occurred in startRinging: " + e);
+                    ringtone = null;
+                }
             }
         }
 
         public static void stopRinging()
         {
-            if (ringtone == null)
+            lock (ringtoneLock)
             {
-                return;
-            }
-
-            try
-            {
-                if (ringtone.IsPlaying)
+                if (ringtone == null)
                 {
-                    ringtone.Stop();
+                    return;
                 }
-                ringtone.Release();
-            }
-            catch (Exception e)
-            {
-                Logging.error("Exception occurred while stopping the ringtone: " + e);
-            }
-            finally
-            {
-                ringtone = null;
-                MainActivity.Instance.VolumeControlStream = Android.Media.Stream.NotificationDefault;
+
+                try
+                {
+                    if (ringtone.IsPlaying)
+                    {
+                        ringtone.Stop();
+                    }
+                    ringtone.Release();
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occurred while stopping the ringtone: " + e);
+                }
+                finally
+                {
+                    ringtone = null;
+                    MainActivity.Instance.VolumeControlStream = Android.Media.Stream.NotificationDefault;
+                }
             }
         }
 

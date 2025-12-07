@@ -207,6 +207,7 @@ public partial class App : Application
 
         NetworkClientManager.wakeReconnectLoop();
         StreamClientManager.wakeReconnectLoop();
+        PresenceList.forceSendKeepAlive = true;
 
         // Popup the lockscreen if necessary
         // Allow a 5 second cooldown after unlock
@@ -219,7 +220,6 @@ public partial class App : Application
             var lockPage = new LockPage(true);
             lockPage.authSucceeded += onUnlock;
             MainPage.Navigation.PushModalAsync(lockPage);
-            PresenceList.forceSendKeepAlive = true;
             return;
         }
 
@@ -229,7 +229,6 @@ public partial class App : Application
             p.onResume();
         }
         OfflinePushMessages.resetCooldown();
-        PresenceList.forceSendKeepAlive = true;
     }
 
     protected override void OnSleep()
