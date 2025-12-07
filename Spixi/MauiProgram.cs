@@ -107,6 +107,7 @@ public static class MauiProgram
                         App.EnsureNodeRunning();
                         NetworkClientManager.wakeReconnectLoop();
                         StreamClientManager.wakeReconnectLoop();
+                        PresenceList.forceSendKeepAlive = true;
                     });
 
                     android.OnPause((activity) =>

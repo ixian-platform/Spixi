@@ -219,6 +219,7 @@ public partial class App : Application
             var lockPage = new LockPage(true);
             lockPage.authSucceeded += onUnlock;
             MainPage.Navigation.PushModalAsync(lockPage);
+            PresenceList.forceSendKeepAlive = true;
             return;
         }
 
@@ -228,6 +229,7 @@ public partial class App : Application
             p.onResume();
         }
         OfflinePushMessages.resetCooldown();
+        PresenceList.forceSendKeepAlive = true;
     }
 
     protected override void OnSleep()
