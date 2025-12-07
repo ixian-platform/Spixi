@@ -826,17 +826,39 @@ namespace SPIXI
                     continue;
                 }
 
-                FriendMessage? lastmsg = null;// TODO friend.metaData.lastMessage;
-                if(friend.getMessages(0).Count > 0)
-                {
-                    lastmsg = friend.getMessages(0).Last();
-                }
+                FriendMessage? lastmsg = friend.metaData.lastMessage;
                 
                 if (lastmsg != null)
                 {
                     string str_online = "false";
                     if (friend.online)
                         str_online = "true";
+
+                    if (lastmsg.localSender
+                        && !lastmsg.sent
+                        && !lastmsg.confirmed)
+                    {
+                        var msgs = friend.getMessages(friend.metaData.lastMessageChannel);
+                        var msg = friend.getMessage(friend.metaData.lastMessageChannel, lastmsg.id);
+                        if (msg != null)
+                        {
+                            if (msg.sent != lastmsg.sent
+                                || msg.confirmed)
+                            {
+                                lastmsg = msg;
+                                friend.metaData.setLastMessage(msg, friend.metaData.lastMessageChannel);
+                                friend.saveMetaData();
+                            }
+                        }
+                        else if (msgs == null
+                                 || msgs.Count == 0)
+                        {
+                            friend.metaData.setLastMessage(null, 0);
+                            friend.metaData.unreadMessageCount = 0;
+                            friend.saveMetaData();
+                            continue;
+                        }
+                    }
 
                     // Generate the excerpt depending on message type
                     string excerpt = lastmsg.message;

@@ -313,7 +313,7 @@ namespace SPIXI
                             UIHelpers.shouldRefreshContacts = true;
 
                             ProtocolMessage.resubscribeEvents();
-                            CoreStreamProcessor.fetchFriendsPresence(friend);
+                            CoreStreamProcessor.fetchFriendsPresence(friend, true);
                         }
                         break;
 
@@ -322,13 +322,13 @@ namespace SPIXI
                         {
                             Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
                             ProtocolMessage.resubscribeEvents();
-                            CoreStreamProcessor.fetchFriendsPresence(friend);
+                            CoreStreamProcessor.fetchFriendsPresence(friend, true);
                         }
                         break;
 
                     case SpixiMessageCode.keys2:
                         {
-                            CoreStreamProcessor.fetchFriendsPresence(friend);
+                            CoreStreamProcessor.fetchFriendsPresence(friend, true);
                         }
                         break;
 
@@ -404,11 +404,19 @@ namespace SPIXI
 
                     case SpixiMessageCode.msgDelete:
                         UIHelpers.deleteMessage(friend, channel, spixi_message.data);
+                        UIHelpers.shouldRefreshContacts = true;
                         break;
 
                     case SpixiMessageCode.msgReaction:
                         var reaction = new ReactionMessage(spixi_message.data);
+                        // If a chat page is not visible set unread indicator
+                        if (!UIHelpers.isChatScreenDisplayed(friend))
+                        {
+                            friend.metaData.unreadMessageCount++;
+                            friend.saveMetaData();
+                        }
                         UIHelpers.updateReactions(friend, channel, reaction.msgId);
+                        UIHelpers.shouldRefreshContacts = true;
                         break;
 
                     case SpixiMessageCode.leaveConfirmed:

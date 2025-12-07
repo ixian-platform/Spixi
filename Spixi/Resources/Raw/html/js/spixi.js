@@ -5,8 +5,7 @@ document.addEventListener('dragstart', (event) => {
     event.preventDefault();
 });
 
-function onload()
-{
+function onload() {
     location.href = "ixian:onload";
     startRelativeTimeUpdate("spixi-rel-ts-active");
 }
@@ -32,22 +31,22 @@ function executeUiCommand(cmd) {
     }
 }
 
-function unescapeParameter(str)
-{
+function unescapeParameter(str) {
     return str.replace(/&gt;/g, ">")
-            .replace(/&lt;/g, "<")
-            .replace(/&#92;/g, "\\")
-            .replace(/&#39;/g, "'")
-            .replace(/&#34;/g, "\"");
+        .replace(/&lt;/g, "<")
+        .replace(/&#92;/g, "\\")
+        .replace(/&#39;/g, "'")
+        .replace(/&#34;/g, "\"")
+        .replace(/&amp;/g, "&");
 }
 
-function escapeParameter(str)
-{
-   return str.replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+function escapeParameter(str) {
+    return str
+        .replace(/&(?!#\d+;|#x[\da-fA-F]+;)/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 function quickScanJS() {
@@ -73,15 +72,13 @@ function amountWithCommas(n) {
     return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
 }
 
-function getTimeDifference(unixTimestamp)
-{
+function getTimeDifference(unixTimestamp) {
     var curTime = Date.now();
     var delta = Math.floor(curTime / 1000) - unixTimestamp;
     return delta;
 }
 
-function getRelativeTime(unixTimestamp)
-{
+function getRelativeTime(unixTimestamp) {
     var delta = getTimeDifference(unixTimestamp);
 
     if (delta < 30)
@@ -105,11 +102,10 @@ function startRelativeTimeUpdate(className) {
     relativeTimeUpdateinterval = setInterval(function () {
         try {
             const els = document.getElementsByClassName(className);
-            if(els.length === 0)
-            {
+            if (els.length === 0) {
                 clearInterval(relativeTimeUpdateinterval);
                 relativeTimeUpdateinterval = null;
-			}
+            }
             for (let el of els) {
                 const ts = parseInt(el.getAttribute("data-timestamp"), 10);
                 if (!isNaN(ts)) {
@@ -123,8 +119,7 @@ function startRelativeTimeUpdate(className) {
 
 var callTimeUpdateinterval = null;
 
-function startCallTimeUpdate(className)
-{
+function startCallTimeUpdate(className) {
     if (callTimeUpdateinterval != null) {
         return;
     }
@@ -137,10 +132,9 @@ function startCallTimeUpdate(className)
                 var totalTime = Math.floor((Date.now() - el.getAttribute("data-start-timestamp")) / 1000);
                 var mins = Math.floor(totalTime / 60);
                 var secs = Math.floor(totalTime % 60);
-                if(secs < 10)
-                {
+                if (secs < 10) {
                     secs = "0" + secs;
-				}
+                }
                 el.innerHTML = mins + ":" + secs;
             }
         } catch (e) {
@@ -173,15 +167,15 @@ function addAppRequest(senderAddress, sessionId, text, acceptHtml, rejectHtml) {
     var el = document.createElement("div");
     el.id = "AppReq_" + sessionId;
     el.className = "spixi-callbar";
-
+    
     var acceptAction = "appAccept('" + senderAddress + "', '" + sessionId + "');";
     var rejectAction = "appReject('" + senderAddress + "', '" + sessionId + "');";
-
+    
     acceptHtml = unescapeParameter(acceptHtml);
     rejectHtml = unescapeParameter(rejectHtml);
-
+    
     el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6"><div onclick="' + acceptAction + '" style="display:inline-block;">' + acceptHtml + '</div></div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + rejectHtml + '</div></div></div>';
-
+    
     document.body.appendChild(el);*/
 }
 
@@ -212,42 +206,35 @@ function appReject(senderAddress, sessionId) {
     location.href = 'ixian:appReject:' + senderAddress + ':' + sessionId;
 }
 
-function displayCallBar(sessionId, text, displayTime)
-{
+function displayCallBar(sessionId, text, displayTime) {
     var el = document.getElementById("CallBar");
-    if(el == null)
-    {
+    if (el == null) {
         el = document.createElement("div");
         document.body.appendChild(el);
-    }else
-    {
+    } else {
         el.style.display = "block";
-	}
+    }
     el.id = "CallBar";
     el.className = "spixi-callbar";
 
     var rejectAction = "hangUp('" + sessionId + "');";
 
     var timeHtml = "";
-    if(displayTime != "0")
-    {
+    if (displayTime != "0") {
         timeHtml = '<div class="spixi-callbar-duration" data-start-timestamp="' + (displayTime * 1000) + '"></div>';
     }
     hangUpHtml = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
     el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6">' + timeHtml + '</div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + hangUpHtml + '</div></div></div>';
-    if(displayTime != "0")
-    {
+    if (displayTime != "0") {
         startCallTimeUpdate("spixi-callbar-duration");
     }
 }
 
-function hangUp(sessionId)
-{
+function hangUp(sessionId) {
     location.href = 'ixian:hangUp:' + sessionId;
 }
 
-function hideCallBar()
-{
+function hideCallBar() {
     var callBarElement = document.getElementById("CallBar");
     if (callBarElement) {
         callBarElement.style.display = "none";
@@ -256,10 +243,9 @@ function hideCallBar()
 
 function showWarning(text) {
     var el = document.getElementById("warning_bar");
-    if(el == null)
-    {
-         return;
-	}
+    if (el == null) {
+        return;
+    }
     if (text == "") {
         el.style.display = 'none';
     }
@@ -285,7 +271,7 @@ var modalHtml = '<div class="modal-content" onclick="event.stopPropagation(); re
                 </div>\
         </div>';
 
-function showModalDialog(title, body, leftButton, rightButton){
+function showModalDialog(title, body, leftButton, rightButton) {
     hideModalDialog();
 
     var modalEl = document.createElement("div");
@@ -304,13 +290,11 @@ function showModalDialog(title, body, leftButton, rightButton){
     modalEl.style.display = "block";
 }
 
-function hideModalDialog()
-{
+function hideModalDialog() {
     var modalEl = document.getElementById("SpixiModalDialog");
-    if(modalEl != null)
-    {
+    if (modalEl != null) {
         document.body.removeChild(modalEl);
-	}
+    }
 }
 
 function parseBoolean(value) {

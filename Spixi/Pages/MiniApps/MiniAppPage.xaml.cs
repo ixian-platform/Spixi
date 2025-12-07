@@ -51,9 +51,19 @@ namespace SPIXI
             webView.Navigating += webViewNavigating;
 
             requestReceivedTimestamp = Clock.getTimestamp();
+
+            if (user_addresses != null)
+            {
+                foreach (Address address in user_addresses)
+                {
+                    Friend friend = FriendList.getFriend(address);
+                    if (friend != null)
+                    {
+                        StreamProcessor.fetchFriendsPresence(friend, true);
+                    }
+                }
+            }
         }
-
-
 
         public override void recalculateLayout()
         {

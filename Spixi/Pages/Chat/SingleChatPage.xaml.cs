@@ -54,7 +54,7 @@ namespace SPIXI
 
             homePage = home;
 
-            StreamProcessor.fetchFriendsPresence(friend);
+            StreamProcessor.fetchFriendsPresence(friend, true);
         }
 
         public override void recalculateLayout()
@@ -1015,7 +1015,13 @@ namespace SPIXI
                 }
                 foreach (FriendMessage message in messages)
                 {
-                    if(skip_messages > 0)
+                    if (message.type == FriendMessageType.standard
+                       && string.IsNullOrEmpty(message.message))
+                    {
+                        continue;
+                    }
+
+                    if (skip_messages > 0)
                     {
                         skip_messages--;
                         continue;
