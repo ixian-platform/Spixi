@@ -853,7 +853,7 @@ namespace SPIXI
                         else if (msgs == null
                                  || msgs.Count == 0)
                         {
-                            friend.metaData.setLastMessage(null, 0);
+                            lastmsg.sent = true;
                             friend.metaData.unreadMessageCount = 0;
                             friend.saveMetaData();
                             continue;

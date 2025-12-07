@@ -133,7 +133,7 @@ namespace SPIXI.MiniApps
         public string installFromUrl(MiniApp fetchedAppInfo)
         {
             // Check for contentUrl first
-            if (string.IsNullOrWhiteSpace(fetchedAppInfo.contentUrl) || !Uri.TryCreate(fetchedAppInfo.contentUrl, UriKind.Absolute, out Uri uri) || uri.Scheme != Uri.UriSchemeHttps)
+            if (string.IsNullOrWhiteSpace(fetchedAppInfo.contentUrl) || !IxiUtils.IsValidUrl(fetchedAppInfo.contentUrl))
             {
                 Logging.error("Invalid or insecure app content URL: " + fetchedAppInfo.contentUrl);
                 return null;
@@ -169,7 +169,7 @@ namespace SPIXI.MiniApps
                 }
             }
 
-            app_name = installFromPath(source_app_file_path, fetchedAppInfo.contentUrl);
+            app_name = installFromPath(source_app_file_path, fetchedAppInfo.url);
             if (File.Exists(source_app_file_path))
             {
                 File.Delete(source_app_file_path);
@@ -283,7 +283,10 @@ namespace SPIXI.MiniApps
 
                     app.contentSize = new FileInfo(source_path).Length;
                     app.checksum = Crypto.sha256OfFile(source_path);
-                    app.url = url;
+                    if (url != null)
+                    {
+                        app.url = url;
+                    }
                     app_name = app.name;
 
                     // TODO sig check

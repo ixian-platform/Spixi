@@ -86,7 +86,10 @@ namespace SPIXI.MiniApps
                         break;
 
                     case "url":
-                        url = value;
+                        if (IxiUtils.IsValidUrl(value))
+                        {
+                            url = value;
+                        }
                         break;
 
                     case "contentUrl":
