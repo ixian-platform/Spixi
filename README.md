@@ -41,8 +41,8 @@ Developer documentation, build guides, and API references are available at:
 
 ### Prerequisites
 
-- .NET 9 SDK or later
-- Visual Studio 2022 or later (with .NET MAUI workload installed)
+- .NET 10 SDK or later
+- Visual Studio 2026 or later (with .NET MAUI workload installed)
 - Git
 
 ### Cloning the Repository
@@ -89,20 +89,20 @@ cd Spixi
 2. **Build and Run the Application:**
    - To build and run the application on a specific platform, use the following command:
      ```bash
-     dotnet build -t:Run -f net9.0-android              # For Android
-     dotnet build -t:Run -f net9.0-ios                  # For iOS
-     dotnet build -t:Run -f net9.0-windows10.0.19041.0 -p:Platform=x64  # For Windows
-     dotnet build -t:Run -f net9.0-maccatalyst          # For macOS
+     dotnet build -t:Run -f net10.0-android              # For Android
+     dotnet build -t:Run -f net10.0-ios                  # For iOS
+     dotnet build -t:Run -f net10.0-windows10.0.19041.0 -p:Platform=x64  # For Windows
+     dotnet build -t:Run -f net10.0-maccatalyst          # For macOS
      ```
    - Ensure you have the appropriate SDKs and emulators/simulators installed for the target platform.
 
 3. **Build the Application in Release mode:**
    - To build and run the application on a specific platform, use the following command:
      ```bash
-     dotnet build --configuration Release -f net9.0-android # For Android
-     dotnet build --configuration Release -f net9.0-ios # For iOS
-     dotnet build --configuration Release -f net9.0-windows10.0.19041.0 -p:Platform=x64  # For Windows
-     dotnet build --configuration Release -f net9.0-maccatalyst # For macOS
+     dotnet build --configuration Release -f net10.0-android # For Android
+     dotnet build --configuration Release -f net10.0-ios # For iOS
+     dotnet build --configuration Release -f net10.0-windows10.0.19041.0 -p:Platform=x64  # For Windows
+     dotnet build --configuration Release -f net10.0-maccatalyst # For macOS
      ```
 
 ### Additional Notes

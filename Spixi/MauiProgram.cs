@@ -60,9 +60,9 @@ public static class MauiProgram
                         var count = Math.Max(0, Interlocked.Decrement(ref ActiveActivityCount));
                         Logging.info($"{activity.GetType().Name} destroyed. Active count = {count}");
 
-                        if (count <= 0 && !activity.IsChangingConfigurations)
+                        if (count <= 0 && !activity.IsChangingConfigurations && !App.isInForeground)
                         {
-                            Logging.info("Last activity destroyed - scheduling delayed shutdown");
+                            Logging.info("Last activity destroyed and app in background - scheduling delayed shutdown");
 
                             _shutdownCts = new CancellationTokenSource();
                             var token = _shutdownCts.Token;
@@ -72,10 +72,14 @@ public static class MauiProgram
                                 try
                                 {
                                     await Task.Delay(1000, token); // 1 second debounce
-                                    if (!token.IsCancellationRequested)
+                                    if (!token.IsCancellationRequested && !App.isInForeground)
                                     {
-                                        Logging.info("No new activity started - shutting down Node");
+                                        Logging.info("No new activity started and still in background - shutting down Node");
                                         await App.Shutdown();
+                                    }
+                                    else
+                                    {
+                                        Logging.info("Shutdown canceled - app returned to foreground");
                                     }
                                 }
                                 catch (TaskCanceledException)
@@ -87,7 +91,8 @@ public static class MauiProgram
                         else
                         {
                             Logging.info($"OnDestroy ignored - remaining activities: {count}, " +
-                                         $"IsChangingConfigurations={activity.IsChangingConfigurations}");
+                                         $"IsChangingConfigurations={activity.IsChangingConfigurations}, " +
+                                         $"isInForeground={App.isInForeground}");
                         }
                     });
 
@@ -95,9 +100,20 @@ public static class MauiProgram
                     {
                         Logging.info("Android OnResume - ensuring Node is running");
                         App.isInForeground = true;
+                        
+                        // Cancel any pending shutdown when activity resumes
+                        _shutdownCts?.Cancel();
+                        
                         App.EnsureNodeRunning();
                         NetworkClientManager.wakeReconnectLoop();
                         StreamClientManager.wakeReconnectLoop();
+                    });
+
+                    android.OnPause((activity) =>
+                    {
+                        Logging.info("Android OnPause - app going to background");
+                        App.isInForeground = false;
+                        IxianHandler.localStorage.flush();
                     });
                 });
 #endif
