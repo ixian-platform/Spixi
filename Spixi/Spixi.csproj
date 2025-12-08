@@ -21,8 +21,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.ixilabs.spixi</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.9.13</ApplicationDisplayVersion>
-    <ApplicationVersion>160009130</ApplicationVersion>
+    <ApplicationDisplayVersion>0.9.14</ApplicationDisplayVersion>
+    <ApplicationVersion>160009140</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
