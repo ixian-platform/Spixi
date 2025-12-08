@@ -495,7 +495,7 @@ function linkify(text) {
 }
 
 function visitLink(url) {
-    location.href = "ixian:openLink:" + escapeParameter(url);
+    location.href = "ixian:openLink:" + url;
     hideModalDialog();
 }
 
@@ -503,7 +503,7 @@ function onExternalLink(e, url) {
     var title = SL_Modals["externalLinkTitle"];
     var body = SL_Modals["externalLinkBody"];
     body = body.replace("{0}", "<b>" + url + "</b>");
-    var visitButtonHtml = "<div onclick=\"visitLink('" + url + "');\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
+    var visitButtonHtml = "<div onclick=\"visitLink('" + escapeParameter(url) + "');\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
     showModalDialog(title, body, cancelBtnHtml, visitButtonHtml);
     e.stopPropagation();

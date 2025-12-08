@@ -34,19 +34,20 @@ function executeUiCommand(cmd) {
 function unescapeParameter(str) {
     return str.replace(/&gt;/g, ">")
         .replace(/&lt;/g, "<")
-        .replace(/&#92;/g, "\\")
-        .replace(/&#39;/g, "'")
-        .replace(/&#34;/g, "\"")
+        .replace(/&bsol;/g, "\\")
+        .replace(/&apos;/g, "'")
+        .replace(/&quot;/g, "\"")
         .replace(/&amp;/g, "&");
 }
 
 function escapeParameter(str) {
     return str
         .replace(/&(?!#\d+;|#x[\da-fA-F]+;)/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+        .replace(/'/g, "&apos;")
+        .replace(/\\/g, "&bsol;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
 function quickScanJS() {
