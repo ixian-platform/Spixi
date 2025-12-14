@@ -28,11 +28,15 @@ namespace SPIXI
         public bool accepted = false;
         public long requestReceivedTimestamp = 0;
 
+        public int sdkVersion = 40;
+
+        private MiniAppActionHandler? miniAppActionHandler;
 
         public MiniAppPage(string app_id, Address host_user_address, Address[] user_addresses, string app_entry_point)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
+
 
             // TODO randomize session id and add support for more users
             sessionId = CryptoManager.lib.sha3_512sqTrunc(UTF8Encoding.UTF8.GetBytes(app_id));
@@ -92,9 +96,18 @@ namespace SPIXI
                 return;
             }
 
-            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if (current_url.StartsWith("ixian:onload", StringComparison.Ordinal))
             {
-                onLoad();
+                string version = current_url.Substring("ixian:onload".Length);
+                if (version.Length < 2)
+                {
+                    version = "";
+                }
+                else
+                {
+                    version = version.Substring(1);
+                }
+                onLoad(version);
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
@@ -121,7 +134,7 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:getStorageData", StringComparison.Ordinal))
             {
                 var key = current_url.Substring("ixian:getStorageData".Length);
-                var data = Node.MiniAppStorage.getStorageData(appId, key);
+                var data = Node.MiniAppStorage.getStorageData(appId, "main", key);
                 string dataStr = "null";
                 if (data != null)
                 {
@@ -139,33 +152,33 @@ namespace SPIXI
                 {
                     valueToStore = Convert.FromBase64String(value);
                 }
-                Node.MiniAppStorage.setStorageData(appId, key, valueToStore);
+                Node.MiniAppStorage.setStorageData(appId, "main", key, valueToStore);
             }
             else if (current_url.StartsWith("ixian:action", StringComparison.Ordinal))
             {
                 var action = current_url.Substring("ixian:action".Length);
-                handleActionPageResponse(action);
+                handleAction(action);
             }
-            else
+            else if (current_url.StartsWith("xa:", StringComparison.Ordinal))
             {
-                // Otherwise it's just normal navigation
-                // TODO for mini apps (possibly other stuff as well) prevent normal navigation
+                var action = current_url.Substring("xa:".Length);
+                handleAction(UTF8Encoding.UTF8.GetString(Convert.FromBase64String(action)));
+            }
+            else if (current_url.Trim().StartsWith("file:", StringComparison.OrdinalIgnoreCase))
+            {
+                // allow normal navigation only for local files
                 e.Cancel = false;
                 return;
             }
             e.Cancel = true;
         }
 
-        private async void handleActionPageResponse(string action)
+        private async void handleAction(string action)
         {
             try
             {
                 MiniAppActionBase jsonResult = JsonConvert.DeserializeObject<MiniAppActionBase>(action);
-                /*if (!await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-description"), jsonResult.responseUrl, jsonResult.command), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
-                {
-                    return;
-                }*/
-                string? actionResponse = MiniAppActionHandler.processAction(jsonResult.command, action);
+                string? actionResponse = miniAppActionHandler.processAction(jsonResult.c, action);
 
                 if (actionResponse == null)
                 {
@@ -173,22 +186,35 @@ namespace SPIXI
                     return;
                 }
 
-                if (jsonResult.command == MiniAppCommands.EXTEND_NAME
-                    || jsonResult.command == MiniAppCommands.TRANSFER_NAME
-                    || jsonResult.command == MiniAppCommands.REGISTER_NAME
-                    || jsonResult.command == MiniAppCommands.UPDATE_CAPACITY
-                    || jsonResult.command == MiniAppCommands.UPDATE_NAME
-                    || jsonResult.command == MiniAppCommands.ALLOW_SUBNAMES)
+                if (jsonResult.c == MiniAppCommands.NETWORK_DATA_SEND)
+                {
+                    // Already processed, no response
+                    return;
+                }
+                else if (jsonResult.c == MiniAppCommands.STORAGE_GET
+                    || jsonResult.c == MiniAppCommands.STORAGE_SET)
+                {
+                    Utils.sendUiCommand(this, "SpixiAppSdk.ar", actionResponse);
+                    return;
+                }
+                else if (jsonResult.c == MiniAppCommands.NAME_EXTEND
+                    || jsonResult.c == MiniAppCommands.NAME_TRANSFER
+                    || jsonResult.c == MiniAppCommands.NAME_REGISTER
+                    || jsonResult.c == MiniAppCommands.NAME_UPDATE_CAPACITY
+                    || jsonResult.c == MiniAppCommands.NAME_UPDATE
+                    || jsonResult.c == MiniAppCommands.NAME_ALLOW_SUBNAMES)
                 {
                     if (!await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-response-confirmation"), actionResponse), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
                     {
                         return;
                     }
                 }
-                else if (jsonResult.command == MiniAppCommands.SEND_PAYMENT)
+                else if (jsonResult.c == MiniAppCommands.SEND_PAYMENT)
                 {
                     TransactionResponse txResponse = JsonConvert.DeserializeObject<TransactionResponse>(actionResponse);
-                    Transaction tx = new Transaction(Crypto.stringToHash(txResponse.tx));
+                    Transaction tx = new Transaction(Convert.FromBase64String(txResponse.tx));
+
+                    Utils.sendUiCommand(this, "SpixiAppSdk.ar", actionResponse);
 
                     Friend friend = FriendList.getFriend(new Address(tx.toList.Keys.First()));
                     string nick = tx.toList.Keys.First().ToString();
@@ -279,16 +305,45 @@ namespace SPIXI
             // Deprecated due to WPF, use onLoad
         }
 
-        private void onLoad()
+        private void onLoad(string sdkVersion)
         {
-            if (userAddresses != null)
+            if (sdkVersion != "")
             {
-                // Multi User App
-                Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), string.Join(',', userAddresses.Select(x => x.ToString())));
-            } else
+                this.sdkVersion = (int)(float.Parse(sdkVersion) * 100);
+            }
+
+            miniAppActionHandler = new MiniAppActionHandler(appId, sessionId, hostUserAddress, userAddresses, this.sdkVersion, Node.MiniAppStorage);
+
+            if (this.sdkVersion >= 50)
             {
-                // Single User App
-                Utils.sendUiCommand(this, "SpixiAppSdk.onInit");
+                if (userAddresses != null)
+                {
+                    string[] args = (new[] { Crypto.hashToString(sessionId) })
+                        .Concat([hostUserAddress.ToString()])
+                        .Concat(userAddresses.Select(x => x.ToString()))
+                        .ToArray();
+
+                    // Multi User App
+                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit", args);
+                }
+                else
+                {
+                    // Single User App
+                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), hostUserAddress.ToString());
+                }
+            }
+            else
+            {
+                if (userAddresses != null)
+                {
+                    // Multi User App
+                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), string.Join(',', userAddresses.Select(x => x.ToString())));
+                }
+                else
+                {
+                    // Single User App
+                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit");
+                }
             }
 
             // Execute timer-related functionality immediately

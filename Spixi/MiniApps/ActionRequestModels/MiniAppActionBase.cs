@@ -2,8 +2,8 @@
 {
     public class MiniAppActionBase
     {
-        public string command;
-        public string requestId;
-        public string responseUrl;
+        public string c;
+        public string id;
+        public string? responseUrl;
     }
 }

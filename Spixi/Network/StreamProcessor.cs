@@ -599,7 +599,7 @@ namespace SPIXI
                         Logging.error("App with id {0} is not installed.", app_id);
                     }
                 }
-                Node.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
+                Node.addMessageWithType(messageId, FriendMessageType.appSession, sender_address, 0, app_data.appId);
 
             });
         }

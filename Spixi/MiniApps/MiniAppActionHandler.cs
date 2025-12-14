@@ -8,24 +8,55 @@ using static IXICore.Transaction;
 using IXICore.RegNames;
 using System.Text;
 using IXICore.Network;
+using IXICore.Streaming;
 
 namespace SPIXI.MiniApps
 {
     public static class MiniAppCommands
     {
         public const string AUTH = "auth";
-        public const string REGISTER_NAME = "registerName";
-        public const string UPDATE_NAME = "updateName";
-        public const string EXTEND_NAME = "extendName";
-        public const string UPDATE_CAPACITY = "updateCapacity";
-        public const string ALLOW_SUBNAMES = "allowSubnames";
-        public const string TRANSFER_NAME = "transferName";
+        public const string NAME_REGISTER = "registerName";
+        public const string NAME_UPDATE = "updateName";
+        public const string NAME_EXTEND = "extendName";
+        public const string NAME_UPDATE_CAPACITY = "updateCapacity";
+        public const string NAME_ALLOW_SUBNAMES = "allowSubnames";
+        public const string NAME_TRANSFER = "transferName";
         public const string SEND_PAYMENT = "sendPayment";
+
+        public const string NETWORK_DATA_SEND = "ds";
+        public const string STORAGE_GET = "getStorage";
+        public const string STORAGE_SET = "setStorage";
     }
 
-    public static class MiniAppActionHandler
+    public class MiniAppActionHandler
     {
-        public static string? processAction(string command, string actionData)
+        private string appId;
+        private byte[] sessionId;
+
+        private Address localUserAddress;
+        private Address[] remoteUserAddresses;
+
+        private int sdkVersion = 40;
+
+        private MiniAppStorage miniAppStorage;
+
+        public MiniAppActionHandler(
+            string appId,
+            byte[] sessionId,
+            Address localUserAddress,
+            Address[] remoteUserAddresses,
+            int sdkVersion,
+            MiniAppStorage miniAppStorage)
+        {
+            this.appId = appId;
+            this.sessionId = sessionId;
+            this.localUserAddress = localUserAddress;
+            this.remoteUserAddresses = remoteUserAddresses;
+            this.sdkVersion = sdkVersion;
+            this.miniAppStorage = miniAppStorage;
+        }
+
+        public string? processAction(string command, string actionData)
         {
             string? resp = null;
             switch (command)
@@ -34,40 +65,125 @@ namespace SPIXI.MiniApps
                     resp = processAuth(actionData);
                     break;
 
-                case MiniAppCommands.REGISTER_NAME:
+                case MiniAppCommands.NAME_REGISTER:
                     resp = processRegisterName(actionData);
                     break;
 
-                case MiniAppCommands.UPDATE_NAME:
+                case MiniAppCommands.NAME_UPDATE:
                     resp = processUpdateName(actionData);
                     break;
 
-                case MiniAppCommands.EXTEND_NAME:
+                case MiniAppCommands.NAME_EXTEND:
                     resp = processExtendName(actionData);
                     break;
 
-                case MiniAppCommands.UPDATE_CAPACITY:
+                case MiniAppCommands.NAME_UPDATE_CAPACITY:
                     resp = processUpdateCapacity(actionData);
                     break;
 
-                /*case MiniAppCommands.ALLOW_SUBNAMES:
+                /*case MiniAppCommands.NAME_ALLOW_SUBNAMES:
                     resp = processAllowSubnames(actionData);
                     break;
 
-                case MiniAppCommands.TRANSFER_NAME:
+                case MiniAppCommands.NAME_TRANSFER:
                     resp = processTransferName(actionData);
                     break;*/
 
                 case MiniAppCommands.SEND_PAYMENT:
                     resp = processSendPayment(actionData, NetworkClientManager.getRandomConnectedClientAddresses(3));
                     break;
+
+                case MiniAppCommands.NETWORK_DATA_SEND:
+                    resp = processDataSend(actionData);
+                    break;
+
+                case MiniAppCommands.STORAGE_GET:
+                    resp = processStorageGet(actionData);
+                    break;
+
+                case MiniAppCommands.STORAGE_SET:
+                    resp = processStorageSet(actionData);
+                    break;
             }
             return resp;
         }
 
+        public string processDataSend(string data)
+        {
+            NetworkDataSendAction? ndsAction = JsonConvert.DeserializeObject<NetworkDataSendAction>(data);
+            byte[] d = UTF8Encoding.UTF8.GetBytes(ndsAction.d);
+            string? pid = ndsAction.pid;
+            Address? recipient = ndsAction.r;
+            Address[] sendTo = remoteUserAddresses;
+
+            byte[]? protocolIdBytes = null;
+            if (!string.IsNullOrEmpty(pid))
+            {
+                protocolIdBytes = CryptoManager.lib.sha3_512Trunc(UTF8Encoding.UTF8.GetBytes(pid));
+            }
+
+            if (recipient != null)
+            {
+                sendTo = [recipient];
+            }
+
+            foreach (Address address in sendTo)
+            {
+                Friend f = FriendList.getFriend(address);
+                if (f != null)
+                {
+                    // Send as normal app data to SessionID or as protocol data if ProtocolID is specified.
+                    if (protocolIdBytes != null)
+                        StreamProcessor.sendAppProtocolData(f, protocolIdBytes, d);
+                    else
+                        StreamProcessor.sendAppData(f, sessionId, d);
+                }
+                else
+                {
+                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
+                }
+            }
+
+            return "";
+        }
+
+        public string processStorageGet(string data)
+        {
+            StorageGetAction? sga = JsonConvert.DeserializeObject<StorageGetAction>(data);
+            string table = sga.t;
+            string key = sga.k;
+            byte[]? value = miniAppStorage.getStorageData(appId, table, key);
+            string strValue = "null";
+            if (value != null)
+            {
+                strValue = Convert.ToBase64String(value);
+            }
+            MiniAppActionResponse resp = new MiniAppActionResponse()
+            {
+                r = strValue,
+                id = sga.id
+            };
+            return JsonConvert.SerializeObject(resp);
+        }
+
+        public string processStorageSet(string data)
+        {
+            StorageSetAction? ssa = JsonConvert.DeserializeObject<StorageSetAction>(data);
+            string table = ssa.t;
+            string key = ssa.k;
+            string value = ssa.v;
+            miniAppStorage.setStorageData(appId, table, key, Convert.FromBase64String(value));
+            MiniAppActionResponse resp = new MiniAppActionResponse()
+            {
+                r = value,
+                id = ssa.id
+            };
+            return JsonConvert.SerializeObject(resp);
+        }
+
         public static string processAuth(string authData)
         {
-            AuthAction authAction = JsonConvert.DeserializeObject<AuthAction>(authData);
+            AuthAction? authAction = JsonConvert.DeserializeObject<AuthAction>(authData);
             byte[] pubKey = IxianHandler.getWalletStorage().getPrimaryPublicKey();
 
             var serviceChallengeBytes = Crypto.stringToHash(authAction.data.challenge);
@@ -83,7 +199,7 @@ namespace SPIXI.MiniApps
                 challenge = Crypto.hashToString(finalChallenge),
                 publicKey = Crypto.hashToString(pubKey),
                 signature = Crypto.hashToString(sig),
-                requestId = authAction.data.challenge
+                id = authAction.data.challenge
             };
 
             return JsonConvert.SerializeObject(authResponse);
@@ -112,7 +228,7 @@ namespace SPIXI.MiniApps
 
         public static string processRegisterName(string nameData)
         {
-            RegNameAction<RegNameRegisterAction> nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameRegisterAction>>(nameData);
+            RegNameAction<RegNameRegisterAction>? nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameRegisterAction>>(nameData);
             var nad = nameAction.data;
             Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
             IxiNumber regFee = RegisteredNamesTransactions.calculateExpectedRegistrationFee(nad.registrationTimeInBlocks, nad.capacity);
@@ -125,15 +241,16 @@ namespace SPIXI.MiniApps
             Transaction tx = createRegNameTransaction(toEntry, nameAction.feeRecipientAddress, nameAction.feeAmount);
             TransactionResponse txResponse = new TransactionResponse()
             {
-                tx = Crypto.hashToString(tx.getBytes()),
-                requestId = nameAction.requestId
+                tx = Convert.ToBase64String(tx.getBytes()),
+                txid = tx.getTxIdString(),
+                id = nameAction.id
             };
             return JsonConvert.SerializeObject(txResponse);
         }
 
         public static string processUpdateName(string nameData)
         {
-            RegNameAction<RegNameUpdateRecordsAction> nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameUpdateRecordsAction>>(nameData);
+            RegNameAction<RegNameUpdateRecordsAction>? nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameUpdateRecordsAction>>(nameData);
             var nad = nameAction.data;
             var narnr = nameAction.nameRecord;
             narnr.dataRecords.AddRange(nameAction.nameDataRecords);
@@ -178,15 +295,16 @@ namespace SPIXI.MiniApps
             Transaction tx = createRegNameTransaction(toEntry, nameAction.feeRecipientAddress, nameAction.feeAmount);
             TransactionResponse txResponse = new TransactionResponse()
             {
-                tx = Crypto.hashToString(tx.getBytes()),
-                requestId = nameAction.requestId
+                tx = Convert.ToBase64String(tx.getBytes()),
+                txid = tx.getTxIdString(),
+                id = nameAction.id
             };
             return JsonConvert.SerializeObject(txResponse);
         }
 
         public static string processExtendName(string nameData)
         {
-            RegNameAction<RegNameExtendAction> nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameExtendAction>>(nameData);
+            RegNameAction<RegNameExtendAction>? nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameExtendAction>>(nameData);
             var nad = nameAction.data;
             var narnr = nameAction.nameRecord;
             Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
@@ -197,15 +315,16 @@ namespace SPIXI.MiniApps
             Transaction tx = createRegNameTransaction(toEntry, nameAction.feeRecipientAddress, nameAction.feeAmount);
             TransactionResponse txResponse = new TransactionResponse()
             {
-                tx = Crypto.hashToString(tx.getBytes()),
-                requestId = nameAction.requestId
+                tx = Convert.ToBase64String(tx.getBytes()),
+                txid = tx.getTxIdString(),
+                id = nameAction.id
             };
             return JsonConvert.SerializeObject(txResponse);
         }
 
         public static string processUpdateCapacity(string nameData)
         {
-            RegNameAction<RegNameChangeCapacityAction> nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameChangeCapacityAction>>(nameData);
+            RegNameAction<RegNameChangeCapacityAction>? nameAction = JsonConvert.DeserializeObject<RegNameAction<RegNameChangeCapacityAction>>(nameData);
             var nad = nameAction.data;
             var narnr = nameAction.nameRecord;
 
@@ -227,36 +346,17 @@ namespace SPIXI.MiniApps
             Transaction tx = createRegNameTransaction(toEntry, nameAction.feeRecipientAddress, nameAction.feeAmount);
             TransactionResponse txResponse = new TransactionResponse()
             {
-                tx = Crypto.hashToString(tx.getBytes()),
-                requestId = nameAction.requestId
+                tx = Convert.ToBase64String(tx.getBytes()),
+                txid = tx.getTxIdString(),
+                id = nameAction.id
             };
             return JsonConvert.SerializeObject(txResponse);
         }
-
-        /*public static string processAllowSubnames(string nameData)
-        {
-            RegNameAction nameAction = JsonConvert.DeserializeObject<RegNameAction>(nameData);
-            TransactionResponse txResponse = new TransactionResponse()
-            {
-                tx = ""
-            };
-            return JsonConvert.SerializeObject(txResponse);
-        }
-
-        public static string processTransferName(string nameData)
-        {
-            RegNameAction nameAction = JsonConvert.DeserializeObject<RegNameAction>(nameData);
-            TransactionResponse txResponse = new TransactionResponse()
-            {
-                tx = ""
-            };
-            return JsonConvert.SerializeObject(txResponse);
-        }*/
 
         public static string processSendPayment(string paymentData, List<Address> relayPeers)
         {
-            SendPayment sendTx = JsonConvert.DeserializeObject<SendPayment>(paymentData);
-            var recipients = sendTx.recipients;
+            SendPayment? spa = JsonConvert.DeserializeObject<SendPayment>(paymentData);
+            var recipients = spa.recipients;
 
             IxiNumber feePerKb = ConsensusConfig.forceTransactionPrice;
             IxiNumber fee = feePerKb;
@@ -288,8 +388,9 @@ namespace SPIXI.MiniApps
 
             TransactionResponse txResponse = new TransactionResponse()
             {
-                tx = Crypto.hashToString(tx.getBytes()),
-                requestId = sendTx.requestId
+                tx = Convert.ToBase64String(tx.getBytes()),
+                txid = tx.getTxIdString(),
+                id = spa.id
             };
             return JsonConvert.SerializeObject(txResponse);
         }

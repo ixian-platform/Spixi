@@ -132,9 +132,9 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public byte[]? getStorageData(string appId, string key)
+        public byte[]? getStorageData(string appId, string table, string key)
         {
-            var madc = getStorageCache(appId);
+            var madc = getStorageCache(appId + "." + table);
             lock (madc)
             {
                 if (madc.data.ContainsKey(key))
@@ -145,9 +145,9 @@ namespace SPIXI.MiniApps
             return null;
         }
 
-        public void setStorageData(string appId, string key, byte[] value)
+        public void setStorageData(string appId, string table, string key, byte[] value)
         {
-            var madc = getStorageCache(appId);
+            var madc = getStorageCache(appId + "." + table);
             lock (madc)
             {
                 if (madc.data.ContainsKey(key))
