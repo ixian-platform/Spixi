@@ -3,6 +3,7 @@ using IXICore.Meta;
 using IXICore.Streaming;
 using Spixi;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SPIXI
 {
@@ -127,6 +128,25 @@ namespace SPIXI
                 }
             }
             return chatPages;
+        }
+
+        public static bool IsAllowedURL(string url)
+        {
+            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                || url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+            {
+                string rx_pattern = @"^https://[A-Za-z0-9]+\.(tenor|giphy)\.com/[A-Za-z0-9_/=%\?\-\.\&]+$";
+
+                if (Regex.IsMatch(url, rx_pattern))
+                {
+                    // Allow tenor and giphy URLs
+                    return true;
+                }
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

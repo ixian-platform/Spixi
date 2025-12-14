@@ -321,9 +321,9 @@ namespace SPIXI
 
                 // TODO: send a notification to the other party
             }
-            else
-            {               
-                // Otherwise it's just normal navigation
+            else if (current_url.Trim().StartsWith("file:", StringComparison.OrdinalIgnoreCase))
+            {
+                // allow normal navigation only for local files
                 e.Cancel = false;
                 return;
             }

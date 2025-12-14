@@ -3,6 +3,10 @@
     using Android.OS;
 #endif
 
+#if WINDOWS
+    using Spixi.Platforms.Windows;
+#endif
+
 using CommunityToolkit.Maui;
 using IXICore;
 using IXICore.Meta;
@@ -39,6 +43,10 @@ public static class MauiProgram
 
 #if IOS
                 handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.iOS.iOSWebViewHandler));
+#endif
+
+#if WINDOWS
+                handlers.AddHandler(typeof(WebView), typeof(WindowsWebViewHandler));
 #endif
             })
             .ConfigureLifecycleEvents(events =>
