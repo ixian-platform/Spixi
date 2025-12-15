@@ -116,7 +116,7 @@ function selectMenuOption(link) {
 }
 
 function loadAvatar(avatar_path) {
-    avatar_path = avatar_path.replace(/&#92;/g, '\\');
+    avatar_path = avatar_path.replace(/&bsol;/g, '/');
 
     var av_path = avatar_path + "?t=" + new Date().getTime();
     document.getElementById("avatar_image").src = av_path;

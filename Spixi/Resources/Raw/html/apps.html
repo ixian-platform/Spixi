@@ -81,8 +81,6 @@
         }
 
         function addApp(id, name, icon) {
-            icon = icon.replace(/&#92;/g, '\\');
-
             var appEntry = document.createElement("div");
             appEntry.className = "spixi-list-item";
             appEntry.innerHTML = '<a href="ixian:details:' + id + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + icon + '"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"></div></div></a>';

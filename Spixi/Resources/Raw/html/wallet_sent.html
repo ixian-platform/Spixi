@@ -169,6 +169,8 @@
 
             amount = amountWithCommas(amount);
 
+            avatar = avatar.replace(/&bsol;/g, '/');
+
             document.getElementById("timestamp").innerHTML = time;
             document.getElementById("amount").innerHTML = amount;
             document.getElementById("fiat-amount").innerHTML = "$" + fiat_amount;

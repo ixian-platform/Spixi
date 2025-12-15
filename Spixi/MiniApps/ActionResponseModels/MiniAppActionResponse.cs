@@ -4,5 +4,6 @@
     {
         public string? id;
         public string? r;
+        public string? e;
     }
 }

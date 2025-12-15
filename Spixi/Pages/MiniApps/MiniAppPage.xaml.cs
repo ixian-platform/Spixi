@@ -173,11 +173,28 @@ namespace SPIXI
             e.Cancel = true;
         }
 
+        private void sendActionRejected(string command, string id, string error)
+        {
+            if (command == MiniAppCommands.STORAGE_GET
+                || command == MiniAppCommands.STORAGE_SET
+                || command == MiniAppCommands.SEND_PAYMENT)
+            {
+                var ar = new MiniAppActionResponse()
+                {
+                    id = id,
+                    e = error
+                };
+                Utils.sendUiCommand(this, "SpixiAppSdk.ar", JsonConvert.SerializeObject(ar));
+                return;
+            }
+        }
+
         private async void handleAction(string action)
         {
+            MiniAppActionBase? jsonResult = null;
             try
             {
-                MiniAppActionBase jsonResult = JsonConvert.DeserializeObject<MiniAppActionBase>(action);
+                jsonResult = JsonConvert.DeserializeObject<MiniAppActionBase>(action);
                 string? actionResponse = miniAppActionHandler.processAction(jsonResult.c, action);
 
                 if (actionResponse == null)
@@ -214,8 +231,6 @@ namespace SPIXI
                     TransactionResponse txResponse = JsonConvert.DeserializeObject<TransactionResponse>(actionResponse);
                     Transaction tx = new Transaction(Convert.FromBase64String(txResponse.tx));
 
-                    Utils.sendUiCommand(this, "SpixiAppSdk.ar", actionResponse);
-
                     Friend friend = FriendList.getFriend(new Address(tx.toList.Keys.First()));
                     string nick = tx.toList.Keys.First().ToString();
                     if (friend != null)
@@ -225,35 +240,44 @@ namespace SPIXI
 
                     if (!await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), string.Format(SpixiLocalization._SL("app-action-response-payment-user-confirmation"), nick, tx.toList.Values.First().amount.ToString() + " IXI"), SpixiLocalization._SL("global-dialog-ok"), SpixiLocalization._SL("global-dialog-cancel")))
                     {
+                        sendActionRejected(jsonResult.c, jsonResult.id, "rejected");
                         return;
                     }
+
                     if (string.IsNullOrEmpty(jsonResult.responseUrl))
                     {
-                        IxianHandler.addTransaction(tx, tx.toList.Keys.Skip(1).ToList(), true);
-
-                        // Send message to recipients
-                        foreach (var entry in tx.toList)
+                        if (IxianHandler.addTransaction(tx, tx.toList.Keys.Skip(1).ToList(), true))
                         {
-                            friend = FriendList.getFriend(entry.Key);
+                            Utils.sendUiCommand(this, "SpixiAppSdk.ar", actionResponse);
 
-                            if (friend != null)
+                            // Send message to recipients
+                            foreach (var entry in tx.toList)
                             {
-                                FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, tx.getTxIdString(), true);
+                                friend = FriendList.getFriend(entry.Key);
 
-                                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, tx.id);
+                                if (friend != null)
+                                {
+                                    FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, tx.getTxIdString(), true);
 
-                                StreamMessage message = new StreamMessage(friend.protocolVersion);
-                                message.type = StreamMessageCode.info;
-                                message.recipient = friend.walletAddress;
-                                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                                message.data = spixi_message.getBytes();
-                                message.id = friend_message.id;
+                                    SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, tx.id);
 
-                                CoreStreamProcessor.sendMessage(friend, message);
+                                    StreamMessage message = new StreamMessage(friend.protocolVersion);
+                                    message.type = StreamMessageCode.info;
+                                    message.recipient = friend.walletAddress;
+                                    message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+                                    message.data = spixi_message.getBytes();
+                                    message.id = friend_message.id;
+
+                                    CoreStreamProcessor.sendMessage(friend, message);
+                                }
                             }
+                            return;
+                        }
+                        else
+                        {
+                            sendActionRejected(jsonResult.c, jsonResult.id, "error");
                         }
 
-                        await displaySpixiAlert(SpixiLocalization._SL("app-action-title"), SpixiLocalization._SL("app-action-sent"), SpixiLocalization._SL("global-dialog-ok"));
                         return;
                     }
 
@@ -296,6 +320,10 @@ namespace SPIXI
             catch (Exception e)
             {
                 Logging.error("Exception while processing Mini App action '{0}': {1}", action, e);
+                if (jsonResult != null)
+                {
+                    sendActionRejected(jsonResult.c, jsonResult.id, e.Message);
+                }
                 await displaySpixiAlert(SpixiLocalization._SL("app-action-error-processing-title"), string.Format(SpixiLocalization._SL("app-action-error-processing"), action), SpixiLocalization._SL("global-dialog-ok"));
             }
         }

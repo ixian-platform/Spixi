@@ -236,7 +236,7 @@
 
     <script type="text/javascript">
         function init(name, icon, publisher, description, version, url, size, capabilities, appId, isSingleUser, isMultiuser, isAppInstalled, isAppVerified, displayLaunch) {
-            icon = icon.replace(/&#92;/g, '\\');
+            icon = icon.replace(/&bsol;/g, '/');
 
             const mappedCapsToArray = capabilities?.split(',').map(cap => cap.trim()) || [];
 

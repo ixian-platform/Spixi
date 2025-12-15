@@ -209,8 +209,7 @@
     }
 
     function setAvatar(avatarPath) {
-        avatarPath = avatarPath.replace(/&#92;/g, '/');
-        avatarPath = avatarPath.replace(/\\/g, '/');
+        avatarPath = avatarPath.replace(/&bsol;/g, '/');
 
         const avatarImage = document.getElementById("avatar");
         avatarImage.src = avatarPath || "img/spixiavatar.png";

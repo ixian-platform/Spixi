@@ -69,19 +69,12 @@ public class SpixiWebViewClient : WebViewClient
     public override WebResourceResponse? ShouldInterceptRequest(AWebView? view, IWebResourceRequest? request)
     {
         var url = request.Url?.ToString() ?? "";
-        if (IsExternal(url))
+        if (!Utils.IsAllowedURL(url))
         {
             // Block by returning an empty response
             return new WebResourceResponse("text/plain", "utf-8", null);
         }
         return base.ShouldInterceptRequest(view, request);
-    }
-
-    private bool IsExternal(string url)
-    {
-        // Allow only local files or app assets
-        return url.StartsWith("http", StringComparison.OrdinalIgnoreCase) ||
-               url.StartsWith("https", StringComparison.OrdinalIgnoreCase);
     }
 
     // Hackish solution to the Xamarin ERR_UNKNOWN_URL_SCHEME issue plaguing the latest releases

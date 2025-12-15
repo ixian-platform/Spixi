@@ -169,7 +169,7 @@
     }
 
     function loadAvatar(avatar_path) {
-        avatar_path = avatar_path.replace(/&#92;/g, '\\');
+        avatar_path = avatar_path.replace(/&bsol;/g, '/');
         document.getElementById("avatar").src = avatar_path + "?t=" + new Date().getTime();
     }
 

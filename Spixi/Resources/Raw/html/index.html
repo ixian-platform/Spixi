@@ -617,13 +617,11 @@
     }
 
     function addApp(id, name, icon, publisher, isSingleUser, isMultiuser) {
-        const mappedIcon = icon.replace(/&#92;/g, '\\');
-
         const div = document.createElement('div');
         div.className = 'mini-apps-list-single-item';
         div.innerHTML = `
         <div class="mini-apps-list-single-image-wrapper" onclick="window.location.href='ixian:appDetails:${id}'">
-            <img src="${mappedIcon}" alt="mini-app-${name}"/>
+            <img src="${icon}" alt="mini-app-${name}"/>
         </div>
         <div class="mini-apps-single-item-info s-text-01">
             <span class="label-sm appNameItem">${name}</span>
