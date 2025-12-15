@@ -15,7 +15,7 @@ namespace SPIXI.MiniApps
     public class MiniAppStorage
     {
         string appsStoragePath = "AppsStorage";
-        Dictionary<string, MiniAppDataCache> appDataCache = new();
+        Dictionary<string, Dictionary<string, MiniAppDataCache>> appDataCache = new();
         public bool running = false;
         Thread storageThread;
 
@@ -39,21 +39,24 @@ namespace SPIXI.MiniApps
             {
                 try
                 {
-                    Dictionary<string, MiniAppDataCache> appDataCacheCopy = new(appDataCache);
-                    foreach (var cache in appDataCacheCopy)
+                    Dictionary<string, Dictionary<string, MiniAppDataCache>> appDataCacheCopy = new(appDataCache);
+                    foreach (var appCache in appDataCacheCopy)
                     {
-                        if (cache.Value.firstRequestWrite == 0)
+                        foreach (var tableCache in appCache.Value)
                         {
-                            continue;
-                        }
+                            if (tableCache.Value.firstRequestWrite == 0)
+                            {
+                                continue;
+                            }
 
-                        if (Clock.getTimestampMillis() - cache.Value.firstRequestWrite < 1000
-                            && Clock.getTimestampMillis() - cache.Value.lastRequestWrite < 200)
-                        {
-                            continue;
-                        }
+                            if (Clock.getTimestampMillis() - tableCache.Value.firstRequestWrite < 1000
+                                && Clock.getTimestampMillis() - tableCache.Value.lastRequestWrite < 200)
+                            {
+                                continue;
+                            }
 
-                        writeStorageData(cache.Key);
+                            writeStorageData(appCache.Key, tableCache.Key);
+                        }
                     }
                 }
                 catch (Exception e)
@@ -64,28 +67,42 @@ namespace SPIXI.MiniApps
             }
         }
 
-        private MiniAppDataCache getStorageCache(string appId)
+        private MiniAppDataCache getStorageCache(string appId, string table)
         {
             lock (appDataCache)
             {
+                MiniAppDataCache madc;
                 if (appDataCache.ContainsKey(appId))
                 {
-                    return appDataCache[appId];
+                    if (appDataCache[appId].ContainsKey(table))
+                    {
+                        return appDataCache[appId][table];
+                    }
+                }
+                else
+                {
+                    appDataCache[appId] = new Dictionary<string, MiniAppDataCache>();
                 }
 
-                var madc = new MiniAppDataCache();
-                appDataCache.Add(appId, madc);
+                madc = new();
+                appDataCache[appId][table] = madc;
 
                 string appStoragePath = Path.Combine(appsStoragePath, appId);
+                string tableStoragePath = Path.Combine(appStoragePath, table);
 
                 lock (madc)
                 {
-                    if (!File.Exists(appStoragePath))
+                    if (!Directory.Exists(appStoragePath))
                     {
                         return madc;
                     }
 
-                    using (var fs = File.Open(appStoragePath, FileMode.Open))
+                    if (!File.Exists(tableStoragePath))
+                    {
+                        return madc;
+                    }
+
+                    using (var fs = File.Open(tableStoragePath, FileMode.Open))
                     {
                         using (var br = new BinaryReader(fs))
                         {
@@ -111,16 +128,20 @@ namespace SPIXI.MiniApps
             }
         }
 
-        private void writeStorageData(string appId)
+        private void writeStorageData(string appId, string table)
         {
-            var madc = getStorageCache(appId);
+            var madc = getStorageCache(appId, table);
             lock (madc)
             {
                 madc.firstRequestWrite = 0;
                 madc.lastRequestWrite = 0;
 
                 string appStoragePath = Path.Combine(appsStoragePath, appId);
-                using (var fs = File.Open(appStoragePath, FileMode.Create))
+                if (!Directory.Exists(appStoragePath))
+                {
+                    Directory.CreateDirectory(appStoragePath);
+                }
+                using (var fs = File.Open(Path.Combine(appStoragePath, table), FileMode.Create))
                 {
                     fs.WriteByte(0);
                     foreach (var entry in madc.data)
@@ -134,7 +155,7 @@ namespace SPIXI.MiniApps
 
         public byte[]? getStorageData(string appId, string table, string key)
         {
-            var madc = getStorageCache(appId + "." + table);
+            var madc = getStorageCache(appId, table);
             lock (madc)
             {
                 if (madc.data.ContainsKey(key))
@@ -147,7 +168,7 @@ namespace SPIXI.MiniApps
 
         public void setStorageData(string appId, string table, string key, byte[] value)
         {
-            var madc = getStorageCache(appId + "." + table);
+            var madc = getStorageCache(appId, table);
             lock (madc)
             {
                 if (madc.data.ContainsKey(key))

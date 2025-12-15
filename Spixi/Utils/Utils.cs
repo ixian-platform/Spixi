@@ -137,7 +137,8 @@ namespace SPIXI
             {
                 string rx_pattern = @"^https://[A-Za-z0-9]+\.(tenor|giphy)\.com/[A-Za-z0-9_/=%\?\-\.\&]+$";
 
-                if (Regex.IsMatch(url, rx_pattern))
+                if (Regex.IsMatch(url, rx_pattern)
+                    || url.StartsWith("https://apps.spixi.io/", StringComparison.OrdinalIgnoreCase))
                 {
                     // Allow tenor and giphy URLs
                     return true;
