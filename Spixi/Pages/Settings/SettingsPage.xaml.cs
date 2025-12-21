@@ -262,6 +262,8 @@ namespace SPIXI
                 TransactionCache.clearAllTransactions();
                 Node.tiv.clearCache();
 
+                IxianHandler.wallets.Clear();
+
                 // Remove the settings page
                 popToRootAsync();
 
@@ -292,10 +294,7 @@ namespace SPIXI
             FriendList.deleteEntireHistory();
             FriendList.deleteAccounts();
             FriendList.clear();
-            TransactionCache.clearAllTransactions();
 
-            Node.stop();
-            IxianHandler.wallets.Clear();
             onLoad();
 
             displaySpixiAlert(SpixiLocalization._SL("settings-deleteda-title"), SpixiLocalization._SL("settings-deleteda-text"), SpixiLocalization._SL("global-dialog-ok"));
