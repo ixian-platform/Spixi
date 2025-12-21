@@ -292,7 +292,10 @@ namespace SPIXI
             FriendList.deleteEntireHistory();
             FriendList.deleteAccounts();
             FriendList.clear();
+            TransactionCache.clearAllTransactions();
 
+            Node.stop();
+            IxianHandler.wallets.Clear();
             onLoad();
 
             displaySpixiAlert(SpixiLocalization._SL("settings-deleteda-title"), SpixiLocalization._SL("settings-deleteda-text"), SpixiLocalization._SL("global-dialog-ok"));

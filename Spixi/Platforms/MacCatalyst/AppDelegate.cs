@@ -75,10 +75,6 @@ public class AppDelegate : MauiUIApplicationDelegate
     public override void WillTerminate(UIApplication uiApplication)
     {
         IxianHandler.shutdown();
-        while (IxianHandler.status != NodeStatus.stopped)
-        {
-            Thread.Sleep(10);
-        }
         base.WillTerminate(uiApplication);
     }
 

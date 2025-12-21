@@ -200,26 +200,32 @@ namespace SPIXI
 
         public static void onUpdate()
         {
-            while (running)
+            try
             {
-                lock (incomingTransfers)
+                while (running)
                 {
-                    foreach(FileTransfer transfer in incomingTransfers)
+                    lock (incomingTransfers)
                     {
-                        if (transfer.completed || transfer.fileStream == null)
-                            continue;
-
-                        if (transfer.lastTimeStamp == 0)
-                            continue;
-
-                        if(Clock.getTimestamp() - transfer.lastTimeStamp > Config.packetRequestTimeout)
+                        foreach (FileTransfer transfer in incomingTransfers)
                         {
-                            requestFileData(transfer.sender, transfer.uid, transfer.lastPacket);
-                        }
-                    }
+                            if (transfer.completed || transfer.fileStream == null)
+                                continue;
 
+                            if (transfer.lastTimeStamp == 0)
+                                continue;
+
+                            if (Clock.getTimestamp() - transfer.lastTimeStamp > Config.packetRequestTimeout)
+                            {
+                                requestFileData(transfer.sender, transfer.uid, transfer.lastPacket);
+                            }
+                        }
+
+                    }
+                    Thread.Sleep(1000);
                 }
-                Thread.Sleep(1000);
+            } catch (ThreadInterruptedException)
+            {
+                // Thread interrupted, exit gracefully
             }
 
             // Cleanup
@@ -246,6 +252,13 @@ namespace SPIXI
             }
 
             running = false;
+
+            if (tm_thread != null)
+            {
+                tm_thread.Interrupt();
+                tm_thread.Join();
+                tm_thread = null;
+            }
         }
 
         public static void resetIncomingTransfers()
@@ -513,6 +526,7 @@ namespace SPIXI
                 }
             }
 
+            transfer.fileStream.Close();
             transfer.fileStream.Dispose();
             
             if(incoming && transfer.fileName != null && transfer.fileName != "")

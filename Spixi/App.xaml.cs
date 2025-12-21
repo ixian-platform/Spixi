@@ -11,17 +11,6 @@ namespace Spixi;
 
 public partial class App : Application
 {
-    private static App _singletonInstance;
-
-    public static App Instance(bool force_redraw = false)
-    {
-        if (_singletonInstance == null)
-        {
-            _singletonInstance = new App();
-        }
-
-        return _singletonInstance;
-    }
     public static bool isInForeground { get; set; } = false;
 
     public static Window appWindow { get; private set; } = null;
@@ -148,7 +137,7 @@ public partial class App : Application
                 }
                 else
                 {
-                    // Wallet found                     
+                    // Wallet found
                     if (isLockEnabled())
                     {
                         // Show the lock screen
@@ -167,9 +156,22 @@ public partial class App : Application
             }
             NavigationPage.SetHasNavigationBar(MainPage, false);
         }
-        else
+        else if (IxianHandler.status == NodeStatus.stopped
+                || IxianHandler.status == NodeStatus.stopping)
         {
             // Already started before
+            Logging.info("App: Node exists but is stopped");
+            while (IxianHandler.status == NodeStatus.stopping)
+            {
+                Thread.Sleep(50);
+            }
+            if (IxianHandler.status == NodeStatus.stopped)
+            {
+                Logging.info("App: Restarting Node");
+                Node.preStart();
+                Node.start();
+                Node.connectToNetwork();
+            }
         }
     }
 
@@ -204,6 +206,7 @@ public partial class App : Application
     {
         base.OnResume();
         isInForeground = true;
+        Node.resume();
 
         NetworkClientManager.wakeReconnectLoop();
         StreamClientManager.wakeReconnectLoop();
@@ -235,6 +238,7 @@ public partial class App : Application
     {
         base.OnSleep();
         isInForeground = false;
+        Node.pause();
         IxianHandler.localStorage.flush();
     }
 
@@ -242,6 +246,7 @@ public partial class App : Application
     {
         base.OnStart();
         isInForeground = true;
+        Node.resume();
     }
 
     protected override Window CreateWindow(IActivationState activationState)
@@ -269,10 +274,6 @@ public partial class App : Application
         try
         {
             IxianHandler.shutdown();
-            while (IxianHandler.status != NodeStatus.stopped)
-            {
-                await Task.Delay(10);
-            }
         }
         catch (Exception ex)
         {
@@ -311,16 +312,21 @@ public partial class App : Application
     {
         try
         {
-            if (Instance == null)
-            {
-                Logging.info("EnsureNodeRunning: Node.Instance is null, creating new Node");
-                _ = new Node();
-            }
-            else if (IxianHandler.status == NodeStatus.stopped)
+            if (IxianHandler.status == NodeStatus.stopped
+                || IxianHandler.status == NodeStatus.stopping)
             {
                 Logging.info("EnsureNodeRunning: Node exists but is stopped");
-                //preStart();
-                //start();
+                while (IxianHandler.status == NodeStatus.stopping)
+                {
+                    Thread.Sleep(50);
+                }
+                if (IxianHandler.status == NodeStatus.stopped)
+                {
+                    Logging.info("EnsureNodeRunning: Restarting Node");
+                    Node.preStart();
+                    Node.start();
+                    Node.connectToNetwork();
+                }
             }
             else
             {

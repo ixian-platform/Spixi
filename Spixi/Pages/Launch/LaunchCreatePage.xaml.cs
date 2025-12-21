@@ -129,7 +129,9 @@ namespace SPIXI
 
                 if (Node.generateWallet(pass))
                 {
+                    Node.preStart();
                     Node.start();
+                    Node.connectToNetwork();
 
                     IxianHandler.localStorage.nickname = nick;
                     IxianHandler.localStorage.writeAccountFile();

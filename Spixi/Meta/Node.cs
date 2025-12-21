@@ -101,6 +101,11 @@ namespace SPIXI.Meta
 
         static public void preStart()
         {
+            if (running)
+            {
+                return;
+            }
+            Logging.info("Pre-Starting node");
             // Start local storage
             IxianHandler.localStorage.start();
 
@@ -116,6 +121,8 @@ namespace SPIXI.Meta
             Logging.info("Starting node");
 
             running = true;
+            IxianHandler.forceShutdown = false;
+            IxianHandler.status = NodeStatus.warmUp;
 
             UpdateVerify.start();
 
@@ -157,15 +164,13 @@ namespace SPIXI.Meta
 
             startCounter++;
 
-            mainLoopThread = new Thread(mainLoop);
-            mainLoopThread.Name = "Main_Loop_Thread";
-            mainLoopThread.Start();
-
             // Init push service
             SPushService.initialize();
 
             string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
             SPushService.setTag(tag);
+
+            resume();
 
             if (Config.apiBinds.Count != 0)
             {
@@ -385,13 +390,13 @@ namespace SPIXI.Meta
         {
             if (!running)
             {
-                Logging.stop();
-                IxianHandler.status = NodeStatus.stopped;
                 return;
             }
 
             Logging.info("Stopping node...");
             running = false;
+
+            IxianHandler.status = NodeStatus.stopping;
 
             PeerStorage.savePeersFile(true);
 
@@ -426,18 +431,40 @@ namespace SPIXI.Meta
 
             UpdateVerify.stop();
 
-            if (mainLoopThread != null)
-            {
-                mainLoopThread.Interrupt();
-                mainLoopThread.Join();
-                mainLoopThread = null;
-            }
+            pause();
 
             IxianHandler.status = NodeStatus.stopped;
 
             Logging.info("Node stopped");
+        }
 
-            Logging.stop();
+        public static void pause()
+        {
+            if (mainLoopThread == null)
+            {
+                return;
+            }
+            
+            mainLoopThread.Interrupt();
+            mainLoopThread.Join();
+            mainLoopThread = null;
+        }
+
+        public static void resume()
+        {
+            if (!running)
+            {
+                return;
+            }
+
+            if (mainLoopThread != null)
+            {
+                return;
+            }
+
+            mainLoopThread = new Thread(mainLoop);
+            mainLoopThread.Name = "Main_Loop_Thread";
+            mainLoopThread.Start();
         }
 
         public override bool isAcceptingConnections()

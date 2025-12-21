@@ -73,7 +73,8 @@ namespace SPIXI.Meta
                 }
             }
 
-            if (block_header.blockNum >= IxianHandler.getHighestKnownNetworkBlockHeight())
+            if (block_header.blockNum >= IxianHandler.getHighestKnownNetworkBlockHeight()
+                && IxianHandler.status == NodeStatus.warmUp)
             {
                 IxianHandler.status = NodeStatus.ready;
             }

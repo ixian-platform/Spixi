@@ -14,6 +14,7 @@ using IXICore.Network;
 using Microsoft.Maui.Controls.Compatibility;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
 using Microsoft.Maui.LifecycleEvents;
+using SPIXI.Meta;
 
 namespace Spixi;
 
@@ -108,7 +109,8 @@ public static class MauiProgram
                     {
                         Logging.info("Android OnResume - ensuring Node is running");
                         App.isInForeground = true;
-                        
+                        Node.resume();
+
                         // Cancel any pending shutdown when activity resumes
                         _shutdownCts?.Cancel();
                         
@@ -122,6 +124,7 @@ public static class MauiProgram
                     {
                         Logging.info("Android OnPause - app going to background");
                         App.isInForeground = false;
+                        Node.pause();
                         IxianHandler.localStorage.flush();
                     });
                 });
@@ -140,6 +143,7 @@ public static class MauiProgram
                     {
                         Logging.info("iOS OnActivated ensuring Node is running");
                         App.isInForeground = true;
+                        Node.resume();
                         App.EnsureNodeRunning();
                         NetworkClientManager.wakeReconnectLoop();
                         StreamClientManager.wakeReconnectLoop();
@@ -160,6 +164,7 @@ public static class MauiProgram
                     {
                         Logging.info("Windows OnWindowCreated - ensuring Node is running");
                         App.isInForeground = true;
+                        Node.resume();
                         App.EnsureNodeRunning();
                     });
                 });

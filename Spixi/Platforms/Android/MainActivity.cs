@@ -170,6 +170,7 @@ public class MainActivity : MauiAppCompatActivity
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
             //App.isInForeground = false;
+            //Node.pause();
             var aspectRatio = new Android.Util.Rational(16, 9);
             var pipParams = new PictureInPictureParams.Builder()
                 .SetAspectRatio(aspectRatio)
