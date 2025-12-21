@@ -86,7 +86,7 @@ namespace SPIXI
             {
                 running = true;
 
-                Task.Run(() =>
+                Task.Run(async () =>
                 {
                     try
                     {
@@ -402,9 +402,9 @@ namespace SPIXI
             {
                 Browser.Default.OpenAsync(new Uri(Config.spixiAppsUrl));
             }
-            else
+            else if (current_url.Trim().StartsWith("file:", StringComparison.OrdinalIgnoreCase))
             {
-                // Otherwise it's just normal navigation
+                // allow normal navigation only for local files
                 e.Cancel = false;
                 return;
             }

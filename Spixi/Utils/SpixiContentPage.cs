@@ -111,7 +111,7 @@ namespace SPIXI
                     tcs.TrySetException(ex);
                 }
             });
-            return (await tcs.Task).Trim('\"') == "complete";
+            return (await tcs.Task)?.Trim('\"') == "complete";
         }
 
         public virtual void reload()

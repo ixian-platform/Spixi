@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IXICore.Meta;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Spixi
                 case "screenDim":
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        UIApplication.SharedApplication.IdleTimerDisabled = true;
+                        DeviceDisplay.Current.KeepScreenOn = true;
                     });
                     return true;
                 case "partial":
@@ -41,7 +42,7 @@ namespace Spixi
                 case "screenDim":
                     MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        UIApplication.SharedApplication.IdleTimerDisabled = false;
+                        DeviceDisplay.Current.KeepScreenOn = false;
                     });
                     return true;
                 case "partial":
