@@ -1,4 +1,4 @@
-#if ANDROID
+﻿#if ANDROID
     using Android.App;
     using Android.OS;
 #endif
@@ -28,10 +28,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-	    .ConfigureMauiHandlers(handlers =>
-            {
-     		 handlers.AddHandler(typeof(Editor), typeof(Spixi.Platforms.iOS.NoAccessoryEditorHandler));
-            });
             .UseMauiCompatibility()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
@@ -41,7 +37,7 @@ public static class MauiProgram
             })
             .ConfigureMauiHandlers((handlers) =>
             {
-#if ANDROID 
+#if ANDROID
                 //handlers.AddHandler(typeof(WebView), typeof(Spixi.Platforms.Android.Renderers.MyWebViewHandler));
                 handlers.AddCompatibilityRenderer(typeof(WebView), typeof(Spixi.Platforms.Android.Renderers.SpixiWebviewRenderer2));
 #endif
