@@ -141,10 +141,9 @@
         function checkAddress() {
 
             var address = $("#addressInput").val();
-            if (address.length >= 65) {
-                confirmAddress.innerText = address;
-                onValidAddress();
-            }
+
+            confirmAddress.innerText = address;
+            location.href = "ixian:checkAddress:" + address;
         }
 
         function onValidAddress() {

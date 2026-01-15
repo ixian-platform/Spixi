@@ -111,9 +111,7 @@
         function checkAddress() {
 
             var address = $("#addressInput").val();
-            if (address.length >= 65) {
-                onValidAddress(address);
-            }
+            onValidAddress(address);
         }
         function onValidAddress(addr) {
             location.href = "ixian:send:" + addr;

@@ -99,10 +99,12 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
                 string address = split[1];
 
-                if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(address)) == false)
+                byte[] addressBytes = Base58Check.Base58CheckEncoding.DecodePlain(address);
+                if (!Address.validateAddress(addressBytes)
+                    || !Address.validateChecksum(addressBytes))
                 {
                     e.Cancel = true;
-                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    //displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 

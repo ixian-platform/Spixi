@@ -88,6 +88,15 @@ namespace SPIXI
                 e.Cancel = true;
                 return;
             }
+            else if (current_url.StartsWith("ixian:checkAddress:", StringComparison.Ordinal))
+            {
+                byte[] addressBytes = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:checkAddress:".Length));
+                if (Address.validateAddress(addressBytes)
+                    && Address.validateChecksum(addressBytes))
+                {
+                    Utils.sendUiCommand(this, "onValidAddress");
+                }
+            }
             else
             {
                 // Otherwise it's just normal navigation
