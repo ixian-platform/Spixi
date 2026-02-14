@@ -21,8 +21,8 @@
     <!-- App Identifier -->
     <ApplicationId>com.ixilabs.spixi</ApplicationId>
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.9.15</ApplicationDisplayVersion>
-    <ApplicationVersion>160009150</ApplicationVersion>
+    <ApplicationDisplayVersion>0.9.16</ApplicationDisplayVersion>
+    <ApplicationVersion>160009160</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
@@ -190,19 +190,17 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="14.0.0" />
     <PackageReference Include="Concentus" Version="2.2.2" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.20" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.20" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.40" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.40" />
+    <PackageReference Include="Mono.Nat" Version="3.0.4" />
 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="OneSignalSDK.DotNet" Version="5.2.2" />
-    <PackageReference Include="Open.Nat" Version="2.1.0" />
+    <PackageReference Include="OneSignalSDK.DotNet" Version="6.0.0" />
     <PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
   <ItemGroup>
