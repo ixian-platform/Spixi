@@ -173,7 +173,7 @@ namespace SPIXI
                     }
                 }
                 contactName = recipient_address.ToString();
-                Friend friend = FriendList.addFriend(FriendState.RequestSent, recipient_address, null, contactName, null, null, 0);
+                Friend friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, recipient_address, null, contactName, null, null, 0);
 
                 if (friend != null)
                 {

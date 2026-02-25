@@ -43,6 +43,8 @@ namespace Spixi.Platforms.iOS
             platformView.ScrollView.ScrollEnabled = false;
             platformView.ScrollView.Bounces = false;
 
+            // Enable inspection for debugging
+            //platformView.Inspectable = true;
 
             // Remove the iOS keyboard accessory bar (up/down arrows and checkmark)
             var assistantItem = platformView.InputAssistantItem;

@@ -170,7 +170,7 @@ namespace SPIXI
 
             Logging.info("Preparing to send payment");
             Logging.info("Broadcasting tx");
-            IxianHandler.addTransaction(transaction, relayNodeAddresses, true);
+            IxianHandler.addTransaction(transaction, relayNodeAddresses, null, null, true);
             Logging.info("Adding to cache");
 
             // Add the unconfirmed transaction to the cache

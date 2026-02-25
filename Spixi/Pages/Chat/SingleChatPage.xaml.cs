@@ -248,7 +248,7 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:sendContactRequest:"))
             {
                 Address address = new Address(current_url.Substring("ixian:sendContactRequest:".Length));
-                Friend new_friend = FriendList.addFriend(FriendState.RequestSent, address, null, address.ToString(), null, null, 0);
+                Friend new_friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, address, null, address.ToString(), null, null, 0);
                 if (new_friend != null)
                 {
                     new_friend.save();
@@ -896,7 +896,7 @@ namespace SPIXI
                         {
                             updateReactions(msg_id, selectedChannel);
                             StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
-                            IxianHandler.addTransaction(tx, relayNodeAddresses, true);
+                            IxianHandler.addTransaction(tx, relayNodeAddresses, null, null, true);
                             TransactionCache.addUnconfirmedTransaction(tx);
                             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-tip-confirmed-body"), nick, amount.ToString() + " IXI");
                             displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
@@ -910,7 +910,7 @@ namespace SPIXI
 
                 case "sendContactRequest":
                     Address new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
-                    Friend new_friend = FriendList.addFriend(FriendState.RequestSent, new_friend_address, null, new_friend_address.ToString(), null, null, 0);
+                    Friend new_friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, new_friend_address, null, new_friend_address.ToString(), null, null, 0);
                     if (new_friend != null)
                     {
                         new_friend.save();

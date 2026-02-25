@@ -38,7 +38,8 @@ namespace SPIXI.Meta
 
         // Private data
 
-        private static Thread mainLoopThread;
+        private static CancellationTokenSource? ctsLoop;
+        private static Task? mainLoopTask;
 
         public static Node Instance = null;
 
@@ -47,6 +48,8 @@ namespace SPIXI.Meta
         private static long lastPriceUpdate = 0;
 
         private static GenericAPIServer apiServer;
+
+        private static object startLock = new object();
 
         public Node()
         {
@@ -114,71 +117,74 @@ namespace SPIXI.Meta
 
         static public void start()
         {
-            if (running)
+            lock (startLock)
             {
-                return;
+                if (running)
+                {
+                    return;
+                }
+                Logging.info("Starting node");
+
+                running = true;
+                IxianHandler.forceShutdown = false;
+                IxianHandler.status = NodeStatus.warmUp;
+
+                UpdateVerify.start();
+
+                ulong block_height = 0;
+                byte[] block_checksum = null;
+
+                string headers_path;
+                if (IxianHandler.networkType == NetworkType.main)
+                {
+                    headers_path = Path.Combine(Config.spixiUserFolder, "headers");
+
+                    block_height = CoreConfig.bakedBlockHeight;
+                    block_checksum = CoreConfig.bakedBlockChecksum;
+                }
+                else
+                {
+                    headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
+                }
+
+                // TODO: replace the TIV with a liteclient-optimized implementation
+                // Start TIV
+                tiv.start(headers_path, block_height, block_checksum, true);
+
+                // Generate presence list
+                PresenceList.init(IxianHandler.publicIP, 0, 'C', CoreConfig.clientKeepAliveInterval);
+
+                // Start the network queue
+                NetworkQueue.start();
+
+                streamProcessor.start();
+
+                // Start the keepalive thread
+                PresenceList.startKeepAlive();
+
+                // Start the transfer manager
+                TransferManager.start();
+
+                MiniAppManager.start();
+
+                startCounter++;
+
+                // Init push service
+                SPushService.initialize();
+
+                string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
+                SPushService.setTag(tag);
+
+                resume();
+
+                if (Config.apiBinds.Count != 0)
+                {
+                    apiServer = new GenericAPIServer();
+                    apiServer.start(Config.apiBinds, Config.apiUsers, Config.apiAllowedIps);
+                }
+
+                Logging.info("Node started");
             }
-            Logging.info("Starting node");
-
-            running = true;
-            IxianHandler.forceShutdown = false;
-            IxianHandler.status = NodeStatus.warmUp;
-
-            UpdateVerify.start();
-
-            ulong block_height = 0;
-            byte[] block_checksum = null;
-
-            string headers_path;
-            if (IxianHandler.networkType == NetworkType.main)
-            {
-                headers_path = Path.Combine(Config.spixiUserFolder, "headers");
-
-                block_height = CoreConfig.bakedBlockHeight;
-                block_checksum = CoreConfig.bakedBlockChecksum;
-            }
-            else
-            {
-                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
-            }
-
-            // TODO: replace the TIV with a liteclient-optimized implementation
-            // Start TIV
-            tiv.start(headers_path, block_height, block_checksum, true);
-            
-            // Generate presence list
-            PresenceList.init(IxianHandler.publicIP, 0, 'C', CoreConfig.clientKeepAliveInterval);
-
-            // Start the network queue
-            NetworkQueue.start();
-
-            streamProcessor.start();
-
-            // Start the keepalive thread
-            PresenceList.startKeepAlive();
-
-            // Start the transfer manager
-            TransferManager.start();
-
-            MiniAppManager.start();
-
-            startCounter++;
-
-            // Init push service
-            SPushService.initialize();
-
-            string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
-            SPushService.setTag(tag);
-
-            resume();
-
-            if (Config.apiBinds.Count != 0)
-            {
-                apiServer = new GenericAPIServer();
-                apiServer.start(Config.apiBinds, Config.apiUsers, Config.apiAllowedIps);
-            }
-
-            Logging.info("Node started");
         }
 
 
@@ -265,7 +271,7 @@ namespace SPIXI.Meta
         }
 
         // Handle timer routines
-        static public void mainLoop()
+        static public async void mainLoop(CancellationToken ct)
         {
             byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum;
             if (primaryAddress == null)
@@ -285,7 +291,7 @@ namespace SPIXI.Meta
             try
             {
                 bool fireLocalNotification = OperatingSystem.IsAndroid();
-                while (running)
+                while (!ct.IsCancellationRequested)
                 {
                     try
                     {
@@ -333,12 +339,12 @@ namespace SPIXI.Meta
                     {
                         Logging.error("Exception occured in mainLoop: " + e);
                     }
-                    Thread.Sleep(2500);
+                    await Task.Delay(2500, ct);
                 }
             }
-            catch (ThreadInterruptedException)
+            catch (OperationCanceledException)
             {
-
+                // normal shutdown
             }
             catch (Exception e)
             {
@@ -388,83 +394,105 @@ namespace SPIXI.Meta
 
         static public void stop()
         {
-            if (!running)
+            lock (startLock)
             {
-                return;
+                if (!running)
+                {
+                    return;
+                }
+
+                Logging.info("Stopping node...");
+                running = false;
+
+                IxianHandler.status = NodeStatus.stopping;
+
+                PeerStorage.savePeersFile(true);
+
+                // Stop the stream processor
+                streamProcessor.stop();
+
+                IxianHandler.localStorage.stop();
+
+                MiniAppManager.stop();
+
+                // Stop TIV
+                tiv.stop();
+
+                // Stop the transfer manager
+                TransferManager.stop();
+
+                // Stop the keepalive thread
+                PresenceList.stopKeepAlive();
+
+                // Stop the API server
+                if (apiServer != null)
+                {
+                    apiServer.stop();
+                    apiServer = null;
+                }
+
+                // Stop the network queue
+                NetworkQueue.stop();
+
+                NetworkClientManager.stop();
+                StreamClientManager.stop();
+
+                UpdateVerify.stop();
+
+                pause();
+
+                IxianHandler.status = NodeStatus.stopped;
+
+                Logging.info("Node stopped");
             }
-
-            Logging.info("Stopping node...");
-            running = false;
-
-            IxianHandler.status = NodeStatus.stopping;
-
-            PeerStorage.savePeersFile(true);
-
-            // Stop the stream processor
-            streamProcessor.stop();
-
-            IxianHandler.localStorage.stop();
-
-            MiniAppManager.stop();
-
-            // Stop TIV
-            tiv.stop();
-
-            // Stop the transfer manager
-            TransferManager.stop();
-
-            // Stop the keepalive thread
-            PresenceList.stopKeepAlive();
-
-            // Stop the API server
-            if (apiServer != null)
-            {
-                apiServer.stop();
-                apiServer = null;
-            }
-
-            // Stop the network queue
-            NetworkQueue.stop();
-
-            NetworkClientManager.stop();
-            StreamClientManager.stop();
-
-            UpdateVerify.stop();
-
-            pause();
-
-            IxianHandler.status = NodeStatus.stopped;
-
-            Logging.info("Node stopped");
         }
 
         public static void pause()
         {
-            if (mainLoopThread == null)
+            lock (startLock)
             {
-                return;
+                if (mainLoopTask == null)
+                {
+                    return;
+                }
+
+                ctsLoop!.Cancel();
+                try
+                {
+                    mainLoopTask.GetAwaiter().GetResult();
+                }
+                catch (OperationCanceledException) { }
+                catch (Exception e)
+                {
+                    Logging.error("Error while pausing " + e);
+                }
+                finally
+                {
+                    ctsLoop.Dispose();
+                    ctsLoop = null;
+                    mainLoopTask = null;
+                }
             }
-            
-            mainLoopThread.Interrupt();
-            mainLoopThread.Join();
-            mainLoopThread = null;
         }
 
         public static void resume()
         {
-            if (!running)
+            lock (startLock)
             {
-                return;
-            }
+                if (!running)
+                {
+                    return;
+                }
 
-            if (mainLoopThread != null)
-            {
-                return;
-            }
+                if (mainLoopTask != null)
+                {
+                    return;
+                }
 
-            mainLoopThread = new Thread(mainLoop);
-            mainLoopThread.Name = "Main_Loop_Thread";
-            mainLoopThread.Start();
+
+                ctsLoop = new CancellationTokenSource();
+                mainLoopTask = Task.Run(() => mainLoop(ctsLoop.Token));
+            }
         }
 
         public override bool isAcceptingConnections()
@@ -511,7 +539,7 @@ namespace SPIXI.Meta
             return tiv.getLastBlockHeader().version;
         }
 
-        public override bool addTransaction(Transaction tx, List<Address> relayNodeAddresses, bool force_broadcast)
+        public override bool addTransaction(Transaction tx, List<Address> relayNodeAddresses, List<ExtendedAddress>? extendedAddresses, byte[]? requestId, bool force_broadcast)
         {
             foreach (var address in relayNodeAddresses)
             {
@@ -826,7 +854,7 @@ namespace SPIXI.Meta
             var transaction = prepTx.transaction;
             var relayNodeAddresses = prepTx.relayNodeAddresses;
             // Send the transaction
-            if (IxianHandler.addTransaction(transaction, relayNodeAddresses, true))
+            if (IxianHandler.addTransaction(transaction, relayNodeAddresses, null, null, true))
             {
                 Logging.info("Sending transaction, txid: {0}", transaction.getTxIdString());
                 return transaction;

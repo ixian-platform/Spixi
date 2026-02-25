@@ -246,7 +246,7 @@ namespace SPIXI
 
                     if (string.IsNullOrEmpty(jsonResult.responseUrl))
                     {
-                        if (IxianHandler.addTransaction(tx, tx.toList.Keys.Skip(1).ToList(), true))
+                        if (IxianHandler.addTransaction(tx, tx.toList.Keys.Skip(1).ToList(), null, null, true))
                         {
                             Utils.sendUiCommand(this, "SpixiAppSdk.ar", actionResponse);
 

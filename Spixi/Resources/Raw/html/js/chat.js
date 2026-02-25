@@ -278,7 +278,7 @@ document.getElementById("chat_send").onclick = function () {
     chatInput.focus();
     var chat_text = chatInput.innerText;
 
-    if (chat_text.length > 1000) {
+    if (chat_text.length > 64000) {
         alert(SL_ChatTextTooLong);
         return false;
     }
@@ -329,38 +329,28 @@ $("#chat_input").keyup(function (event) {
 
 });
 
-// TODO: check when this doesn't work correctly
 function shouldScroll() {
-    return true;
+    var el = messagesEl;
+    if (el.scrollTop + (window.innerHeight * 1.5) >= el.scrollHeight) {
+        return true;
+    }
+    return false;
 }
 
 var chatInput = document.getElementById("chat_input");
 
 function scrollToBottom() {
-    if (shouldScroll()) {
-        requestAnimationFrame(function () {
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-        });
-    }
+    requestAnimationFrame(function () {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
 }
 
 $("#chat_input").focus(function (event) {
     hideAttachBar();
 
-    scrollToBottom();
-    /*
     if (shouldScroll()) {
-        setTimeout(function () {			
-            //document.getElementById("chatholder").scrollIntoView(false);
-            var messagesEl = document.getElementById('messages');
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-            // Hack for slow devices
-            setTimeout(function () {
-                //document.getElementById("chatholder").scrollIntoView(false);
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-            }, 800);
-        }, 200);
-    }*/
+        scrollToBottom();
+    }
 });
 
 chatInput.addEventListener("blur", function () {
@@ -469,8 +459,8 @@ function addReactions(id, reactions) {
         reactionsEl.parentNode.removeChild(reactionsEl);
     }
 
-    if (messagesEl) {
-        messagesEl.scrollTop = messagesEl.scrollHeight;
+    if (shouldScroll()) {
+        scrollToBottom();
     }
 }
 
@@ -706,7 +696,9 @@ function addText(id, address, nick, avatar, text, time, className) {
         updateStickyHeader();
     }, 500);
 
-    scrollToBottom();
+    if (shouldScroll()) {
+        scrollToBottom();
+    }
 }
 
 // TODO: optimize and merge this function with addText
@@ -879,7 +871,9 @@ function addCall(id, message, declined, time) {
         messagesEl.appendChild(bubbleEl);
     }
 
-    scrollToBottom();
+    if (shouldScroll()) {
+        scrollToBottom();
+    }
 }
 
 function updateFile(id, progress, complete) {
@@ -1800,7 +1794,6 @@ function iosFixer(overshoot = 0) {
 
             wrapEl.style.top = `${diff + overshoot}px`;
             messagesEl.style.height = `${window.innerHeight - overshoot - 120}px`;
-            debouncedScrollToBottom();
         });
     } else if (newOffset < updatedOffset && wrapEl.style.top != "0px") {
         requestAnimationFrame(function () {
@@ -1809,7 +1802,6 @@ function iosFixer(overshoot = 0) {
 
             wrapEl.style.top = "0px";
             messagesEl.style.height = msgHeight;
-            debouncedScrollToBottom();
         });
     }
     updatedOffset = newOffset;
@@ -1842,11 +1834,15 @@ if (SL_Platform != "Xamarin-WPF") {
     if (SL_Platform == "Xamarin-iOS") {
         window.visualViewport.addEventListener('resize', () => {
             debouncedIOSFixer();
-            debouncedScrollToBottom();
+            if (shouldScroll()) {
+                debouncedScrollToBottom();
+            }
         });
     } else {
         window.addEventListener('resize', function () {
-            debouncedScrollToBottom();
+            if (shouldScroll()) {
+                debouncedScrollToBottom();
+            }
         });
     }
 }

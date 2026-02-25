@@ -512,7 +512,7 @@ namespace SPIXI
 
         private void joinBot()
         {
-            Friend friend = FriendList.addFriend(FriendState.RequestSent, new Address("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
+            Friend friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, new Address("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
             if (friend != null)
             {
                 friend.save();
