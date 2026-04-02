@@ -278,9 +278,13 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
             icon = 'fa fa-spinner fa-spin';
     }
 
-
     const isReceived = receive === "1";
-    const arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;
+    let arrow = "";
+    if (confirmed == "error") {
+        arrow = `<i class="spixi-list-tx-icon ${icon} ${iconClass}"></i>`;
+    } else {
+        arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;
+    }
 
     const paymentEntry = document.createElement("div");
     paymentEntry.id = "tx_" + txid;
@@ -494,7 +498,7 @@ function setNotificationCount(notification_count) {
 }
 
 // Function to toggle tab's active color
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+$('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Not very elegant, but it works
     document.getElementById("tab1").className = "col-3 spixi-tab";
     document.getElementById("tab2").className = "col-3 spixi-tab";

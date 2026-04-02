@@ -4,8 +4,7 @@
 <head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
 
     <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -15,15 +14,11 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
-
     <script src="js/jquery.min.js"></script>
-
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/clipboard.min.js"></script>
-    <script src="js/jquery.touchSwipe.min.js"></script>
-
 </head>
 <body onload="ixian:onload();">
 <div id="wrap" class="container-fluid noselect">
@@ -54,7 +49,7 @@
 
     <div id="tabholder" class="tab-content scrollable-div maintabholder">
         <!-- CHATS -->
-        <div id="chats" class="tab-pane in active">
+        <div id="chats" class="tab-pane show active">
             <div id="chat_no_activity" class="container">
                 <div class="spixi-list-placeholder-chat-image"></div>
                 <div class="spixi-list-placeholder-title">*SL{index-no-conversations-title}</div>
@@ -79,7 +74,7 @@
         </div>
 
         <!-- WALLET -->
-        <div id="wallet" class="tab-pane ">
+        <div id="wallet" class="tab-pane">
             <!-- BalanceBar -->
             <div id="status_balance" class="spixi-balancebar">
                 <div class="container-fluid">
@@ -277,7 +272,7 @@
     <div class="" style="width:98%; margin: auto;">
         <ul class="nav nav-tabs row no-gutters spixi-footer-row">
             <li id="tab1" class="col-3 spixi-tab">
-                <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
+                <a data-bs-toggle="tab" href="#chats" class="spixi-tab-pad">
                     <div class="spixi-tab-icon"><i class="fa-solid fa-message"></i>
                         <div id="unread-dot" class="spixi-footer-chat-unread-indicator"></div>
                     </div>
@@ -285,19 +280,19 @@
                 </a>
             </li>
             <li id="tab2" class="col-3 spixi-tab">
-                <a data-toggle="tab" href="#wallet" class="spixi-tab-pad">
+                <a data-bs-toggle="tab" href="#wallet" class="spixi-tab-pad">
                     <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
                     <div class="spixi-tab-text">*SL{index-tab-wallet}</div>
                 </a>
             </li>
             <li id="tab3" class="col-3 spixi-tab">
-                <a data-toggle="tab" href="#spixiApps" class="spixi-tab-pad">
+                <a data-bs-toggle="tab" href="#spixiApps" class="spixi-tab-pad">
                     <div class="spixi-tab-icon"><i class="fa-solid fa-rocket"></i></div>
                     <div class="spixi-tab-text">*SL{index-side-apps}</div>
                 </a>
             </li>
             <li id="tab4" class="col-3 spixi-tab">
-                <a data-toggle="tab" href="#myaddress" class="spixi-tab-pad">
+                <a data-bs-toggle="tab" href="#myaddress" class="spixi-tab-pad">
                     <div class="spixi-tab-icon"><i class="fa-solid fa-qrcode"></i></div>
                     <div class="spixi-tab-text">*SL{index-tab-address}</div>
                 </a>

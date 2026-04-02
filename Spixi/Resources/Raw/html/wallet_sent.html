@@ -15,14 +15,11 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
-
     <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
     <script src="js/clipboard.min.js"></script>
-
 </head>
 <body onload="onload()">
     <div id="templates" style="display: none;">
@@ -150,18 +147,22 @@
             //
         }
 
-        function addEntry(address, username, avatar, amount, fiat_amount, time, type, confirmed)
+        function addEntry(address, username, avatar, amount, fiat_amount, time, type, status)
         {
             if (received == true) {
-                if (confirmed == "true") {
+                if (status == "true") {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive}";
+                } else if (status == "error") {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-failed}";
                 } else {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive-pending}";
                 }
             }
             else {
-                if (confirmed == "true") {
+                if (status == "true") {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent}";
+                } else if (status == "error") {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-failed}";
                 } else {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent-pending}";
                 }
