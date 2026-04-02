@@ -15,17 +15,28 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
-
     <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/clipboard.min.js"></script>
     <script src="js/spixi.js"></script>
-
 </head>
 <body onload="ixian:onload()">
     <div id="wrap" class="container-fluid noselect">
+        <div class="new-modal-wrapper" id="sendingFailedModal" style="display: none;">
+            <div class="new-modal-container">
+                <img src="img/err-modal-icon.png" alt="err-img" width="32" height="32" />
+                <div class="new-modal-texts">
+                    <span class="label-lg">*SL{global-invalid-address-title}</span>
+                    <span class="body-sm">*SL{global-invalid-address-description}</span>
+                </div>
+                <div class="new-modal-buttons">
+                    <div class="spixi-flat-button label-sm button outline" onclick="document.getElementById('sendingFailedModal').style.display = 'none'">
+                        *SL{wallet-sent-dismiss}
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Toolbar -->
         <div class="spixi-toolbar shadow">
@@ -57,14 +68,26 @@
             *SL{wallet-send-subdetails}
         </div>
         <div class="spixi-textfield-holder multiline">
-            <textarea rows="3" class="spixi-textfield multiline" id="addressInput" oninput="checkAddress()" placeholder="*SL{contact-new-placeholder}"></textarea>
+            <textarea rows="3" class="spixi-textfield multiline" id="addressInput" placeholder="*SL{contact-new-placeholder}"></textarea>
         </div>
         <div class="send-ixi-buttons">
-            <div id="pickcontact" class="spixi-flat-button label-sm"><i class="fa-solid fa-address-book"></i> *SL{wallet-send-select}</div>
+            <div id="walletsend" class="spixi-flat-button label-sm"><i class="fa-solid fa-address-book"></i> *SL{wallet-send-next}</div>
+            <span class="label-xs s-text-02">*SL{wallet-send-or}</span>
+            <div id="pickcontact" class="spixi-flat-button label-sm button outline"><i class="fa-solid fa-address-book"></i> *SL{wallet-send-select}</div>
             <span class="label-xs s-text-02">*SL{wallet-send-or}</span>
             <div id="quickscan" class="spixi-flat-button label-sm button outline"><i class="fas fa-qrcode"></i> *SL{contact-new-scan}</div>
         </div>
         <div class="spixi-holder-20"></div>
+
+        <div class="loading-modal-wrapper" id="sendTxLoadingModal" style="display: none;">
+            <div class="loading-modal-container">
+                <span class="spixi-loader"></span>
+                <div class="new-modal-texts">
+                    <span class="label-lg">*SL{wallet-sending-title}</span>
+                    <span class="body-sm">*SL{wallet-sending-description}</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -80,6 +103,24 @@
 
         document.getElementById("quickscan").onclick = function () {
             location.href = "ixian:quickscan";
+        }
+
+        document.getElementById("walletsend").onclick = function () {
+            checkAddress();
+        }
+
+        function showSendingModal() {
+            sendingFailedModal
+            document.getElementById("sendTxLoadingModal").style.display = "flex";
+        }
+
+        function hideSendingModal() {
+            document.getElementById("sendTxLoadingModal").style.display = "none";
+        }
+
+        function showSendingFailedModal() {
+            hideSendingModal();
+            document.getElementById("sendingFailedModal").style.display = "flex";
         }
 
         /*
