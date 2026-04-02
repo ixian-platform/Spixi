@@ -15,7 +15,7 @@ namespace Spixi.Platforms.Windows
             void AttachWebResourceRequested(CoreWebView2 core)
             {
                 // Add filter for all resources
-                core.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
+                core.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All, CoreWebView2WebResourceRequestSourceKinds.All);
 
                 // Prevent multiple subscriptions
                 core.WebResourceRequested -= CoreWebView2_WebResourceRequested;

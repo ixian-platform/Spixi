@@ -119,10 +119,6 @@ namespace SPIXI
                     {
                         archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, "avatar.jpg"), "avatar.jpg");
                     }
-                    if (File.Exists(Path.Combine(Config.spixiUserFolder, "txcache.ixi")))
-                    {
-                        archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, "txcache.ixi"), "txcache.ixi");
-                    }
                     archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, Config.walletFile), "wallet.ixi");
                 }
 

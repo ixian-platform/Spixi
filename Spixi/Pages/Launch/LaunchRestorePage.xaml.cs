@@ -190,10 +190,6 @@ namespace SPIXI
                 {
                     File.Move(Path.Combine(tmpDirectory, "avatar.jpg"), Path.Combine(Config.spixiUserFolder, "avatar.jpg"));
                 }
-                if (File.Exists(Path.Combine(tmpDirectory, "txcache.ixi")))
-                {
-                    File.Move(Path.Combine(tmpDirectory, "txcache.ixi"), Path.Combine(Config.spixiUserFolder, "txcache.ixi"));
-                }
                 File.Move(Path.Combine(tmpDirectory, "wallet.ixi"), Path.Combine(Config.spixiUserFolder, "wallet.ixi"));
 
                 Node.loadWallet();

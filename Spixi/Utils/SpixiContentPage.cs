@@ -63,6 +63,8 @@ namespace SPIXI
             MainThread.BeginInvokeOnMainThread(() => {
                 try
                 {
+                    if (_webView == null)
+                        return;
                     _webView.EvaluateJavaScriptAsync("try{ " + script + " }catch(e){  }");
                 }
                 catch { }
@@ -103,6 +105,8 @@ namespace SPIXI
             {
                 try
                 {
+                    if (_webView == null)
+                        return;
                     var result = await _webView.EvaluateJavaScriptAsync("document.readyState");
                     tcs.TrySetResult(result);
                 }
