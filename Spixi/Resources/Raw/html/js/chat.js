@@ -584,6 +584,7 @@ function updateStickyHeader() {
 
 // TODO optimize this function
 function addText(id, address, nick, avatar, text, time, className) {
+    var shouldScrollInitial = shouldScroll();
     text = text.replace(/\n/g, "<br>");
 
     var textEl = document.createElement('div');
@@ -696,7 +697,7 @@ function addText(id, address, nick, avatar, text, time, className) {
         updateStickyHeader();
     }, 500);
 
-    if (shouldScroll()) {
+    if (shouldScrollInitial) {
         scrollToBottom();
     }
 }
