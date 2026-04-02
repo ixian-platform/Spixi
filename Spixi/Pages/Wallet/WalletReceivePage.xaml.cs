@@ -3,7 +3,6 @@ using IXICore.Meta;
 using IXICore.Streaming;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using System.Text;
 using System.Web;
 
 namespace SPIXI
@@ -11,7 +10,7 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WalletReceivePage : SpixiContentPage
 	{
-        private Friend local_friend = null;
+        private Friend? local_friend = null;
 
 		public WalletReceivePage ()
 		{
@@ -104,7 +103,7 @@ namespace SPIXI
 
                         string recipient = split_address_amount[0];
                         string amount = split_address_amount[1];
-                        if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(recipient)) == false)
+                        if (!ExtendedAddress.Validate(recipient))
                         {
                             e.Cancel = true;
                             displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
@@ -150,7 +149,7 @@ namespace SPIXI
                 try
                 {
                     string[] split = current_url.Split(new string[] { "ixian:addrecipient:" }, StringSplitOptions.None);
-                    if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
+                    if (ExtendedAddress.Validate(split[1]))
                     {
                         Utils.sendUiCommand(this, "addRecipient", split[1], split[1]);
                     }
@@ -177,21 +176,12 @@ namespace SPIXI
         private void onRequest(string recipient, string amount)
         {
             Address recipient_address = new Address(recipient);
-            Friend friend = FriendList.getFriend(recipient_address);
+            Friend? friend = FriendList.getFriend(recipient_address);
             if (friend != null && (new IxiNumber(amount)) > 0)
             {
-                FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.requestFunds, friend.walletAddress, 0, amount, true);
+                FriendMessage? friend_message = Node.addMessageWithType(null, FriendMessageType.requestFunds, friend.walletAddress, 0, amount, true);
 
-                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
-
-                StreamMessage message = new StreamMessage(friend.protocolVersion);
-                message.type = StreamMessageCode.info;
-                message.recipient = recipient_address;
-                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                message.data = spixi_message.getBytes();
-                message.id = friend_message.id;
-
-                StreamProcessor.sendMessage(friend, message);
+                StreamProcessor.transactionRequest(friend_message.id, friend, new IxiNumber(amount), null, null);
 
                 popPageAsync();
             }// else error?
@@ -206,7 +196,7 @@ namespace SPIXI
 
             foreach (string wallet_to_send in wallet_arr)
             {
-                Friend friend = FriendList.getFriend(new Address(wallet_to_send));
+                Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
 
                 string nickname = wallet_to_send;
                 if (friend != null)

@@ -1,6 +1,5 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using IXICore.Storage;
 using IXICore.Streaming;
 using IXICore.Utils;
 using SPIXI.Lang;
@@ -15,69 +14,15 @@ namespace SPIXI
     {
         SortedDictionary<Address, ToEntry> to_list = new SortedDictionary<Address, ToEntry>(new AddressComparer());
         IxiNumber totalAmount = 0;
-        Transaction transaction = null;
+        Transaction? transaction = null;
 
-        string toAddress = null;
-        byte[] _address;
-        public WalletSend2Page(string address)
+        ExtendedAddress _address;
+        public WalletSend2Page(ExtendedAddress address)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            _address = Base58Check.Base58CheckEncoding.DecodePlain(address);
-            if (Address.validateChecksum(_address) == false)
-            {
-                displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
-                return;
-            }
-            toAddress = address;
-
-            loadPage(webView, "wallet_send_2.html");
-        }
-
-        public WalletSend2Page(string[] addresses_with_amounts)
-        {
-            InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);
-
-            // Go through each entry
-            foreach (string address_and_amount in addresses_with_amounts)
-            {
-                if (address_and_amount.Length < 1)
-                    continue;
-
-                // Extract the address and amount
-                string[] asplit = address_and_amount.Split(new string[] { ":" }, StringSplitOptions.None);
-                if (asplit.Count() < 2)
-                    continue;
-
-                string address = asplit[0];
-                string amount = asplit[1];
-
-                _address = Base58Check.Base58CheckEncoding.DecodePlain(address);
-                if (Address.validateChecksum(_address) == false)
-                {
-                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    return;
-                }
-                string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
-                if (amount_split.Length > 2)
-                {
-                    displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amountdecimal-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    return;
-                }
-
-                IxiNumber _amount = amount;
-
-                if (_amount < (long)0)
-                {
-                    displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    return;
-                }
-
-                to_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), _amount));
-                totalAmount = totalAmount + _amount;
-            }
+            _address = address;
 
             loadPage(webView, "wallet_send_2.html");
         }
@@ -90,16 +35,19 @@ namespace SPIXI
         private void onLoad()
         {
             // Calculate tx fee
-            IxiNumber fee = ConsensusConfig.forceTransactionPrice;
             Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
-            Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
-            SortedDictionary<Address, ToEntry> tx_list = new SortedDictionary<Address, ToEntry>(new AddressComparer());
-            tx_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), 1));
-            Transaction tx = new Transaction((int)Transaction.Type.Normal, fee, tx_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
-
-            Utils.sendUiCommand(this, "setRecipient", toAddress, toAddress, "img/spixiavatar.png");
+            var prepTx = Node.prepareTransactionFrom(from, _address, 1000);
+            var tx = prepTx.transaction;
+            Utils.sendUiCommand(this, "setRecipient", _address.PaymentAddress.ToString(), _address.PaymentAddress.ToString(), "img/spixiavatar.png");
             Utils.sendUiCommand(this, "setBalance", Node.getAvailableBalance().ToString(), Node.fiatPrice.ToString());
-            Utils.sendUiCommand(this, "setFees", tx.fee.ToString());
+
+            IxiNumber fee = 0;
+            foreach (var toEntry in tx.toList.TakeLast(2))
+            {
+                fee += toEntry.Value.amount;
+            }
+            fee += tx.fee;
+            Utils.sendUiCommand(this, "setFees", fee.ToString());
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -130,11 +78,8 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
-                if (Node.getAvailableBalance() > ConsensusConfig.forceTransactionPrice * 6)
-                {
-                    // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(this, "setMaxAmount", (Node.getAvailableBalance() - (ConsensusConfig.forceTransactionPrice * 6)).ToString());
-                }
+                var fee = Node.calculateTransactionFeeFromAvailableBalance(IxianHandler.primaryWalletAddress, _address);
+                Utils.sendUiCommand(this, "setMaxAmount", (Node.getAvailableBalance() - fee).ToString());
             }
             else
             {
@@ -156,48 +101,21 @@ namespace SPIXI
                 return;
             }
 
-            to_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), _amount));
-
-
             IxiNumber fee = ConsensusConfig.forceTransactionPrice;
             Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
             Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
-            var txPrep = Node.prepareTransactionFrom(from, new Address(_address), amount);
+            var txPrep = Node.prepareTransactionFrom(from, _address, amount);
             transaction = txPrep.transaction;
             var relayNodeAddresses = txPrep.relayNodeAddresses;
-            totalAmount = transaction.calculateTotalAmount() + transaction.fee;
+            totalAmount = transaction.amount + transaction.fee;
 
             Logging.info("Preparing to send payment");
             Logging.info("Broadcasting tx");
-            IxianHandler.addTransaction(transaction, relayNodeAddresses, null, null, true);
+            IxianHandler.addTransaction(transaction, relayNodeAddresses, txPrep.extendedAddresses, null, true);
             Logging.info("Adding to cache");
 
-            // Add the unconfirmed transaction to the cache
-            TransactionCache.addUnconfirmedTransaction(transaction);
             Logging.info("Showing payment details");
-
-            // Send message to recipients
-            foreach (var entry in to_list)
-            {
-                Friend friend = FriendList.getFriend(entry.Key);
-
-                if (friend != null)
-                {
-                    FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, transaction.getTxIdString(), true);
-
-                    SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, transaction.id);
-
-                    StreamMessage message = new StreamMessage(friend.protocolVersion);
-                    message.type = StreamMessageCode.info;
-                    message.recipient = friend.walletAddress;
-                    message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                    message.data = spixi_message.getBytes();
-                    message.id = friend_message.id;
-
-                    CoreStreamProcessor.sendMessage(friend, message);
-                }
-            }
 
             // Show the payment details
             Navigation.PushAsync(new WalletSentPage(transaction, false), Config.defaultXamarinAnimations);

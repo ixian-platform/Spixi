@@ -1,9 +1,9 @@
 ﻿using IXICore;
+using IXICore.Activity;
 using IXICore.Inventory;
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Network.Messages;
-using IXICore.Storage;
 using IXICore.Streaming;
 using IXICore.Utils;
 using SPIXI.Meta;
@@ -13,41 +13,6 @@ namespace SPIXI.Network
 {
     public class ProtocolMessage
     {
-        public static void resubscribeEvents()
-        {
-            lock (NetworkClientManager.networkClients)
-            {
-                foreach (var client in NetworkClientManager.networkClients)
-                {
-                    if (client.isConnected() && client.helloReceived)
-                    {
-                        if (client.presenceAddress.type != 'M'
-                            && client.presenceAddress.type != 'H'
-                            && client.presenceAddress.type != 'R')
-                        {
-                            continue;
-                        }
-
-                        byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.all, new byte[0]);
-                        client.sendData(ProtocolMessageCode.detachEvent, event_data);
-                        subscribeToEvents(client);
-                    }
-                }
-            }
-        }
-
-        private static void subscribeToEvents(RemoteEndpoint endpoint)
-        {
-            CoreProtocolMessage.subscribeToEvents(endpoint);
-
-            byte[] friend_matcher = FriendList.getFriendCuckooFilter();
-            if (friend_matcher != null)
-            {
-                byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.keepAlive, friend_matcher);
-                endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-            }
-        }
-
         // Unified protocol message parsing
         public static void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
         {
@@ -152,7 +117,7 @@ namespace SPIXI.Network
                                     || node_type == 'H'
                                     || node_type == 'R')
                                 {
-                                    subscribeToEvents(endpoint);
+                                    CoreProtocolMessage.subscribeToEvents(endpoint);
                                 }
                             }
                         }
@@ -197,6 +162,13 @@ namespace SPIXI.Network
 
                     case ProtocolMessageCode.balance2:
                         {
+                            if (endpoint.presenceAddress.type != 'M'
+                                && endpoint.presenceAddress.type != 'H'
+                                && endpoint.presenceAddress.type != 'R')
+                            {
+                                Logging.warn("Received balance2 from non-master node {0}. Ignoring.", endpoint.getFullAddress());
+                                return;
+                            }
                             using (MemoryStream m = new MemoryStream(data))
                             {
                                 using (BinaryReader reader = new BinaryReader(m))
@@ -214,27 +186,23 @@ namespace SPIXI.Network
                                     ulong block_height = reader.ReadIxiVarUInt();
                                     byte[] block_checksum = reader.ReadBytes((int)reader.ReadIxiVarUInt());
 
-                                    foreach (Balance balance in IxianHandler.balances)
+                                    if (IxianHandler.balances.TryGetValue(address, out var balance))
                                     {
-                                        if (address.addressNoChecksum.SequenceEqual(balance.address.addressNoChecksum))
+                                        if (block_height > balance.blockHeight && (balance.balance != ixi_balance || balance.blockHeight == 0))
                                         {
-                                            if (block_height > balance.blockHeight && (balance.balance != ixi_balance || balance.blockHeight == 0))
-                                            {
-                                                balance.address = address;
-                                                balance.balance = ixi_balance;
-                                                balance.blockHeight = block_height;
-                                                balance.blockChecksum = block_checksum;
-                                                balance.verified = false;
-                                            }
-
-                                            balance.lastUpdate = Clock.getTimestamp();
+                                            balance.address = address;
+                                            balance.balance = ixi_balance;
+                                            balance.blockHeight = block_height;
+                                            balance.blockChecksum = block_checksum;
+                                            balance.verified = false;
                                         }
+
+                                        balance.lastUpdate = Clock.getTimestamp();
                                     }
                                 }
                             }
                         }
                         break;
-
 
                     case ProtocolMessageCode.updatePresence:
                         handleUpdatePresence(data, endpoint);
@@ -244,25 +212,8 @@ namespace SPIXI.Network
                         handleKeepAlivePresence(data, endpoint);
                         break;
 
-                    case ProtocolMessageCode.compactBlockHeaders1:
-                        {
-                            using (MemoryStream m = new MemoryStream(data))
-                            {
-                                using (BinaryReader reader = new BinaryReader(m))
-                                {
-                                    ulong from = reader.ReadIxiVarUInt();
-                                    ulong totalCount = reader.ReadIxiVarUInt();
-
-                                    int filterLen = (int)reader.ReadIxiVarUInt();
-                                    byte[] filterBytes = reader.ReadBytes(filterLen);
-
-                                    byte[] headersBytes = new byte[reader.BaseStream.Length - reader.BaseStream.Position];
-                                    Array.Copy(data, reader.BaseStream.Position, headersBytes, 0, headersBytes.Length);
-
-                                    Node.tiv.receivedBlockHeaders3(headersBytes, endpoint);
-                                }
-                            }
-                        }
+                    case ProtocolMessageCode.blockHeaders4:
+                        handleBlockHeaders4(data, endpoint);
                         break;
 
                     case ProtocolMessageCode.blockHeaders3:
@@ -274,6 +225,13 @@ namespace SPIXI.Network
 
                     case ProtocolMessageCode.pitData2:
                         {
+                            if (endpoint.presenceAddress.type != 'M'
+                                && endpoint.presenceAddress.type != 'H'
+                                && endpoint.presenceAddress.type != 'R')
+                            {
+                                Logging.warn("Received pit data from non-master node {0}. Ignoring.", endpoint.getFullAddress());
+                                return;
+                            }
                             Node.tiv.receivedPIT2(data, endpoint);
                         }
                         break;
@@ -310,6 +268,10 @@ namespace SPIXI.Network
                         CoreProtocolMessage.processGetKeepAlives(data, endpoint);
                         break;
 
+                    case ProtocolMessageCode.transactionsChunk3:
+                        handleTransactionsChunk3(data, endpoint);
+                        break;
+
                     default:
                         Logging.warn("Unknown protocol message: {0}, from {1} ({2})", code, endpoint.getFullAddress(), endpoint.serverWalletAddress);
                         break;
@@ -322,11 +284,105 @@ namespace SPIXI.Network
             }
         }
 
+        public static void handleTransactionsChunk3(byte[] data, RemoteEndpoint endpoint)
+        {
+            using (MemoryStream m = new MemoryStream(data))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    if (endpoint.presenceAddress.type != 'M'
+                        && endpoint.presenceAddress.type != 'H'
+                        && endpoint.presenceAddress.type != 'R')
+                    {
+                        Logging.warn("Received transactions chunk from non-master node {0}. Ignoring.", endpoint.getFullAddress());
+                        return;
+                    }
+
+                    long msg_id = reader.ReadIxiVarInt();
+
+                    int tx_count = (int)reader.ReadIxiVarUInt();
+
+                    int max_tx_per_chunk = CoreConfig.maximumTransactionsPerChunk;
+                    if (tx_count > max_tx_per_chunk)
+                    {
+                        tx_count = max_tx_per_chunk;
+                    }
+
+                    var sw = new System.Diagnostics.Stopwatch();
+                    sw.Start();
+                    int processedTxCount = 0;
+                    int totalTxCount = 0;
+                    for (int i = 0; i < tx_count; i++)
+                    {
+                        if (m.Position == m.Length)
+                        {
+                            break;
+                        }
+
+                        int tx_len = (int)reader.ReadIxiVarUInt();
+                        byte[] tx_bytes = reader.ReadBytes(tx_len);
+
+                        Transaction tx = new Transaction(tx_bytes, false, true);
+
+                        totalTxCount++;
+
+                        if (IxianHandler.addIncomingTransaction(tx))
+                        {
+                            processedTxCount++;
+                        }
+                    }
+                    sw.Stop();
+                    TimeSpan elapsed = sw.Elapsed;
+                    Logging.info("Processed {0}/{1} txs for #{2} in {3}ms", processedTxCount, totalTxCount, msg_id, elapsed.TotalMilliseconds);
+                }
+            }
+        }
+
+        private static void handleBlockHeaders4(byte[] data, RemoteEndpoint endpoint)
+        {
+            using (MemoryStream m = new MemoryStream(data))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    if (endpoint.presenceAddress.type != 'M'
+                        && endpoint.presenceAddress.type != 'H'
+                        && endpoint.presenceAddress.type != 'R')
+                    {
+                        Logging.warn("Received block headers from non-master node {0}. Ignoring.", endpoint.getFullAddress());
+                        return;
+                    }
+                    ulong from = reader.ReadIxiVarUInt();
+                    if (from > IxianHandler.getLastBlockHeight() + 1)
+                    {
+                        Logging.warn("Received block headers starting from {0}, but our last block height is {1}. Ignoring.", from, IxianHandler.getLastBlockHeight());
+                        return;
+                    }
+                    ulong totalCount = reader.ReadIxiVarUInt();
+
+                    int filterLen = (int)reader.ReadIxiVarUInt();
+                    byte[] filterBytes = reader.ReadBytes(filterLen);
+
+                    byte[] headersBytes = new byte[reader.BaseStream.Length - reader.BaseStream.Position];
+                    Buffer.BlockCopy(data, (int)reader.BaseStream.Position, headersBytes, 0, headersBytes.Length);
+
+                    Node.tiv.receivedBlockHeaders3(headersBytes, endpoint);
+                }
+            }
+        }
 
         private static void handleTransactionData(byte[] data, RemoteEndpoint endpoint)
         {
+            if (endpoint.presenceAddress.type != 'M'
+                && endpoint.presenceAddress.type != 'H'
+                && endpoint.presenceAddress.type != 'R')
+            {
+                Logging.warn("Received transaction data from non-master node {0}. Ignoring.", endpoint.getFullAddress());
+                return;
+            }
+
             Transaction tx = new Transaction(data, true, true);
 
+            // Check if my transaction
             bool myTransaction = IxianHandler.isMyAddress(tx.pubKey);
             if (!myTransaction)
             {
@@ -340,29 +396,28 @@ namespace SPIXI.Network
                 }
             }
 
-            Logging.info("Received new transaction {0}", tx.getTxIdString());
+            Logging.trace("Received new transaction {0}", tx.getTxIdString());
 
             if (myTransaction)
             {
-                var localTx = TransactionCache.getTransaction(tx.id);
-                var localUnconfirmedTx = TransactionCache.getUnconfirmedTransaction(tx.id);
-                if (localTx == null)
+                // If transaction already processed
+                ActivityObject? activity = Node.activityStorage.getActivityById(tx.id, null);
+                if (activity != null)
                 {
-                    if (endpoint.presenceAddress.type == 'M'
-                        || endpoint.presenceAddress.type == 'H'
-                        || endpoint.presenceAddress.type == 'R')
+                    if (activity.status != ActivityStatus.Final)
                     {
-                        PendingTransactions.increaseReceivedCount(tx.id, endpoint.presence.wallet);
-                    }
-
-                    Node.tiv.receivedNewTransaction(tx);
-
-                    if (localUnconfirmedTx == null)
-                    {
-                        if (TransactionCache.addUnconfirmedTransaction(tx))
+                        if (endpoint.presenceAddress.type == 'M'
+                            || endpoint.presenceAddress.type == 'H'
+                            || endpoint.presenceAddress.type == 'R')
                         {
-                            //Node.addTransactionToActivityStorage(tx);
+                            PendingTransactions.increaseReceivedCount(tx.id, endpoint.presence.wallet);
                         }
+                    }
+                }
+                else
+                {
+                    if (IxianHandler.addIncomingTransaction(tx))
+                    {
                     }
                 }
             }
@@ -400,9 +455,9 @@ namespace SPIXI.Network
 
         private static void handleUpdatePresence(byte[] data, RemoteEndpoint endpoint)
         {
-            
+
             // Parse the data and update entries in the presence list
-            Presence p = PresenceList.updateFromBytes(data, 0);
+            Presence p = PresenceList.updateFromBytes(data, IxianHandler.getMinSignerPowDifficulty(IxianHandler.getLastBlockHeight(), IxianHandler.getLastBlockVersion(), 0));
             if (p == null)
             {
                 return;
@@ -412,6 +467,10 @@ namespace SPIXI.Network
             Friend f = FriendList.getFriend(p.wallet);
             if (f != null)
             {
+                if (f.publicKey == null)
+                {
+                    f.setPublicKey(p.pubkey);
+                }
                 var pa = p.addresses[0];
                 if (f.lastSeenTime < pa.lastSeenTime)
                 {
@@ -438,6 +497,10 @@ namespace SPIXI.Network
             byte[] device_id = null;
             char node_type;
             bool updated = PresenceList.receiveKeepAlive(data, out address, out last_seen, out device_id, out node_type, endpoint);
+            if (!updated)
+            {
+                return;
+            }
 
             Logging.trace("Received keepalive update for " + address);
             Presence p = PresenceList.getPresenceByAddress(address);
@@ -485,6 +548,14 @@ namespace SPIXI.Network
 
         static void handleSectorNodes(byte[] data, RemoteEndpoint endpoint)
         {
+            if (endpoint.presenceAddress.type != 'M'
+                && endpoint.presenceAddress.type != 'H'
+                && endpoint.presenceAddress.type != 'R')
+            {
+                Logging.warn("Received sector nodes from non-master node {0}. Ignoring.", endpoint.getFullAddress());
+                return;
+            }
+
             int offset = 0;
 
             var prefixAndOffset = data.ReadIxiBytes(offset);
@@ -500,7 +571,7 @@ namespace SPIXI.Network
                 var kaBytesAndOffset = data.ReadIxiBytes(offset);
                 offset += kaBytesAndOffset.bytesRead;
 
-                Presence p = PresenceList.updateFromBytes(kaBytesAndOffset.bytes, IxianHandler.getMinSignerPowDifficulty(IxianHandler.getLastBlockHeight() + 1, IxianHandler.getLastBlockVersion(), Clock.getNetworkTimestamp()));
+                Presence p = PresenceList.updateFromBytes(kaBytesAndOffset.bytes, IxianHandler.getMinSignerPowDifficulty(IxianHandler.getLastBlockHeight(), IxianHandler.getLastBlockVersion(), 0));
                 if (p != null)
                 {
                     RelaySectors.Instance.addRelayNode(p.wallet);
@@ -532,6 +603,14 @@ namespace SPIXI.Network
             {
                 friend.updatedSectorNodes = Clock.getTimestamp();
                 friend.sectorNodes = peers;
+            }
+
+            friends = IXISocketConnections.GetPendingSectorRequestsBySectorPrefix(prefix);
+            foreach (var friend in friends)
+            {
+                friend.updatedSectorNodes = Clock.getTimestamp();
+                friend.sectorNodes = peers;
+                IXISocketConnections.RemovePendingSectorRequest(friend);
             }
         }
 
@@ -600,12 +679,17 @@ namespace SPIXI.Network
 
                     Dictionary<ulong, List<InventoryItemSignature>> sig_lists = new Dictionary<ulong, List<InventoryItemSignature>>();
                     List<InventoryItemKeepAlive> ka_list = new List<InventoryItemKeepAlive>();
-                    List<byte[]> tx_list = new List<byte[]>();
                     for (ulong i = 0; i < item_count; i++)
                     {
                         ulong len = reader.ReadIxiVarUInt();
                         byte[] item_bytes = reader.ReadBytes((int)len);
-                        InventoryItem item = InventoryCache.decodeInventoryItem(item_bytes);
+                        InventoryItem? item = InventoryCache.decodeInventoryItem(item_bytes);
+
+                        if (item == null)
+                        {
+                            Logging.warn("Failed to decode inventory item, skipping. Endpoint: {0}", endpoint.getFullAddress());
+                            continue;
+                        }
 
                         // First update endpoint blockheights and pending transactions
                         switch (item.type)
@@ -643,11 +727,6 @@ namespace SPIXI.Network
                                     }
                                     break;
 
-                                case InventoryItemTypes.transaction:
-                                    tx_list.Add(item.hash);
-                                    pii.lastRequested = Clock.getTimestamp();
-                                    break;
-
                                 case InventoryItemTypes.block:
                                     var iib = ((InventoryItemBlock)item);
                                     if (iib.blockNum <= last_accepted_block_height)
@@ -674,8 +753,6 @@ namespace SPIXI.Network
                     }
 
                     CoreProtocolMessage.broadcastGetKeepAlives(ka_list, endpoint);
-
-                    CoreProtocolMessage.broadcastGetTransactions(tx_list, 0, endpoint);
                 }
             }
         }

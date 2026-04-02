@@ -18,6 +18,10 @@ namespace SPIXI.Meta
 
         public static string spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Spixi");
 
+        public static string activityFolderPath = "";
+        public static string headersFolderPath = "";
+        public static string logFolderPath = "";
+
         public static int encryptionRetryPasswordAttempts = 3;   // How many allowed attempts in the LaunchRetry page before throwing the user back to Launch Page
 
         // Read-only values
@@ -53,11 +57,6 @@ namespace SPIXI.Meta
         // Push notifications OneSignal AppID
         public static string oneSignalAppId = "af20710d-7d68-4038-94a4-2896f3029263";
 
-        // Temporary variables for bh sync recovery
-        // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 33234, the correct value is 32999)
-        public static ulong bakedRecoveryBlockHeight = 4199999;
-        public static byte[] bakedRecoveryBlockChecksum = Crypto.stringToHash("f17fe6d63acac3efa071e2e99122099d6ff97b9a453126ae410e7987ccb71c759d24b80d7ac694588a07628fb83e3ec4bb8a3bdf9770342e1cc5efa04d36b236");
-
         // VoIP settings, don't change
         public static readonly int VoIP_sampleRate = 16000;
         public static readonly int VoIP_bitsPerSample = 16;
@@ -77,7 +76,7 @@ namespace SPIXI.Meta
 
         public static string configFilename = "ixian.cfg";
 
-        public static byte[] checksumLock = null;
+        public static byte[]? checksumLock = null;
 
         public static int maxConnectedStreamingNodes = 6;
 
@@ -86,7 +85,32 @@ namespace SPIXI.Meta
         public static List<string> apiAllowedIps = new List<string>();
         public static List<string> apiBinds = new List<string>();
 
-        public static void readConfigFile(string filename)
+        public static ulong activityDbCacheSize = 8 << 20;
+        public static ulong blocksDbCacheSize = 8 << 20;
+
+
+        private static NetworkType parseNetworkTypeValue(string value)
+        {
+            NetworkType netType;
+            value = value.ToLower();
+            switch (value)
+            {
+                case "mainnet":
+                    netType = NetworkType.main;
+                    break;
+                case "testnet":
+                    netType = NetworkType.test;
+                    break;
+                case "regtest":
+                    netType = NetworkType.reg;
+                    break;
+                default:
+                    throw new Exception(string.Format("Unknown network type '{0}'. Possible values are 'mainnet', 'testnet', 'regtest'", value));
+            }
+            return netType;
+        }
+
+        private static void readConfigFile(string filename)
         {
             if (!File.Exists(filename))
             {
@@ -103,8 +127,8 @@ namespace SPIXI.Meta
                 {
                     continue;
                 }
-                string key = option[0].Trim(new char[] { ' ', '\t', '\r', '\n' });
-                string value = option[1].Trim(new char[] { ' ', '\t', '\r', '\n' });
+                string key = option[0].Trim([' ', '\t', '\r', '\n']);
+                string value = option[1].Trim([' ', '\t', '\r', '\n']);
 
                 if (key.StartsWith(";"))
                 {
@@ -113,6 +137,19 @@ namespace SPIXI.Meta
                 Logging.info("Processing config parameter '" + key + "' = '" + value + "'");
                 switch (key)
                 {
+                    case "apiAllowIp":
+                        apiAllowedIps.Add(value);
+                        break;
+                    case "apiBind":
+                        apiBinds.Add(value);
+                        break;
+                    case "addApiUser":
+                        string[] credential = value.Split(':');
+                        if (credential.Length == 2)
+                        {
+                            apiUsers.Add(credential[0], credential[1]);
+                        }
+                        break;
                     case "externalIp":
                         externalIp = value;
                         break;
@@ -122,7 +159,7 @@ namespace SPIXI.Meta
                             NetworkUtils.seedNodes.Clear();
                         }
                         foundAddPeer = true;
-                        NetworkUtils.seedNodes.Add(new string[2] { value, null });
+                        NetworkUtils.seedNodes.Add([value, null]);
                         break;
                     case "addTestnetPeer":
                         if (!foundAddTestPeer)
@@ -130,7 +167,7 @@ namespace SPIXI.Meta
                             NetworkUtils.seedTestNetNodes.Clear();
                         }
                         foundAddTestPeer = true;
-                        NetworkUtils.seedTestNetNodes.Add(new string[2] { value, null });
+                        NetworkUtils.seedTestNetNodes.Add([value, null]);
                         break;
                     case "maxLogSize":
                         maxLogSize = int.Parse(value);
@@ -145,43 +182,71 @@ namespace SPIXI.Meta
                         checksumLock = Encoding.UTF8.GetBytes(value);
                         break;
                     case "networkType":
-                        value = value.ToLower();
-                        switch (value)
-                        {
-                            case "mainnet":
-                                networkType = NetworkType.main;
-                                break;
-                            case "testnet":
-                                networkType = NetworkType.test;
-                                break;
-                            case "regtest":
-                                networkType = NetworkType.reg;
-                                break;
-                            default:
-                                throw new Exception(string.Format("Unknown network type '{0}'. Possible values are 'mainnet', 'testnet', 'regtest'", value));
-                        }
+                        networkType = parseNetworkTypeValue(value);
+                        break;
+                    case "logFolderPath":
+                        logFolderPath = value;
+                        break;
+                    case "activityFolderPath":
+                        activityFolderPath = value;
+                        break;
+                    case "headersFolderPath":
+                        headersFolderPath = value;
+                        break;
+                    case "dataFolderPath":
+                        spixiUserFolder = value;
+                        break;
+                    case "wallet":
+                        walletFile = value;
+                        break;
+                    case "blocksDbCache":
+                        blocksDbCacheSize = ulong.Parse(value);
+                        break;
+                    case "activityDbCache":
+                        activityDbCacheSize = ulong.Parse(value);
                         break;
                     case "spixiUserFolder":
                         spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), value);
-                        break;
-                    case "apiAllowIp":
-                        apiAllowedIps.Add(value);
-                        break;
-                    case "apiBind":
-                        apiBinds.Add(value);
-                        break;
-                    case "addApiUser":
-                        string[] credential = value.Split(':');
-                        if (credential.Length == 2)
-                        {
-                            apiUsers.Add(credential[0], credential[1]);
-                        }
                         break;
                     default:
                         // unknown key
                         Logging.warn("Unknown config parameter was specified '" + key + "'");
                         break;
                 }
+            }
+        }
+
+        public static void init()
+        {
+            readConfigFile(configFilename);
+
+            if (headersFolderPath == "")
+            {
+                if (networkType == NetworkType.main)
+                {
+                    headersFolderPath = Path.Combine(spixiUserFolder, "headers");
+                }
+                else
+                {
+                    headersFolderPath = Path.Combine(spixiUserFolder, "testnet-headers");
+                }
+            }
+
+            if (activityFolderPath == "")
+            {
+                if (networkType == NetworkType.main)
+                {
+                    activityFolderPath = Path.Combine(spixiUserFolder, "activity");
+                }
+                else
+                {
+                    activityFolderPath = Path.Combine(spixiUserFolder, "testnet-activity");
+                }
+            }
+
+            if (logFolderPath == "")
+            {
+                logFolderPath = spixiUserFolder;
             }
         }
     }

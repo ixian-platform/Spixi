@@ -113,9 +113,6 @@ namespace SPIXI
 
         private void onSend()
         {
-            IxiNumber fee = ConsensusConfig.forceTransactionPrice;
-            IxiNumber relayFee = fee * 4;
-
             IxiNumber _amount = amount;
 
             if (_amount < (long)0)
@@ -125,7 +122,9 @@ namespace SPIXI
             }
 
             IxiNumber availableBalance = Node.getAvailableBalance();
-            if (_amount + fee + relayFee > availableBalance)
+            ExtendedAddress to = new(friend.walletAddress, AddressPaymentFlag.OfflineTag, null);
+            IxiNumber fee = Node.calculateTransactionFee(IxianHandler.primaryWalletAddress, to, amount);
+            if (_amount + fee > availableBalance)
             {
                 string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), _amount + fee, availableBalance);
                 displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
@@ -138,12 +137,9 @@ namespace SPIXI
             // Send tx details to the request
             if (!requestMsg.message.StartsWith(":"))
             {
-                // Create an ixian transaction and send it to the dlt network
-                Address to = friend.walletAddress;
-                
                 Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
 
-                Transaction transaction = Node.sendTransactionFrom(from, to, amount);
+                Transaction transaction = Node.sendTransactionFrom(from, to, amount, null);
                 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id + ":" + transaction.getTxIdString()));
 
@@ -151,7 +147,7 @@ namespace SPIXI
 
                 StreamMessage message = new StreamMessage(friend.protocolVersion);
                 message.type = StreamMessageCode.info;
-                message.recipient = to;
+                message.recipient = to.PaymentAddress;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 

@@ -1,5 +1,4 @@
-﻿using IXICore;
-using IXICore.Meta;
+﻿using IXICore.Meta;
 using IXICore.Storage;
 using IXICore.Streaming;
 
@@ -7,11 +6,6 @@ namespace SPIXI.Meta
 {
     internal class SpixiLocalStorageCallbacks : LocalStorageCallbacks
     {
-        public bool receivedNewTransaction(Transaction transaction)
-        {
-            return Node.tiv.receivedNewTransaction(transaction);
-        }
-
         public void processMessage(FriendMessage friendMessage)
         {
             if (friendMessage.filePath != "")

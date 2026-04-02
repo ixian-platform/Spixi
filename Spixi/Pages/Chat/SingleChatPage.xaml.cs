@@ -258,7 +258,7 @@ namespace SPIXI
                     StreamProcessor.sendContactRequest(new_friend);
                     if (new_friend.approved)
                     {
-                        ProtocolMessage.resubscribeEvents();
+                        CoreProtocolMessage.resubscribeEvents();
                     }
                 }
             }
@@ -713,14 +713,10 @@ namespace SPIXI
                 }
                 byte[] b_id = Transaction.txIdLegacyToV8(id);
 
-                Transaction transaction = TransactionCache.getTransaction(b_id);
+                Transaction? transaction = Node.activityStorage.getActivityById(b_id, null, true)?.transaction;
                 if (transaction == null)
                 {
-                    transaction = TransactionCache.getUnconfirmedTransaction(b_id);
-                    if (transaction == null)
-                    {
-                        return;
-                    }
+                    return;
                 }
 
                 if (homePage != null)
@@ -864,10 +860,10 @@ namespace SPIXI
             {
                 case "tip":
                     FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id));
-                    Address sender_address = msg.senderAddress;
+                    ExtendedAddress sender_address = new ExtendedAddress(msg.senderAddress, AddressPaymentFlag.OfflineTag, null);
                     if(!friend.bot)
                     {
-                        sender_address = friend.walletAddress;
+                        sender_address = new ExtendedAddress(friend.walletAddress, AddressPaymentFlag.OfflineTag, null);
                     }
                     IxiNumber amount = new IxiNumber(data);
                     var prepTx = Node.prepareTransactionFrom(IxianHandler.getWalletStorage().getPrimaryAddress(), sender_address, amount);
@@ -889,15 +885,14 @@ namespace SPIXI
                         string nick = friend.nickname;
                         if (friend.bot)
                         {
-                            nick = friend.users.getUser(sender_address).getNick();
+                            nick = friend.users.getUser(sender_address.RoutingAddress).getNick();
                         }
                         string modal_title = String.Format(SpixiLocalization._SL("chat-modal-tip-title"), nick);
                         if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new ReactionMessage(msg_id, "tip:" + tx.id), selectedChannel))
                         {
                             updateReactions(msg_id, selectedChannel);
                             StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
-                            IxianHandler.addTransaction(tx, relayNodeAddresses, null, null, true);
-                            TransactionCache.addUnconfirmedTransaction(tx);
+                            IxianHandler.addTransaction(tx, relayNodeAddresses, new() { sender_address }, null, true);
                             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-tip-confirmed-body"), nick, amount.ToString() + " IXI");
                             displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
                         }
@@ -921,7 +916,7 @@ namespace SPIXI
 
                         if (new_friend.approved)
                         {
-                            ProtocolMessage.resubscribeEvents();
+                            CoreProtocolMessage.resubscribeEvents();
                         }
                     }
                     break;
@@ -1142,16 +1137,27 @@ namespace SPIXI
                     enableView = false;
                 }else if(message.message.StartsWith(":"))
                 {
-                    status = SpixiLocalization._SL("chat-payment-status-pending");
                     txid = message.message.Substring(1);
                     byte[] b_txid = Transaction.txIdLegacyToV8(txid);
 
-                    bool confirmed = true;
-                    Transaction transaction = TransactionCache.getTransaction(b_txid);
-                    if (transaction == null)
+                    var activity = Node.activityStorage.getActivityById(b_txid, null, true);
+                    var transaction = activity?.transaction;
+
+                    status = SpixiLocalization._SL("chat-payment-status-declined");
+                    status_icon = "fa-exclamation-circle";
+
+                    if (activity != null)
                     {
-                        transaction = TransactionCache.getUnconfirmedTransaction(b_txid);
-                        confirmed = false;
+                        if (activity.status == IXICore.Activity.ActivityStatus.Final)
+                        {
+                            status = SpixiLocalization._SL("chat-payment-status-confirmed");
+                            status_icon = "fa-check-circle";
+                        }
+                        else if (activity.status == IXICore.Activity.ActivityStatus.Pending)
+                        {
+                            status = SpixiLocalization._SL("chat-payment-status-pending");
+                            status_icon = "fa-clock";
+                        }
                     }
 
                     amount = "?";
@@ -1159,12 +1165,6 @@ namespace SPIXI
                     if (transaction != null)
                     {
                         amount = transaction.amount.ToString();
-
-                        if (confirmed)
-                        {
-                            status = SpixiLocalization._SL("chat-payment-status-confirmed");
-                            status_icon = "fa-check-circle";
-                        }
                     }
                     else
                     {
@@ -1187,33 +1187,30 @@ namespace SPIXI
 
             if (message.type == FriendMessageType.sentFunds)
             {
-                bool confirmed = true;
                 byte[] b_txid = Transaction.txIdLegacyToV8(message.message);
-                Transaction transaction = TransactionCache.getTransaction(b_txid);
-                if (transaction == null)
-                {
-                    transaction = TransactionCache.getUnconfirmedTransaction(b_txid);
-                    confirmed = false;
-                }
+                var activity = Node.activityStorage.getActivityById(b_txid, null, true);
+                var transaction = activity?.transaction;
 
-                string status = SpixiLocalization._SL("chat-payment-status-pending");
-                string status_icon = "fa-clock";
+                string status = SpixiLocalization._SL("chat-payment-status-declined");
+                string status_icon = "fa-exclamation-circle";
+                if (activity != null)
+                {
+                    if (activity.status == IXICore.Activity.ActivityStatus.Final)
+                    {
+                        status = SpixiLocalization._SL("chat-payment-status-confirmed");
+                        status_icon = "fa-check-circle";
+                    }
+                    else if (activity.status == IXICore.Activity.ActivityStatus.Pending)
+                    {
+                        status = SpixiLocalization._SL("chat-payment-status-pending");
+                        status_icon = "fa-clock";
+                    }
+                }
 
                 string amount = "?";
 
                 if (transaction != null)
                 {
-                    if (transaction.applied > 0
-                        && IxianHandler.getHighestKnownNetworkBlockHeight() > transaction.applied + Config.txConfirmationBlocks)
-                    {
-                        confirmed = true;
-                    }
-
-                    if (confirmed)
-                    {
-                        status = SpixiLocalization._SL("chat-payment-status-confirmed");
-                        status_icon = "fa-check-circle";
-                    }
                     if(message.localSender)
                     {
                         amount = transaction.amount.ToString();

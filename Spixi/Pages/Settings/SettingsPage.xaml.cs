@@ -1,4 +1,5 @@
-﻿using IXICore.Meta;
+﻿using IXICore;
+using IXICore.Meta;
 using IXICore.Storage;
 using IXICore.Streaming;
 using Spixi;
@@ -258,8 +259,9 @@ namespace SPIXI
 
                 SpixiLocalization.addCustomString("OnboardingComplete", "false");
 
-                IxianHandler.localStorage.deleteTransactionCacheFile();
-                TransactionCache.clearAllTransactions();
+                PendingTransactions.clear();
+                Node.storage.deleteData();
+                Node.activityStorage.deleteData();
                 Node.tiv.clearCache();
 
                 IxianHandler.wallets.Clear();

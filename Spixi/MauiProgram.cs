@@ -124,8 +124,20 @@ public static class MauiProgram
                     {
                         Logging.info("Android OnPause - app going to background");
                         App.isInForeground = false;
+                        IxianHandler.localStorage?.flush();
                         Node.pause();
-                        IxianHandler.localStorage.flush();
+                    });
+
+                    android.OnApplicationLowMemory(app =>
+                    {
+                        Node.onLowMemory();
+                        Logging.warn("Android OnApplicationLowMemory");
+                    });
+
+                    android.OnApplicationTrimMemory((app, level) =>
+                    {
+                        Node.onLowMemory();
+                        Logging.warn($"Android OnApplicationTrimMemory Trim Memory Level {level}");
                     });
                 });
 #endif

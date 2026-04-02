@@ -70,8 +70,6 @@ public partial class App : MauiWinUIApplication
 
         SpixiLocalization.addCustomString("Platform", "Xamarin-WPF");
 
-        Config.readConfigFile(Config.configFilename);
-
         // Add prepare storage (copy/overwrite html folder with embedded one)
         copyResources();
     }

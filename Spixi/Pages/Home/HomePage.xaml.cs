@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Activity;
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Storage;
@@ -38,8 +39,6 @@ namespace SPIXI
             return _singletonInstance;
         }
 
-        // Temporary optimizations for native->js data transfer
-        private ulong lastTransactionChange = 9999;
         private ushort transactionFilter = 0; // 0-All 1-Sent 2-Received
 
         private string currentTab = "tab1";
@@ -105,9 +104,14 @@ namespace SPIXI
                 timer.Interval = TimeSpan.FromMilliseconds(2000);
                 timer.Tick += (s, e) =>
                 {
-                    onUpdateUI();
-                    if (!running)
+                    if (running)
+                    {
+                        onUpdateUI();
+                    }
+                    else
+                    {
                         timer.Stop();
+                    }
                 };
                 timer.Start();
             }
@@ -276,6 +280,14 @@ namespace SPIXI
             else if (current_url.Contains("ixian:tab:"))
             {
                 currentTab = current_url.Split(new string[] { "ixian:tab:" }, StringSplitOptions.None)[1];
+                if (currentTab == "tab2")
+                {
+                    loadTransactions(true);
+                }
+                else if (currentTab == "tab3")
+                {
+                    loadApps(true);
+                }
             }
             else if (current_url.Equals("ixian:downloads", StringComparison.Ordinal))
             {
@@ -523,7 +535,7 @@ namespace SPIXI
 
                 if (friend.approved)
                 {
-                    ProtocolMessage.resubscribeEvents();
+                    CoreProtocolMessage.resubscribeEvents();
                 }
             }
         }
@@ -578,8 +590,6 @@ namespace SPIXI
 
             UIHelpers.shouldRefreshContacts = true;
             UIHelpers.refreshAppRequests = true;
-            UIHelpers.shouldRefreshApps = true;
-            lastTransactionChange = 0;
 
             Utils.sendUiCommand(this, "selectTab", currentTab);
 
@@ -628,17 +638,11 @@ namespace SPIXI
 
         public async void onTransaction(byte[] txid, WebNavigatingEventArgs e)
         {
-
-            Transaction transaction = TransactionCache.getTransaction(txid);
-            if (transaction == null)
+            var activity = Node.activityStorage.getActivityById(txid, null, true);
+            if (activity == null)
             {
-                transaction = TransactionCache.getUnconfirmedTransaction(txid);
-
-                if (transaction == null)
-                {
-                    e.Cancel = true;
-                    return;
-                }
+                e.Cancel = true;
+                return;
             }
 
             if (rightContent.IsVisible)
@@ -652,7 +656,7 @@ namespace SPIXI
                     Logging.warn("Exception: " + ex);
                 }
                 removeDetailContent(false);
-                detailContent = new WalletSentPage(transaction, true, this);
+                detailContent = new WalletSentPage(activity.transaction, true, this);
                 rightContent.Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
                 rightContent.Content.Opacity = 0;
@@ -666,12 +670,12 @@ namespace SPIXI
                     Logging.warn("Exception: " + ex);
                 }
 
-                Utils.sendUiCommand(this, "selectTx", transaction.getTxIdString());
+                Utils.sendUiCommand(this, "selectTx", activity.transaction.getTxIdString());
                 return;
             }
 
 
-            Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new WalletSentPage(activity.transaction), Config.defaultXamarinAnimations);
         }
 
         public async void onChat(string friend_address, WebNavigatingEventArgs ev)
@@ -1026,8 +1030,7 @@ namespace SPIXI
                     }
 
             }
-            lastTransactionChange++;
-            loadTransactions();
+            loadTransactions(true);
         }
         public string filterToString(int filter)
         {
@@ -1043,19 +1046,22 @@ namespace SPIXI
             }
         }
 
-        public void loadTransactions()
+        public void loadTransactions(bool forceRefresh)
         {
-            // Check if there are any changes
-            if(lastTransactionChange == TransactionCache.lastChange)
+            if(!forceRefresh && !UIHelpers.shouldRefreshTransactions)
             {
                 return;
             }
-            lastTransactionChange = TransactionCache.lastChange;
-
+            if (detailContent != null)
+            {
+                detailContent.updateScreen();
+            }
+            UIHelpers.shouldRefreshTransactions = false;
             Utils.sendUiCommand(this, "clearPaymentActivity", filterToString(transactionFilter));
 
-            void addPaymentActivity(Transaction tx)
+            void addPaymentActivity(ActivityObject activity)
             {
+                Transaction tx = activity.transaction;
                 string received = "1";
                 string tx_text = tx.pubKey.ToString();
                 IxiNumber amount = tx.amount;
@@ -1086,35 +1092,48 @@ namespace SPIXI
                 string amount_string = Utils.amountToHumanFormatString(amount);
                 string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
 
-                string confirmed = "false";
-                if(tx.applied > 0
-                    && IxianHandler.getHighestKnownNetworkBlockHeight() > tx.applied + Config.txConfirmationBlocks)
+                string confirmed = "error";
+                if (activity.status == IXICore.Activity.ActivityStatus.Final)
                 {
                     confirmed = "true";
                 }
+                else if (activity.status == IXICore.Activity.ActivityStatus.Pending)
+                {
+                    confirmed = "false";
+                }
+                else
+                {
+                    confirmed = "error";
+                }
 
-
-                string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(tx.timeStamp));
+                string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(activity.timestamp));
                 Utils.sendUiCommand(this, "addPaymentActivity", tx.getTxIdString(), received, tx_text, time, amount_string, fiat_amount_string, confirmed);
             }
 
-            lock (TransactionCache.unconfirmedTransactions)
+            foreach (var activity in Node.activityStorage.getActivitiesByStatus(IXICore.Activity.ActivityStatus.Rejected, true))
             {
-                for (int i = TransactionCache.unconfirmedTransactions.Count - 1; i >= 0; i--)
+                addPaymentActivity(activity);
+            }
+
+            foreach (var activity in Node.activityStorage.getActivitiesByStatus(IXICore.Activity.ActivityStatus.Reverted, true))
+            {
+                addPaymentActivity(activity);
+            }
+
+            foreach (var activity in Node.activityStorage.getActivitiesByStatus(IXICore.Activity.ActivityStatus.Pending, true))
+            {
+                addPaymentActivity(activity);
+            }
+
+            foreach (var activity in Node.activityStorage.getActivitiesBySeedHashAndType(IxianHandler.getWalletStorage().getSeedHash(), null))
+            {
+                if (activity.status != IXICore.Activity.ActivityStatus.Final
+                    && activity.status != IXICore.Activity.ActivityStatus.Expired)
                 {
-                    addPaymentActivity(TransactionCache.unconfirmedTransactions[i].transaction);
+                    continue;
                 }
-            }
-
-            int max_tx_count = 0;
-            if(TransactionCache.transactions.Count > 50)
-            {
-                max_tx_count = TransactionCache.transactions.Count - 50;
-            }
-
-            for (int i = TransactionCache.transactions.Count - 1; i >= max_tx_count; i--)
-            {
-                addPaymentActivity(TransactionCache.transactions[i].transaction);                
+                var activityWithTx = Node.activityStorage.getActivityById(activity.id, null, true);
+                addPaymentActivity(activityWithTx);
             }
         }
 
@@ -1131,75 +1150,82 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
-            base.updateScreen();
-
-            if (App.startingScreen != "")
-            {
-                string startingScreen = App.startingScreen;
-                App.startingScreen = "";
-                try
-                {
-                    onChat(startingScreen, null);
-                }
-                catch (Exception e)
-                {
-                    Logging.error("Error in home update screen: " + e);
-                }
-                return;
-            }
-
-            displayBackupReminder();
-
-            loadApps();
-            loadChats();
-            loadContacts();
-            UIHelpers.shouldRefreshContacts = false;
-
-            updateContactStatus();
-            loadTransactions();
-
             try
             {
-                string cur_version = Config.version.Substring(Config.version.IndexOf('-') + 1);
+                base.updateScreen();
 
-                string new_version = checkForUpdate();
-                new_version = !new_version.StartsWith("(") ? new_version.Substring(new_version.IndexOf('-') + 1) : cur_version;
-
-                if (UpdateVerify.compareVersionsWithSuffix(new_version, cur_version) > 0)
+                if (App.startingScreen != "")
                 {
-                    Utils.sendUiCommand(this, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
-                }
-                else
-                {
-                    // Check the ixian dlt
-                    if (NetworkClientManager.getConnectedClients(true).Count() > 0)
+                    string startingScreen = App.startingScreen;
+                    App.startingScreen = "";
+                    try
                     {
-                        Utils.sendUiCommand(this, "showWarning", "");
+                        onChat(startingScreen, null);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Error in home update screen: " + e);
+                    }
+                    return;
+                }
+
+                displayBackupReminder();
+
+                loadApps(false);
+                loadChats();
+                loadContacts();
+                UIHelpers.shouldRefreshContacts = false;
+
+                updateContactStatus();
+                loadTransactions(false);
+
+                try
+                {
+                    string cur_version = Config.version.Substring(Config.version.IndexOf('-') + 1);
+
+                    string new_version = checkForUpdate();
+                    new_version = !new_version.StartsWith("(") ? new_version.Substring(new_version.IndexOf('-') + 1) : cur_version;
+
+                    if (UpdateVerify.compareVersionsWithSuffix(new_version, cur_version) > 0)
+                    {
+                        Utils.sendUiCommand(this, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
                     }
                     else
                     {
-                        Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
-                    }
+                        // Check the ixian dlt
+                        if (NetworkClientManager.getConnectedClients(true).Count() > 0)
+                        {
+                            Utils.sendUiCommand(this, "showWarning", "");
+                        }
+                        else
+                        {
+                            Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                        }
 
+                    }
                 }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occurred in HomePage.UpdateScreen: " + e);
+                }
+                IxiNumber availableBalance = Node.getAvailableBalance();
+                string balance = Utils.amountToHumanFormatString(availableBalance);
+                string fiatBalance = Utils.amountToHumanFormatString(Node.fiatPrice * availableBalance);
+                Utils.sendUiCommand(this, "setBalance", balance, fiatBalance, IxianHandler.localStorage.nickname);
+
+                // Check if we should reload certain elements
+                if (Node.changedSettings == true)
+                {
+                    Utils.sendUiCommand(this, "loadAvatar", IxianHandler.localStorage.getOwnAvatarPath());
+                    Node.changedSettings = false;
+                }
+
+                SPushService.clearNotifications(FriendList.getUnreadMessageCount());
             }
             catch (Exception e)
             {
                 Logging.error("Exception occurred in HomePage.UpdateScreen: " + e);
             }
-            IxiNumber availableBalance = Node.getAvailableBalance();
-            string balance = Utils.amountToHumanFormatString(availableBalance);
-            string fiatBalance = Utils.amountToHumanFormatString(Node.fiatPrice * availableBalance);
-            Utils.sendUiCommand(this, "setBalance", balance, fiatBalance, IxianHandler.localStorage.nickname);
-
-            // Check if we should reload certain elements
-            if (Node.changedSettings == true)
-            {
-                Utils.sendUiCommand(this, "loadAvatar", IxianHandler.localStorage.getOwnAvatarPath());
-                Node.changedSettings = false;
-            }
-
-            SPushService.clearNotifications(FriendList.getUnreadMessageCount());
         }
 
         private void onUpdateUI(/*object source, ElapsedEventArgs e*/)
@@ -1358,9 +1384,9 @@ namespace SPIXI
 
         // Spixi Mini Apps logic
 
-        private void loadApps()
+        private void loadApps(bool forceRefresh)
         {
-            if(!UIHelpers.shouldRefreshApps)
+            if(!forceRefresh && !UIHelpers.shouldRefreshApps)
             {
                 return;
             }

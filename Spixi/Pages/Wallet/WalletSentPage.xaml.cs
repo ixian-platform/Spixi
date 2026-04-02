@@ -1,6 +1,6 @@
 ﻿using IXICore;
+using IXICore.Activity;
 using IXICore.Meta;
-using IXICore.Storage;
 using IXICore.Streaming;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -11,7 +11,8 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WalletSentPage : SpixiContentPage
     {
-        private Transaction transaction = null;
+        private Transaction transaction;
+        private ActivityStatus lastActivityStatus = 0;
 
         private bool viewOnly = true;
 
@@ -103,23 +104,40 @@ namespace SPIXI
         {
             Utils.sendUiCommand(this, "clearEntries");
 
-            string confirmed = "true";
+            string confirmed = "error";
 
-            Transaction ctransaction = TransactionCache.getTransaction(transaction.id);
-            if (ctransaction == null || ctransaction.applied == 0)
+            var activity = Node.activityStorage.getActivityById(transaction.id, null, true);
+            Transaction? ctransaction = transaction;
+            if (activity != null)
             {
-                ctransaction = transaction;
-                confirmed = "false";
-            } else if (IxianHandler.getHighestKnownNetworkBlockHeight() > ctransaction.applied + Config.txConfirmationBlocks)
+                if (lastActivityStatus == activity.status)
+                {
+                    return;
+                }
+                lastActivityStatus = activity.status;
+                ctransaction = activity.transaction;
+                if (activity.status == IXICore.Activity.ActivityStatus.Final)
+                {
+                    isConfirmedDisplayed = true;
+                    confirmed = "true";
+                }
+                else if (activity.status == IXICore.Activity.ActivityStatus.Pending)
+                {
+                    confirmed = "false";
+                }
+                else
+                {
+                    confirmed = "error";
+                }
+            }
+            else
             {
-                transaction.applied = ctransaction.applied;
-                isConfirmedDisplayed = true;
-                confirmed = "true";
+                confirmed = "error";
             }
 
             IxiNumber amount = ctransaction.amount;
 
-            string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(ctransaction.timeStamp));
+            string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(activity.timestamp));
 
             string type = "send";
 
@@ -130,7 +148,7 @@ namespace SPIXI
 
                 foreach (var entry in ctransaction.toList)
                 {
-                    Friend friend = FriendList.getFriend(entry.Key);
+                    Friend? friend = FriendList.getFriend(entry.Key);
                     IxiNumber entry_amount = entry.Value.amount;
                     IxiNumber fiat_amount = entry_amount * Node.fiatPrice;
 
@@ -149,10 +167,7 @@ namespace SPIXI
                     Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), username, user_avatar, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
 
                     // TODO Handle multiple recipients
-                    if (friend != null)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
             else
@@ -191,7 +206,14 @@ namespace SPIXI
 
             }
 
-            Utils.sendUiCommand(this, "setData", amount.ToString(), ctransaction.fee.ToString(),
+            IxiNumber fee = 0;
+            foreach (var toEntry in ctransaction.toList.TakeLast(2))
+            {
+                fee += toEntry.Value.amount;
+            }
+            fee += ctransaction.fee;
+
+            Utils.sendUiCommand(this, "setData", amount.ToString(), fee.ToString(),
                 time, transaction.getTxIdString(), confirmed);
             return;
         }
@@ -200,24 +222,7 @@ namespace SPIXI
         {
             if (!isConfirmedDisplayed)
             {
-                if (transaction.applied != 0)
-                {
-                    if (!isConfirmedDisplayed
-                        && IxianHandler.getHighestKnownNetworkBlockHeight() > transaction.applied + Config.txConfirmationBlocks)
-                    {
-                        checkTransaction();
-                    }
-                }
-                else
-                {
-                    Transaction ctransaction = TransactionCache.getTransaction(transaction.id);
-                    if (ctransaction != null
-                        && ctransaction.applied != 0
-                        && IxianHandler.getHighestKnownNetworkBlockHeight() > ctransaction.applied + Config.txConfirmationBlocks)
-                    {
-                        transaction.applied = ctransaction.applied;
-                    }
-                }
+                checkTransaction();
             }
         }
 

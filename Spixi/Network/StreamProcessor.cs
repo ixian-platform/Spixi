@@ -7,7 +7,6 @@ using Spixi;
 using SPIXI.MiniApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Network;
 using SPIXI.VoIP;
 using System.Text;
 using IXICore.Streaming.Models;
@@ -177,9 +176,9 @@ namespace SPIXI
         }*/
 
         // Called when receiving S2 data from clients
-        public override ReceiveDataResponse receiveData(byte[] bytes, RemoteEndpoint endpoint, bool fireLocalNotification = true, bool alert = true)
+        public override ReceiveDataResponse? receiveData(byte[] bytes, RemoteEndpoint endpoint, bool fireLocalNotification = true, bool alert = true)
         {
-            ReceiveDataResponse rdr = base.receiveData(bytes, endpoint);
+            ReceiveDataResponse? rdr = base.receiveData(bytes, endpoint);
             if (rdr == null)
             {
                 return rdr;
@@ -312,7 +311,7 @@ namespace SPIXI
 
                             UIHelpers.shouldRefreshContacts = true;
 
-                            ProtocolMessage.resubscribeEvents();
+                            CoreProtocolMessage.resubscribeEvents();
                             CoreStreamProcessor.fetchFriendsPresence(friend, true);
                         }
                         break;
@@ -321,7 +320,7 @@ namespace SPIXI
                     case SpixiMessageCode.acceptAdd2:
                         {
                             Node.addMessageWithType(new byte[] { 1 }, FriendMessageType.standard, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
-                            ProtocolMessage.resubscribeEvents();
+                            CoreProtocolMessage.resubscribeEvents();
                             CoreStreamProcessor.fetchFriendsPresence(friend, true);
                         }
                         break;
@@ -444,6 +443,18 @@ namespace SPIXI
                         // app data received, find the protocol id of the app and forward the data to it
                         handleAppProtocolData(sender_address, spixi_message.data);
                         return rdr;
+                        break;
+
+                    case SpixiMessageCode.transactionRequest:
+                        var tr = new TransactionRequest(spixi_message.data);
+                        Node.addMessageWithType(tr.RequestId, FriendMessageType.requestFunds, sender_address, 0, tr.Amount.ToString());
+                        break;
+
+                    case SpixiMessageCode.transactionSend:
+                        UIHelpers.shouldRefreshTransactions = true;
+                        var ts = new TransactionSend(spixi_message.data);
+                        Node.addMessageWithType(ts.RequestId, FriendMessageType.sentFunds, sender_address, 0, ts.Transaction.getTxIdString());
+
                         break;
                 }
             }catch(Exception e)

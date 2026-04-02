@@ -96,8 +96,16 @@ public class AppDelegate : MauiUIApplicationDelegate
 
     public override void WillTerminate(UIApplication uiApplication)
     {
+        IxianHandler.localStorage?.flush();
         IxianHandler.shutdown();
         base.WillTerminate(uiApplication);
     }
 
+    // Manually export the native iOS memory warning selector
+    [Export("applicationDidReceiveMemoryWarning:")]
+    public void DidReceiveMemoryWarning(UIApplication application)
+    {
+        Node.onLowMemory();
+        Logging.warn("iOS DidReceiveMemoryWarning");
+    }
 }

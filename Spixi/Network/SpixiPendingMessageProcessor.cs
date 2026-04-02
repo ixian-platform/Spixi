@@ -1,6 +1,5 @@
 ﻿
 using IXICore;
-using IXICore.Meta;
 using IXICore.Streaming;
 
 namespace SPIXI.Network

@@ -24,7 +24,9 @@ public partial class App : Application
     public App()
     {        
         InitializeComponent();
- 
+
+        Config.init();
+
         // Check if already started
         if (Node.Instance == null)
         {
@@ -238,8 +240,8 @@ public partial class App : Application
     {
         base.OnSleep();
         isInForeground = false;
+        IxianHandler.localStorage?.flush();
         Node.pause();
-        IxianHandler.localStorage.flush();
     }
 
     protected override void OnStart()

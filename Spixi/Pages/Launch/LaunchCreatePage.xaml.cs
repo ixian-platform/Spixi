@@ -160,7 +160,7 @@ namespace SPIXI
                     List<Address> address_list = IxianHandler.getWalletStorage().getMyAddresses();
                     foreach (Address addr in address_list)
                     {
-                        IxianHandler.balances.Add(new Balance(addr, 0));
+                        IxianHandler.balances.Add(addr, new Balance(addr, 0));
                     }
                 }
                 else

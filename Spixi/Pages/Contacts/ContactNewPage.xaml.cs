@@ -91,11 +91,17 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:checkAddress:", StringComparison.Ordinal))
             {
                 byte[] addressBytes = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:checkAddress:".Length));
-                if (Address.validateAddress(addressBytes)
-                    && Address.validateChecksum(addressBytes))
+                ExtendedAddress ext_recipient_address;
+                try
                 {
-                    Utils.sendUiCommand(this, "onValidAddress");
+                    ext_recipient_address = new ExtendedAddress(addressBytes);
                 }
+                catch (Exception)
+                {
+                    return;
+                }
+
+                Utils.sendUiCommand(this, "onValidAddress");
             }
             else
             {
@@ -145,13 +151,18 @@ namespace SPIXI
             string contactName = null;
             try
             {
-                if(Address.validateChecksum(recipient_address_bytes) == false)
+                ExtendedAddress ext_recipient_address;
+                try
+                {
+                    ext_recipient_address = new ExtendedAddress(recipient_address_bytes);
+                }
+                catch (Exception)
                 {
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
-                Address recipient_address = new Address(recipient_address_bytes);
+                Address recipient_address = ext_recipient_address.RoutingAddress;
                 if (recipient_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                 {
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-self-text"), SpixiLocalization._SL("global-dialog-ok"));

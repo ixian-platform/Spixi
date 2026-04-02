@@ -1,14 +1,9 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Streaming;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-//using ZXing.Net.Mobile.Forms;
 
 namespace SPIXI
 {
@@ -42,7 +37,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(this, "setBalance", Node.getAvailableBalance().ToString());
+            Utils.sendUiCommand(this, "setBalance", Node.getAvailableBalance().ToString(), Node.fiatPrice.ToString());
 
             // If we have a pre-set recipient, fill out the recipient wallet address and nickname
             if (recipient != null)
@@ -99,19 +94,34 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
                 string address = split[1];
 
-                byte[] addressBytes = Base58Check.Base58CheckEncoding.DecodePlain(address);
-                if (!Address.validateAddress(addressBytes)
-                    || !Address.validateChecksum(addressBytes))
+                if (!ExtendedAddress.Validate(address))
                 {
                     e.Cancel = true;
-                    //displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    Utils.sendUiCommand(this, "showSendingFailedModal");
                     return;
                 }
-
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
+                    Utils.sendUiCommand(this, "showSendingModal");
+                    ExtendedAddress? single_to_address;
+                    try
+                    {
+                        single_to_address = new ExtendedAddress(address);
+                        single_to_address = await CoreStreamProcessor.resolveExtendedAddress(0, single_to_address);
+                        if (single_to_address == null)
+                        {
+                            Utils.sendUiCommand(this, "showSendingFailedModal");
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        Utils.sendUiCommand(this, "showSendingFailedModal");
+                        return;
+                    }
                     await Task.Delay(200); // WinUI Crash fix
-                    await Navigation.PushAsync(new WalletSend2Page(address), Config.defaultXamarinAnimations);
+                    Utils.sendUiCommand(this, "hideSendingModal");
+                    await Navigation.PushAsync(new WalletSend2Page(single_to_address), Config.defaultXamarinAnimations);
                 });
 
                 /*             // TODO re-enable in a future update  
@@ -172,18 +182,17 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
-                if (Node.getAvailableBalance() > ConsensusConfig.forceTransactionPrice * 6)
-                {
-                    // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(this, "setAmount", (Node.getAvailableBalance() - (ConsensusConfig.forceTransactionPrice * 6)).ToString());
-                }
+                string[] split = current_url.Split(new string[] { "ixian:getMaxAmount:" }, StringSplitOptions.None);
+                string address = split[1];
+                var fee = Node.calculateTransactionFeeFromAvailableBalance(IxianHandler.primaryWalletAddress, new ExtendedAddress(address));
+                Utils.sendUiCommand(this, "setAmount", (Node.getAvailableBalance() - fee).ToString());
             }
             else if (current_url.Contains("ixian:addrecipient"))
             {
                 try
                 {
                     string[] split = current_url.Split(new string[] { "ixian:addrecipient:" }, StringSplitOptions.None);
-                    if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
+                    if (ExtendedAddress.Validate(split[1]))
                     {
                         Utils.sendUiCommand(this, "addRecipient", split[1], split[1]);
                     }
@@ -256,7 +265,7 @@ namespace SPIXI
             {
                 // Handle direct addresses
                 string wallet_to_send = result;
-                if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send)))
+                if (ExtendedAddress.Validate(wallet_to_send))
                 {
                     string nickname = wallet_to_send;
 

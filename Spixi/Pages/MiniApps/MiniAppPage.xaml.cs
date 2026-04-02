@@ -259,16 +259,7 @@ namespace SPIXI
                                 {
                                     FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, tx.getTxIdString(), true);
 
-                                    SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, tx.id);
-
-                                    StreamMessage message = new StreamMessage(friend.protocolVersion);
-                                    message.type = StreamMessageCode.info;
-                                    message.recipient = friend.walletAddress;
-                                    message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                                    message.data = spixi_message.getBytes();
-                                    message.id = friend_message.id;
-
-                                    CoreStreamProcessor.sendMessage(friend, message);
+                                    StreamProcessor.transactionSend(tx, null, null);
                                 }
                             }
                             return;
