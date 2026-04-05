@@ -89,13 +89,17 @@ namespace SPIXI
                 {
                     try
                     {
-                        Node.start();
+                        if (!Node.start())
+                        {
+                            await displaySpixiAlert("Fatal exception", "Fatal exception has occurred, please send the log files to the developers.", "OK");
+                            return;
+                        }
                         Node.connectToNetwork();
                     }
                     catch (Exception e)
                     {
                         Logging.error("Fatal error has occured: " + e);
-                        displaySpixiAlert("Fatal exception", "Fatal exception has occured, please send the log files to the developers." + e.Message, "OK");
+                        await displaySpixiAlert("Fatal exception", "Fatal exception has occurred, please send the log files to the developers. Error message: " + e.Message, "OK");
                     }
                 });
 
@@ -117,7 +121,7 @@ namespace SPIXI
             }
         }
 
-        private void OnPageSizeChanged(object sender, EventArgs e)
+        private void OnPageSizeChanged(object? sender, EventArgs? e)
         {
             if (Width < 700)
             {
@@ -1508,7 +1512,7 @@ namespace SPIXI
             Navigation.PushAsync(new AppDetailsPage(appId), Config.defaultXamarinAnimations);
         }
 
-        public SpixiContentPage getDetailContent()
+        public SpixiContentPage? getDetailContent()
         {
             return detailContent;
         }

@@ -58,6 +58,10 @@ namespace SPIXI.Meta
 
         public Node()
         {
+            if (Instance != null)
+            {
+                throw new Exception("Node instance already exists!");
+            }
 #if DEBUG
             Logging.warn("Testing language files");
             //  Lang.SpixiLocalization.testLanguageFiles("en-us");
@@ -68,10 +72,7 @@ namespace SPIXI.Meta
             IxianHandler.init(Config.version, this, Config.networkType, false, Config.checksumLock);
 
             // Initialize storage
-            if (storage is null)
-            {
-                storage = new RocksDBStorage(Config.headersFolderPath, Config.blocksDbCacheSize, CoreConfig.maxBlockHeadersPerDatabase, 3, RocksDBOptimizations.Mobiles);
-            }
+            storage = new RocksDBStorage(Config.headersFolderPath, Config.blocksDbCacheSize, CoreConfig.maxBlockHeadersPerDatabase, 3, RocksDBOptimizations.Mobiles);
 
             activityStorage = new ActivityStorage(Config.activityFolderPath, Config.activityDbCacheSize, 0, RocksDBOptimizations.Mobiles);
 
@@ -80,6 +81,7 @@ namespace SPIXI.Meta
             // Network configuration
             networkClientManagerStatic = new NetworkClientManagerStatic(Config.maxRelaySectorNodesToConnectTo);
             NetworkClientManager.init(networkClientManagerStatic);
+            StreamClientManager.init(Config.maxConnectedStreamingNodes, true);
 
             // Prepare the stream processor
             StreamCapabilities caps = StreamCapabilities.Incoming | StreamCapabilities.Outgoing | StreamCapabilities.IPN | StreamCapabilities.Apps;
@@ -131,18 +133,18 @@ namespace SPIXI.Meta
             }
         }
 
-        static public void start()
+        static public bool start()
         {
             lock (startLock)
             {
                 if (running)
                 {
-                    return;
+                    Logging.warn("Cannot start Node, it is already running.");
+                    return false;
                 }
                 Logging.info("Starting node");
 
                 running = true;
-                IxianHandler.forceShutdown = false;
                 IxianHandler.status = NodeStatus.warmUp;
 
                 UpdateVerify.start();
@@ -150,8 +152,7 @@ namespace SPIXI.Meta
                 if (!storage.prepareStorage(false))
                 {
                     Logging.error("Error while preparing block storage! Aborting.");
-                    IxianHandler.forceShutdown = true;
-                    return;
+                    return false;
                 }
 
                 activityStorage.prepareStorage(false);
@@ -216,6 +217,8 @@ namespace SPIXI.Meta
                 }
 
                 Logging.info("Node started");
+
+                return true;
             }
         }
 
@@ -274,11 +277,11 @@ namespace SPIXI.Meta
 
         static public void connectToNetwork()
         {
+            // Start the s2 client manager
+            StreamClientManager.start();
+
             // Start the network client manager
             NetworkClientManager.start(2);
-
-            // Start the s2 client manager
-            StreamClientManager.start(Config.maxConnectedStreamingNodes, true, true);
         }
 
         private static void connectToBotNodes()
@@ -416,7 +419,7 @@ namespace SPIXI.Meta
             }
         }
 
-        static public void stop()
+        static private void stop()
         {
             lock (startLock)
             {
@@ -428,22 +431,31 @@ namespace SPIXI.Meta
                 Logging.info("Stopping node...");
                 running = false;
 
-                IxianHandler.status = NodeStatus.stopping;
+                // First stop localStorage, to flush any pending chat messages to storage
+                // The Node is currently in shutting down state, so no incoming messages will be processed by the message processors
+                IxianHandler.localStorage.stop();
+
+                // Stop the stream processor, it includes pending messages
+                streamProcessor.stop();
+
+                // Stop everything else storage related
+                MiniAppManager.stop();
+
+                activityStorage.stopStorage();
+
+                TransferManager.stop();
 
                 PeerStorage.savePeersFile(true);
 
-                // Stop the stream processor
-                streamProcessor.stop();
+                // Stop the block storage
+                storage.stopStorage();
 
-                IxianHandler.localStorage.stop();
 
-                MiniAppManager.stop();
+                // Stop everything else
+
 
                 // Stop TIV
                 tiv.stop();
-
-                // Stop the transfer manager
-                TransferManager.stop();
 
                 // Stop the keepalive thread
                 PresenceList.stopKeepAlive();
@@ -455,22 +467,14 @@ namespace SPIXI.Meta
                     apiServer = null;
                 }
 
-                activityStorage.stopStorage();
-
-                // Stop the network queue
+                // Stop everything network related
                 NetworkQueue.stop();
-
                 NetworkClientManager.stop();
                 StreamClientManager.stop();
 
                 UpdateVerify.stop();
 
                 pause();
-
-                // Stop the block storage
-                storage.stopStorage();
-
-                IxianHandler.status = NodeStatus.stopped;
 
                 Logging.info("Node stopped");
             }
@@ -486,8 +490,8 @@ namespace SPIXI.Meta
                 }
 
                 IxianHandler.localStorage?.flush();
-                storage.sleep();
-                activityStorage.sleep();
+                storage?.sleep();
+                activityStorage?.sleep();
 
                 ctsLoop!.Cancel();
                 try
@@ -522,7 +526,6 @@ namespace SPIXI.Meta
                     return;
                 }
 
-
                 ctsLoop = new CancellationTokenSource();
                 mainLoopTask = Task.Run(() => mainLoop(ctsLoop.Token));
             }
@@ -548,18 +551,6 @@ namespace SPIXI.Meta
                 return 0;
             }
             return block.blockNum;
-        }
-
-        public override ulong getHighestKnownNetworkBlockHeight()
-        {
-            ulong bh = getLastBlockHeight();
-            ulong netBlockNum = CoreProtocolMessage.determineHighestNetworkBlockNum();
-            if (bh < netBlockNum)
-            {
-                bh = netBlockNum;
-            }
-
-            return bh;
         }
 
         public override int getLastBlockVersion()
@@ -601,7 +592,7 @@ namespace SPIXI.Meta
                 {
                     foreach (var address in relayNodeAddresses)
                     {
-                        NetworkClientManager.sendToClient(address, ProtocolMessageCode.transactionData2, tx.getBytes(true, true), null);
+                        NetworkClientManager.sendToClient(address, ProtocolMessageCode.transactionData2, tx.getBytes(true, true));
                     }
                     if (extendedAddresses != null)
                     {

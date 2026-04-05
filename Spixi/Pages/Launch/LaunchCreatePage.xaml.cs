@@ -130,7 +130,13 @@ namespace SPIXI
                 if (Node.generateWallet(pass))
                 {
                     Node.preStart();
-                    Node.start();
+                    if (!Node.start())
+                    {
+                        MainThread.BeginInvokeOnMainThread(() => {
+                            displaySpixiAlert("Fatal exception", "Fatal exception has occurred, please send the log files to the developers.", "OK");
+                        });
+                        return;
+                    }
                     Node.connectToNetwork();
 
                     IxianHandler.localStorage.nickname = nick;

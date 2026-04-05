@@ -96,7 +96,6 @@ public class AppDelegate : MauiUIApplicationDelegate
 
     public override void WillTerminate(UIApplication uiApplication)
     {
-        IxianHandler.localStorage?.flush();
         IxianHandler.shutdown();
         base.WillTerminate(uiApplication);
     }

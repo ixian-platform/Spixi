@@ -1601,7 +1601,8 @@ namespace SPIXI
             // Show connectivity warning bar
             if (NetworkClientManager.getConnectedClients(true).Count() > 0)
             {
-                if (!Config.enablePushNotifications && (friend.relayNode == null || StreamClientManager.isConnectedTo(friend.relayNode.hostname, true) == null))
+                if (!Config.enablePushNotifications
+                    && (friend.relayNode == null || !StreamClientManager.isConnectedTo(friend.relayNode.hostname, true)))
                 {
                     if (!warningDisplayed)
                     {

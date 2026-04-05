@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Network;
 using IXICore.Storage;
 using IXICore.Streaming;
 using Spixi;
@@ -251,7 +252,7 @@ namespace SPIXI
                 onDeleteAccount(sender, e);
 
                 // Stop network activity
-                Node.stop();
+                NetworkUtils.isolate();
 
                 Preferences.Default.Remove("onboardingComplete");
                 Preferences.Default.Remove("lockenabled");
@@ -265,6 +266,8 @@ namespace SPIXI
                 Node.tiv.clearCache();
 
                 IxianHandler.wallets.Clear();
+
+                IxianHandler.shutdown();
 
                 // Remove the settings page
                 popToRootAsync();

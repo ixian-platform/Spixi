@@ -87,7 +87,7 @@ namespace SPIXI
             }
         }
 
-        public static SingleChatPage getChatPage(Friend friend)
+        public static SingleChatPage? getChatPage(Friend friend)
         {
             
             foreach (var item in App.Current.MainPage.Navigation.NavigationStack)

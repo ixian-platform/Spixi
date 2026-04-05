@@ -16,11 +16,6 @@ namespace SPIXI.Network
         // Unified protocol message parsing
         public static void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
         {
-            if (endpoint == null)
-            {
-                Logging.error("Endpoint was null. parseProtocolMessage");
-                return;
-            }
             try
             {
                 switch (code)
@@ -76,15 +71,16 @@ namespace SPIXI.Network
 
                                 if (node_type == 'R')
                                 {
-                                    string[] connected_servers = StreamClientManager.getConnectedClients(true);
-                                    if (connected_servers.Count() > 0
-                                        && !connected_servers.Contains(StreamClientManager.primaryS2Address))
+                                    if (!StreamClientManager.isConnectedTo(StreamClientManager.primaryS2Address)
+                                        && StreamClientManager.isConnectedTo(endpoint))
                                     {
                                         // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
                                         StreamClientManager.primaryS2Address = endpoint.getFullAddress(true);
                                         // TODO TODO do not set if directly connectable
                                         IxianHandler.publicPort = endpoint.incomingPort;
                                         IxianHandler.publicIP = endpoint.address;
+                                        // TODO pin any other nodes (i.e. VoIP or other real-time ops)
+                                        StreamClientManager.setPinnedNodes(new() { StreamClientManager.primaryS2Address });
                                         PresenceList.forceSendKeepAlive = true;
                                         Logging.info("Forcing KA from networkprotocol");
                                     } else
@@ -146,7 +142,7 @@ namespace SPIXI.Network
                                             byte[][] presence_chunks = p.getByteChunks();
                                             foreach (byte[] presence_chunk in presence_chunks)
                                             {
-                                                endpoint.sendData(ProtocolMessageCode.updatePresence, presence_chunk, null);
+                                                endpoint.sendData(ProtocolMessageCode.updatePresence, presence_chunk);
                                             }
                                         }
                                     }

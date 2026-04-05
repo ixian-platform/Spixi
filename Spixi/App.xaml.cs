@@ -171,7 +171,10 @@ public partial class App : Application
             {
                 Logging.info("App: Restarting Node");
                 Node.preStart();
-                Node.start();
+                if (!Node.start())
+                {
+                    throw new Exception("Error starting Node");
+                }
                 Node.connectToNetwork();
             }
         }
@@ -326,7 +329,10 @@ public partial class App : Application
                 {
                     Logging.info("EnsureNodeRunning: Restarting Node");
                     Node.preStart();
-                    Node.start();
+                    if (!Node.start())
+                    {
+                        throw new Exception("Error starting Node");
+                    }
                     Node.connectToNetwork();
                 }
             }
