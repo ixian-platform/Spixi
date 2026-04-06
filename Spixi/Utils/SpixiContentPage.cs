@@ -6,6 +6,18 @@ using SPIXI.Meta;
 using SPIXI.VoIP;
 using Spixi;
 using IXICore.Streaming;
+using Page = Microsoft.Maui.Controls.Page;
+using Application = Microsoft.Maui.Controls.Application;
+using NavigationPage = Microsoft.Maui.Controls.NavigationPage;
+
+
+
+
+
+#if IOS || MACCATALYST
+using Microsoft.Maui.Controls.PlatformConfiguration;
+using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
+#endif
 
 #if WINDOWS
 using Microsoft.Web.WebView2.Core;
@@ -99,6 +111,15 @@ namespace SPIXI
         {
             if (_webView == null)
                 return false;
+
+#if IOS || MACCATALYST
+            var insets = this.On<iOS>().SafeAreaInsets();
+
+            // Apply padding to the page itself
+            this.Padding = new Thickness(0, insets.Top, 0, 0);
+
+            this.BackgroundColor = ThemeManager.getBackgroundColor();
+#endif
 
             var tcs = new TaskCompletionSource<string>();
             MainThread.BeginInvokeOnMainThread(async () =>

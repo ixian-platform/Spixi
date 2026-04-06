@@ -11,6 +11,16 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Globally disable Safe Area for all Pages on iOS -->
+            <Style TargetType="ContentPage">
+                <Setter Property="SafeAreaEdges" Value="None" />
+            </Style>
+
+            <!-- Globally ignore Safe Area for all Grids (your root containers) -->
+            <Style TargetType="Grid">
+                <Setter Property="SafeAreaEdges" Value="None" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

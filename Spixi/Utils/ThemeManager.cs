@@ -62,8 +62,8 @@ namespace SPIXI
         public static Color getBackgroundColor()
         {
             if (getActiveAppearanceString() == "spixiui-light")
-                return Color.FromArgb("#FFFFFF");
-            return Color.FromArgb("#000000");
+                return Color.FromArgb("#223766");
+            return Color.FromArgb("#0B1219");
         }
 
     }

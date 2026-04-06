@@ -206,20 +206,10 @@
     font-style: normal;
 }
 
-/* Global Font Family */
-body, html, * {
-    font-family: 'Inter', sans-serif;
-}
-
 /*
  * SPIXI User Interface Kit
  * https://ixian.io | https://spixi.io
  */
-
-/* Fonts */
-@font-face {
-    /* The original Roboto declarations have been removed */
-}
 
 /* General */
 body, html, * {
@@ -5199,11 +5189,9 @@ img.emoji {
 
 .single-step {
     opacity: 0;
-    visibility: hidden;
     transition: opacity 0.3s ease;
     font-size: 40px;
-    position: absolute;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 24px;
     align-items: center;
@@ -5220,8 +5208,6 @@ img.emoji {
 .single-step.active {
     display: flex;
     opacity: 1;
-    visibility: visible;
-    position: static;
 }
 
 #step-nav {
