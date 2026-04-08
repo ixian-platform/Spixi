@@ -14,7 +14,7 @@
     <RootNamespace>Spixi</RootNamespace>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!-- Display name -->
     <ApplicationTitle>Spixi</ApplicationTitle>
@@ -25,7 +25,7 @@
     <ApplicationVersion>160009160</ApplicationVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
@@ -39,6 +39,27 @@
   <PropertyGroup>
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
+  <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+    <NativeReference Include="Platforms/iOS/NativeLibraries/RocksDB.xcframework/ios-arm64/librocksdb_full.a">
+      <Kind>Static</Kind>
+      <ForceLoad>true</ForceLoad>
+      <IsCxx>true</IsCxx>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+    <AndroidNativeLibrary Include="Platforms/Android/lib/arm64-v8a/librocksdb.so">
+      <Abi>arm64-v8a</Abi>
+    </AndroidNativeLibrary>
+
+    <AndroidNativeLibrary Include="Platforms/Android/lib/armeabi-v7a/librocksdb.so">
+      <Abi>armeabi-v7a</Abi>
+    </AndroidNativeLibrary>
+
+    <AndroidNativeLibrary Include="Platforms/Android/lib/x86_64/librocksdb.so">
+      <Abi>x86_64</Abi>
+    </AndroidNativeLibrary>
+  </ItemGroup>
+
   <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
     <ProvisioningType>manual</ProvisioningType>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -92,101 +113,8 @@
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
-    <MauiAsset Remove="Resources\Raw\html\img\xhdpi\onboarding1.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xhdpi\onboarding100.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xhdpi\onboarding2.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xhdpi\onboarding3.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xhdpi\onboarding4.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding1.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding100.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding2.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding3.png" />
-    <MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding4.png" />
-    <MauiAsset Remove="Resources\Raw\lang\TRANSLATORS-README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <MauiCss Remove="Resources\Raw\html\css\bootstrap.min.css" />
-    <MauiCss Remove="Resources\Raw\html\css\normalize.css" />
-    <MauiCss Remove="Resources\Raw\html\css\spixiui-dark.css" />
-    <MauiCss Remove="Resources\Raw\html\css\spixiui-intro.css" />
-    <MauiCss Remove="Resources\Raw\html\css\spixiui-light.css" />
-    <MauiCss Remove="Resources\Raw\html\libs\fontawesome\css\fontawesome.min.css" />
-    <MauiCss Remove="Resources\Raw\html\libs\fontawesome\css\solid.min.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Platforms\Android\Resources\values\styles.xml" />
-    <None Remove="Resources\Raw\html\address.html" />
-    <None Remove="Resources\Raw\html\apps.html" />
-    <None Remove="Resources\Raw\html\app_details.html" />
-    <None Remove="Resources\Raw\html\app_new.html" />
-    <None Remove="Resources\Raw\html\chat.html" />
-    <None Remove="Resources\Raw\html\contact_details.html" />
-    <None Remove="Resources\Raw\html\contact_new.html" />
-    <None Remove="Resources\Raw\html\downloads.html" />
-    <None Remove="Resources\Raw\html\empty_detail.html" />
-    <None Remove="Resources\Raw\html\fonts\Roboto-Bold.ttf" />
-    <None Remove="Resources\Raw\html\fonts\Roboto-Regular.ttf" />
-    <None Remove="Resources\Raw\html\img\hdpi\onboarding1.png" />
-    <None Remove="Resources\Raw\html\img\hdpi\onboarding100.png" />
-    <None Remove="Resources\Raw\html\img\hdpi\onboarding2.png" />
-    <None Remove="Resources\Raw\html\img\hdpi\onboarding3.png" />
-    <None Remove="Resources\Raw\html\img\hdpi\onboarding4.png" />
-    <None Remove="Resources\Raw\html\img\introloading.png" />
-    <None Remove="Resources\Raw\html\img\intrologo.png" />
-    <None Remove="Resources\Raw\html\img\ixicash.svg" />
-    <None Remove="Resources\Raw\html\img\ldpi\onboarding1.png" />
-    <None Remove="Resources\Raw\html\img\ldpi\onboarding100.png" />
-    <None Remove="Resources\Raw\html\img\ldpi\onboarding2.png" />
-    <None Remove="Resources\Raw\html\img\ldpi\onboarding3.png" />
-    <None Remove="Resources\Raw\html\img\ldpi\onboarding4.png" />
-    <None Remove="Resources\Raw\html\img\mdpi\onboarding1.png" />
-    <None Remove="Resources\Raw\html\img\mdpi\onboarding100.png" />
-    <None Remove="Resources\Raw\html\img\mdpi\onboarding2.png" />
-    <None Remove="Resources\Raw\html\img\mdpi\onboarding3.png" />
-    <None Remove="Resources\Raw\html\img\mdpi\onboarding4.png" />
-    <None Remove="Resources\Raw\html\img\poweredbyixian.png" />
-    <None Remove="Resources\Raw\html\img\spixiavatar.png" />
-    <None Remove="Resources\Raw\html\img\spixitoolbarlogo.png" />
-    <None Remove="Resources\Raw\html\img\switch-off.png" />
-    <None Remove="Resources\Raw\html\img\switch-on.png" />
-    <None Remove="Resources\Raw\html\index.html" />
-    <None Remove="Resources\Raw\html\intro.html" />
-    <None Remove="Resources\Raw\html\intro_new.html" />
-    <None Remove="Resources\Raw\html\intro_restore.html" />
-    <None Remove="Resources\Raw\html\intro_retry.html" />
-    <None Remove="Resources\Raw\html\js\bootstrap.min.js" />
-    <None Remove="Resources\Raw\html\js\chat.js" />
-    <None Remove="Resources\Raw\html\js\clipboard.min.js" />
-    <None Remove="Resources\Raw\html\js\home.js" />
-    <None Remove="Resources\Raw\html\js\jquery.min.js" />
-    <None Remove="Resources\Raw\html\js\jquery.touchSwipe.min.js" />
-    <None Remove="Resources\Raw\html\js\qrcode.min.js" />
-    <None Remove="Resources\Raw\html\js\spixi.js" />
-    <None Remove="Resources\Raw\html\libs\fontawesome\webfonts\fa-solid-900.ttf" />
-    <None Remove="Resources\Raw\html\lock.html" />
-    <None Remove="Resources\Raw\html\scan.html" />
-    <None Remove="Resources\Raw\html\settings.html" />
-    <None Remove="Resources\Raw\html\settings_backup.html" />
-    <None Remove="Resources\Raw\html\settings_encryption.html" />
-    <None Remove="Resources\Raw\html\settings_lock.html" />
-    <None Remove="Resources\Raw\html\wallet_contact_request.html" />
-    <None Remove="Resources\Raw\html\wallet_recipient.html" />
-    <None Remove="Resources\Raw\html\wallet_request.html" />
-    <None Remove="Resources\Raw\html\wallet_send.html" />
-    <None Remove="Resources\Raw\html\wallet_send_2.html" />
-    <None Remove="Resources\Raw\html\wallet_sent.html" />
-    <None Remove="Resources\Raw\lang\cn-cn.txt" />
-    <None Remove="Resources\Raw\lang\de-de.txt" />
-    <None Remove="Resources\Raw\lang\en-us.txt" />
-    <None Remove="Resources\Raw\lang\es-co.txt" />
-    <None Remove="Resources\Raw\lang\fr-fr.txt" />
-    <None Remove="Resources\Raw\lang\ja-jp.txt" />
-    <None Remove="Resources\Raw\lang\lt-lt.txt" />
-    <None Remove="Resources\Raw\lang\pt-br.txt" />
-    <None Remove="Resources\Raw\lang\ru-ru.txt" />
-    <None Remove="Resources\Raw\lang\sl-si.txt" />
-    <None Remove="Resources\Raw\lang\sr-sp.txt" />
-    <None Remove="Resources\Splash\splash.svg" />
+    <MauiAsset Remove="Platforms\Android\Resources\values\styles.xml" />
+    <MauiAsset Remove="Resources\Splash\splash.svg" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
@@ -199,7 +127,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="OneSignalSDK.DotNet" Version="6.1.3" />
     <PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
-    <PackageReference Include="RocksDB" Version="10.4.2.64152" />
+    <!-- Android and IOS: exclude native assets, use custom built RocksDB-Sharp -->
+    <PackageReference Include="RocksDB" Version="0.0.42" Condition="$(TargetFramework.Contains('-android')) or $(TargetFramework.Contains('-ios'))">
+	  <ExcludeAssets>native</ExcludeAssets>
+    </PackageReference>
+	<!-- Other platforms: normal -->
+    <PackageReference Include="RocksDB" Version="10.4.2.64152" Condition="!$(TargetFramework.Contains('-android')) and !$(TargetFramework.Contains('-ios'))" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
     <PackageReference Include="NAudio" Version="2.3.0" />
@@ -292,9 +225,6 @@
     <MauiXaml Update="Pages\Wallet\WalletSentPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Platforms\Android\Assets\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Pages\Contributors\ContributorsPage.xaml.cs">

@@ -1,7 +1,10 @@
 ﻿using Foundation;
 using IXICore.Meta;
+using Microsoft.Maui;
+using Microsoft.Maui.Hosting;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using System.IO;
 using UIKit;
 
 namespace Spixi;
@@ -37,9 +40,9 @@ public class AppDelegate : MauiUIApplicationDelegate
 
         SpixiLocalization.addCustomString("Platform", "Xamarin-iOS");
 
-    //    LoadApplication(App.Instance());
+        //    LoadApplication(App.Instance());
 
-    //    prepareBackgroundService();
+        //    prepareBackgroundService();
 
         return base.FinishedLaunching(app, options);
     }
