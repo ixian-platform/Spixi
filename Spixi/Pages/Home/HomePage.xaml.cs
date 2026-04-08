@@ -2,14 +2,25 @@
 using IXICore.Activity;
 using IXICore.Meta;
 using IXICore.Network;
-using IXICore.Storage;
 using IXICore.Streaming;
+using Microsoft.Maui;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.Dispatching;
+using Microsoft.Maui.Storage;
 using Spixi;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
-using SPIXI.Network;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace SPIXI
@@ -96,10 +107,16 @@ namespace SPIXI
                         }
                         Node.connectToNetwork();
                     }
+                    catch (IOException e)
+                    {
+                        Logging.error("Fatal IO error has occurred: " + e);
+                        string ioErrorMessage = "Fatal error has occurred. This may be due to insufficient disk space. Please check your device storage and send the log files to the developers.\n\nError: " + e.Message;
+                        await displaySpixiAlert("Fatal Exception", ioErrorMessage, "OK");
+                    }
                     catch (Exception e)
                     {
-                        Logging.error("Fatal error has occured: " + e);
-                        await displaySpixiAlert("Fatal exception", "Fatal exception has occurred, please send the log files to the developers. Error message: " + e.Message, "OK");
+                        Logging.error("Fatal error has occurred: " + e);
+                        await displaySpixiAlert("Fatal Exception", "Fatal error has occurred. Please send the log files to the developers.\n\nError: " + e.Message, "OK");
                     }
                 });
 
@@ -263,7 +280,7 @@ namespace SPIXI
                 string id = split[1];
                 // TODO: handle exceptions
 
-                Friend friend = FriendList.getFriend(new Address(id));
+                Friend? friend = FriendList.getFriend(new Address(id));
 
                 if (friend == null)
                 {
@@ -434,7 +451,7 @@ namespace SPIXI
                 Navigation.PushAsync(new WalletSendPage(), Config.defaultXamarinAnimations);
                 return;
             }
-            Navigation.PushAsync(new WalletSendPage(wallet), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new WalletSendPage(new ExtendedAddress(wallet, AddressPaymentFlag.OfflineTag, null)), Config.defaultXamarinAnimations);
         }
 
         public void onReceiveIxi(Friend? friend)
@@ -480,7 +497,7 @@ namespace SPIXI
 
                 try
                 {
-                    Address wallet_to_send = new Address(split[0]);
+                    ExtendedAddress wallet_to_send = new ExtendedAddress(split[0]);
                     Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
                 }catch(Exception)
                 {

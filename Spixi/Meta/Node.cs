@@ -8,13 +8,21 @@ using IXICore.RegNames;
 using IXICore.Storage;
 using IXICore.Streaming;
 using IXICore.Utils;
+using Microsoft.Maui.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Spixi;
 using SPIXI.MiniApps;
 using SPIXI.Network;
 using SPIXI.VoIP;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using static IXICore.Transaction;
 
 namespace SPIXI.Meta
@@ -72,9 +80,9 @@ namespace SPIXI.Meta
             IxianHandler.init(Config.version, this, Config.networkType, false, Config.checksumLock);
 
             // Initialize storage
-            storage = new RocksDBStorage(Config.headersFolderPath, Config.blocksDbCacheSize, CoreConfig.maxBlockHeadersPerDatabase, 3, RocksDBOptimizations.Mobiles);
+            storage = new RocksDBStorage(Config.headersFolderPath, Config.blocksDbCacheSize, CoreConfig.maxBlockHeadersPerDatabase, 3, RocksDBOptimizations.Mobiles, Config.minRequiredDiskSpace);
 
-            activityStorage = new ActivityStorage(Config.activityFolderPath, Config.activityDbCacheSize, 0, RocksDBOptimizations.Mobiles);
+            activityStorage = new ActivityStorage(Config.activityFolderPath, Config.activityDbCacheSize, 0, RocksDBOptimizations.Mobiles, Config.minRequiredDiskSpace);
 
             PeerStorage.init(Config.spixiUserFolder);
 
@@ -684,7 +692,7 @@ namespace SPIXI.Meta
             return tsd.blockHash;
         }
 
-        public static FriendMessage? addMessageWithType(byte[] id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address? sender_address = null, long timestamp = 0, bool fire_local_notification = true, bool alert = true, int payable_data_len = 0)
+        public static FriendMessage? addMessageWithType(byte[]? id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address? sender_address = null, long timestamp = 0, bool fire_local_notification = true, bool alert = true, int payable_data_len = 0)
         {
             FriendMessage? friend_message = FriendList.addMessageWithType(id, type, wallet_address, channel, message, local_sender, sender_address, timestamp, fire_local_notification, payable_data_len);
             if (friend_message != null)

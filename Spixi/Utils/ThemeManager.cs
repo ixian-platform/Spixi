@@ -1,4 +1,8 @@
-﻿using SPIXI.Lang;
+﻿using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Storage;
+using SPIXI.Lang;
 
 namespace SPIXI
 {
@@ -59,11 +63,17 @@ namespace SPIXI
             return "spixiui-light";
         }
 
-        public static Color getBackgroundColor()
+
+        public static string getBackgroundColorString()
         {
             if (getActiveAppearanceString() == "spixiui-light")
-                return Color.FromArgb("#223766");
-            return Color.FromArgb("#0B1219");
+                return "#223766";
+            return "#0B1219";
+        }
+
+        public static Color getBackgroundColor()
+        {
+            return Color.FromArgb(getBackgroundColorString());
         }
 
     }

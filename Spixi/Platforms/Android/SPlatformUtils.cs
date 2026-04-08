@@ -2,8 +2,11 @@
 using Android.Content;
 using Android.Media;
 using IXICore.Meta;
+using Microsoft.Maui.Storage;
 using SPIXI;
 using SPIXI.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace Spixi
 {
@@ -184,15 +187,7 @@ namespace Spixi
 
             if (rootView != null)
             {
-                Android.Graphics.Color bgColor;
-                if (ThemeManager.getActiveAppearance() == ThemeAppearance.light)
-                {
-                    bgColor = Android.Graphics.Color.ParseColor("#223766");
-                }
-                else
-                {
-                    bgColor = Android.Graphics.Color.ParseColor("#0B1219");
-                }
+                Android.Graphics.Color bgColor = Android.Graphics.Color.ParseColor(ThemeManager.getBackgroundColorString());
                 rootView.SetBackgroundColor(bgColor);
             }
         }

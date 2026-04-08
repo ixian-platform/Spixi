@@ -1,8 +1,14 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Streaming;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace SPIXI
@@ -10,7 +16,7 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WalletSendPage : SpixiContentPage
 	{
-        private Address recipient = null;
+        private ExtendedAddress? recipient = null;
 
         public WalletSendPage ()
 		{
@@ -20,7 +26,7 @@ namespace SPIXI
             loadPage(webView, "wallet_send.html");
         }
 
-        public WalletSendPage(Address wal)
+        public WalletSendPage(ExtendedAddress wal)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
@@ -44,7 +50,7 @@ namespace SPIXI
             {
                 string nickname = recipient.ToString();
 
-                Friend friend = FriendList.getFriend(recipient);
+                Friend? friend = FriendList.getFriend(recipient.RoutingAddress);
                 if (friend != null)
                     nickname = friend.nickname;
 
@@ -216,7 +222,7 @@ namespace SPIXI
 
         }
 
-        private void HandleScanSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private void HandleScanSucceeded(object? sender, SPIXI.EventArgs<string> e)
         {
             string wallets_to_add = e.Value;
 
@@ -239,7 +245,7 @@ namespace SPIXI
                 string wallet_to_send = split[0];
                 string nickname = wallet_to_send;
 
-                Friend friend = FriendList.getFriend(new Address(wallet_to_send));
+                Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
                 if (friend != null)
                     nickname = friend.nickname;
                 Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
@@ -279,9 +285,7 @@ namespace SPIXI
             }
         }
 
-
-
-        private async void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private async void HandlePickSucceeded(object? sender, SPIXI.EventArgs<string> e)
         {
             string wallets_to_send = e.Value;
 
@@ -289,7 +293,7 @@ namespace SPIXI
 
             foreach (string wallet_to_send in wallet_arr)
             {
-                Friend friend = FriendList.getFriend(new Address(wallet_to_send));
+                Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
 
                 string nickname = wallet_to_send;
                 if (friend != null)

@@ -11,10 +11,15 @@ using CommunityToolkit.Maui;
 using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
-using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 using Microsoft.Maui.LifecycleEvents;
 using SPIXI.Meta;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Spixi;
 
@@ -136,8 +141,12 @@ public static class MauiProgram
 
                     android.OnApplicationTrimMemory((app, level) =>
                     {
-                        Node.onLowMemory();
-                        Logging.warn($"Android OnApplicationTrimMemory Trim Memory Level {level}");
+                        if (level == Android.Content.TrimMemory.RunningLow
+                            || level == Android.Content.TrimMemory.RunningCritical)
+                        {
+                            Node.onLowMemory();
+                            Logging.warn($"Android OnApplicationTrimMemory Trim Memory Level {level}");
+                        }
                     });
                 });
 #endif

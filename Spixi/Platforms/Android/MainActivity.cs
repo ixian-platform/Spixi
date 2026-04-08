@@ -7,10 +7,16 @@ using Android.Views;
 using AndroidX.Core.Content;
 using AndroidX.Core.View;
 using IXICore.Meta;
+using Microsoft.Maui;
+using Microsoft.Maui.ApplicationModel;
 using Plugin.Fingerprint;
 using SPIXI;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using View = Android.Views.View;
 namespace Spixi;
 
@@ -49,6 +55,19 @@ public class MainActivity : MauiAppCompatActivity
 
         // Opt into edge-to-edge drawing
         WindowCompat.SetDecorFitsSystemWindows(Window, false);
+
+        Window?.SetStatusBarColor(Android.Graphics.Color.Transparent);
+        Window?.SetNavigationBarColor(Android.Graphics.Color.Transparent);
+
+        var controller = WindowCompat.GetInsetsController(Window, Window?.DecorView);
+
+        if (controller != null)
+        {
+            // Set white icons for status and navigation bars to ensure visibility
+            controller.AppearanceLightStatusBars = false;
+            controller.AppearanceLightNavigationBars = false;
+        }
+
         var rootView = FindViewById(Android.Resource.Id.Content);
 
         if (rootView != null)
@@ -56,6 +75,7 @@ public class MainActivity : MauiAppCompatActivity
             ViewCompat.SetOnApplyWindowInsetsListener(rootView, new InsetsListener());
             SPlatformUtils.setEdgeToEdge();
         }
+        // End of edge-to-edge setup
 
         if (ContextCompat.CheckSelfPermission(Instance, Manifest.Permission.Camera) != Permission.Granted)
         {           

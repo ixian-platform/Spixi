@@ -9,6 +9,15 @@ using IXICore.Streaming;
 using Page = Microsoft.Maui.Controls.Page;
 using Application = Microsoft.Maui.Controls.Application;
 using NavigationPage = Microsoft.Maui.Controls.NavigationPage;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.ApplicationModel;
+using System.IO;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Maui;
+
 
 
 
@@ -116,7 +125,7 @@ namespace SPIXI
             var insets = this.On<iOS>().SafeAreaInsets();
 
             // Apply padding to the page itself
-            this.Padding = new Thickness(0, insets.Top, 0, 0);
+            this.Padding = new Thickness(0, insets.Top, 0, 10);
 
             this.BackgroundColor = ThemeManager.getBackgroundColor();
 #endif

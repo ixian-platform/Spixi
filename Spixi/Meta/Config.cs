@@ -1,6 +1,9 @@
-﻿using IXICore;
-using IXICore.Meta;
+﻿using IXICore.Meta;
 using IXICore.Network;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace SPIXI.Meta
@@ -38,7 +41,7 @@ namespace SPIXI.Meta
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.9.16"; // Spixi version
+        public static readonly string version = "spixi-0.9.17-dev"; // Spixi version
 
         public static readonly string checkVersionUrl = "https://resources.ixian.io/spixi-update.txt";
         public static readonly int checkVersionSeconds = 1 * 60 * 60; // 1 hour
@@ -85,8 +88,10 @@ namespace SPIXI.Meta
         public static List<string> apiAllowedIps = new List<string>();
         public static List<string> apiBinds = new List<string>();
 
-        public static ulong activityDbCacheSize = 8 << 20;
+        public static ulong activityDbCacheSize = 8 << 20; // 8MB
         public static ulong blocksDbCacheSize = 8 << 20;
+
+        public static long minRequiredDiskSpace = 50 << 20; // 50MB
 
 
         private static NetworkType parseNetworkTypeValue(string value)

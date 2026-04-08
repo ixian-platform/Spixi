@@ -1,5 +1,7 @@
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using SPIXI.Lang;
-using SPIXI.Meta;
+using System;
 using System.Web;
 
 namespace SPIXI;
@@ -7,7 +9,7 @@ namespace SPIXI;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class ScanPage : SpixiContentPage
 {
-    public event EventHandler<SPIXI.EventArgs<string>> scanSucceeded;
+    public event EventHandler<SPIXI.EventArgs<string>>? scanSucceeded = null;
 
     private bool allowScanning = true;
 
