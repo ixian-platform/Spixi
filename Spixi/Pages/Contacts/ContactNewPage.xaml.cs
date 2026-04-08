@@ -43,7 +43,10 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(this, "setAddress", wallet_to_add);
+            if (wallet_to_add != null && wallet_to_add.Length > 0)
+            {
+                Utils.sendUiCommand(this, "setAddress", wallet_to_add);
+            }
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -99,8 +102,9 @@ namespace SPIXI
                 {
                     ext_recipient_address = new ExtendedAddress(address);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Logging.error("Invalid address format: " + ex.Message);
                     return;
                 }
 
@@ -113,14 +117,15 @@ namespace SPIXI
                 return;
             }
             e.Cancel = true;
-
         }
+
         private void HandleScanSucceeded(object? sender, SPIXI.EventArgs<string> e)
         {
             string wallets_to_add = e.Value;
 
             processQRResult(wallets_to_add);
         }
+
         public async void quickScan()
         {
             var scanPage = new ScanPage();
@@ -158,8 +163,9 @@ namespace SPIXI
                 {
                     ext_recipient_address = new ExtendedAddress(recipient_address_string);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Logging.error("Invalid address format: " + ex.Message);
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }

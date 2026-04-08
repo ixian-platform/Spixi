@@ -120,8 +120,9 @@ namespace SPIXI
                             return;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Logging.error("Invalid address format: " + ex.Message);
                         Utils.sendUiCommand(this, "showSendingFailedModal");
                         return;
                     }
@@ -190,8 +191,15 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:getMaxAmount:" }, StringSplitOptions.None);
                 string address = split[1];
-                var fee = Node.calculateTransactionFeeFromAvailableBalance(IxianHandler.primaryWalletAddress, new ExtendedAddress(address));
-                Utils.sendUiCommand(this, "setAmount", (Node.getAvailableBalance() - fee).ToString());
+                try
+                {
+                    var fee = Node.calculateTransactionFeeFromAvailableBalance(IxianHandler.primaryWalletAddress, new ExtendedAddress(address));
+                    Utils.sendUiCommand(this, "setAmount", (Node.getAvailableBalance() - fee).ToString());
+                }
+                catch (Exception ex)
+                {
+                    Logging.error("Invalid address format: " + ex.Message);
+                }
             }
             else if (current_url.Contains("ixian:addrecipient"))
             {
@@ -260,7 +268,7 @@ namespace SPIXI
                     string wallet_to_send = split[0];
                     string nickname = wallet_to_send;
 
-                    Friend friend = FriendList.getFriend(new Address(wallet_to_send));
+                    Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
                     if (friend != null)
                         nickname = friend.nickname;
                     Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
@@ -275,7 +283,7 @@ namespace SPIXI
                 {
                     string nickname = wallet_to_send;
 
-                    Friend friend = FriendList.getFriend(new Address(wallet_to_send));
+                    Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
                     if (friend != null)
                         nickname = friend.nickname;
 

@@ -499,9 +499,9 @@ namespace SPIXI
                 {
                     ExtendedAddress wallet_to_send = new ExtendedAddress(split[0]);
                     Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
-                }catch(Exception)
+                }catch(Exception ex)
                 {
-
+                    Logging.error("Invalid address format: " + ex.Message);
                 }
                 return;
             }
@@ -521,11 +521,11 @@ namespace SPIXI
             Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
         }
 
-        private async void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private async void HandlePickSucceeded(object? sender, SPIXI.EventArgs<string> e)
         {
             string id = e.Value;
             Address id_bytes = new Address(id);
-            Friend friend = FriendList.getFriend(id_bytes);
+            Friend? friend = FriendList.getFriend(id_bytes);
 
             if (friend == null)
             {
@@ -545,7 +545,7 @@ namespace SPIXI
 
         private void joinBot()
         {
-            Friend friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, new Address("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
+            Friend? friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, new Address("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
             if (friend != null)
             {
                 friend.save();
@@ -695,15 +695,14 @@ namespace SPIXI
                 return;
             }
 
-
             Navigation.PushAsync(new WalletSentPage(activity.transaction), Config.defaultXamarinAnimations);
         }
 
-        public async void onChat(string friend_address, WebNavigatingEventArgs ev)
+        public async void onChat(string friend_address, WebNavigatingEventArgs? ev)
         {
             Address id_bytes = new Address(friend_address);
 
-            Friend friend = FriendList.getFriend(id_bytes);
+            Friend? friend = FriendList.getFriend(id_bytes);
 
             if (friend == null)
             {
@@ -713,7 +712,6 @@ namespace SPIXI
                 }
                 return;
             }
-
 
             if (rightContent.IsVisible)
             {
@@ -780,12 +778,6 @@ namespace SPIXI
         // TODO: optimize this
         public void loadContacts()
         {
-            if (!UIHelpers.shouldRefreshContacts)
-            {
-                //  No changes detected, stop here
-                return;
-            }
-
             // Clear everything
             Utils.sendUiCommand(this, "clearContacts");
 
@@ -830,12 +822,6 @@ namespace SPIXI
             }else
             {
                 Utils.sendUiCommand(this, "setUnreadIndicator", "0");
-            }
-
-            if (!UIHelpers.shouldRefreshContacts)
-            {
-                //  No changes detected, stop here
-                return;
             }
 
             Utils.sendUiCommand(this, "clearChats");
@@ -969,7 +955,7 @@ namespace SPIXI
                         excerpt = SpixiLocalization._SL("index-excerpt-typing");
                         type = "typing";
                     }
-                    else if (lastmsg.localSender)
+                    else if (lastmsg.localSender && lastmsg.type != FriendMessageType.voiceCallEnd)
                     {
                         if (lastmsg.read)
                         {
@@ -1193,9 +1179,13 @@ namespace SPIXI
                 displayBackupReminder();
 
                 loadApps(false);
-                loadChats();
-                loadContacts();
-                UIHelpers.shouldRefreshContacts = false;
+
+                if (UIHelpers.shouldRefreshContacts)
+                {
+                    loadChats();
+                    loadContacts();
+                    UIHelpers.shouldRefreshContacts = false;
+                }
 
                 updateContactStatus();
                 loadTransactions(false);

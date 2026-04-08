@@ -71,7 +71,7 @@ namespace SPIXI
 
         }
 
-        private void HandleNewContactSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private void HandleNewContactSucceeded(object? sender, SPIXI.EventArgs<string> e)
         {
             string id = e.Value;
             onPickSucceeded(id);
