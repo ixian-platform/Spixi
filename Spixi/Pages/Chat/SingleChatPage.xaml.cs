@@ -8,12 +8,19 @@ using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
 using SPIXI.VoIP;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using IXICore.Streaming;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using System.Net;
+using Microsoft.Maui.Storage;
+using Microsoft.Maui.ApplicationModel;
 using System.Text;
 using System.Web;
-using IXICore.Streaming;
-using SPIXI.Network;
-using IXICore.Storage;
 
 namespace SPIXI
 {
@@ -356,7 +363,7 @@ namespace SPIXI
                 return;
             }
 
-            Navigation.PushAsync(new WalletSendPage(friend.walletAddress), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new WalletSendPage(new ExtendedAddress(friend.walletAddress, AddressPaymentFlag.OfflineTag, null)), Config.defaultXamarinAnimations);
         }
 
         private void onRequestIxi()

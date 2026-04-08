@@ -1,8 +1,12 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Streaming;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using System;
+using System.Linq;
 using System.Web;
 
 namespace SPIXI
@@ -12,7 +16,7 @@ namespace SPIXI
 	{
         private string wallet_to_add = "";
 
-        public event EventHandler<SPIXI.EventArgs<string>> pickSucceeded;
+        public event EventHandler<SPIXI.EventArgs<string>>? pickSucceeded = null;
 
         public ContactNewPage ()
 		{
@@ -69,8 +73,7 @@ namespace SPIXI
                 try
                 {
                     string[] split = current_url.Split(new string[] { "ixian:request:" }, StringSplitOptions.None);
-                    byte[] wal = Base58Check.Base58CheckEncoding.DecodePlain(split[1]);
-                    onRequest(wal);
+                    onRequest(split[1]);
                 }catch(Exception)
                 {
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
@@ -90,11 +93,11 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:checkAddress:", StringComparison.Ordinal))
             {
-                byte[] addressBytes = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:checkAddress:".Length));
+                string address = current_url.Substring("ixian:checkAddress:".Length);
                 ExtendedAddress ext_recipient_address;
                 try
                 {
-                    ext_recipient_address = new ExtendedAddress(addressBytes);
+                    ext_recipient_address = new ExtendedAddress(address);
                 }
                 catch (Exception)
                 {
@@ -112,7 +115,7 @@ namespace SPIXI
             e.Cancel = true;
 
         }
-        private void HandleScanSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private void HandleScanSucceeded(object? sender, SPIXI.EventArgs<string> e)
         {
             string wallets_to_add = e.Value;
 
@@ -143,18 +146,17 @@ namespace SPIXI
                 if (wal.Length > 20 && wal.Length < 128)
                     Utils.sendUiCommand(this, "setAddress", wal);
             }
-
         }
 
-        public void onRequest(byte[] recipient_address_bytes)
+        public void onRequest(string recipient_address_string)
         {
-            string contactName = null;
+            string? contactName = null;
             try
             {
                 ExtendedAddress ext_recipient_address;
                 try
                 {
-                    ext_recipient_address = new ExtendedAddress(recipient_address_bytes);
+                    ext_recipient_address = new ExtendedAddress(recipient_address_string);
                 }
                 catch (Exception)
                 {
@@ -169,7 +171,7 @@ namespace SPIXI
                     return;
                 }
 
-                Friend old_friend = FriendList.getFriend(recipient_address);
+                Friend? old_friend = FriendList.getFriend(recipient_address);
                 if (old_friend != null)
                 {
                     if (old_friend.pendingDeletion)
@@ -184,7 +186,7 @@ namespace SPIXI
                     }
                 }
                 contactName = recipient_address.ToString();
-                Friend friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, recipient_address, null, contactName, null, null, 0);
+                Friend? friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, recipient_address, null, contactName, null, null, 0);
 
                 if (friend != null)
                 {

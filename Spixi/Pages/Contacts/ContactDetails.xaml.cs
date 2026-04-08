@@ -1,8 +1,11 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Streaming;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using System;
 using System.Web;
 
 namespace SPIXI
@@ -71,7 +74,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSendPage(friend.walletAddress), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new WalletSendPage(new ExtendedAddress(friend.walletAddress, AddressPaymentFlag.OfflineTag, null)), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:chat", StringComparison.Ordinal))
             {

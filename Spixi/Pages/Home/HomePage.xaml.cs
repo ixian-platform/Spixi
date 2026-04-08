@@ -618,7 +618,7 @@ namespace SPIXI
 
             Utils.sendUiCommand(this, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
 
-            string address_string = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
+            string address_string = new ExtendedAddress(IxianHandler.getWalletStorage().getPrimaryAddress(), AddressPaymentFlag.OfflineTag, null).ToString();
             Utils.sendUiCommand(this, "setAddress", address_string);
 
             Utils.sendUiCommand(this, "setHideBalance", hideBalance.ToString());
