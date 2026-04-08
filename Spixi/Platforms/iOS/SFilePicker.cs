@@ -1,10 +1,12 @@
 ﻿using Foundation;
 using IXICore.Meta;
+using Microsoft.Maui.Storage;
 using Spixi.Platform.iOS;
 using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;

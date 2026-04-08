@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.RegNames;
+using System.Collections.Generic;
 
 namespace SPIXI.MiniApps.ActionRequestModels
 {

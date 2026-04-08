@@ -7,6 +7,7 @@ using IXICore.Meta;
 using IXICore.Streaming;
 using OneSignalSDK.DotNet;
 using OneSignalSDK.DotNet.Core.Debug;
+using System;
 using OneSignalNative = Com.OneSignal.Android.OneSignal;
 
 namespace Spixi

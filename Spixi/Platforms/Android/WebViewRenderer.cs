@@ -18,6 +18,13 @@ using AndroidX.Core.View.InputMethod;
 using Android.OS;
 using AInputMethods = Android.Views.InputMethods;
 using Android.Runtime;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System;
+using System.Linq;
+using Microsoft.Maui.Graphics;
 
 namespace Spixi.Platforms.Android.Renderers;
 

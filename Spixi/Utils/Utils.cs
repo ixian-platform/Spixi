@@ -2,6 +2,8 @@
 using IXICore.Meta;
 using IXICore.Streaming;
 using Spixi;
+using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 

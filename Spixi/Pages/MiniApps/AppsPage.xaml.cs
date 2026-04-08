@@ -1,10 +1,9 @@
 ﻿using SPIXI.MiniApps;
-using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
-using System.Linq;
-using System.Text;
 using System.Web;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Controls;
 
 namespace SPIXI
 {

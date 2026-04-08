@@ -1,6 +1,7 @@
 ﻿using IXICore;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using Plugin.Fingerprint.Abstractions;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;

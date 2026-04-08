@@ -1,9 +1,12 @@
 ﻿using Foundation;
 using IXICore.Meta;
 using IXICore.Streaming;
+using Microsoft.Maui.ApplicationModel;
 using OneSignalSDK.DotNet;
 using OneSignalSDK.DotNet.Core.Debug;
 using SPIXI;
+using System;
+using System.Threading.Tasks;
 using UIKit;
 using UserNotifications;
 using OneSignalNative = Com.OneSignal.iOS.OneSignal;

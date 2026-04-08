@@ -3,6 +3,11 @@ using SPIXI.Interfaces;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing;
+using System.Threading.Tasks;
+using Microsoft.Maui.Storage;
+using System.IO;
+using System;
+using System.Linq;
 
 namespace Spixi
 {

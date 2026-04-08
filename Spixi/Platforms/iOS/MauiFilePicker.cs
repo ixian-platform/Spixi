@@ -7,7 +7,14 @@
 // - Custom FileResult implementation compatible with .NET MAUI 10
 
 using Foundation;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
 using MobileCoreServices;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using UIKit;
 
 namespace Spixi.Platform.iOS

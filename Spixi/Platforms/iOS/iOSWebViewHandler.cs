@@ -1,4 +1,3 @@
-using Foundation;
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Maui.Handlers;
@@ -53,7 +52,7 @@ namespace Spixi.Platforms.iOS
                 assistantItem.LeadingBarButtonGroups = Array.Empty<UIBarButtonItemGroup>();
                 assistantItem.TrailingBarButtonGroups = Array.Empty<UIBarButtonItemGroup>();
             }
- 
+
             // Try swizzling WKContentView's inputAccessoryView to return nil
             TrySwizzleInputAccessoryView();
         }

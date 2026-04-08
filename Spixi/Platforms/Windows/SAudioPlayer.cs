@@ -3,6 +3,7 @@ using NAudio.Wave;
 using IXICore.Meta;
 using Spixi.VoIP;
 using NAudio.CoreAudioApi;
+using System;
 
 namespace Spixi
 {

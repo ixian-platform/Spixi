@@ -1,6 +1,8 @@
 ﻿using IXICore.Meta;
 using IXICore.Storage;
 using IXICore.Streaming;
+using System;
+using System.IO;
 
 namespace SPIXI.Meta
 {

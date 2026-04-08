@@ -1,5 +1,7 @@
 ﻿using IXICore;
 using IXICore.Streaming;
+using Microsoft.Maui.Controls;
+using System.Linq;
 
 namespace SPIXI
 {

@@ -1,5 +1,9 @@
 ﻿using IXICore.Streaming;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using SPIXI.Meta;
+using System;
+using System.Linq;
 using System.Web;
 
 namespace SPIXI

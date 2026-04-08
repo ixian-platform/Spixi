@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Activity;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SPIXI.MiniApps.ActionRequestModels
 {

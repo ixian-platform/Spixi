@@ -9,6 +9,12 @@ using System.Text;
 using System.Web;
 using IXICore.Streaming;
 using SPIXI.MiniApps.ActionResponseModels;
+using Microsoft.Maui.ApplicationModel;
+using System;
+using System.Net.Http;
+using System.Linq;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 
 
 namespace SPIXI

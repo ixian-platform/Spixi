@@ -3,6 +3,7 @@ using IXICore.Activity;
 using IXICore.Meta;
 using IXICore.Streaming;
 using IXICore.Utils;
+using System.Linq;
 
 namespace SPIXI.Meta
 {

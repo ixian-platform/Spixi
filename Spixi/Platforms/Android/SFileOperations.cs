@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Android.OS;
 using Android.Webkit;
 using IXICore.Meta;
 using Java.IO;
+using Microsoft.Maui.Storage;
 using SPIXI.Lang;
 using File = Java.IO.File;
 

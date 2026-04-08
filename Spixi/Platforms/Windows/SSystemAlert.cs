@@ -1,4 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Microsoft.Maui.Controls;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Spixi

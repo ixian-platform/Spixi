@@ -4,6 +4,12 @@ using IXICore.Streaming;
 using IXICore.Utils;
 using System.IO.Compression;
 using System.Net.Http.Headers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Net.Http;
 using System.Text;
 
 namespace SPIXI.MiniApps

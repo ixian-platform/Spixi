@@ -1,8 +1,13 @@
 ﻿using IXICore.Meta;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
+using System;
+using System.IO;
+using System.Linq;
 using System.Web;
 
 namespace SPIXI

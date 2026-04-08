@@ -4,6 +4,9 @@ using Android.Media.Audiofx;
 using Android.OS;
 using IXICore.Meta;
 using SPIXI.VoIP;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Spixi
 {

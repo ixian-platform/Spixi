@@ -7,6 +7,10 @@ using IXICore.Network.Messages;
 using IXICore.Streaming;
 using IXICore.Utils;
 using SPIXI.Meta;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 
 namespace SPIXI.Network

@@ -2,6 +2,8 @@
 using Foundation;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
+using System;
+using System.IO;
 
 namespace Spixi
 {

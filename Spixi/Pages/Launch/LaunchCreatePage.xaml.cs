@@ -1,10 +1,15 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Storage;
 using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;

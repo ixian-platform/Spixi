@@ -1,7 +1,10 @@
 ﻿using Foundation;
 using IXICore.Meta;
+using Microsoft.Maui;
+using Microsoft.Maui.Hosting;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using System.IO;
 using UIKit;
 
 namespace Spixi;

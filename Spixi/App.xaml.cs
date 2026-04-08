@@ -2,10 +2,18 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Streaming;
+using Microsoft.Maui;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
 using SPIXI;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using System;
 using System.Globalization;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Spixi;
 
@@ -254,7 +262,7 @@ public partial class App : Application
         Node.resume();
     }
 
-    protected override Window CreateWindow(IActivationState activationState)
+    protected override Window CreateWindow(IActivationState? activationState)
     {
         var window = base.CreateWindow(activationState);
         if (window != null)

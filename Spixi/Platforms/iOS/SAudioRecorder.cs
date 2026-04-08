@@ -3,7 +3,10 @@ using AVFoundation;
 using Foundation;
 using IXICore.Meta;
 using SPIXI.VoIP;
+using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Spixi
 {
