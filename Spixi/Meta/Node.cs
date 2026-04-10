@@ -70,10 +70,6 @@ namespace SPIXI.Meta
             {
                 throw new Exception("Node instance already exists!");
             }
-#if DEBUG
-            Logging.warn("Testing language files");
-            //  Lang.SpixiLocalization.testLanguageFiles("en-us");
-#endif
             Logging.info("Initing node constructor");
             Instance = this;
 

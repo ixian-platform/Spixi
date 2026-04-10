@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31611.283
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spixi", "Spixi\Spixi.csproj", "{63B997DA-ECD2-469F-8262-957A3A69649E}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IXICore", "..\Ixian-Core\IXICore.shproj", "{80487C64-619A-4B60-97BD-ED7670BF45B3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spixi-PushService", "Spixi-PushService\Spixi-PushService.csproj", "{A3DD869B-F356-433B-87B9-589FE5C1A283}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spixi-UnitTests", "Spixi-UnitTests\Spixi-UnitTests.csproj", "{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,14 @@ Global
 		{A3DD869B-F356-433B-87B9-589FE5C1A283}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A3DD869B-F356-433B-87B9-589FE5C1A283}.Release|x64.ActiveCfg = Release|Any CPU
 		{A3DD869B-F356-433B-87B9-589FE5C1A283}.Release|x64.Build.0 = Release|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Debug|x64.Build.0 = Debug|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Release|x64.ActiveCfg = Release|Any CPU
+		{98CE7D22-2EA4-4E2E-A1B6-50CB51915392}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -223,9 +223,9 @@ namespace SPIXI.Lang
             return lines;
         }
 
-        private static Dictionary<string, (int argCount, string localizedString)> testFile(string path)
+        private static Dictionary<string, (int argCount, string localizedString)>? testFile(string path)
         {
-            Dictionary<string, (int, string)> keys = new Dictionary<string, (int, string)>();
+            Dictionary<string, (int, string)>? keys = new Dictionary<string, (int, string)>();
 
             Stream file_stream = SPlatformUtils.getAsset(path);
 
@@ -238,8 +238,10 @@ namespace SPIXI.Lang
             while (!sr.EndOfStream)
             {
                 line_count++;
-                string line = sr.ReadLine().Trim();
-                if (line == "" || line.StartsWith(";"))
+                string? line = sr.ReadLine()?.Trim();
+                if (line == null
+                    || line == ""
+                    || line.StartsWith(";"))
                 {
                     continue;
                 }
@@ -254,9 +256,9 @@ namespace SPIXI.Lang
 
                 last_key = line.Substring(0, sep_index).Trim();
                 string value = line.Substring(sep_index + 1).Trim();
-                if (last_key == "" || value == "")
+                if (last_key == "")
                 {
-                    Logging.error("Language file " + path + " error on line: " + line_count + ", key or value is empty/null");
+                    Logging.error("Language file " + path + " error on line: " + line_count + ", key is empty/null");
                     keys = null;
                     break;
                 }
@@ -282,12 +284,23 @@ namespace SPIXI.Lang
             file_stream.Close();
             file_stream.Dispose();
 
+            if (keys?.Count == 0)
+            {
+                return null;
+            }
+
             return keys;
         }
 
-        public static void testLanguageFiles(string ref_language)
+        public static bool testLanguageFiles(string ref_language)
         {
             var ref_keys = testFile(Path.Combine("lang", ref_language + ".txt"));
+            if (ref_keys == null || ref_keys.Count == 0)
+            {
+                Logging.error("Reference language file " + ref_language + " is empty or invalid");
+                return false;
+            }
+            bool success = true;
             foreach(var language in languages)
             {
                 if(language == ref_language)
@@ -295,25 +308,49 @@ namespace SPIXI.Lang
                     continue;
                 }
                 var test_keys = testFile(Path.Combine("lang", language + ".txt"));
-                foreach(var ref_key in ref_keys)
+                if (test_keys == null || test_keys.Count == 0)
+                {
+                    Logging.error(language + " is empty or invalid");
+                    success = false;
+                    continue;
+                }
+                foreach (var ref_key in ref_keys)
                 {
                     if(!test_keys.ContainsKey(ref_key.Key))
                     {
-                        Logging.error("Language file " + language + " error, missing key: " + ref_key.Key);
+                        Logging.error(language + " error, missing key: " + ref_key.Key);
+                        success = false;
+                        continue;
+                    }
+                    if (ref_key.Value.localizedString != ""
+                        && test_keys[ref_key.Key].localizedString == "")
+                    {
+                        Logging.error(language + " error, empty value for key: " + ref_key.Key);
+                        success = false;
                         continue;
                     }
                     if (test_keys[ref_key.Key].argCount != ref_key.Value.argCount)
                     {
-                        Logging.error("Language file " + language + " error, invalid number of arguments for key " + ref_key.Key);
+                        Logging.error(language + " error, invalid number of arguments for key " + ref_key.Key);
+                        success = false;
                         continue;
                     }
                     if (test_keys[ref_key.Key].localizedString == ref_key.Value.localizedString)
                     {
-                        Logging.warn("Language file " + language + " warn, value is the same as reference value for key " + ref_key.Key);
-                        continue;
+                        var refValue = ref_key.Value.localizedString.ToLower();
+                        if (refValue != "spixi"
+                            && refValue != "..."
+                            && refValue != ""
+                            && refValue != "id"
+                            && refValue != "min"
+                            && refValue != "1 min")
+                        {
+                            Logging.warn(language + " warn, value is the same as reference value for key " + ref_key.Key + " = " + ref_key.Value.localizedString);
+                        }
                     }
                 }
             }
+            return success;
         }
     }
 }

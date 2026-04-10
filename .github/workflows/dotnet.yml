@@ -40,5 +40,6 @@ jobs:
     - name: Building Spixi
       run: dotnet build Spixi/Spixi.csproj -f net10.0-windows10.0.19041.0 -p:Platform=x64 -v:n
 
-    #- name: Running Unit Tests
-    #  run: dotnet test UnitTests\bin\Debug\unittests.dll --verbosity normal
+    - name: Running Unit Tests
+      run: dotnet test Spixi.sln --verbosity normal
+
