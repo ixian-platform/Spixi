@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Med nameščanjem aplikacije je prišlo do n
 apps-title = Mini Aplikacije
 apps-empty = Nimate nameščenih aplikacij.
 apps-apps-text = Aplikacije
-apps-not-sure-text = Niste prepričani, kje začeti? Obiščite <a href="ixian:spixiAppsLink">{0}</a> za raziskovanje Spixi Mini aplikacij.
+apps-not-sure-text = Niste prepričani, kje začeti? Obiščite <a href='ixian:spixiAppsLink'>{0}</a> za raziskovanje Spixi Mini aplikacij.
 apps-launch = Zaženi
 apps-launch-app = Zaženi aplikacijo
 apps-remove-app = Odstrani to aplikacijo
@@ -98,8 +98,8 @@ app-action-error-sending-title = Napaka pri pošiljanju odgovora
 app-action-error-sending = Napaka pri pošiljanju odgovora storitvi {0}.
 app-action-sent = Dejanje aplikacije poslano
 app-action-response-confirmation = Ali želite poslati naslednje podatke storitvi? {0}
-app-action-response-payment-user-confirmation = Uporabnik zahteva plačilo v višini {0}. Ali želite poslati to plačilo?
-app-action-response-payment-service-confirmation = Storitev zahteva plačilo v višini {0}. Ali želite poslati to plačilo?
+app-action-response-payment-user-confirmation = {0} zahteva plačilo v višini {1}. Ali želite poslati to plačilo?
+app-action-response-payment-service-confirmation = {0} zahteva plačilo v višini {1}. Ali želite poslati to plačilo?
 
 ; Chat Screen
 chat-sent-contact-request = je poslal zahtevo za stik

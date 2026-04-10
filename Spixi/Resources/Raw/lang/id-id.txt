@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Terjadi kesalahan saat memasang aplikasi.
 apps-title = Aplikasi Spixi
 apps-empty = Anda tidak memiliki aplikasi yang terpasang.
 apps-apps-text = Aplikasi
-apps-not-sure-text = Tidak yakin harus mulai dari mana? Kunjungi <a href="ixian:spixiAppsLink">{0}</a> untuk menjelajahi Mini Apps Spixi.
+apps-not-sure-text = Tidak yakin harus mulai dari mana? Kunjungi <a href='ixian:spixiAppsLink'>{0}</a> untuk menjelajahi Mini Apps Spixi.
 apps-launch = Luncurkan
 apps-launch-app = Luncurkan Aplikasi
 apps-remove-app = Hapus Aplikasi Ini
@@ -409,7 +409,7 @@ settings-deletea-text = Apakah Anda yakin ingin menghapus akun Spixi Anda?<br/><
 settings-deleteda-title = Dihapus
 settings-deleteda-text = Akun Spixi telah dihapus.
 settings-wallet-settings = Pengaturan Dompet
-settings-wallet-description = Dompet Anda dikaitkan dengan akun Spixi Anda. Untuk menghapus dompet, akun, dan semua riwayat pembayaran di perangkat ini, ketuk tombol "Hapus Dompet Saya" di bawah. 
+settings-wallet-description = Dompet Anda dikaitkan dengan akun Spixi Anda. Untuk menghapus dompet, akun, dan semua riwayat pembayaran di perangkat ini, ketuk tombol 'Hapus Dompet Saya' di bawah. 
 settings-wallet-delete = HAPUS DOMPET MILIK SAYA
 settings-deletew-title = Hapus dompet ini?
 settings-deletew-text = Apakah Anda yakin ingin menghapus dompet Anda?<br/><br/>Tindakan ini tidak dapat dibatalkan! Dengan menghapus dompet ini, Anda akan kehilangan akses ke semua dana yang ada di dalamnya! Untuk memulihkan dompet ini, Anda memerlukan file cadangan dan kata sandi enkripsi!

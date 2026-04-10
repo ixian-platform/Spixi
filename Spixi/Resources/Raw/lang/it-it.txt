@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Si è verificato un errore durante l'install
 apps-title = Spixi Apps
 apps-empty = Non hai alcuna app installata.
 apps-apps-text = App
-apps-not-sure-text = Non sai da dove iniziare? Visita <a href="ixian:spixiAppsLink">{0}</a> per esplorare le Mini App di Spixi.
+apps-not-sure-text = Non sai da dove iniziare? Visita <a href='ixian:spixiAppsLink'>{0}</a> per esplorare le Mini App di Spixi.
 apps-launch = Avvia
 apps-launch-app = Avvia App
 apps-remove-app = Rimuovi Questa App
@@ -98,8 +98,8 @@ app-action-error-sending-title = Errore nell'invio della risposta all'azione
 app-action-error-sending = Errore nell'invio della risposta dell'azione al servizio {0}.
 app-action-sent = Azione dell'app inviata
 app-action-response-confirmation = Vuoi inviare i seguenti dati al servizio? {0}
-app-action-response-payment-user-confirmation = L'utente sta richiedendo un pagamento di {0}. Vuoi inviare questo pagamento?
-app-action-response-payment-service-confirmation = Il servizio sta richiedendo un pagamento di {0}. Vuoi inviare questo pagamento?
+app-action-response-payment-user-confirmation = {0} richiede un pagamento di {1}. Vuoi autorizzare questo pagamento?
+app-action-response-payment-service-confirmation = {0} richiede un pagamento di {1}. Vuoi autorizzare questo pagamento?
 
 ; Schermata Chat
 chat-sent-contact-request = ha inviato una richiesta di contatto

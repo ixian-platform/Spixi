@@ -37,7 +37,7 @@ app-new-dialog-installfailed-text = Ein Fehler ist beim Installieren der App auf
 apps-title = Spixi Apps
 apps-empty = Du hast keine Apps installiert.
 apps-apps-text = Apps
-apps-not-sure-text = Du bist dir nicht sicher, wo du anfangen sollst? Besuche <a href="ixian:spixiAppsLink">{0}</a>, um Spixi Mini-Apps zu entdecken.
+apps-not-sure-text = Du bist dir nicht sicher, wo du anfangen sollst? Besuche <a href='ixian:spixiAppsLink'>{0}</a>, um Spixi Mini-Apps zu entdecken.
 apps-launch = Starten
 apps-launch-app = App starten
 apps-remove-app = Diese App entfernen
@@ -98,8 +98,8 @@ app-action-error-sending-title = Fehler beim Senden der Antwort
 app-action-error-sending = Fehler beim Senden der Antwort an den Dienst {0}.
 app-action-sent = App-Aktion gesendet
 app-action-response-confirmation = Möchtest du dem Dienst folgende Daten senden? {0}
-app-action-response-payment-user-confirmation = Der Benutzer fordert eine Zahlung von {0} an. Möchten Sie diese Zahlung senden?
-app-action-response-payment-service-confirmation = Der Dienst fordert eine Zahlung von {0} an. Möchten Sie diese Zahlung senden?
+app-action-response-payment-user-confirmation = {0} fordert eine Zahlung von {1} an. Möchten Sie diese Zahlung autorisieren?
+app-action-response-payment-service-confirmation = {0} fordert eine Zahlung von {1} an. Möchten Sie diese Zahlung autorisieren?
 
 ; Chat Screen
 chat-sent-contact-request = hat dir eine Kontaktanfrage gesendet
@@ -404,7 +404,7 @@ settings-account-nick-edit = Spitzname
 settings-account-nick-placeholder = Neuen Spitznamen eingeben
 settings-account-deleteinfo = Du kannst dieses Spixi-Konto und alle zugehörigen Daten jederzeit dauerhaft von diesem Gerät löschen. <b>Wichtig:</b> Nach dem Löschen musst du ein Konto erstellen oder wiederherstellen, um Spixi weiter zu nutzen.
 settings-account-delete = Konto löschen
-settings-deletea-title = Delete This Spixi Account?
+settings-deletea-title = Diesen Spixi-Account löschen?
 settings-deletea-text = Bist du sicher, dass du dieses Spixi-Konto löschen möchtest?<br/><br/>Diese Aktion ist nicht umkehrbar! Es wird empfohlen, dieses Konto vor dem Löschen zu sichern. Du benötigst die Sicherungsdatei, falls du später wieder Zugriff auf dieses Konto erhalten möchtest.
 settings-deleteda-title = Gelöscht
 settings-deleteda-text = Spixi-Konto wurde gelöscht.
