@@ -101,14 +101,13 @@ namespace SPIXI
                 try
                 {
                     ext_recipient_address = new ExtendedAddress(address);
+
+                    Utils.sendUiCommand(this, "onValidAddress");
                 }
                 catch (Exception ex)
                 {
                     Logging.error("Invalid address format: " + ex.Message);
-                    return;
                 }
-
-                Utils.sendUiCommand(this, "onValidAddress");
             }
             else
             {

@@ -385,7 +385,7 @@ namespace SPIXI
         {
             foreach (Address address in userAddresses)
             {
-                Friend f = FriendList.getFriend(address);
+                Friend? f = FriendList.getFriend(address);
                 if (f != null)
                 {
                     StreamProcessor.sendAppData(f, sessionId, data);
@@ -402,7 +402,7 @@ namespace SPIXI
         {
             foreach (Address address in userAddresses)
             {
-                Friend f = FriendList.getFriend(address);
+                Friend? f = FriendList.getFriend(address);
                 if (f != null)
                 {
                     StreamProcessor.sendAppProtocolData(f, protocolId, data);

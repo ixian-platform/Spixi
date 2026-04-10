@@ -1254,7 +1254,7 @@ namespace SPIXI
                 }
 
                 if (page == this
-                    && detailContent is not null and SpixiContentPage)
+                    && detailContent is not null)
                 {
                     ((SpixiContentPage)detailContent).updateScreen();
                 }
