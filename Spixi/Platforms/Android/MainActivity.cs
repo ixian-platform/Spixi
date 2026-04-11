@@ -15,9 +15,9 @@ using SPIXI.Interfaces;
 using SPIXI.Lang;
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using View = Android.Views.View;
+
 namespace Spixi;
 
 [Activity(Label = "Spixi",
@@ -43,6 +43,7 @@ public class MainActivity : MauiAppCompatActivity
 
     public TaskCompletionSource<SpixiImageData> PickImageTaskCompletionSource { set; get; }
     internal static MainActivity Instance { get; private set; }
+    public static Thickness? Insets = null;
     protected override void OnCreate(Bundle? bundle)
     {
         Instance = this;
@@ -117,6 +118,7 @@ public class MainActivity : MauiAppCompatActivity
             }
         }
     }
+
     private void SaveFileToUri(Android.Net.Uri uri, string filePath)
     {
         try
@@ -162,14 +164,24 @@ public class MainActivity : MauiAppCompatActivity
     {
         public WindowInsetsCompat? OnApplyWindowInsets(View? v, WindowInsetsCompat? insets)
         {
+            if (insets == null)
+            {
+                return null;
+            }
+
             // Get system bars (status + navigation) and IME (keyboard) insets
             var sysInsets = insets.GetInsets(WindowInsetsCompat.Type.SystemBars());
             var imeInsets = insets.GetInsets(WindowInsetsCompat.Type.Ime());
 
-            if (v is ViewGroup vg)
+            if (sysInsets != null && imeInsets != null)
             {
-                // Apply top padding for status bar, bottom padding for keyboard
-                vg.SetPadding(0, sysInsets.Top, 0, Math.Max(imeInsets.Bottom, sysInsets.Bottom));
+                if (v is ViewGroup vg)
+                {
+                    // Apply top padding for status bar, bottom padding for keyboard
+                    vg?.SetPadding(0, sysInsets.Top, 0, Math.Max(imeInsets.Bottom, sysInsets.Bottom));
+                }
+
+                Insets = new Thickness(sysInsets.Left, sysInsets.Top, sysInsets.Right, Math.Max(imeInsets.Bottom, sysInsets.Bottom));
             }
 
             return WindowInsetsCompat.Consumed; // We've handled insets manually

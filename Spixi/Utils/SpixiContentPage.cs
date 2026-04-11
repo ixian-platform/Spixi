@@ -18,11 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Maui;
 
-
-
-
-
-
 #if IOS || MACCATALYST
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
@@ -127,6 +122,21 @@ namespace SPIXI
             // Apply padding to the page itself
             this.Padding = new Thickness(0, insets.Top, 0, 10);
 
+            this.BackgroundColor = ThemeManager.getBackgroundColor();
+#endif
+#if ANDROID
+            // Fix edge-to-edge on Android 15 for modals
+            if (OperatingSystem.IsAndroidVersionAtLeast(35))
+            {
+                bool isModal = Navigation.ModalStack.Contains(this);
+                if (isModal)
+                {
+                    if (MainActivity.Insets != null)
+                    {
+                        this.Padding = new Thickness(0, MainActivity.Insets.Value.Top / 3, 0, 0);
+                    }
+                }
+            }
             this.BackgroundColor = ThemeManager.getBackgroundColor();
 #endif
 
