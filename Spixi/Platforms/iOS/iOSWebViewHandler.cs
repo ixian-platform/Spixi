@@ -78,6 +78,10 @@ namespace Spixi.Platforms.iOS
                     {
                         "trigger": { "url-filter": "https://[A-Za-z0-9]+\\.giphy\\.com/[A-Za-z0-9_/=%\\?\\-\\.\\&]+" },
                         "action": { "type": "ignore-previous-rules" }
+                    },
+                    {
+                        "trigger": { "url-filter": "https://apps\\.spixi\\.io/[A-Za-z0-9_/=%\\?\\-\\.\\&]+" },
+                        "action": { "type": "ignore-previous-rules" }
                     }
                 ]
                 """,

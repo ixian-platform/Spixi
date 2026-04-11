@@ -855,12 +855,11 @@ img.emoji {
 
 .spixi-descriptionbar-row-icon {
     text-align: center;
-    width: 16px;
+    width: auto;
     font-size: 16px;
 }
 
 .spixi-descriptionbar-row-details {
-    padding-right: 30px;
     font-size: 14px;
 }
 
@@ -1026,7 +1025,7 @@ img.emoji {
     box-sizing: border-box;
     background: var(--colors-text-select);
     position: absolute;
-    margin: 6px 40% 18px 60%;
+    margin: 6px 10px 18px 30px;
     border: 1px solid var(--colors-outline-01);
 }
 
@@ -1524,6 +1523,9 @@ img.emoji {
     font-size: 14px;
     line-height: 20px;
     color: var(--colors-text-01);
+    word-break: break-all;
+    width: 232px;
+    margin: 0 auto;
 }
 
 .spixi-text-address:hover {
@@ -2051,9 +2053,6 @@ img.emoji {
 }
 
 .spixi-list-item-left {
-    display: inline-block;
-    width: 50pt;
-    max-width: 64px;
     vertical-align: middle;
 }
 
@@ -2063,8 +2062,6 @@ img.emoji {
 }
 
 .spixi-list-item-center {
-    display: inline-block;
-    width: 100%;
     box-sizing: border-box;
     vertical-align: middle;
 }
@@ -2815,6 +2812,7 @@ img.emoji {
     -webkit-user-select: text;
     user-select: text;
     color: var(--colors-text-01);
+    cursor: auto;
 }
 
 #chat_input.placeholder::before {
@@ -3591,7 +3589,6 @@ img.emoji {
     overflow: auto;
 }
 
-
 .spixi-popbutton {
     width: 150px;
     height: 40px;
@@ -4106,7 +4103,7 @@ img.emoji {
 }
 
 .important-notice-container.extended {
-    max-height: 124px;
+    max-height: unset;
     align-items: flex-start;
 
     .important-notice-text {
@@ -4115,7 +4112,7 @@ img.emoji {
         & > span:nth-child(2),
         span:nth-child(3) {
             opacity: 1;
-            max-height: 100px;
+            max-height: unset;
             transition: opacity 0.1s ease, max-height 0.1s ease;
         }
     }
@@ -4258,6 +4255,10 @@ img.emoji {
     color: var(--colors-text-link);
     font-weight: bold;
     text-decoration: underline;
+}
+
+.primary-guide-container i {
+    color: var(--colors-text-01);
 }
 
 .add-new-app-floating-btn {
@@ -4413,8 +4414,6 @@ img.emoji {
     color: var(--colors-text-01);
     gap: 4px;
     align-items: center;
-    width: 100%;
-    max-width: 90px;
 }
 
 .single-attach-bar-item > i {
@@ -4422,6 +4421,8 @@ img.emoji {
     border-radius: 12px;
     color: var(--colors-icon-on-action);
     cursor: pointer;
+    width: auto;
+    display: inline-flex;
 }
 
 .iconApp {
@@ -4601,12 +4602,12 @@ img.emoji {
 
 .payment-data-row-amount .heading-sm {
     background-image: url('../img/ixicash.svg');
-    width: 80px;
+    width: 100%;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 0px -1px;
     margin: auto;
-    padding-left: 24px;
+    padding-left: 26px;
     font-size: 20px !important;
     font-style: normal;
     font-weight: 400;

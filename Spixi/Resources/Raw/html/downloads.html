@@ -79,7 +79,7 @@
 
             var appEntry = document.createElement("div");
             appEntry.className = "spixi-list-item";
-            appEntry.innerHTML = '<a href="ixian:open:' + name + '"><div class="row"><div class="col-2 spixi-list-item-left">' + iconHtml + '</div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><div onclick="' + deleteAction + '"><i class="fa fa-trash spixi-list-item-action-icon"></i></div></div></div></a>';
+            appEntry.innerHTML = '<a href="ixian:open:' + name + '"><div class="row"><div class="col-1 spixi-list-item-left">' + iconHtml + '</div><div class="col-10 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-1 spixi-list-item-right"><div onclick="' + deleteAction + '"><i class="fa fa-trash spixi-list-item-action-icon"></i></div></div></div></a>';
 
             var appsNode = document.getElementById("DownloadList");
             appsNode.appendChild(appEntry);
