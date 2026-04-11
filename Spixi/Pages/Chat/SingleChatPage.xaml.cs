@@ -171,8 +171,6 @@ namespace SPIXI
 
                 FriendMessage fm = friend.getMessages(selectedChannel).Find(x => x.transferId == id);
 
-                // Open file in default app. May not work, check https://forums.xamarin.com/discussion/103042/how-to-open-pdf-or-txt-file-in-default-app-on-xamarin-forms
-                //Device.OpenUri(new Uri(transfer.filePath));
                 if (File.Exists(fm.filePath))
                 {
                     SFileOperations.open(fm.filePath);
@@ -500,6 +498,7 @@ namespace SPIXI
             }
 
             UIHelpers.refreshAppRequests = true;
+            UIHelpers.shouldRefreshContacts = true;
             warningDisplayed = false;
             unreadIndicatorDisplayed = false;
             setNickname = "";
@@ -1396,14 +1395,13 @@ namespace SPIXI
                 if (!friend.bot)
                 {
                     // Send read confirmation
-                    StreamMessage msg_received = new StreamMessage(friend.protocolVersion);
-                    msg_received.type = StreamMessageCode.info;
-                    msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                    msg_received.recipient = friend.walletAddress;
-                    msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id, selectedChannel).getBytes();
+                    StreamMessage msg_read = new StreamMessage(friend.protocolVersion);
+                    msg_read.type = StreamMessageCode.info;
+                    msg_read.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+                    msg_read.recipient = friend.walletAddress;
+                    msg_read.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id, selectedChannel).getBytes();
                     
-                    // TODO TODO TODO change remove_after_sending parameter to false after a few releases
-                    StreamProcessor.sendMessage(friend, msg_received, true, true, false, true);
+                    StreamProcessor.sendMessage(friend, msg_read, true, true, false, false);
                 }
             }
         }
