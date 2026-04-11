@@ -167,8 +167,9 @@ namespace SPIXI
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
+            e.Cancel = true;
 
-            if(onNavigatingGlobal(current_url))
+            if (onNavigatingGlobal(current_url))
             {
                 e.Cancel = true;
                 return;

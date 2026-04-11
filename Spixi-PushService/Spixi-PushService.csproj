@@ -1,42 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" Condition="$(TargetFramework.Contains('-ios'))">
-  <PropertyGroup>
-    <TargetFrameworks>net10.0-ios</TargetFrameworks>
-    <OutputType>Library</OutputType>
+	<PropertyGroup>
+		<TargetFrameworks>net10.0-ios</TargetFrameworks>
+		<OutputType>Library</OutputType>
 
-    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
 
-    <ApplicationId>com.ixilabs.spixi.Spixi-PushService</ApplicationId>
+		<ApplicationId>com.ixilabs.spixi.Spixi-PushService</ApplicationId>
 
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
 
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
-  </PropertyGroup>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <IsAppExtension>True</IsAppExtension>
-    <IsWatchExtension>False</IsWatchExtension>
-  </PropertyGroup>
+	<PropertyGroup>
+		<IsAppExtension>True</IsAppExtension>
+		<IsWatchExtension>False</IsWatchExtension>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <ProvisioningType>manual</ProvisioningType>
-    <CodesignProvision></CodesignProvision>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
+		<CodesignKey>iPhone Developer</CodesignKey>
+		<ProvisioningType>manual</ProvisioningType>
+		<CodesignProvision></CodesignProvision>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="!$(TargetFramework.Contains('-ios'))">
+	<PropertyGroup Condition="!$(TargetFramework.Contains('-ios'))">
 		<BuildProject>false</BuildProject>
 	</PropertyGroup>
-	
-  <!-- strip exited with code 139 workaround - https://github.com/xamarin/xamarin-macios/issues/19157 -->
-  <PropertyGroup>
-    <MtouchNoSymbolStrip Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">True</MtouchNoSymbolStrip>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="OneSignalSDK.DotNet" Version="5.2.2" />
-  </ItemGroup>
+	<PropertyGroup>
+		<MtouchNoSymbolStrip Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">True</MtouchNoSymbolStrip>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="OneSignalSDK.DotNet" Version="5.2.2" />
+	</ItemGroup>
 </Project>

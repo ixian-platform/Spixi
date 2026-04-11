@@ -56,10 +56,7 @@
 
             <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
 
-            <div id="wal1" class="spixi-text-address">*SL{address-gen-1b}</div>
-            <div id="wal2" class="spixi-text-address">*SL{address-gen-2b}</div>
-            <div id="wal3" class="spixi-text-address">*SL{address-gen-3}</div>
-            <div id="wal4" class="spixi-text-address">*SL{address-gen-4}</div>
+            <div id="wal1" class="spixi-text-address">*SL{address-gen-1}</div>
 
             <hr class="spixi-separator" />
             <div class="spixi-sectionbar-txid spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> *SL{address-tooltip}</div>
@@ -147,12 +144,7 @@
         function setAddress(addr) {
             wal_id = addr;
             generateQR();
-            var parts = addr.match(/.{1,17}/g) || [];
-            document.getElementById("wal1").innerHTML = parts[0];
-            document.getElementById("wal2").innerHTML = parts[1];
-            document.getElementById("wal3").innerHTML = parts[2];
-            document.getElementById("wal4").innerHTML = parts[3];
-
+            document.getElementById("wal1").innerHTML = wal_id;
         }
 
         function generateQR() {

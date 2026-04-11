@@ -180,7 +180,6 @@
                 <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
 
                 <div id="wal1" class="spixi-text-address">*SL{address-gen-1}</div>
-                <div id="wal2" class="spixi-text-address">*SL{address-gen-2}</div>
 
                 <div class="row address_actionbuttons">
                     <div class="col">
@@ -564,10 +563,8 @@
 
     function setAddress(addr) {
         wal_id = addr;
-        var parts = addr.match(/.{1,34}/g) || [];
         document.getElementById("user-address").innerHTML = maskWalletAddress(wal_id);
-        document.getElementById("wal1").innerHTML = parts[0];
-        document.getElementById("wal2").innerHTML = parts[1];
+        document.getElementById("wal1").innerHTML = wal_id;
         generateQR();
     }
 

@@ -1,405 +1,405 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);__MOBILE__</DefineConstants>
-    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst;net10.0-windows10.0.19041.0</TargetFrameworks>
-    <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-    <!-- <TargetFrameworks>$(TargetFrameworks);net10.0-tizen</TargetFrameworks> -->
-    <!-- Note for MacCatalyst:
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);__MOBILE__</DefineConstants>
+		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst;net10.0-windows10.0.19041.0</TargetFrameworks>
+		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net10.0-tizen</TargetFrameworks> -->
+		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
 		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
 		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
-    <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Spixi</RootNamespace>
-    <UseMaui>true</UseMaui>
-    <SingleProject>true</SingleProject>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <!-- Display name -->
-    <ApplicationTitle>Spixi</ApplicationTitle>
-    <!-- App Identifier -->
-    <ApplicationId>com.ixilabs.spixi</ApplicationId>
-    <!-- Versions -->
-    <ApplicationDisplayVersion>0.9.16</ApplicationDisplayVersion>
-    <ApplicationVersion>160009160</ApplicationVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-    <DefaultLanguage>en</DefaultLanguage>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-    <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <Platforms>AnyCPU;x64;arm64</Platforms>
-  </PropertyGroup>
-  <PropertyGroup>
-    <MtouchLink>SdkOnly</MtouchLink>
-  </PropertyGroup>
-  <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
-    <NativeReference Include="Platforms/iOS/NativeLibraries/RocksDB.xcframework/ios-arm64/librocksdb_full.a">
-      <Kind>Static</Kind>
-      <ForceLoad>true</ForceLoad>
-      <IsCxx>true</IsCxx>
-    </NativeReference>
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
-    <AndroidNativeLibrary Include="Platforms/Android/lib/arm64-v8a/librocksdb.so">
-      <Abi>arm64-v8a</Abi>
-    </AndroidNativeLibrary>
+		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+		<OutputType>Exe</OutputType>
+		<RootNamespace>Spixi</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<!-- Display name -->
+		<ApplicationTitle>Spixi</ApplicationTitle>
+		<!-- App Identifier -->
+		<ApplicationId>com.ixilabs.spixi</ApplicationId>
+		<!-- Versions -->
+		<ApplicationDisplayVersion>0.9.16</ApplicationDisplayVersion>
+		<ApplicationVersion>160009160</ApplicationVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<DefaultLanguage>en</DefaultLanguage>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<Platforms>AnyCPU;x64;arm64</Platforms>
+	</PropertyGroup>
+	<PropertyGroup>
+		<MtouchLink>SdkOnly</MtouchLink>
+	</PropertyGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<NativeReference Include="Platforms/iOS/NativeLibraries/RocksDB.xcframework/ios-arm64/librocksdb_full.a">
+			<Kind>Static</Kind>
+			<ForceLoad>true</ForceLoad>
+			<IsCxx>true</IsCxx>
+		</NativeReference>
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<AndroidNativeLibrary Include="Platforms/Android/lib/arm64-v8a/librocksdb.so">
+			<Abi>arm64-v8a</Abi>
+		</AndroidNativeLibrary>
 
-    <AndroidNativeLibrary Include="Platforms/Android/lib/armeabi-v7a/librocksdb.so">
-      <Abi>armeabi-v7a</Abi>
-    </AndroidNativeLibrary>
+		<AndroidNativeLibrary Include="Platforms/Android/lib/armeabi-v7a/librocksdb.so">
+			<Abi>armeabi-v7a</Abi>
+		</AndroidNativeLibrary>
 
-    <AndroidNativeLibrary Include="Platforms/Android/lib/x86_64/librocksdb.so">
-      <Abi>x86_64</Abi>
-    </AndroidNativeLibrary>
-  </ItemGroup>
+		<AndroidNativeLibrary Include="Platforms/Android/lib/x86_64/librocksdb.so">
+			<Abi>x86_64</Abi>
+		</AndroidNativeLibrary>
+	</ItemGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
-    <ProvisioningType>manual</ProvisioningType>
-    <CodesignKey>iPhone Developer</CodesignKey>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
-    <UseInterpreter>true</UseInterpreter>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
-    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
-    <RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
-    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
-    <TargetSdkVersion>35</TargetSdkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <SatelliteResourceLanguages>en-US;en</SatelliteResourceLanguages>
-    <AppxPackage>false</AppxPackage>
-    <PublishAppxPackage>false</PublishAppxPackage>
-    <WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
-    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-windows10.0.19041.0|x64'">
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-ios' and '$(IsPublish)' == 'true'">
-    <CodesignKey>iPhone Distribution</CodesignKey>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|x64'">
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|arm64'">
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
-  </PropertyGroup>
-  <!-- strip exited with code 139 workaround - https://github.com/xamarin/xamarin-macios/issues/19157 -->
-  <PropertyGroup>
-    <MtouchNoSymbolStrip Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">True</MtouchNoSymbolStrip>
-    <WindowsPackageType>None</WindowsPackageType>
-  </PropertyGroup>
-  <ItemGroup>
-    <!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#000000" />
-    <!-- Splash Screen -->
-    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#144576" BaseSize="128,128" />
-    <!-- Images -->
-    <MauiImage Include="Resources\Images\*" />
-    <!-- Custom Fonts -->
-    <MauiFont Include="Resources\Fonts\*" />
-    <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
-  <ItemGroup>
-    <MauiAsset Remove="Platforms\Android\Resources\values\styles.xml" />
-    <MauiAsset Remove="Resources\Splash\splash.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="CommunityToolkit.Maui" Version="14.0.1" />
-    <PackageReference Include="Concentus" Version="2.2.2" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.51" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.51" />
-    <PackageReference Include="Mono.Nat" Version="3.0.4" />
+	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<ProvisioningType>manual</ProvisioningType>
+		<CodesignKey>iPhone Developer</CodesignKey>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<UseInterpreter>true</UseInterpreter>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+		<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
+		<AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+		<TargetSdkVersion>35</TargetSdkVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<SatelliteResourceLanguages>en-US;en</SatelliteResourceLanguages>
+		<AppxPackage>false</AppxPackage>
+		<PublishAppxPackage>false</PublishAppxPackage>
+		<WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
+		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-windows10.0.19041.0|x64'">
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-ios' and '$(IsPublish)' == 'true'">
+		<CodesignKey>iPhone Distribution</CodesignKey>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|x64'">
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|arm64'">
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+	<!-- strip exited with code 139 workaround - https://github.com/xamarin/xamarin-macios/issues/19157 -->
+	<PropertyGroup>
+		<MtouchNoSymbolStrip Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">True</MtouchNoSymbolStrip>
+		<WindowsPackageType>None</WindowsPackageType>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#000000" />
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#144576" BaseSize="128,128" />
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+	<ItemGroup>
+		<MauiAsset Remove="Platforms\Android\Resources\values\styles.xml" />
+		<MauiAsset Remove="Resources\Splash\splash.svg" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="14.0.1" />
+		<PackageReference Include="Concentus" Version="2.2.2" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.51" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.51" />
+		<PackageReference Include="Mono.Nat" Version="3.0.4" />
 
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="OneSignalSDK.DotNet" Version="6.1.3" />
-    <PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
-    <!-- Android and IOS: exclude native assets, use custom built RocksDB-Sharp -->
-    <PackageReference Include="RocksDB" Version="0.0.42" Condition="$(TargetFramework.Contains('-android')) or $(TargetFramework.Contains('-ios'))">
-	  <ExcludeAssets>native</ExcludeAssets>
-    </PackageReference>
-	<!-- Other platforms: normal -->
-    <PackageReference Include="RocksDB" Version="10.4.2.64152" Condition="!$(TargetFramework.Contains('-android')) and !$(TargetFramework.Contains('-ios'))" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <PackageReference Include="NAudio" Version="2.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <MauiXaml Update="Pages\Chat\SingleChatPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Contacts\ContactDetails.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Contacts\ContactNewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Contributors\ContributorsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Dev\DevPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\MiniApps\AppDetailsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\MiniApps\AppNewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\MiniApps\AppsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\MiniApps\MiniAppPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Downloads\DownloadsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Home\EmptyDetail.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Home\HomePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Home\OnboardPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Launch\LaunchCreatePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Launch\LaunchPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Launch\LaunchRestorePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Launch\LaunchRetryPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Launch\LockPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Scan\ScanPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Settings\BackupPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Settings\EncryptionPassword.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Settings\SetLockPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Settings\SettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Wallet\WalletContactRequestPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Wallet\WalletReceivePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Wallet\WalletRecipientPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Wallet\WalletSend2Page.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Wallet\WalletSendPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Pages\Wallet\WalletSentPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Pages\Contributors\ContributorsPage.xaml.cs">
-      <DependentUpon>ContributorsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Pages\Dev\DevPage.xaml.cs">
-      <DependentUpon>DevPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Pages\MiniApps\MiniAppPage.xaml.cs">
-      <DependentUpon>MiniAppPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <!-- Android -->
-  <ItemGroup Condition="$(TargetFramework.Contains('-android')) != true">
-    <Compile Remove="**\Android\**\*.cs" />
-    <None Include="**\Android\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-  <!-- iOS -->
-  <ItemGroup Condition="$(TargetFramework.Contains('-ios')) != true">
-    <Compile Remove="**\iOS\**\*.cs" />
-    <None Include="**\iOS\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-  <!-- Mac Catalyst -->
-  <ItemGroup Condition="$(TargetFramework.Contains('-maccatalyst')) != true">
-    <Compile Remove="**\MacCatalyst\**\*.cs" />
-    <None Include="**\MacCatalyst\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-  <!-- Windows -->
-  <ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
-    <Compile Remove="**\Windows\**\*.cs" />
-    <None Include="**\Windows\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-  <Import Project="..\..\Ixian-Core\IXICore.projitems" Label="Shared" />
-  <!-- iOS Push Service-->
-  <!-- <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="OneSignalSDK.DotNet" Version="6.1.3" />
+		<PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
+		<!-- Android and IOS: exclude native assets, use custom built RocksDB-Sharp -->
+		<PackageReference Include="RocksDB" Version="0.0.42" Condition="$(TargetFramework.Contains('-android')) or $(TargetFramework.Contains('-ios'))">
+			<ExcludeAssets>native</ExcludeAssets>
+		</PackageReference>
+		<!-- Other platforms: normal -->
+		<PackageReference Include="RocksDB" Version="10.4.2.64152" Condition="!$(TargetFramework.Contains('-android')) and !$(TargetFramework.Contains('-ios'))" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<PackageReference Include="NAudio" Version="2.3.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<MauiXaml Update="Pages\Chat\SingleChatPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Contacts\ContactDetails.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Contacts\ContactNewPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Contributors\ContributorsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Dev\DevPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\MiniApps\AppDetailsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\MiniApps\AppNewPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\MiniApps\AppsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\MiniApps\MiniAppPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Downloads\DownloadsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Home\EmptyDetail.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Home\HomePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Home\OnboardPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Launch\LaunchCreatePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Launch\LaunchPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Launch\LaunchRestorePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Launch\LaunchRetryPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Launch\LockPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Scan\ScanPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Settings\BackupPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Settings\EncryptionPassword.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Settings\SetLockPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Settings\SettingsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Wallet\WalletContactRequestPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Wallet\WalletReceivePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Wallet\WalletRecipientPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Wallet\WalletSend2Page.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Wallet\WalletSendPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Wallet\WalletSentPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Pages\Contributors\ContributorsPage.xaml.cs">
+			<DependentUpon>ContributorsPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\Dev\DevPage.xaml.cs">
+			<DependentUpon>DevPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\MiniApps\MiniAppPage.xaml.cs">
+			<DependentUpon>MiniAppPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+	<!-- Android -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-android')) != true">
+		<Compile Remove="**\Android\**\*.cs" />
+		<None Include="**\Android\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+	<!-- iOS -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-ios')) != true">
+		<Compile Remove="**\iOS\**\*.cs" />
+		<None Include="**\iOS\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+	<!-- Mac Catalyst -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-maccatalyst')) != true">
+		<Compile Remove="**\MacCatalyst\**\*.cs" />
+		<None Include="**\MacCatalyst\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+	<!-- Windows -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
+		<Compile Remove="**\Windows\**\*.cs" />
+		<None Include="**\Windows\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+	<Import Project="..\..\Ixian-Core\IXICore.projitems" Label="Shared" />
+	<!-- iOS Push Service-->
+	<!-- <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
     <ProjectReference Include="../Spixi-PushService/Spixi-PushService.csproj">
       <IsAppExtension>true</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>-->
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarSpixiHideInfoBar="True" />
-    </VisualStudio>
-  </ProjectExtensions>
-  <!-- Fix for https://github.com/microsoft/WindowsAppSDK/issues/3843 -->
-  <Target Name="WindowsAppSdk_Issue_3843_Workaround_MsixContent" AfterTargets="AddMicrosoftWindowsAppSDKPayloadFiles">
-    <ItemGroup>
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\DeploymentAgent.exe" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\PushNotificationsLongRunningTask.ProxyStub.dll" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\RestartAgent.exe" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\WindowsAppRuntime.png" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\af-ZA\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\af-ZA\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\am-ET\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\am-ET\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ar-SA\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ar-SA\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\az-Latn-AZ\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\az-Latn-AZ\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bg-BG\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bg-BG\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bs-Latn-BA\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bs-Latn-BA\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ca-ES\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ca-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cs-CZ\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cs-CZ\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cy-GB\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cy-GB\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\da-DK\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\da-DK\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\de-DE\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\de-DE\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\el-GR\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\el-GR\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\en-GB\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\en-GB\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-ES\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-MX\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-MX\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\et-EE\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\et-EE\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\eu-ES\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\eu-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fa-IR\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fa-IR\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fi-FI\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fi-FI\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-CA\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-CA\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-FR\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-FR\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\gl-ES\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\gl-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\he-IL\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\he-IL\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hi-IN\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hi-IN\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hr-HR\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hr-HR\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hu-HU\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hu-HU\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\id-ID\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\id-ID\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\is-IS\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\is-IS\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\it-IT\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\it-IT\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ja-JP\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ja-JP\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ka-GE\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ka-GE\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\kk-KZ\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\kk-KZ\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ko-KR\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ko-KR\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lt-LT\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lt-LT\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lv-LV\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lv-LV\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ms-MY\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ms-MY\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nb-NO\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nb-NO\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nl-NL\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nl-NL\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nn-NO\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nn-NO\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pl-PL\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pl-PL\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-BR\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-BR\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-PT\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-PT\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ro-RO\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ro-RO\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ru-RU\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ru-RU\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sk-SK\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sk-SK\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sl-SI\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sl-SI\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sq-AL\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sq-AL\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Cyrl-RS\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Cyrl-RS\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Latn-RS\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Latn-RS\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sv-SE\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sv-SE\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\th-TH\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\th-TH\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\tr-TR\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\tr-TR\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\uk-UA\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\uk-UA\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\vi-VN\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\vi-VN\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-CN\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-CN\Microsoft.UI.Xaml.Phone.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-TW\Microsoft.ui.xaml.dll.mui" />
-      <None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-TW\Microsoft.UI.Xaml.Phone.dll.mui" />
-    </ItemGroup>
-  </Target>
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties XamarinHotReloadWrongLinkerErrorInfoBarSpixiHideInfoBar="True" />
+		</VisualStudio>
+	</ProjectExtensions>
+	<!-- Fix for https://github.com/microsoft/WindowsAppSDK/issues/3843 -->
+	<Target Name="WindowsAppSdk_Issue_3843_Workaround_MsixContent" AfterTargets="AddMicrosoftWindowsAppSDKPayloadFiles">
+		<ItemGroup>
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\DeploymentAgent.exe" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\PushNotificationsLongRunningTask.ProxyStub.dll" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\RestartAgent.exe" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\WindowsAppRuntime.png" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\af-ZA\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\af-ZA\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\am-ET\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\am-ET\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ar-SA\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ar-SA\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\az-Latn-AZ\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\az-Latn-AZ\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bg-BG\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bg-BG\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bs-Latn-BA\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\bs-Latn-BA\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ca-ES\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ca-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cs-CZ\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cs-CZ\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cy-GB\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\cy-GB\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\da-DK\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\da-DK\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\de-DE\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\de-DE\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\el-GR\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\el-GR\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\en-GB\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\en-GB\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-ES\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-MX\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\es-MX\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\et-EE\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\et-EE\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\eu-ES\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\eu-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fa-IR\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fa-IR\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fi-FI\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fi-FI\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-CA\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-CA\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-FR\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\fr-FR\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\gl-ES\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\gl-ES\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\he-IL\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\he-IL\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hi-IN\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hi-IN\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hr-HR\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hr-HR\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hu-HU\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\hu-HU\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\id-ID\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\id-ID\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\is-IS\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\is-IS\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\it-IT\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\it-IT\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ja-JP\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ja-JP\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ka-GE\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ka-GE\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\kk-KZ\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\kk-KZ\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ko-KR\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ko-KR\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lt-LT\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lt-LT\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lv-LV\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\lv-LV\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ms-MY\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ms-MY\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nb-NO\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nb-NO\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nl-NL\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nl-NL\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nn-NO\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\nn-NO\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pl-PL\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pl-PL\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-BR\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-BR\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-PT\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\pt-PT\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ro-RO\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ro-RO\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ru-RU\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\ru-RU\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sk-SK\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sk-SK\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sl-SI\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sl-SI\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sq-AL\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sq-AL\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Cyrl-RS\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Cyrl-RS\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Latn-RS\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sr-Latn-RS\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sv-SE\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\sv-SE\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\th-TH\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\th-TH\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\tr-TR\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\tr-TR\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\uk-UA\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\uk-UA\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\vi-VN\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\vi-VN\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-CN\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-CN\Microsoft.UI.Xaml.Phone.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-TW\Microsoft.ui.xaml.dll.mui" />
+			<None Remove="$(MicrosoftWindowsAppSDKMsixContent)\zh-TW\Microsoft.UI.Xaml.Phone.dll.mui" />
+		</ItemGroup>
+	</Target>
 </Project>
