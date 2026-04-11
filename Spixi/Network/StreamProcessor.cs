@@ -382,6 +382,10 @@ namespace SPIXI
 
                     case SpixiMessageCode.chat:
                         Node.addMessageWithType(message.id, FriendMessageType.standard, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), false, real_sender_address, message.timestamp, fireLocalNotification, alert, 0);
+                        if (friend != null && !friend.bot)
+                        {
+                            sendReceivedConfirmation(friend, sender_address, message.id, channel);
+                        }
                         break;
 
                     case SpixiMessageCode.msgReceived:
