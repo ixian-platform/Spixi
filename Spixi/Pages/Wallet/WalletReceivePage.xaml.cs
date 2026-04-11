@@ -44,7 +44,8 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(this, "setAddress", IxianHandler.getWalletStorage().getPrimaryAddress().ToString());
+            var ea = new ExtendedAddress(IxianHandler.getWalletStorage().getPrimaryAddress(), AddressPaymentFlag.OfflineTag, null);
+            Utils.sendUiCommand(this, "setAddress", ea.ToString());
 
             // Check if this page is accessed from the home wallet
             if (local_friend == null)

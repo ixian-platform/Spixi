@@ -54,14 +54,14 @@ namespace SPIXI
                 if (friend != null)
                     nickname = friend.nickname;
 
-                Utils.sendUiCommand(this, "addRecipient", nickname, 
-                    recipient.ToString());
+                Utils.sendUiCommand(this, "addRecipient", nickname, recipient.ToString());
             }
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
+            e.Cancel = true;
 
             if (onNavigatingGlobal(current_url))
             {
@@ -97,12 +97,12 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:send:"))
             {
+                e.Cancel = true;
                 string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
                 string address = split[1];
 
                 if (!ExtendedAddress.Validate(address))
                 {
-                    e.Cancel = true;
                     Utils.sendUiCommand(this, "showSendingFailedModal");
                     return;
                 }
@@ -220,6 +220,21 @@ namespace SPIXI
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
+            else if (current_url.StartsWith("ixian:checkAddress:", StringComparison.Ordinal))
+            {
+                string address = current_url.Substring("ixian:checkAddress:".Length);
+                ExtendedAddress ext_recipient_address;
+                try
+                {
+                    ext_recipient_address = new ExtendedAddress(address);
+
+                    Utils.sendUiCommand(this, "onValidAddress");
+                }
+                catch (Exception ex)
+                {
+                    Logging.error("Invalid address format: " + ex.Message);
+                }
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -251,12 +266,14 @@ namespace SPIXI
                 if (split.Count() < 1)
                     return;
                 string wallet_to_send = split[0];
-                string nickname = wallet_to_send;
+                var ea = new ExtendedAddress(wallet_to_send);
+                string nickname = ea.ToString();
 
-                Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
+                Friend? friend = FriendList.getFriend(ea.RoutingAddress);
                 if (friend != null)
                     nickname = friend.nickname;
-                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
+
+                Utils.sendUiCommand(this, "addRecipient", nickname, ea.ToString());
                 return;
             }
             else if (result.Contains(":send"))
@@ -266,12 +283,14 @@ namespace SPIXI
                 if (split.Count() > 1)
                 {
                     string wallet_to_send = split[0];
-                    string nickname = wallet_to_send;
+                    var ea = new ExtendedAddress(wallet_to_send);
+                    string nickname = ea.ToString();
 
-                    Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
+                    Friend? friend = FriendList.getFriend(ea.RoutingAddress);
                     if (friend != null)
                         nickname = friend.nickname;
-                    Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
+
+                    Utils.sendUiCommand(this, "addRecipient", nickname, ea.ToString());
                     return;
                 }
             }
@@ -281,13 +300,14 @@ namespace SPIXI
                 string wallet_to_send = result;
                 if (ExtendedAddress.Validate(wallet_to_send))
                 {
-                    string nickname = wallet_to_send;
+                    var ea = new ExtendedAddress(wallet_to_send);
+                    string nickname = ea.ToString();
 
-                    Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
+                    Friend? friend = FriendList.getFriend(ea.RoutingAddress);
                     if (friend != null)
                         nickname = friend.nickname;
 
-                    Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
+                    Utils.sendUiCommand(this, "addRecipient", nickname, ea.ToString());
                     return;
                 }
             }
@@ -301,13 +321,14 @@ namespace SPIXI
 
             foreach (string wallet_to_send in wallet_arr)
             {
-                Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
+                var ea = new ExtendedAddress(wallet_to_send);
+                string nickname = ea.ToString();
 
-                string nickname = wallet_to_send;
+                Friend? friend = FriendList.getFriend(ea.RoutingAddress);
                 if (friend != null)
                     nickname = friend.nickname;
 
-                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
+                Utils.sendUiCommand(this, "addRecipient", nickname, ea.ToString());
             }
             popPageAsync();
         }

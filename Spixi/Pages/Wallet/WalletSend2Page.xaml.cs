@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Streaming;
 using IXICore.Utils;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
@@ -40,23 +41,22 @@ namespace SPIXI
         {
             // Calculate tx fee
             Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
-            var prepTx = Node.prepareTransactionFrom(from, _address, 1000);
-            var tx = prepTx.transaction;
-            Utils.sendUiCommand(this, "setRecipient", _address.PaymentAddress.ToString(), _address.PaymentAddress.ToString(), "img/spixiavatar.png");
+            string nickname = _address.RoutingAddress.ToString();
+
+            Friend? friend = FriendList.getFriend(_address.RoutingAddress);
+            if (friend != null)
+                nickname = friend.nickname;
+            Utils.sendUiCommand(this, "setRecipient", nickname, _address.ToString(), "img/spixiavatar.png");
             Utils.sendUiCommand(this, "setBalance", Node.getAvailableBalance().ToString(), Node.fiatPrice.ToString());
 
-            IxiNumber fee = 0;
-            foreach (var toEntry in tx.toList.TakeLast(2))
-            {
-                fee += toEntry.Value.amount;
-            }
-            fee += tx.fee;
+            var fee = Node.calculateTransactionFee(from, _address, ConsensusConfig.transactionDustLimit);
             Utils.sendUiCommand(this, "setFees", fee.ToString());
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
+            e.Cancel = true;
 
             if (onNavigatingGlobal(current_url))
             {
@@ -111,15 +111,16 @@ namespace SPIXI
 
             var txPrep = Node.prepareTransactionFrom(from, _address, amount);
             transaction = txPrep.transaction;
+            if (transaction == null)
+            {
+                displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
+                return;
+            }
             var relayNodeAddresses = txPrep.relayNodeAddresses;
             totalAmount = transaction.amount + transaction.fee;
 
-            Logging.info("Preparing to send payment");
-            Logging.info("Broadcasting tx");
+            Logging.info("Broadcasting tx {0}", transaction.id);
             IxianHandler.addTransaction(transaction, relayNodeAddresses, txPrep.extendedAddresses, null, true);
-            Logging.info("Adding to cache");
-
-            Logging.info("Showing payment details");
 
             // Show the payment details
             Navigation.PushAsync(new WalletSentPage(transaction, false), Config.defaultXamarinAnimations);
