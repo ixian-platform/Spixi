@@ -512,49 +512,40 @@ $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
     location.href = "ixian:tab:" + tabid;
 });
 
-
-
 // Handle sidebar swiping
-$("#leftSidebarHelper").swipe( {
-    swipeStatus:function(event, phase, direction, distance)
-    {
-        if(direction === "right")
-        {
-            leftSidebar.style.transition = '';
-            leftSidebar.style.transform = '';
-            leftSidebar.classList.add('open');
+addSwipe(document.querySelector("#leftSidebarHelper"), {
+threshold: 10,
+    swipeStatus: (event, phase, direction) => {
+        if (direction === "right") {
+            leftSidebar.style.transition = "";
+            leftSidebar.style.transform = "";
+            leftSidebar.classList.add("open");
         }
-    },
-    threshold:10
+    }
 });
 
-$("#leftSidebar").swipe( {
-    swipeStatus:function(event, phase, direction, distance)
-    {
-        if(direction === "left")
-        {
-            if (phase === "move")
-            {
+addSwipe(document.querySelector("#leftSidebar"), {
+    threshold: 100,
+    allowPageScroll: true,
 
-                leftSidebar.style.transition = "none"; // Disable transition for smooth movement
-                leftSidebar.style.transform = "translateX(-" + distance + "px)";
-                leftSidebar.classList.remove('open');
+    swipeStatus: (event, phase, direction, distance) => {
+        if (direction === "left") {
+
+            if (phase === "move") {
+                leftSidebar.style.transition = "none";
+                leftSidebar.style.transform = `translateX(-${distance}px)`;
+                leftSidebar.classList.remove("open");
             }
 
-            if (phase === "end" || phase === "cancel")
-            {
-                if(distance > 1)
-                {
-                    leftSidebar.style.transform = 'translateX(-100%)';
+            if (phase === "end" || phase === "cancel") {
+                if (distance > 1) {
+                    leftSidebar.style.transform = "translateX(-100%)";
                     leftSidebar.style.transition = "transform 0.3s ease";
-                    leftSidebar.classList.remove('open');
+                    leftSidebar.classList.remove("open");
                 }
             }
         }
-    },
-    triggerOnTouchEnd:true,
-    threshold:100,
-    allowPageScroll:"vertical"
+    }
 });
 
 function showRatingPrompt() {

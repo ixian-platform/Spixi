@@ -1,4 +1,84 @@
 // SPIXI helper script
+function addSwipe(el, options = {}) {
+    const opts = {
+        threshold: 75,
+        allowPageScroll: true,
+        swipeStatus: null,
+        ...options
+    };
+
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let lastY = 0;
+    let isDown = false;
+    let startTime = 0;
+
+    function getDir(dx, dy) {
+        if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return "none";
+        return Math.abs(dx) > Math.abs(dy)
+            ? dx > 0 ? "right" : "left"
+            : dy > 0 ? "down" : "up";
+    }
+
+    function trigger(phase, dx, dy) {
+        if (!opts.swipeStatus) return;
+        const dir = getDir(dx, dy);
+        opts.swipeStatus(null, phase, dir, Math.sqrt(dx * dx + dy * dy));
+    }
+
+    function onStart(x, y) {
+        isDown = true;
+        startX = lastX = x;
+        startY = lastY = y;
+        startTime = Date.now();
+        trigger("start", 0, 0);
+    }
+
+    function onMove(x, y) {
+        if (!isDown) return;
+
+        const dx = x - startX;
+        const dy = y - startY;
+        lastX = x;
+        lastY = y;
+
+        const dir = getDir(dx, dy);
+
+        trigger("move", dx, dy);
+
+        if (!opts.allowPageScroll) {
+            // basic scroll lock
+            // (only blocks when horizontal swipe is dominant)
+            if (Math.abs(dx) > Math.abs(dy)) {
+                el.style.touchAction = "none";
+            }
+        }
+    }
+
+    function onEnd() {
+        if (!isDown) return;
+        isDown = false;
+
+        const dx = lastX - startX;
+        const dy = lastY - startY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist >= opts.threshold) {
+            trigger("end", dx, dy);
+        } else {
+            trigger("cancel", dx, dy);
+        }
+
+        el.style.touchAction = "";
+    }
+
+    // Pointer Events
+    el.addEventListener("pointerdown", (e) => onStart(e.clientX, e.clientY));
+    el.addEventListener("pointermove", (e) => onMove(e.clientX, e.clientY));
+    el.addEventListener("pointerup", onEnd);
+    el.addEventListener("pointercancel", onEnd);
+}
 
 // Disable drag
 document.addEventListener('dragstart', (event) => {
