@@ -14,7 +14,7 @@ var userAddress = "";
 const attachBar = document.getElementById("attach-bar");
 
 const messagesEl = document.getElementById("messages");
-const chatHolderEl = document.getElementById("chatholder");
+const chatBarEl = document.getElementById("chatbar");
 const wrapEl = document.getElementById("wrap");
 
 function onChatScreenLoad() {
@@ -1780,32 +1780,19 @@ function getCaretPosition(editableDiv) {
 }
 
 // Fix for iOS toolbar offscreen issue when soft keyboard is shown
-const initialOffset = window.outerHeight - window.innerHeight;
-let updatedOffset = initialOffset;
-let msgHeight = messagesEl.style.height || (window.innerHeight - 120) + "px";
-
 function iosFixer(overshoot = 0) {
-    const newOffset = window.outerHeight - window.innerHeight;
+    const scroll = shouldScroll();
+    requestAnimationFrame(function () {
+        chatBarEl.style.top = `${window.visualViewport.height + overshoot - 64}px`;
+        chatBarEl.style.bottom = `unset`;
+        messagesEl.style.maxHeight = `${window.visualViewport.height - 120}px`;
 
-    if (newOffset >= updatedOffset) {
-        const diff = newOffset - initialOffset;
-        requestAnimationFrame(function () {
-            //wrapEl.style.transition = "top 0.20s ease-out";
-            //messagesEl.style.transition = "height 0.20s ease-out";
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
-            wrapEl.style.top = `${diff + overshoot}px`;
-            messagesEl.style.height = `${window.innerHeight - overshoot - 120}px`;
-        });
-    } else if (newOffset < updatedOffset && wrapEl.style.top != "0px") {
-        requestAnimationFrame(function () {
-            //wrapEl.style.transition = "top 0.20s ease-out";
-            //messagesEl.style.transition = "height 0.20s ease-out";
-
-            wrapEl.style.top = "0px";
-            messagesEl.style.height = msgHeight;
-        });
-    }
-    updatedOffset = newOffset;
+        if (scroll) {
+            scrollToBottom();
+        }
+    });
 }
 
 const throttle = (fn, delay) => {
@@ -1819,29 +1806,31 @@ const throttle = (fn, delay) => {
     };
 };
 
-const debounce = (fn, delay) => {
-    let timeout;
+let timeouts = {};
+const debounce = (fn, delay, timeoutKey) => {
     return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(...args), delay);
+        clearTimeout(timeouts[timeoutKey]);
+        timeouts[timeoutKey] = setTimeout(() => fn(...args), delay);
     };
 };
 
-const debouncedScrollToBottom = debounce(scrollToBottom, 200);
-const debouncedIOSFixer = debounce(iosFixer, 25);
+const debouncedScrollToBottom = debounce(scrollToBottom, 200, 'scrollToBottom');
+const debouncedIOSFixer = debounce(iosFixer, 200, 'iosFixer');
 
 // Mobile only logic
 if (SL_Platform != "Xamarin-WPF") {
     if (SL_Platform == "Xamarin-iOS") {
         window.visualViewport.addEventListener('resize', () => {
-            debouncedIOSFixer();
             if (shouldScroll()) {
                 debouncedScrollToBottom();
             }
+            debouncedIOSFixer();
+            iosFixer();
         });
     } else {
         window.addEventListener('resize', function () {
             if (shouldScroll()) {
+                scrollToBottom();
                 debouncedScrollToBottom();
             }
         });

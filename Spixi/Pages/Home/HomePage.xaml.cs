@@ -78,11 +78,11 @@ namespace SPIXI
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
-            this.Title = "SPIXI";
+            this.Title = "Spixi";
             webView.Opacity = 0;
 
             hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
-            //SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
+            SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
             SpixiLocalization.addCustomString("devMode", Preferences.Default.Get("devMode", false) ? "true" : "false");
             SpixiLocalization.addCustomString("apps-not-sure-text", string.Format(SpixiLocalization.getLocalizedString("apps-not-sure-text"), Config.spixiAppsUrl));
 
