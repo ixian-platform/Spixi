@@ -43,7 +43,8 @@ namespace SPIXI
                     _singletonInstance = null;
                 }
             }
-            if (_singletonInstance == null)
+            if (_singletonInstance == null
+                || !_singletonInstance.running)
             {
                 _singletonInstance = new HomePage();
             }
@@ -70,7 +71,7 @@ namespace SPIXI
             public long timestamp;
         }
         private static List<contactStatusCacheItem> contactStatusCache = new List<contactStatusCacheItem>();
-
+        private IDispatcherTimer? timer;
         private HomePage ()
         {
             Node.preStart();
@@ -121,7 +122,7 @@ namespace SPIXI
                 });
 
                 // Setup a timer to handle UI updates
-                IDispatcherTimer timer = Dispatcher.CreateTimer();
+                timer = Dispatcher.CreateTimer();
                 timer.Interval = TimeSpan.FromMilliseconds(2000);
                 timer.Tick += (s, e) =>
                 {
@@ -162,6 +163,10 @@ namespace SPIXI
         public void stop()
         {
             running = false;
+            _singletonInstance = null;
+            timer?.Stop();
+            timer = null;
+            removeDetailContent(false);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

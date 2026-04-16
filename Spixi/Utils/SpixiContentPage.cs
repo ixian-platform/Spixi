@@ -402,18 +402,31 @@ namespace SPIXI
 
         public void Dispose()
         {
-            if (!Navigation.NavigationStack.Contains(this))
+            try
             {
-                pageLoaded = false;
-                messageQueue.Clear();
-
-                if (_webView != null)
+                if (!Navigation.NavigationStack.Contains(this))
                 {
-                    _webView.Navigated -= webViewNavigated;
-                    _webView.Navigating -= webViewNavigating;
-                    _webView.Handler?.DisconnectHandler();
+                    pageLoaded = false;
+                    messageQueue.Clear();
+
+                    var webView = _webView;
                     _webView = null;
+                    if (webView != null)
+                    {
+                        webView.Navigated -= webViewNavigated;
+                        webView.Navigating -= webViewNavigating;
+
+                        if (webView.Parent is Layout layout)
+                            layout.Remove(webView);
+
+                        webView.Source = null;
+                        webView.Handler?.DisconnectHandler();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Exception occured while disposing SpixiContentPage: " + ex);
             }
         }
 
