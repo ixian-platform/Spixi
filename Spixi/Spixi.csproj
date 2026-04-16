@@ -21,8 +21,8 @@
 		<!-- App Identifier -->
 		<ApplicationId>com.ixilabs.spixi</ApplicationId>
 		<!-- Versions -->
-		<ApplicationDisplayVersion>0.9.16</ApplicationDisplayVersion>
-		<ApplicationVersion>160009160</ApplicationVersion>
+		<ApplicationDisplayVersion>0.9.17</ApplicationDisplayVersion>
+		<ApplicationVersion>160009170</ApplicationVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
@@ -118,14 +118,14 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="14.0.1" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="14.1.0" />
 		<PackageReference Include="Concentus" Version="2.2.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.51" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.51" />
 		<PackageReference Include="Mono.Nat" Version="3.0.4" />
 
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="OneSignalSDK.DotNet" Version="6.1.3" />
+		<PackageReference Include="OneSignalSDK.DotNet" Version="6.1.4" />
 		<PackageReference Include="Plugin.Fingerprint" Version="3.0.0-beta.1" />
 		<!-- Android and IOS: exclude native assets, use custom built RocksDB-Sharp -->
 		<PackageReference Include="RocksDB" Version="0.0.42" Condition="$(TargetFramework.Contains('-android')) or $(TargetFramework.Contains('-ios'))">

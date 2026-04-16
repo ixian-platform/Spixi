@@ -143,6 +143,7 @@ namespace SPIXI
             // Remove history file
             if(friend.deleteHistory())
             {
+                UIHelpers.shouldRefreshContacts = true;
                 displaySpixiAlert(SpixiLocalization._SL("contact-details-deletedhistory-title"), SpixiLocalization._SL("contact-details-deletedhistory-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
         }
