@@ -1114,6 +1114,10 @@ namespace SPIXI
                 {
                     confirmed = "false";
                 }
+                else if (activity.status == IXICore.Activity.ActivityStatus.Unknown)
+                {
+                    confirmed = "unknown";
+                }
                 else
                 {
                     confirmed = "error";
@@ -1140,8 +1144,9 @@ namespace SPIXI
 
             foreach (var activity in Node.activityStorage.getActivitiesBySeedHashAndType(IxianHandler.getWalletStorage().getSeedHash(), null))
             {
-                if (activity.status != IXICore.Activity.ActivityStatus.Final
-                    && activity.status != IXICore.Activity.ActivityStatus.Expired)
+                if (activity.status == IXICore.Activity.ActivityStatus.Rejected
+                    || activity.status == IXICore.Activity.ActivityStatus.Reverted
+                    || activity.status == IXICore.Activity.ActivityStatus.Pending)
                 {
                     continue;
                 }

@@ -598,9 +598,20 @@ namespace SPIXI.Meta
                     {
                         NetworkClientManager.sendToClient(address, ProtocolMessageCode.transactionData2, tx.getBytes(true, true));
                     }
+
                     if (extendedAddresses != null)
                     {
-                        CoreStreamProcessor.transactionSend(tx, extendedAddresses, requestId);
+                        foreach (ExtendedAddress extendedAddress in extendedAddresses)
+                        {
+                            Friend? friend = FriendList.getFriend(extendedAddress.RoutingAddress);
+                            byte[]? txRequestId = requestId;
+                            if (friend != null)
+                            {
+                                FriendMessage? friend_message = Node.addMessageWithType(requestId, FriendMessageType.sentFunds, friend.walletAddress, 0, tx.getTxIdString(), true);
+                                txRequestId = friend_message.id;
+                            }
+                            CoreStreamProcessor.transactionSend(tx, extendedAddresses, txRequestId);
+                        }
                     }
                     return true;
                 }

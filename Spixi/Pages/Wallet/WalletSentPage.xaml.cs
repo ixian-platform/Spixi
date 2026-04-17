@@ -130,6 +130,10 @@ namespace SPIXI
                 {
                     confirmed = "false";
                 }
+                else if (activity.status == IXICore.Activity.ActivityStatus.Unknown)
+                {
+                    confirmed = "unknown";
+                }
                 else
                 {
                     confirmed = "error";

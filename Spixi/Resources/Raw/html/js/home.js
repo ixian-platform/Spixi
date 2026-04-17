@@ -273,6 +273,10 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
             iconClass = "spixi-status-red";
             icon = 'fa fa-exclamation-circle';
             break;
+        case "unknown":
+            iconClass = "";
+            icon = 'fa fa-question-circle';
+            break;
         default:
             iconClass = "spixi-status-yellow";
             icon = 'fa fa-spinner fa-spin';
@@ -280,7 +284,7 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
 
     const isReceived = receive === "1";
     let arrow = "";
-    if (confirmed == "error") {
+    if (confirmed == "error" || confirmed == "unknown") {
         arrow = `<i class="spixi-list-tx-icon ${icon} ${iconClass}"></i>`;
     } else {
         arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;

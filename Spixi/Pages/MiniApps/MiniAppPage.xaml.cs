@@ -236,8 +236,8 @@ namespace SPIXI
                 {
                     TransactionResponse txResponse = JsonConvert.DeserializeObject<TransactionResponse>(actionResponse);
                     Transaction tx = new Transaction(Convert.FromBase64String(txResponse.tx));
-
-                    Friend friend = FriendList.getFriend(new Address(tx.toList.Keys.First()));
+                    // TODO Add support for extended addresses
+                    Friend? friend = FriendList.getFriend(new Address(tx.toList.Keys.First()));
                     string nick = tx.toList.Keys.First().ToString();
                     if (friend != null)
                     {
@@ -255,19 +255,6 @@ namespace SPIXI
                         if (IxianHandler.addTransaction(tx, tx.toList.Keys.Skip(1).ToList(), null, null, true))
                         {
                             Utils.sendUiCommand(this, "SpixiAppSdk.ar", actionResponse);
-
-                            // Send message to recipients
-                            foreach (var entry in tx.toList)
-                            {
-                                friend = FriendList.getFriend(entry.Key);
-
-                                if (friend != null)
-                                {
-                                    FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, tx.getTxIdString(), true);
-
-                                    StreamProcessor.transactionSend(tx, null, null);
-                                }
-                            }
                             return;
                         }
                         else

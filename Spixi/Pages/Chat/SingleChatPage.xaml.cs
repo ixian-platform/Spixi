@@ -708,7 +708,7 @@ namespace SPIXI
 
         public void onViewPayment(string msg_id)
         {
-            FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(Crypto.stringToHash(msg_id)));
+            FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(Crypto.stringToHash(msg_id)));
 
             if(msg.type == FriendMessageType.sentFunds || msg.message.StartsWith(":"))
             {
@@ -865,7 +865,7 @@ namespace SPIXI
             switch(action)
             {
                 case "tip":
-                    FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id));
+                    FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(msg_id));
                     ExtendedAddress sender_address = new ExtendedAddress(msg.senderAddress, AddressPaymentFlag.OfflineTag, null);
                     if(!friend.bot)
                     {
@@ -910,7 +910,7 @@ namespace SPIXI
                     break;
 
                 case "sendContactRequest":
-                    Address new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
+                    Address new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(msg_id)).senderAddress;
                     Friend new_friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, new_friend_address, null, new_friend_address.ToString(), null, null, 0);
                     if (new_friend != null)
                     {
@@ -928,11 +928,11 @@ namespace SPIXI
                     break;
 
                 case "kickUser":
-                    onKickUser(friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
+                    onKickUser(friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(msg_id)).senderAddress);
                     break;
 
                 case "banUser":
-                    onBanUser(friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
+                    onBanUser(friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(msg_id)).senderAddress);
                     break;
 
                 case "report":
@@ -1459,7 +1459,7 @@ namespace SPIXI
         {
             if (channel == selectedChannel)
             {
-                FriendMessage fm = friend.getMessages(channel).Find(x => x.id.SequenceEqual(msg_id));
+                FriendMessage fm = friend.getMessages(channel).Find(x => x.id != null && x.id.SequenceEqual(msg_id));
                 if (fm != null)
                 {
                     updateReactions(fm);

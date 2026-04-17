@@ -97,6 +97,13 @@ namespace SPIXI.Meta
             refreshTransactionPages(tx, false);
         }
 
+        public void transactionCannotVerify(Transaction tx)
+        {
+            tx.applied = 0;
+            Node.activityStorage.updateStatus(tx.id, ActivityStatus.Unknown, 0);
+            refreshTransactionPages(tx, false);
+        }
+
         public void receivedBlockHeader(Block blockHeader, bool verified)
         {
             foreach (Balance balance in IxianHandler.balances.Values)

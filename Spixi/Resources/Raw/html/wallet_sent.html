@@ -154,6 +154,8 @@
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive}";
                 } else if (status == "error") {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-failed}";
+                } else if (status == "unknown") {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-unknown}";
                 } else {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive-pending}";
                 }
@@ -163,6 +165,8 @@
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent}";
                 } else if (status == "error") {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-failed}";
+                } else if (status == "unknown") {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-unknown}";
                 } else {
                     document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent-pending}";
                 }
@@ -188,12 +192,14 @@
                 document.getElementById("unconfirmed_warning").className = "";
                 document.getElementById("unconfirmed_warning").style.display = "none";
                 titleIcon.innerHTML = '<i class="fa fa-check-circle spixi-status-green"></i>';
-
-
             } else if (confirmed == "error") {
                 document.getElementById("unconfirmed_warning").className = "";
                 document.getElementById("unconfirmed_warning").style.display = "none";
                 titleIcon.innerHTML = '<i class="fa fa-exclamation-circle spixi-status-red"></i>';
+            } else if (confirmed == "unknown") {
+                document.getElementById("unconfirmed_warning").className = "";
+                document.getElementById("unconfirmed_warning").style.display = "none";
+                titleIcon.innerHTML = '<i class="fa fa-question-circle"></i>';
             } else {
                 document.getElementById("unconfirmed_warning").className = "row spixi-descriptionbar-row smallmargin warning";
             }

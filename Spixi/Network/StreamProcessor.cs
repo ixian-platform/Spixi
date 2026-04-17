@@ -219,7 +219,7 @@ namespace SPIXI
                                     msg_id = Crypto.stringToHash(msg_id_tx_id);
                                 }
 
-                                FriendMessage msg = friend.getMessages(0).Find(x => x.id.SequenceEqual(msg_id));
+                                FriendMessage msg = friend.getMessages(0).Find(x => x.id != null && x.id.SequenceEqual(msg_id));
 
                                 string status = SpixiLocalization._SL("chat-payment-status-pending");
                                 if (tx_id != null)
@@ -455,16 +455,30 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.transactionRequest:
-                        var tr = new TransactionRequest(spixi_message.data);
-                        Node.addMessageWithType(tr.RequestId, FriendMessageType.requestFunds, sender_address, 0, tr.Amount.ToString());
-                        break;
+                        {
+                            var tr = new TransactionRequest(spixi_message.data);
+                            var msgId = tr.RequestId;
+                            if (tr.RequestId == null)
+                            {
+                                msgId = message.id;
+                            }
+                            Node.addMessageWithType(msgId, FriendMessageType.requestFunds, sender_address, 0, tr.Amount.ToString());
+                            break;
+                        }
 
                     case SpixiMessageCode.transactionSend:
-                        UIHelpers.shouldRefreshTransactions = true;
-                        var ts = new TransactionSend(spixi_message.data);
-                        Node.addMessageWithType(ts.RequestId, FriendMessageType.sentFunds, sender_address, 0, ts.Transaction.getTxIdString());
+                        {
+                            UIHelpers.shouldRefreshTransactions = true;
+                            var ts = new TransactionSend(spixi_message.data);
+                            var msgId = ts.RequestId;
+                            if (ts.RequestId == null)
+                            {
+                                msgId = message.id;
+                            }
+                            Node.addMessageWithType(msgId, FriendMessageType.sentFunds, sender_address, 0, ts.Transaction.getTxIdString());
 
-                        break;
+                            break;
+                        }
                 }
             }catch(Exception e)
             {
@@ -710,11 +724,11 @@ namespace SPIXI
             switch (sba.action)
             {
                 case SpixiBotActionCode.kickUser:
-                    Node.addMessageWithType(null, FriendMessageType.kicked, bot.walletAddress, 0, SpixiLocalization._SL("chat-kicked"));
+                    Node.addMessageWithType(null, FriendMessageType.kicked, bot.walletAddress, 0, SpixiLocalization._SL("chat-kicked"), true);
                     break;
 
                 case SpixiBotActionCode.banUser:
-                    Node.addMessageWithType(null, FriendMessageType.banned, bot.walletAddress, 0, SpixiLocalization._SL("chat-banned"));
+                    Node.addMessageWithType(null, FriendMessageType.banned, bot.walletAddress, 0, SpixiLocalization._SL("chat-banned"), true);
                     break;
             }
         }
