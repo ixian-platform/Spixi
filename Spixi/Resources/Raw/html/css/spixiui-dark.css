@@ -317,7 +317,7 @@ img.emoji {
     display: table;
 }
 
-#wrap, #messages, .spixi-toolbar {
+#messages, .spixi-toolbar {
     will-change: transform;
     transition: none;
 }
@@ -2722,11 +2722,11 @@ img.emoji {
 }
 
 #chatbar {
-    -moz-transition: all 0.6s ease-in-out;
-    -ms-transition: all 0.6s ease-in-out;
-    -o-transition: all 0.6s ease-in-out;
-    -webkit-transition: all 0.6s ease-in-out;
-    transition: all 0.6s;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s;
 
     position: fixed;
     z-index: 1001;
@@ -3387,7 +3387,7 @@ img.emoji {
     min-height: 100px;
     color: var(--colors-text-01);
     overflow: auto;
-    word-break: break-all;
+    word-break: break-word;
     overflow-wrap: anywhere;
 }
 

@@ -203,7 +203,7 @@ namespace SPIXI.VoIP
                     if (callAccepted == true && tmp_messages.Last() != fm)
                     {
                         fm.message = callDuration.ToString();
-                        Node.addMessageWithType(null, FriendMessageType.voiceCallEnd, currentCallContact.walletAddress, 0, fm.message, currentCallInitiator, null, 0, false);
+                        Node.addMessageWithType(currentCallSessionId, FriendMessageType.voiceCallEnd, currentCallContact.walletAddress, 0, fm.message, currentCallInitiator, null, 0);
                     }
                     else
                     {
