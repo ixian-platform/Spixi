@@ -134,16 +134,6 @@ namespace SPIXI
 
                 if (Node.generateWallet(pass))
                 {
-                    Node.preStart();
-                    if (!Node.start())
-                    {
-                        MainThread.BeginInvokeOnMainThread(() => {
-                            displaySpixiAlert("Fatal exception", "Fatal exception has occurred, please send the log files to the developers.", "OK");
-                        });
-                        return;
-                    }
-                    Node.connectToNetwork();
-
                     IxianHandler.localStorage.nickname = nick;
                     IxianHandler.localStorage.writeAccountFile();
 
@@ -162,17 +152,17 @@ namespace SPIXI
                     if (wake_lock_p)
                         SPowerManager.ReleaseLock("partial");
 
-                    MainThread.BeginInvokeOnMainThread(() => {
-                        Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
-                        removePage(this);
-                    });
-
                     // Prepare the balances list
                     List<Address> address_list = IxianHandler.getWalletStorage().getMyAddresses();
                     foreach (Address addr in address_list)
                     {
                         IxianHandler.balances.Add(addr, new Balance(addr, 0));
                     }
+
+                    MainThread.BeginInvokeOnMainThread(async() => {
+                        await Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
+                        removePage(this);
+                    });
                 }
                 else
                 {
