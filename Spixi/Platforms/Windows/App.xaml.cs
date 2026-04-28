@@ -74,9 +74,6 @@ public partial class App : MauiWinUIApplication
         });
 
         SpixiLocalization.addCustomString("Platform", "Xamarin-WPF");
-
-        // Add prepare storage (copy/overwrite html folder with embedded one)
-        copyResources();
     }
 
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
@@ -84,38 +81,10 @@ public partial class App : MauiWinUIApplication
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
-
     }
 
     private void OnAppInstanceActivated(object? sender, AppActivationArguments e)
     {
         Services.GetRequiredService<ILifecycleEventService>().OnAppInstanceActivated(sender, e);
     }
-
-    public void copyResources()
-    {
-        string sourceDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html");
-        string targetDirectory = Path.Combine(Config.spixiUserFolder, "html");
-
-        copyContents(sourceDirectory, targetDirectory);
-    }
-
-    private void copyContents(string sourceDirectory, string targetDirectory)
-    {
-        Directory.CreateDirectory(targetDirectory);
-
-        foreach (string file in Directory.GetFiles(sourceDirectory))
-        {
-            string destFile = Path.Combine(targetDirectory, Path.GetFileName(file));
-            File.Copy(file, destFile, true); // overwrite existing files
-        }
-
-        foreach (string subdir in Directory.GetDirectories(sourceDirectory))
-        {
-            string destSubdir = Path.Combine(targetDirectory, Path.GetFileName(subdir));
-            copyContents(subdir, destSubdir);
-        }
-    }
-
 }
-

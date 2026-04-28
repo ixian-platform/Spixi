@@ -39,36 +39,40 @@ namespace SPIXI.MiniApps
 
         private void storageLoop()
         {
-            while (running)
+            try
             {
-                try
+                while (running)
                 {
-                    Dictionary<string, Dictionary<string, MiniAppDataCache>> appDataCacheCopy = new(appDataCache);
-                    foreach (var appCache in appDataCacheCopy)
+                    try
                     {
-                        foreach (var tableCache in appCache.Value)
+                        Dictionary<string, Dictionary<string, MiniAppDataCache>> appDataCacheCopy = new(appDataCache);
+                        foreach (var appCache in appDataCacheCopy)
                         {
-                            if (tableCache.Value.firstRequestWrite == 0)
+                            foreach (var tableCache in appCache.Value)
                             {
-                                continue;
-                            }
+                                if (tableCache.Value.firstRequestWrite == 0)
+                                {
+                                    continue;
+                                }
 
-                            if (Clock.getTimestampMillis() - tableCache.Value.firstRequestWrite < 1000
-                                && Clock.getTimestampMillis() - tableCache.Value.lastRequestWrite < 200)
-                            {
-                                continue;
-                            }
+                                if (Clock.getTimestampMillis() - tableCache.Value.firstRequestWrite < 1000
+                                    && Clock.getTimestampMillis() - tableCache.Value.lastRequestWrite < 200)
+                                {
+                                    continue;
+                                }
 
-                            writeStorageData(appCache.Key, tableCache.Key);
+                                writeStorageData(appCache.Key, tableCache.Key);
+                            }
                         }
                     }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception in MiniAppStorage: " + e);
+                    }
+                    Thread.Sleep(1000);
                 }
-                catch (Exception e)
-                {
-                    Logging.error("Exception in MiniAppStorage: " + e);
-                }
-                Thread.Sleep(1000);
             }
+            catch (ThreadInterruptedException) { }
         }
 
         private MiniAppDataCache getStorageCache(string appId, string table)
