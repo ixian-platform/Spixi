@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = Да, очистить чат
 contact-details-delete-contact-modal-title = Удалить из контактов
 contact-details-delete-contact-modal-subtitle = Контакт будет удалён из вашего списка. Вы не сможете отправлять или получать сообщения, пока не добавите его снова.
 contact-details-delete-contact-modal-confirm = Да, удалить контакт
+contact-details-cannotremovecontact-title = Невозможно удалить контакт
+contact-details-cannotremovecontact-text = Этот контакт нельзя удалить, так как он является участником группы.
 
 ; New Contact Screen
 contact-new-title = Новый Контакт
@@ -499,6 +501,14 @@ wallet-recipient-add = Добавить получателя
 wallet-recipient-selected = Получатели выбраны
 wallet-recipient-new-contact-button = Добавить новый контакт
 wallet-recipient-no-contact-button = Новый контакт
+wallet-recipient-new-chat-button = Новый чат
+wallet-recipient-new-group-button = Создать группу
+wallet-recipient-group-settings = Настройки группы
+wallet-recipient-group-image-edit = Изменить изображение группы
+wallet-recipient-group-name = Название группы
+wallet-recipient-group-name-placeholder = Введите название группы
+wallet-recipient-group-blind-mode = Скрытый режим
+wallet-recipient-group-blind-mode-info = Когда включено, только создатель группы может видеть список адресов контактов. Остальные участники будут видеть только псевдонимы.
 
 ; Wallet Request Screen
 wallet-request-title = Запросить платёж

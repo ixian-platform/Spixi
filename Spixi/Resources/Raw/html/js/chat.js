@@ -1,7 +1,10 @@
 var notifications = false;
+var isGroup = false;
+var isBlindGroup = false;
 var isBot = false;
 var isAdmin = false;
 var messageCost = "";
+var topMessageOffset = "0px";
 
 var requestReceivedModal = document.getElementById("requestReceivedModal");
 var requestSentModal = document.getElementById("requestSentModal");
@@ -42,6 +45,10 @@ function onChatScreenLoad() {
     messagesEl.addEventListener("click", function (e) {
         hideAttachBar();
 
+        if (isBlindGroup) {
+            return;
+        }
+
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
             var nick = nickEl.getAttribute("nick");
@@ -63,7 +70,7 @@ function onChatScreenLoad() {
     onload();
 }
 
-function hideAttachBar(){
+function hideAttachBar() {
     if (attachBar && attachBar.classList.contains("show")) {
         attachBar.classList.remove("show");
         attachBar.classList.add("hide");
@@ -75,7 +82,7 @@ function hideContextMenus() {
     hideContextMenu();
 }
 
-function setBotMode(bot, cost, costText, admin, botDescription, notificationsString) {
+function setChatMode(type, cost, costText, admin, botDescription, notificationsString) {
     var isPaid = false;
     if (admin == "True") {
         isAdmin = true;
@@ -101,22 +108,65 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
         isPaid = true;
     }
 
-    if (bot == "True") {
+    if (type == 1) {
+        // private group
+        isGroup = true;
+        isBot = false;
+        document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder bot";
+        document.getElementsByClassName("spixi-channel-bar")[0].style.display = "table";
+        // Disable action options
+        document.getElementById("ca_send").style.display = "none";
+        document.getElementById("ca_request").style.display = "none";
+        document.getElementById("ca_app").style.display = "none";
+        if (isPaid) {
+            topMessageOffset = "115px";
+        } else {
+            topMessageOffset = "90px";
+        }
+    } else if (type == 2) {
+        // private blind group
+        isGroup = true;
+        isBlindGroup = true;
+        isBot = false;
+        document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder bot";
+        document.getElementsByClassName("spixi-channel-bar")[0].style.display = "table";
+        // Disable action options
+        document.getElementById("ca_sendfile").style.display = "none";
+        document.getElementById("ca_send").style.display = "none";
+        document.getElementById("ca_request").style.display = "none";
+        document.getElementById("ca_app").style.display = "none";
+        if (isPaid) {
+            topMessageOffset = "115px";
+        } else {
+            topMessageOffset = "90px";
+        }
+    } else if (type == 3) {
+        // bot
+        isGroup = true;
         isBot = true;
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder bot";
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "table";
+        // Disable action options
+        document.getElementById("ca_sendfile").style.display = "none";
+        document.getElementById("ca_send").style.display = "none";
+        document.getElementById("ca_request").style.display = "none";
+        document.getElementById("ca_app").style.display = "none";
+
+        setBotAddress(userAddress);
 
         if (isPaid) {
-            messagesEl.style.height = "calc(100vh - 175px)";
+            topMessageOffset = "115px";
         } else {
-            messagesEl.style.height = "calc(100vh - 150px)";
+            topMessageOffset = "90px";
         }
-
     } else {
+        isGroup = false;
         isBot = false;
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder";
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "none";
+        topMessageOffset = "60px";
     }
+    resizeChatInput();
 
     if (notificationsString == "True") {
         notifications = true;
@@ -135,7 +185,7 @@ function setSelectedChannel(id, icon, name) {
     selectedChannel = id;
     var channelBarEl = document.getElementsByClassName("spixi-channel-bar")[0];
     channelBarEl.getElementsByClassName("channel-icon")[0].innerHTML = "<i class=\"fa " + icon + "\"></i>";
-    channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = name + "<div class=\"unread-indicator\"></div>";
+    channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = "# " + name + " ▽ <div class=\"unread-indicator\"></div>";
 }
 
 function isScrollable(el) {
@@ -157,7 +207,7 @@ function setInitialStickyDate() {
     if (stickyHeader && isScrollable(messagesEl)) {
         stickyHeader.textContent = formatDateForStickyDate(date);
         stickyHeader.style.display = "flex";
-    } else{
+    } else {
         stickyHeader.style.display = "none";
     }
 }
@@ -188,16 +238,18 @@ function onChatScreenLoaded() {
                 <div class="spixi-flat-button label-sm button outline" onclick="showEndAppSessionModal()">${SL_Leave}</div>
             </section>`;
         messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
-    } else if(isInviteSent){
+    } else if (isInviteSent) {
         const elementToAdd = ` <section class="session-banner">
                 <span class="label-sm"><i class="fas fa-user-plus"></i>&nbsp;${SL_InviteSentTo} USERNAME</span>
                 <div class="spixi-flat-button label-sm button outline">${SL_CancelInvite}</div>
             </section>`;
         messagesEl.insertAdjacentHTML("afterbegin", elementToAdd);
     }
+
+    debouncedResizeChatInput();
 }
 
-function showEndAppSessionModal(){
+function showEndAppSessionModal() {
     const modal = document.getElementById("endAppSessionModal");
     modal.style.display = "flex";
 }
@@ -205,7 +257,6 @@ function showEndAppSessionModal(){
 function onChatScreenReady(address) {
     userAddress = address;
     userNick = address;
-    setBotAddress(address);
 }
 
 function hideBackButton() {
@@ -222,8 +273,8 @@ function hideBackButton() {
 document.getElementById("backbtn").onclick = function () {
     if (document.getElementById("ContactsBox")) {
         hideContacts();
-    } else if (document.getElementById("BotDetails").style.display == "block") {
-        hideBotDetails();
+    } else if (document.getElementById("GroupDetails").style.display == "block") {
+        hideGroupDetails();
     } else {
         location.href = "ixian:back";
     }
@@ -295,7 +346,7 @@ $("#chat_input").keydown(function (event) {
     if (event.keyCode === 16) {
         shiftPressed = true;
     }
-    if (isBot) {
+    if (isGroup) {
         return;
     }
     if (new Date().getTime() - lastTypingSent > 1000) {
@@ -398,6 +449,7 @@ $("#chat_input").on('paste', function (e) {
 function clearInput() {
     document.getElementById("chat_input").innerHTML = "";
     document.getElementById("chat_send").className = "chatbar-sendbutton";
+    resizeChatInput();
 }
 
 let scrollTimeout;
@@ -515,7 +567,7 @@ function formatDateForDateHeader(date) {
     return new Date(date).toLocaleDateString(undefined, options);
 }
 
-function formatDateForStickyDate(date){
+function formatDateForStickyDate(date) {
     const options = { day: '2-digit', month: 'short' };
     return new Date(date).toLocaleDateString(undefined, options);
 }
@@ -530,7 +582,7 @@ const stickyHeader = document.getElementById('sticky-date');
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        if (entry.isIntersecting  && isScrollable(messagesEl)) {
+        if (entry.isIntersecting && isScrollable(messagesEl)) {
             const newDate = entry.target.getAttribute('data-date');
             stickyHeader.innerText = formatDateForStickyDate(newDate);
             stickyHeader.style.display = "flex";
@@ -666,9 +718,12 @@ function addText(id, address, nick, avatar, text, time, className) {
         }
         var avatarHtml = avatarEl.outerHTML;
         avatarEl.onclick = function (e) {
-            if(!isBot){
-                showBotDetails()
-            } else{
+            if (isBlindGroup) {
+                return;
+            }
+            if (!isGroup) {
+                showGroupDetails()
+            } else {
                 if (nick == "") {
                     address = userAddress;
                     nick = userNick;
@@ -685,7 +740,7 @@ function addText(id, address, nick, avatar, text, time, className) {
 
     messagesEl.appendChild(bubbleEl);
 
-    adjustLastestBubbles();
+    adjustLatestBubbles();
 
     observeDateHeadersOnce();
 
@@ -703,7 +758,7 @@ function addText(id, address, nick, avatar, text, time, className) {
 }
 
 // TODO: optimize and merge this function with addText
-function adjustLastestBubbles() {
+function adjustLatestBubbles() {
     var bubbles = messagesEl.querySelectorAll(".spixi-bubble");
 
     if (bubbles.length < 2) {
@@ -750,7 +805,7 @@ function adjustLastestBubbles() {
     }
 }
 
-function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, paid) {
+function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, paid, errorSending) {
     var additionalClasses = "";
     if (confirmed == "True") {
         additionalClasses = " confirmed";
@@ -759,8 +814,11 @@ function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, pai
     } else {
         additionalClasses = " default";
     }
+    if (errorSending == "True") {
+        additionalClasses = " error-sending";
+    }
     if (read == "True") {
-        additionalClasses += " read";
+        additionalClasses = " read";
     }
     if (paid == "True") {
         additionalClasses += " paid";
@@ -920,16 +978,17 @@ function updateMessage(id, message, sent, confirmed, read, paid, errorSending) {
         if (confirmed == "True") {
             additionalClasses = " confirmed";
         }
+
+        if (errorSending == "True") {
+            additionalClasses = " error-sending";
+        }
+
         if (read == "True") {
-            additionalClasses += " read";
+            additionalClasses = " read";
         }
 
         if (paid == "True") {
             additionalClasses += " paid";
-        }
-
-        if (errorSending == "True") {
-            additionalClasses += " error-sending";
         }
 
         if (msgEl.className.indexOf("spixi-payment-request") > -1) {
@@ -959,7 +1018,10 @@ function updateMessage(id, message, sent, confirmed, read, paid, errorSending) {
             }
         }
 
-        msgEl.className = "spixi-bubble myself" + additionalClasses;
+        if (msgEl.className.includes("myself")) {
+            additionalClasses += " myself";
+        }
+        msgEl.className = "spixi-bubble" + additionalClasses;
 
         if (isFile == false && isPayment == false) {
             message = parseMessageText(message);
@@ -1075,7 +1137,7 @@ function addAppRequest(id, appid, appname, appimage, address, nick, avatar, time
     }
 
     addText(id, address, nick, avatar, message, time, "spixi-bubble spixi-payment-request" + additionalClasses);
-}		
+}
 
 
 function setNickname(nick) {
@@ -1124,7 +1186,7 @@ function addApp(id, name, icon, publisher) {
 }
 
 function showCallButton() {
-    if (!isBot) {
+    if (!isGroup) {
         document.getElementById("CallButton").style.display = "block";
     }
 }
@@ -1314,13 +1376,16 @@ function displayContextMenu(e) {
     menuHtml += "<div onclick=\"contextAction('copy', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-quote-right\"></i></span> " + SL_ContextMenu["copyMessage"] + "</div>";
     menuHtml += "<div onclick=\"contextAction('copySelected', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-copy\"></i></span> " + SL_ContextMenu["copySelected"] + "</div>";
     if (!localMsg) {
-        menuHtml += "<div onclick=\"contextAction('tip', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-wallet\"></i></span> " + SL_ContextMenu["tipUser"] + "</div>";
         menuHtml += "<div onclick=\"contextAction('like', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-heart\"></i></span> " + SL_ContextMenu["likeMessage"] + "</div>";
-        if (isBot) {
-            menuHtml += "<div onclick=\"contextAction('userInfo', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-info-circle\"></i></span> " + SL_ContextMenu["userInfo"] + "</div>";
-            menuHtml += "<div onclick=\"contextAction('sendContactRequest', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-plus\"></i></span> " + SL_ContextMenu["sendContactRequest"] + "</div>";
-            menuHtml += "<div onclick=\"contextAction('report', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-flag\"></i></span> " + SL_ContextMenu["reportMessage"] + "</div>";
-
+        if (!isBlindGroup) {
+            menuHtml += "<div onclick=\"contextAction('tip', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-wallet\"></i></span> " + SL_ContextMenu["tipUser"] + "</div>";
+            if (isGroup) {
+                menuHtml += "<div onclick=\"contextAction('userInfo', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-info-circle\"></i></span> " + SL_ContextMenu["userInfo"] + "</div>";
+                menuHtml += "<div onclick=\"contextAction('sendContactRequest', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-plus\"></i></span> " + SL_ContextMenu["sendContactRequest"] + "</div>";
+                if (isBot) {
+                    menuHtml += "<div onclick=\"contextAction('report', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-flag\"></i></span> " + SL_ContextMenu["reportMessage"] + "</div>";
+                }
+            }
         }
     }
 
@@ -1328,7 +1393,7 @@ function displayContextMenu(e) {
         menuHtml += "<div onclick=\"contextAction('kickUser', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-times\"></i></span> " + SL_ContextMenu["kickUser"] + "</div>";
         menuHtml += "<div onclick=\"contextAction('banUser', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-slash\"></i></span> " + SL_ContextMenu["banUser"] + "</div>";
     }
-    if (isAdmin || localMsg || !isBot) {
+    if (isAdmin || localMsg || !isGroup) {
         menuHtml += "<div onclick=\"contextAction('deleteMessage', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-trash-alt\"></i></span> " + SL_ContextMenu["deleteMessage"] + "</div>";
     }
 
@@ -1401,6 +1466,9 @@ function contextAction(action, msgId) {
     } else if (action == "copySelected") {
         document.execCommand('copy');
     } else if (action == "tip") {
+        if (isBlindGroup) {
+            return;
+        }
         var msgEl = document.getElementById("msg_" + msgId);
         var address = null;
         var nick = null;
@@ -1431,12 +1499,19 @@ function contextAction(action, msgId) {
 
         showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
     } else if (action == "userInfo") {
+        if (isBlindGroup) {
+            return;
+        }
         var msgEl = document.getElementById("msg_" + msgId);
         var nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
         var address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
         var avatar = msgEl.getElementsByClassName("avatar")[0].outerHTML;
         showUserDetails(avatar + " " + nick, address);
     } else if (action == "report") {
+        if (!isBot) {
+            return;
+        }
+
         showReportModal(msgId);
     } else {
         location.href = "ixian:contextAction:" + action + ":" + msgId;
@@ -1511,16 +1586,16 @@ function payTip() {
     location.href = "ixian:contextAction:tip:" + contextActionMsgId + ":" + tipPrice;
 }
 
-function showBotDetails() {
-    if (!isBot) {
+function showGroupDetails() {
+    if (!isGroup) {
         location.href = "ixian:details";
         return;
     }
-    document.getElementById("BotDetails").style.display = "block";
+    document.getElementById("GroupDetails").style.display = "block";
 }
 
-function hideBotDetails() {
-    document.getElementById("BotDetails").style.display = "none";
+function hideGroupDetails() {
+    document.getElementById("GroupDetails").style.display = "none";
 }
 
 function toggleNotifications(el) {
@@ -1571,7 +1646,7 @@ var userQrCode = new QRCode("UserQrCode", {
 });
 
 function setBotAddress(addr) {
-    bot_address = addr;
+    document.getElementById("BotAddressTitle").style.display = "";
     var parts = addr.match(/.{1,17}/g) || [];
     document.getElementById("BotWal1").innerHTML = parts[0];
     document.getElementById("BotWal2").innerHTML = parts[1];
@@ -1685,12 +1760,12 @@ function setUnreadIndicator(unread_count) {
 function showRequestSentModal(show) {
     if (show == true) {
         requestSentModal.style.display = "block";
-        document.getElementById("chatbar").style.display = "none";
+        document.getElementById("chatbar").style.visibility = "hidden";
         document.getElementById("CallButton").style.display = "none";
         document.getElementById("chat_input").disabled = true;
     } else {
         requestSentModal.style.display = "none";
-        document.getElementById("chatbar").style.display = "block";
+        document.getElementById("chatbar").style.visibility = "visible";
         document.getElementById("CallButton").style.display = "block";
         document.getElementById("chat_input").disabled = false;
     }
@@ -1779,13 +1854,57 @@ function getCaretPosition(editableDiv) {
     return caretPos;
 }
 
+const input = document.getElementById("chat_input");
+
+function resizeChatInput() {
+    // Reset height so shrinking works
+    input.style.height = "auto";
+
+    // Calculate desired height
+    const maxHeight = window.innerHeight * 0.33;
+
+    const newHeight = Math.min(input.scrollHeight, maxHeight);
+
+    input.style.height = `${newHeight}px`;
+
+    // Toggle scrolling when max height reached
+    if (input.scrollHeight > maxHeight) {
+        input.style.overflowY = "auto";
+    } else {
+        input.style.overflowY = "hidden";
+    }
+
+    messagesEl.style.height = "calc(100vh - " + topMessageOffset + " - " + chatBarEl.clientHeight + "px)";
+
+    if (shouldScroll()) {
+        scrollToBottom();
+        debouncedScrollToBottom();
+    }
+
+    if (SL_Platform == "Xamarin-iOS") {
+        iosFixer();
+        debouncedIOSFixer();
+    }
+}
+
+// Resize on input
+input.addEventListener("input", resizeChatInput);
+
+// Resize on paste
+input.addEventListener("paste", () => {
+    requestAnimationFrame(resizeChatInput);
+});
+
+// Resize on window change
+window.addEventListener("resize", resizeChatInput);
+
 // Fix for iOS toolbar offscreen issue when soft keyboard is shown
 function iosFixer(overshoot = 0) {
     const scroll = shouldScroll();
     requestAnimationFrame(function () {
-        chatBarEl.style.top = `${window.visualViewport.height + overshoot - 64}px`;
+        chatBarEl.style.top = `${window.visualViewport.height + overshoot - chatBarEl.clientHeight}px`;
         chatBarEl.style.bottom = `unset`;
-        messagesEl.style.maxHeight = `${window.visualViewport.height - 120}px`;
+        messagesEl.style.maxHeight = `${window.visualViewport.height - chatBarEl.clientHeight - parseInt(topMessageOffset)}px`;
 
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
@@ -1814,25 +1933,23 @@ const debounce = (fn, delay, timeoutKey) => {
     };
 };
 
+const debouncedResizeChatInput = debounce(resizeChatInput, 200, 'resizeChatInput');
 const debouncedScrollToBottom = debounce(scrollToBottom, 200, 'scrollToBottom');
 const debouncedIOSFixer = debounce(iosFixer, 200, 'iosFixer');
 
-// Mobile only logic
-if (SL_Platform != "Xamarin-WPF") {
-    if (SL_Platform == "Xamarin-iOS") {
-        window.visualViewport.addEventListener('resize', () => {
-            if (shouldScroll()) {
-                debouncedScrollToBottom();
-            }
-            debouncedIOSFixer();
-            iosFixer();
-        });
-    } else {
-        window.addEventListener('resize', function () {
-            if (shouldScroll()) {
-                scrollToBottom();
-                debouncedScrollToBottom();
-            }
-        });
-    }
+if (SL_Platform == "Xamarin-iOS") {
+    window.visualViewport.addEventListener('resize', () => {
+        if (shouldScroll()) {
+            debouncedScrollToBottom();
+        }
+        debouncedIOSFixer();
+        iosFixer();
+    });
+} else {
+    window.addEventListener('resize', function () {
+        if (shouldScroll()) {
+            scrollToBottom();
+            debouncedScrollToBottom();
+        }
+    });
 }

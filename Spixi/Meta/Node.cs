@@ -88,7 +88,7 @@ namespace SPIXI.Meta
             StreamClientManager.init(Config.maxConnectedStreamingNodes, true);
 
             // Prepare the stream processor
-            StreamCapabilities caps = StreamCapabilities.Incoming | StreamCapabilities.Outgoing | StreamCapabilities.IPN | StreamCapabilities.Apps;
+            StreamCapabilities caps = StreamCapabilities.Incoming | StreamCapabilities.Outgoing | StreamCapabilities.IPN | StreamCapabilities.Apps | StreamCapabilities.AppProtocols | StreamCapabilities.GroupCapabilites;
             streamProcessor = new StreamProcessor(new SpixiPendingMessageProcessor(Config.spixiUserFolder, Config.enablePushNotifications), caps);
             
             // Init TIV

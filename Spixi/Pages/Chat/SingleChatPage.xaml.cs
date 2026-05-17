@@ -21,6 +21,8 @@ using Microsoft.Maui.Storage;
 using Microsoft.Maui.ApplicationModel;
 using System.Text;
 using System.Web;
+using System.Collections.Generic;
+using IXICore.Streaming.Models;
 
 namespace SPIXI
 {
@@ -285,12 +287,21 @@ namespace SPIXI
             }
             else if(current_url.StartsWith("ixian:leave"))
             {
-                if(friend.bot)
+                if(friend.bot
+                   || friend.type == FriendType.Group)
                 {
-                    friend.pendingDeletion = true;
-                    friend.save();
+                    if (!friend.bot)
+                    {
+                        StreamProcessor.sendLeave(friend, null);
+                        FriendList.removeFriend(friend);
+                    }
+                    else
+                    {
+                        friend.pendingDeletion = true;
+                        friend.save();
+                        StreamProcessor.sendLeave(friend, null);
+                    }
                     UIHelpers.shouldRefreshContacts = true;
-                    StreamProcessor.sendLeave(friend, null);
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
                     popPageAsync();
                     homePage?.removeDetailContent();
@@ -355,7 +366,13 @@ namespace SPIXI
 
         private void onSendIxi()
         {
-            if(homePage != null)
+            if (friend.bot
+                || friend.type == FriendType.Group)
+            {
+                Logging.error("Send IXI is not supported in this chat.");
+                return;
+            }
+            if (homePage != null)
             {
                 homePage.onSendIxi(friend.walletAddress);
                 return;
@@ -366,6 +383,12 @@ namespace SPIXI
 
         private void onRequestIxi()
         {
+            if (friend.bot
+                || friend.type == FriendType.Group)
+            {
+                Logging.error("Request IXI is not supported in this chat.");
+                return;
+            }
             if (homePage != null)
             {
                 homePage.onReceiveIxi(friend);
@@ -423,19 +446,27 @@ namespace SPIXI
         private void loadContacts()
         {
             var contacts = friend.users.contacts;
-            lock (contacts)
+            foreach (var contact in contacts)
             {
-                foreach (var contact in contacts)
+                var contactAddress = contact.Key;
+                string address = contactAddress.ToString();
+                string? avatar = IxianHandler.localStorage.getAvatarPath(address);
+                if (avatar == null)
                 {
-                    string address = contact.Key.ToString();
-                    string avatar = IxianHandler.localStorage.getAvatarPath(address);
-                    if (avatar == null)
-                    {
-                        avatar = "img/spixiavatar.png";
-                    }
-                    int role = contact.Value.getPrimaryRole();
-                    Utils.sendUiCommand(this, "addContact",  address, contact.Value.getNick(), avatar, role.ToString());
+                    avatar = "img/spixiavatar.png";
                 }
+                int role = contact.Value.getPrimaryRole();
+                string nick = resolveNick(contact.Value.getNick(), contactAddress);
+                if (friend.type == FriendType.Group
+                    && friend.metaData.botInfo.hideParticipantAddresses)
+                {
+                    if (string.IsNullOrEmpty(nick))
+                    {
+                        nick = "x" + contactAddress.ToString();
+                    }
+                    address = "[Unknown]";
+                }
+                Utils.sendUiCommand(this, "addContact",  address, nick, avatar, role.ToString());
             }
         }
 
@@ -453,7 +484,23 @@ namespace SPIXI
                 Utils.sendUiCommand(this, "hideBackButton");
             }
 
+            int chat_type = 0;
             if (friend.bot)
+            {
+                chat_type = 3;
+            }
+            else if (friend.type == FriendType.Group)
+            {
+                if (friend.metaData.botInfo.hideParticipantAddresses)
+                {
+                    chat_type = 2;
+                } else
+                {
+                    chat_type = 1;
+                }
+            }
+
+            if (chat_type > 0)
             {
                 int sleep_cnt = 0;
                 while (friend.metaData.botInfo == null || !friend.channels.hasChannel(friend.metaData.botInfo.defaultChannel))
@@ -471,7 +518,7 @@ namespace SPIXI
                 string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.metaData.botInfo.cost.ToString() + " IXI");
                 bool send_notification = friend.metaData.botInfo.sendNotification;
 
-                Utils.sendUiCommand(this, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
+                Utils.sendUiCommand(this, "setChatMode", chat_type.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
                 setChannelSelectorUnread();
 
                 selectedChannel = 0; // TODO: remove this after groupchat UI improvements
@@ -494,7 +541,7 @@ namespace SPIXI
                 }
             } else
             {
-                Utils.sendUiCommand(this, "setBotMode", "False", "0.00000000", "", "False");
+                Utils.sendUiCommand(this, "setChatMode", "0", "0.00000000", "", "False");
             }
 
             UIHelpers.refreshAppRequests = true;
@@ -588,24 +635,17 @@ namespace SPIXI
             // Finally, clear the input field
             Utils.sendUiCommand(this, "clearInput");
 
-            StreamMessage message = new StreamMessage(friend.protocolVersion);
-            message.type = StreamMessageCode.data;
-            message.recipient = friend.walletAddress;
-            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            message.data = spixi_msg_bytes;
-            message.id = friend_message.id;
-
-            if (friend.bot)
-            {
-                message.encryptionType = StreamMessageEncryptionCode.none;
-                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
-            }
-
-            StreamProcessor.sendMessage(friend, message);
+            CoreStreamProcessor.sendChatMessage(friend, friend_message, selectedChannel);
         }
 
         public async Task onSendFile()
         {
+            if (friend.bot
+                || (friend.type == FriendType.Group && friend.metaData.botInfo.hideParticipantAddresses))
+            {
+                Logging.error("File sending is not supported in this chat.");
+                return;
+            }
             // Show file picker and send the file
             try
             {
@@ -638,25 +678,23 @@ namespace SPIXI
                 fileName = spixi_img_data.name;
                 filePath = spixi_img_data.path;
 
+                Address? sender_address = null;
                 FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, stream, filePath);
                 transfer.channel = selectedChannel;
+                if (friend.bot || friend.type == FriendType.Group)
+                {
+                    sender_address = IxianHandler.primaryWalletAddress;
+                    transfer.groupAddress = friend.walletAddress;
+                }
                 Logging.info("File Transfer uid: " + transfer.uid);
-
-                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileHeader, transfer.getBytes(), selectedChannel);
-
-                StreamMessage message = new StreamMessage(friend.protocolVersion);
-                message.type = StreamMessageCode.data;
-                message.recipient = friend.walletAddress;
-                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                message.data = spixi_message.getBytes();
-
-                StreamProcessor.sendMessage(friend, message);
-
 
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
 
                 // store the message and display it
-                FriendMessage friend_message = Node.addMessageWithType(message.id, FriendMessageType.fileHeader, friend.walletAddress, selectedChannel, message_data, true);
+                FriendMessage friend_message = Node.addMessageWithType(null, FriendMessageType.fileHeader, friend.walletAddress, selectedChannel, message_data, true, sender_address);
+
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileHeader, transfer.getBytes(), selectedChannel);
+                StreamProcessor.sendSpixiMessage(friend, spixi_message, null, friend_message.id);
 
                 friend_message.transferId = transfer.uid;
                 friend_message.filePath = transfer.filePath;
@@ -678,19 +716,45 @@ namespace SPIXI
             }
 
             //displaySpixiAlert("File", uid, "Ok");
-            string file_name = System.IO.Path.GetFileName(message.filePath);
+            string file_name = System.IO.Path.GetFileName(message.filePath);;
+
+            var senderAddress = friend.walletAddress;
+            var senderFriend = friend;
+            if (friend.type == FriendType.Group)
+            {
+                if (friend.metaData.botInfo.hideParticipantAddresses)
+                {
+                    Logging.error("Cannot accept file transfer in this chat due to hidden participant addresses.");
+                    return;
+                }
+                else
+                {
+                    senderAddress = message.senderAddress;
+                    senderFriend = FriendList.getFriend(senderAddress);
+                    if (senderFriend == null)
+                    {
+                        Logging.error("Cannot find group sender friend for file transfer.");
+                        return;
+                    }
+                }
+            }
 
             var ft = new FileTransfer();
             ft.fileName = file_name;
             ft.fileSize = message.fileSize;
             ft.uid = message.transferId;
             ft.channel = selected_channel;
-
-            ft = TransferManager.prepareIncomingFileTransfer(ft.getBytes(), friend.walletAddress);
+            ft.incoming = true;
+            ft.sender = senderAddress;
+            if (message.senderAddress != null)
+            {
+                ft.groupAddress = friend.walletAddress;
+            }
+            ft = TransferManager.prepareIncomingFileTransfer(ft);
 
             if (ft != null)
             {
-                TransferManager.acceptFile(friend, ft.uid);
+                TransferManager.acceptFile(senderFriend, ft.uid);
                 updateFile(ft.uid, "0", false);
             }
         }
@@ -759,6 +823,13 @@ namespace SPIXI
 
         public void onApp(string app_id)
         {
+            if (friend.bot
+                || friend.type == FriendType.Group)
+            {
+                Logging.error("App Sending is not supported in this chat.");
+                return;
+            }
+
             Address[] user_addresses = new Address[] { friend.walletAddress };
 
             byte[]? session_id = null;
@@ -865,11 +936,19 @@ namespace SPIXI
             switch(action)
             {
                 case "tip":
-                    FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(msg_id));
-                    ExtendedAddress sender_address = new ExtendedAddress(msg.senderAddress, AddressPaymentFlag.OfflineTag, null);
-                    if(!friend.bot)
+                    if (friend.bot
+                        || (friend.type == FriendType.Group && friend.metaData.botInfo.hideParticipantAddresses))
                     {
-                        sender_address = new ExtendedAddress(friend.walletAddress, AddressPaymentFlag.OfflineTag, null);
+                        Logging.error("Send IXI is not supported in this chat.");
+                        return;
+                    }
+
+                    FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(msg_id));
+                    ExtendedAddress sender_address = new ExtendedAddress(friend.walletAddress, AddressPaymentFlag.OfflineTag, null);
+                    if (friend.bot
+                       || (friend.type == FriendType.Group && !friend.metaData.botInfo.hideParticipantAddresses))
+                    {
+                        sender_address = new ExtendedAddress(msg.senderAddress, AddressPaymentFlag.OfflineTag, null);
                     }
                     IxiNumber amount = new IxiNumber(data);
                     var prepTx = Node.prepareTransactionFrom(IxianHandler.getWalletStorage().getPrimaryAddress(), sender_address, amount);
@@ -910,6 +989,12 @@ namespace SPIXI
                     break;
 
                 case "sendContactRequest":
+                    if (friend.bot
+                        || (friend.type == FriendType.Group && friend.metaData.botInfo.hideParticipantAddresses))
+                    {
+                        Logging.error("Send IXI is not supported in this chat.");
+                        return;
+                    }
                     Address new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id != null && x.id.SequenceEqual(msg_id)).senderAddress;
                     Friend new_friend = FriendList.addFriend(FriendType.Normal, FriendState.RequestSent, new_friend_address, null, new_friend_address.ToString(), null, null, 0);
                     if (new_friend != null)
@@ -955,7 +1040,15 @@ namespace SPIXI
                     break;
 
                 case "like":
-                    if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new ReactionMessage(msg_id, "like:"), selectedChannel))
+                    var address = IxianHandler.getWalletStorage().getPrimaryAddress();
+                    if (friend.type == FriendType.Group
+                        && friend.metaData.botInfo.hideParticipantAddresses
+                        && !friend.users.getOwner().SequenceEqual(address))
+                    {
+                        // if blind group and not owner, use derived address
+                        address = GroupChat.DeriveGroupAddress(address, friend.metaData.botInfo.randomId);
+                    }
+                    if (friend.addReaction(address, new ReactionMessage(msg_id, "like:"), selectedChannel))
                     {
                         updateReactions(msg_id, selectedChannel);
                         StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
@@ -1002,6 +1095,11 @@ namespace SPIXI
         public void loadMessages()
         {
             var messages = friend.getMessages(selectedChannel, (int)messagesToShow);
+            if (messages?.Count == 0)
+            {
+                return;
+            }
+
             string show_more = "true";
             if (messages.Count < messagesToShow)
                 show_more = "false";
@@ -1044,6 +1142,40 @@ namespace SPIXI
             }
         }
 
+        public string resolveNick(string senderNick, Address senderAddress)
+        {
+            string nick = senderNick;
+            if (nick == "")
+            {
+                if (senderAddress != null)
+                {
+                    var tmp_nick = friend.users.getUser(senderAddress)?.getNick();
+                    if (!string.IsNullOrEmpty(tmp_nick))
+                    {
+                        nick = tmp_nick;
+                    }
+                    else
+                    {
+                        var local_fr = FriendList.getFriend(senderAddress);
+                        if (local_fr != null)
+                        {
+                            nick = local_fr.nickname;
+                        }
+                        else if (senderAddress.SequenceEqual(IxianHandler.primaryWalletAddress))
+                        {
+                            nick = IxianHandler.localStorage.nickname;
+                        }
+                        else
+                        {
+                            nick = senderAddress.ToString();
+                        }
+                    }
+                }
+            }
+
+            return nick;
+        }
+
         public void insertMessage(FriendMessage message, int channel)
         {
             if(channel != selectedChannel)
@@ -1083,26 +1215,14 @@ namespace SPIXI
             string nick = "";
             if (!message.localSender)
             {
-                if (friend.bot)
+                if (friend.bot
+                    || friend.type == FriendType.Group)
                 {
                     if (message.senderAddress != null)
                     {
                         address = message.senderAddress.ToString();
                     }
-
-                    nick = message.senderNick;
-                    if (nick == "")
-                    {
-                        if (message.senderAddress != null && friend.users.hasUser(message.senderAddress))
-                        {
-                            nick = friend.users.getUser(message.senderAddress).getNick();
-                        }
-                    }
-
-                    if (nick == "")
-                    {
-                        nick = address;
-                    }
+                    nick = resolveNick(message.senderNick, message.senderAddress);
                 }
 
                 prefix = "addThem";
@@ -1333,7 +1453,7 @@ namespace SPIXI
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only
-                Utils.sendUiCommand(this, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
+                Utils.sendUiCommand(this, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString(), message.errorSending.ToString());
             }
 
             if(message.type == FriendMessageType.voiceCall || message.type == FriendMessageType.voiceCallEnd)
@@ -1395,13 +1515,9 @@ namespace SPIXI
                 if (!friend.bot)
                 {
                     // Send read confirmation
-                    StreamMessage msg_read = new StreamMessage(friend.protocolVersion);
-                    msg_read.type = StreamMessageCode.info;
-                    msg_read.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                    msg_read.recipient = friend.walletAddress;
-                    msg_read.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id, selectedChannel).getBytes();
+                    SpixiMessage msg_read = new SpixiMessage(SpixiMessageCode.msgRead, message.id, selectedChannel);
                     
-                    StreamProcessor.sendMessage(friend, msg_read, true, true, false, false);
+                    StreamProcessor.sendSpixiMessage(friend, msg_read, null, null, true, true, false, false);
                 }
             }
         }
@@ -1539,10 +1655,10 @@ namespace SPIXI
             if (homePage != null)
             {
                 homePage.removeDetailContent(false);
-                homePage.onChat(friend.walletAddress.ToString(), null);
+                homePage.onChat(friend.walletAddress, null);
             } else
             {
-                HomePage.Instance().onChat(friend.walletAddress.ToString(), null);
+                HomePage.Instance().onChat(friend.walletAddress, null);
             }
         }
 

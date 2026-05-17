@@ -6,6 +6,7 @@ using Microsoft.Maui.Controls.Xaml;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
@@ -79,7 +80,10 @@ namespace SPIXI
             else if (current_url.Equals("ixian:pick", StringComparison.Ordinal))
             {
                 var recipientPage = new WalletRecipientPage();
-                recipientPage.pickSucceeded += HandlePickSucceeded;
+                recipientPage.pickSucceeded += (sender, e) =>
+                {
+                    HandlePickSucceeded(sender, e.Value.Item1);
+                };
                 Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
@@ -193,21 +197,17 @@ namespace SPIXI
 
         }
 
-        private async void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private async void HandlePickSucceeded(object sender, List<ExtendedAddress> addresses)
         {
-            string wallets_to_send = e.Value;
-
-            string[] wallet_arr = wallets_to_send.Split('|');
-
-            foreach (string wallet_to_send in wallet_arr)
+            foreach (var wallet_to_send in addresses)
             {
-                Friend? friend = FriendList.getFriend(new Address(wallet_to_send));
+                Friend? friend = FriendList.getFriend(wallet_to_send.RoutingAddress);
 
-                string nickname = wallet_to_send;
+                string nickname = wallet_to_send.PaymentAddress.ToString();
                 if (friend != null)
                     nickname = friend.nickname;
 
-                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
+                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send.ToString());
             }
 
             popPageAsync();

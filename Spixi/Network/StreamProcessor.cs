@@ -25,7 +25,7 @@ namespace SPIXI
         }
 
         // Called when receiving file headers from the message recipient
-        public static void handleFileHeader(Address sender, SpixiMessage data, byte[] message_id)
+        public static void handleFileHeader(Address sender, SpixiMessage data, byte[] message_id, Address? group_sender_address)
         {
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
@@ -33,7 +33,7 @@ namespace SPIXI
                 FileTransfer transfer = new FileTransfer(data.data);
 
                 string message_data = string.Format("{0}:{1}:{2}", transfer.uid, transfer.fileName, transfer.fileSize);
-                FriendMessage fm = Node.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, data.channel, message_data);
+                FriendMessage fm = Node.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, data.channel, message_data, false, group_sender_address);
                 if (fm != null)
                 {
                     // TODO this can probably be removed now
@@ -82,10 +82,10 @@ namespace SPIXI
 
         public static void handleRequestFileData(Address sender, SpixiMessage data)
         {
-            Friend friend = FriendList.getFriend(sender);
+            Friend? friend = FriendList.getFriend(sender);
             if (friend != null)
             {
-                Logging.info("Received request file data");
+                Logging.trace("Received request file data");
 
                 try
                 {
@@ -127,14 +127,28 @@ namespace SPIXI
 
         public static void handleFileFullyReceived(Address sender, SpixiMessage data)
         {
-            Friend friend = FriendList.getFriend(sender);
-            if (friend == null)
+            var uid = Crypto.hashToString(data.data);
+            var ft = TransferManager.getOutgoingTransfer(uid);
+            if (ft != null && ft.groupAddress != null)
             {
-                Logging.error("Received file fully received from an unknown friend.");
+                Friend? friend = FriendList.getFriend(ft.groupAddress);
+                if (friend != null && friend.type == FriendType.Group)
+                {
+                    var chat_message = friend.getMessages(ft.channel)?.Find(x => x.transferId == uid);
+                    if (chat_message != null)
+                    {
+                        friend.addReaction(sender, new ReactionMessage(chat_message.id, "fileReceived:"), ft.channel);
+                        if (chat_message.completed)
+                        {
+                            TransferManager.completeFileTransfer(sender, uid);
+                        }
+                    }
+                }
+
                 return;
             }
 
-            TransferManager.completeFileTransfer(sender, Crypto.hashToString(data.data));
+            TransferManager.completeFileTransfer(sender, uid);
         }
 
         // Called when an encryption key is received from the S2 server, as per step 4 of the WhitePaper
@@ -191,9 +205,9 @@ namespace SPIXI
 
             StreamMessage message = rdr.streamMessage;
             SpixiMessage spixi_message = rdr.spixiMessage;
-            Friend friend = rdr.friend;
+            Friend? friend = rdr.friend;
             Address sender_address = rdr.senderAddress;
-            Address real_sender_address = rdr.realSenderAddress;
+            Address? group_sender_address = rdr.groupSenderAddress;
 
             int channel = 0;
             try
@@ -241,7 +255,7 @@ namespace SPIXI
 
                     case SpixiMessageCode.fileHeader:
                         {
-                            handleFileHeader(sender_address, spixi_message, message.id);
+                            handleFileHeader(sender_address, spixi_message, message.id, group_sender_address);
                         }
                         break;
 
@@ -362,12 +376,12 @@ namespace SPIXI
                         if (spixi_message.data != null && spixi_message.data.Length < 500000)
                         {
                             byte[] resized_avatar = SFilePicker.ResizeImage(spixi_message.data, 128, 128, 100);
-                            FriendList.setAvatar(sender_address, spixi_message.data, resized_avatar, real_sender_address);
+                            FriendList.setAvatar(sender_address, spixi_message.data, resized_avatar, group_sender_address);
                             UIHelpers.shouldRefreshContacts = true;
                         }
                         else
                         {
-                            //FriendList.setAvatar(sender_address, null, null, real_sender_address);
+                            //FriendList.setAvatar(sender_address, null, null, group_sender_address);
                         }
                         break;
 
@@ -381,7 +395,7 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.chat:
-                        Node.addMessageWithType(message.id, FriendMessageType.standard, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), false, real_sender_address, message.timestamp, fireLocalNotification, alert, 0);
+                        Node.addMessageWithType(message.id, FriendMessageType.standard, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), false, group_sender_address, message.timestamp, fireLocalNotification, alert, 0);
                         if (friend != null && !friend.bot)
                         {
                             sendReceivedConfirmation(friend, sender_address, message.id, channel);
@@ -389,24 +403,14 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.msgReceived:
-                        {
-                            UIHelpers.shouldRefreshContacts = true;
-                            var fm = friend.getMessage(channel, spixi_message.data);
-                            if (fm != null)
-                            {
-                                UIHelpers.updateMessage(friend, channel, fm);
-                            }
-                        }
-                        break;
-                            
                     case SpixiMessageCode.msgRead:
                         {
-                            UIHelpers.shouldRefreshContacts = true;
                             var fm = friend.getMessage(channel, spixi_message.data);
                             if (fm != null)
                             {
                                 UIHelpers.updateMessage(friend, channel, fm);
                             }
+                            UIHelpers.shouldRefreshContacts = true;
                         }
                         break;
 
@@ -432,12 +436,12 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.nick:
-                        if (friend.bot && real_sender_address != null)
+                        if (friend.bot && group_sender_address != null)
                         {
                             // update UI with the new nick
                             Logging.info("Updating group chat nicks");
-                            var nick = friend.users.getUser(real_sender_address).getNick();
-                            UIHelpers.updateGroupChatNicks(friend, real_sender_address, nick);
+                            var nick = friend.users.getUser(group_sender_address).getNick();
+                            UIHelpers.updateGroupChatNicks(friend, group_sender_address, nick);
                         }else
                         {
                             UIHelpers.shouldRefreshContacts = true;
@@ -468,7 +472,6 @@ namespace SPIXI
 
                     case SpixiMessageCode.transactionSend:
                         {
-                            UIHelpers.shouldRefreshTransactions = true;
                             var ts = new TransactionSend(spixi_message.data);
                             var msgId = ts.RequestId;
                             if (ts.RequestId == null)
@@ -476,9 +479,19 @@ namespace SPIXI
                                 msgId = message.id;
                             }
                             Node.addMessageWithType(msgId, FriendMessageType.sentFunds, sender_address, 0, ts.Transaction.getTxIdString());
-
+                            UIHelpers.shouldRefreshTransactions = true;
                             break;
                         }
+
+                    case SpixiMessageCode.createGroup:
+                        {
+                            UIHelpers.shouldRefreshContacts = true;
+                            break;
+                        }
+
+                    case SpixiMessageCode.leave:
+                        UIHelpers.shouldRefreshContacts = true;
+                        break;
                 }
             }catch(Exception e)
             {

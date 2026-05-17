@@ -3,6 +3,8 @@ using IXICore.Activity;
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Streaming;
+using IXICore.Streaming.Models;
+using IXICore.Utils;
 using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.ApplicationModel.DataTransfer;
@@ -61,6 +63,8 @@ namespace SPIXI
         private bool fromSettings = false;
         private bool fromChat = false;
 
+        public bool devMode = false;
+
         // Interal cache object to store contact status items
         private struct contactStatusCacheItem
         {
@@ -82,9 +86,11 @@ namespace SPIXI
             this.Title = "Spixi";
             webView.Opacity = 0;
 
+            devMode = Preferences.Default.Get("devMode", false);
+
             hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
             SpixiLocalization.addCustomString("miniAppsStartNoteHidden", Preferences.Default.Get("miniAppsStartNoteHidden", false) ? "true" : "false");
-            SpixiLocalization.addCustomString("devMode", Preferences.Default.Get("devMode", false) ? "true" : "false");
+            SpixiLocalization.addCustomString("devMode", devMode ? "true" : "false");
             SpixiLocalization.addCustomString("apps-not-sure-text", string.Format(SpixiLocalization.getLocalizedString("apps-not-sure-text"), Config.spixiAppsUrl));
 
             loadPage(webView, "index.html");
@@ -278,7 +284,7 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
                 string id = split[1];
-                onChat(id, e);
+                onChat(new Address(id), e);
             }
             else if (current_url.Contains("ixian:details:"))
             {
@@ -431,7 +437,14 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:enableDevMode", StringComparison.Ordinal))
             {
                 Preferences.Default.Set("devMode", true);
+                devMode = true;
                 SpixiLocalization.addCustomString("devMode", "true");
+            }
+            else if (current_url.StartsWith("ixian:disableDevMode", StringComparison.Ordinal))
+            {
+                Preferences.Default.Set("devMode", false);
+                devMode = false;
+                SpixiLocalization.addCustomString("devMode", "false");
             }
             else if (current_url.StartsWith("ixian:dev", StringComparison.Ordinal))
             {
@@ -514,34 +527,81 @@ namespace SPIXI
 
             string id_to_add = split[0];
             var contactNewPage = new ContactNewPage(id_to_add);
-            contactNewPage.pickSucceeded += HandlePickSucceeded;
+            contactNewPage.pickSucceeded += (sender, e) =>
+            {
+                HandlePickSucceeded(sender, new() { new ExtendedAddress(e.Value) }, null, false);
+            };
             Navigation.PushAsync(contactNewPage, Config.defaultXamarinAnimations);
             return;
         }
 
-        // Show the recipientpage
+        // Show the recipient page
         public void newChat()
         {
-            var recipientPage = new WalletRecipientPage();
-            recipientPage.pickSucceeded += HandlePickSucceeded;
+            var recipientPage = new WalletRecipientPage(true, false);
+            recipientPage.pickSucceeded += (sender, e) =>
+            {
+                HandlePickSucceeded(sender, e);
+            }; 
             Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
         }
 
-        private async void HandlePickSucceeded(object? sender, SPIXI.EventArgs<string> e)
+        private async void HandlePickSucceeded(object? sender, EventArgs<(List<ExtendedAddress>, string?, bool)> e)
         {
-            string id = e.Value;
-            Address id_bytes = new Address(id);
-            Friend? friend = FriendList.getFriend(id_bytes);
+            HandlePickSucceeded(sender, e.Value.Item1, e.Value.Item2, e.Value.Item3);
+        }
 
-            if (friend == null)
+        private async void HandlePickSucceeded(object? sender, List<ExtendedAddress> addresses, string? groupName, bool blindMode)
+        {
+            if (addresses.Count == 0)
             {
+                await displaySpixiAlert("No recipient selected", "Please select a recipient to start the chat.", "OK");
                 return;
+            }
+
+            bool hideParticipantAddresses = blindMode;
+            Address address = addresses.First().RoutingAddress;
+            
+            if (addresses.Count > 1)
+            {
+                // group
+                if (string.IsNullOrEmpty(groupName))
+                {
+                    Logging.error("Group name is null for group chat creation.");
+                    return;
+                }
+
+                var contacts = addresses.ToOrderedDictionary(x => x.RoutingAddress, x => FriendList.getFriend(x.RoutingAddress)?.nickname, new AddressComparer());
+                var g = GroupChat.CreateGroup(new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), contacts, groupName, hideParticipantAddresses);
+                if (g != null)
+                {
+                    string avatarPath = WalletRecipientPage.temporaryImagePath;
+                    if (File.Exists(avatarPath))
+                    {
+                        var avatar = File.ReadAllBytes(avatarPath);
+                        byte[] resized_avatar = SFilePicker.ResizeImage(avatar, 128, 128, 100);
+                        FriendList.setAvatar(g.walletAddress, avatar, resized_avatar, null);
+                        File.Delete(avatarPath);
+                    }
+                    var cgm = new SpixiMessage(SpixiMessageCode.createGroup, new CreateGroupMessage(g.metaData.botInfo.randomId, groupName, contacts, new(), hideParticipantAddresses).getBytes());
+                    CoreStreamProcessor.sendSpixiMessage(g, cgm);
+                }
+                address = g.walletAddress;
+            }
+            else
+            {
+                Friend? friend = FriendList.getFriend(address);
+
+                if (friend == null)
+                {
+                    return;
+                }
             }
 
             try
             {
                 popPageAsync();
-                onChat(id, null);
+                onChat(address, null);
             }
             catch (Exception ex)
             {
@@ -704,11 +764,9 @@ namespace SPIXI
             Navigation.PushAsync(new WalletSentPage(activity.transaction), Config.defaultXamarinAnimations);
         }
 
-        public async void onChat(string friend_address, WebNavigatingEventArgs? ev)
+        public async void onChat(Address friend_address, WebNavigatingEventArgs? ev)
         {
-            Address id_bytes = new Address(friend_address);
-
-            Friend? friend = FriendList.getFriend(id_bytes);
+            Friend? friend = FriendList.getFriend(friend_address);
 
             if (friend == null)
             {
@@ -798,6 +856,11 @@ namespace SPIXI
                 if (avatar == null)
                 {
                     avatar = "img/spixiavatar.png";
+
+                    if (friend.type == FriendType.Group)
+                    {
+                        avatar = "img/spixi-group-avatar.png";
+                    }
                 }
 
                 Utils.sendUiCommand(this, "addContact", friend.walletAddress.ToString(), friend.nickname, avatar, str_online, friend.getUnreadMessageCount().ToString());
@@ -952,6 +1015,11 @@ namespace SPIXI
                     if(avatar == null)
                     {
                         avatar = "img/spixiavatar.png";
+
+                        if (friend.type == FriendType.Group)
+                        {
+                            avatar = "img/spixi-group-avatar.png";
+                        }
                     }
 
                     string type = "";
@@ -1142,7 +1210,7 @@ namespace SPIXI
                 addPaymentActivity(activity);
             }
 
-            foreach (var activity in Node.activityStorage.getActivitiesBySeedHashAndType(IxianHandler.getWalletStorage().getSeedHash(), null))
+            foreach (var activity in Node.activityStorage.getActivitiesBySeedHashAndType(IxianHandler.getWalletStorage().getSeedHash(), null, null, 0, true))
             {
                 if (activity.status == IXICore.Activity.ActivityStatus.Rejected
                     || activity.status == IXICore.Activity.ActivityStatus.Reverted
@@ -1165,6 +1233,21 @@ namespace SPIXI
             }
         }
 
+        private void updateDebugOverlay()
+        {
+            if (!devMode)
+            {
+                return;
+            }
+
+            string info = "";
+            info += "<a title='Network Messages (Received/Sent/Error Sending)'><span>NETM:</span>" + RemoteEndpoint.receivedNetworkMessages + "/" + RemoteEndpoint.sentNetworkMessages + "/" + (RemoteEndpoint.toSendNetworkMessages - RemoteEndpoint.sentNetworkMessages) + "</a>";
+            info += "<a title='Stream Messages (Received/To Send/Sent)'><span>STRM:</span>" + CoreStreamProcessor.receivedStreamMessages + "/" + PendingMessageProcessor.toSendStreamMessages + "/" + PendingMessageProcessor.sentStreamMessages + "</a>";
+            info += "<a title='Offline Messages (Received/Sent)'><span>OFFM:</span>" + OfflinePushMessages.receivedOfflineMessages + "/" + OfflinePushMessages.sentOfflineMessages + "</a>";
+            info += "<a title='Pending Stream Messages'><span>PSTRM:</span>" + CoreStreamProcessor.pendingMessageProcessor.countPendingMessages() + "</a>";
+            Utils.sendUiCommand(this, "updateDebugInfo", info);
+        }
+
         // Executed every second
         public override void updateScreen()
         {
@@ -1178,11 +1261,11 @@ namespace SPIXI
                     App.startingScreen = "";
                     try
                     {
-                        onChat(startingScreen, null);
+                        onChat(new Address(startingScreen), null);
                     }
                     catch (Exception e)
                     {
-                        Logging.error("Error in home update screen: " + e);
+                        Logging.error("Error in selecting start screen: " + e);
                     }
                     return;
                 }
@@ -1243,6 +1326,8 @@ namespace SPIXI
                 }
 
                 SPushService.clearNotifications(FriendList.getUnreadMessageCount());
+
+                updateDebugOverlay();
             }
             catch (Exception e)
             {
@@ -1455,10 +1540,10 @@ namespace SPIXI
 
         private void onStartAppMulti(string appId)
         {
-            var recipientPage = new WalletRecipientPage();
+            var recipientPage = new WalletRecipientPage(false, false);
             recipientPage.pickSucceeded += (sender, e) =>
             {
-                HandlePickAppMultiUserSucceeded(sender, e, appId);
+                HandlePickAppMultiUserSucceeded(sender, e.Value.Item1, appId);
             };
 
             MainThread.BeginInvokeOnMainThread(() =>
@@ -1467,11 +1552,10 @@ namespace SPIXI
             });
         }
 
-        private async void HandlePickAppMultiUserSucceeded(object sender, SPIXI.EventArgs<string> e, string appId)
+        private async void HandlePickAppMultiUserSucceeded(object sender, List<ExtendedAddress> addresses, string appId)
         {
-            string id = e.Value;
-            Address id_bytes = new Address(id);
-            Friend friend = FriendList.getFriend(id_bytes);
+            Address address = new Address(addresses.First().RoutingAddress);
+            Friend? friend = FriendList.getFriend(address);
 
             if (friend == null)
             {
@@ -1482,7 +1566,7 @@ namespace SPIXI
             {
                 popPageAsync();
 
-                byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
+                byte[] session_id = onJoinApp(appId, new Address[] { address });
 
                 var app_info = Node.MiniAppManager.getAppInfo(appId);
                 var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null, app_info);

@@ -17,6 +17,7 @@ namespace SPIXI
         public ulong fileSize = 0;
         public byte[] preview = null;       // Additional preview data
         public Address sender = null;        // Additional sender address field
+        public Address? groupAddress = null;
         public int packetSize = Config.packetDataSize;
 
         public bool incoming = false;       // Incoming or outgoing flag
@@ -226,6 +227,9 @@ namespace SPIXI
             } catch (ThreadInterruptedException)
             {
                 // Thread interrupted, exit gracefully
+            } catch (Exception)
+            {
+
             }
 
             // Cleanup
@@ -299,12 +303,8 @@ namespace SPIXI
             return transfer;
         }
 
-        public static FileTransfer prepareIncomingFileTransfer(byte[] data, Address sender)
+        public static FileTransfer prepareIncomingFileTransfer(FileTransfer transfer)
         {
-            FileTransfer transfer = new FileTransfer(data);
-            transfer.incoming = true;
-            transfer.sender = sender;
-
             lock (incomingTransfers)
             {
                 if (incomingTransfers.Find(x => x.uid.SequenceEqual(transfer.uid)) != null)
@@ -340,11 +340,9 @@ namespace SPIXI
 
         public static bool sendFileData(Friend friend, string uid, ulong packet_number)
         {
-            FileTransfer transfer = TransferManager.getOutgoingTransfer(uid);
+            FileTransfer? transfer = TransferManager.getOutgoingTransfer(uid);
             if (transfer == null)
                 return false;
-
-
 
             using (MemoryStream m = new MemoryStream())
             {
@@ -354,7 +352,7 @@ namespace SPIXI
 
                     writer.Write(packet_number);
 
-                    Logging.info("Sending file packet #{0}", packet_number);
+                    Logging.trace("Sending file packet #{0}", packet_number);
                     byte[] data = transfer.getPacketData(packet_number);
                     
                     // Write the data
@@ -384,7 +382,17 @@ namespace SPIXI
 
             }
 
-            var chat_page = Utils.getChatPage(friend);
+            var chat_friend = friend;
+            if (transfer.groupAddress != null)
+            {
+                chat_friend = FriendList.getFriend(transfer.groupAddress);
+                if (chat_friend == null)
+                {
+                    return false;
+                }
+            }
+
+            var chat_page = Utils.getChatPage(chat_friend);
             if (chat_page != null)
             {
                 ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
@@ -407,7 +415,7 @@ namespace SPIXI
 
         public static bool receiveFileData(byte[] data, Address sender)
         {
-            Logging.info("Received File Data");
+            Logging.trace("Received File Data");
 
             byte[] file_data = null;
             try
@@ -427,7 +435,7 @@ namespace SPIXI
                         if (data_length > 0)
                             file_data = reader.ReadBytes(data_length);
 
-                        Logging.info("File Uid: {0} Packet #{1}", uid, packet_number);
+                        Logging.trace("File Uid: {0} Packet #{1}", uid, packet_number);
 
                         FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
                         if (transfer == null)
@@ -487,7 +495,7 @@ namespace SPIXI
 
         public static bool receiveAcceptFile(Friend friend, string uid)
         {
-            FileTransfer transfer = TransferManager.getOutgoingTransfer(uid);
+            FileTransfer? transfer = TransferManager.getOutgoingTransfer(uid);
             if (transfer == null)
                 return false;
           
@@ -496,26 +504,26 @@ namespace SPIXI
         }
 
 
-        public static FileTransfer getOutgoingTransfer(string uid)
+        public static FileTransfer? getOutgoingTransfer(string uid)
         {
             FileTransfer transfer = outgoingTransfers.Where(x => x.uid.Contains(uid)).FirstOrDefault();
             return transfer;
         }
 
-        public static FileTransfer getIncomingTransfer(string uid)
+        public static FileTransfer? getIncomingTransfer(string uid)
         {
-            FileTransfer transfer = incomingTransfers.Where(x => x.uid.Contains(uid)).FirstOrDefault();
+            FileTransfer? transfer = incomingTransfers.Where(x => x.uid.Contains(uid)).FirstOrDefault();
             return transfer;
         }
 
         public static void completeFileTransfer(Address sender, string uid)
         {
-            Friend friend = FriendList.getFriend(sender);
+            Friend? friend = FriendList.getFriend(sender);
             if (friend == null)
                 return;
 
             bool incoming = true;
-            FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
+            FileTransfer? transfer = TransferManager.getIncomingTransfer(uid);
             if (transfer == null)
             {
                 incoming = false;
@@ -546,12 +554,6 @@ namespace SPIXI
 
             removePacketsForFileTransfer(uid);
 
-            FriendMessage fm = friend.getMessages(transfer.channel).Find(x => x.transferId == uid);
-            fm.completed = true;
-            fm.filePath = transfer.filePath;
-
-            IxianHandler.localStorage.requestWriteMessages(friend.walletAddress, transfer.channel);
-
             if(incoming)
             {
                 lock (incomingTransfers)
@@ -566,7 +568,23 @@ namespace SPIXI
                 }
             }
 
-            var chat_page = Utils.getChatPage(friend);
+            var chat_friend = friend;
+            if (transfer.groupAddress != null)
+            {
+                chat_friend = FriendList.getFriend(transfer.groupAddress);
+                if (chat_friend == null)
+                {
+                    return;
+                }
+            }
+
+            FriendMessage fm = chat_friend.getMessages(transfer.channel).Find(x => x.transferId == uid);
+            fm.completed = true;
+            fm.filePath = transfer.filePath;
+
+            IxianHandler.localStorage.requestWriteMessages(chat_friend.walletAddress, transfer.channel);
+
+            var chat_page = Utils.getChatPage(chat_friend);
             if (chat_page != null)
             {
                 chat_page.updateFile(uid, "100", true);
@@ -592,8 +610,8 @@ namespace SPIXI
 
         public static void requestFileData(Address sender, string uid, ulong packet_number)
         {
-            Logging.info("Requesting File Data, packet #{0}", packet_number);
-            Friend friend = FriendList.getFriend(sender);
+            Logging.trace("Requesting File Data, packet #{0}", packet_number);
+            Friend? friend = FriendList.getFriend(sender);
             if (friend == null)
                 return;
 
@@ -618,13 +636,23 @@ namespace SPIXI
 
                 CoreStreamProcessor.sendMessage(friend, message, false, false, false, !message.requireRcvConfirmation);
 
-                var chat_page = Utils.getChatPage(friend);
+                FileTransfer? transfer = TransferManager.getIncomingTransfer(uid);
+                if (transfer == null)
+                    return;
+
+                var chat_friend = friend;
+                if (transfer.groupAddress != null)
+                {
+                    chat_friend = FriendList.getFriend(transfer.groupAddress);
+                    if (chat_friend == null)
+                    {
+                        return;
+                    }
+                }
+
+                var chat_page = Utils.getChatPage(chat_friend);
                 if (chat_page != null)
                 {
-                    FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
-                    if (transfer == null)
-                        return;
-
                     ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
                     ulong fp = 0;
                     if (packet_number > 0

@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = Sì, cancella chat
 contact-details-delete-contact-modal-title = Rimuovi dai contatti
 contact-details-delete-contact-modal-subtitle = Questo contatto verrà rimosso dalla tua lista. Non potrai più inviare o ricevere messaggi a meno che non lo aggiunga di nuovo.
 contact-details-delete-contact-modal-confirm = Sì, rimuovi contatto
+contact-details-cannotremovecontact-title = Impossibile rimuovere il contatto
+contact-details-cannotremovecontact-text = Questo contatto non può essere rimosso perché è un partecipante di un gruppo.
 
 ; Schermata Nuovo Contatto
 contact-new-title = Aggiungi Nuovo Contatto
@@ -499,6 +501,14 @@ wallet-recipient-add = Aggiungi Destinatario(i)
 wallet-recipient-selected = Destinatario(i) selezionati
 wallet-recipient-new-contact-button = Aggiungi Nuovo Contatto
 wallet-recipient-no-contact-button = Nuovo Contatto
+wallet-recipient-new-chat-button = Nuova chat
+wallet-recipient-new-group-button = Crea gruppo
+wallet-recipient-group-settings = Impostazioni gruppo
+wallet-recipient-group-image-edit = Modifica immagine gruppo
+wallet-recipient-group-name = Nome del gruppo
+wallet-recipient-group-name-placeholder = Inserisci il nome del gruppo
+wallet-recipient-group-blind-mode = Modalità cieca
+wallet-recipient-group-blind-mode-info = Quando abilitata, solo il creatore del gruppo può vedere l’elenco degli indirizzi dei contatti. Gli altri membri vedranno solo i nickname.
 
 ; Schermata Richiesta Portafoglio
 wallet-request-title = Richiedi Pagamento

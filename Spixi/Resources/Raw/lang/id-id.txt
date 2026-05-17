@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = Ya, Bersihkan Obrolan
 contact-details-delete-contact-modal-title = Hapus dari kontak
 contact-details-delete-contact-modal-subtitle = Ini akan menghapus kontak dari daftar Anda. Anda tidak dapat mengirim atau menerima pesan kecuali Anda menambahkannya kembali.
 contact-details-delete-contact-modal-confirm = Ya, Hapus Kontak
+contact-details-cannotremovecontact-title = Tidak Dapat Menghapus Kontak
+contact-details-cannotremovecontact-text = Kontak ini tidak dapat dihapus karena merupakan peserta dalam grup.
 
 ; New Contact Screen
 contact-new-title = Kontak Baru
@@ -499,6 +501,14 @@ wallet-recipient-add = Tambahkan Penerima
 wallet-recipient-selected = Penerima yang dipilih
 wallet-recipient-new-contact-button = Tambahkan Kontak Baru
 wallet-recipient-no-contact-button = Kontak Baru
+wallet-recipient-new-chat-button = Chat Baru
+wallet-recipient-new-group-button = Buat Grup
+wallet-recipient-group-settings = Pengaturan Grup
+wallet-recipient-group-image-edit = Edit Gambar Grup
+wallet-recipient-group-name = Nama Grup
+wallet-recipient-group-name-placeholder = Masukkan nama grup
+wallet-recipient-group-blind-mode = Mode Buta
+wallet-recipient-group-blind-mode-info = Saat diaktifkan, hanya pembuat grup yang dapat melihat daftar alamat kontak. Anggota lain hanya akan melihat nama panggilan.
 
 ; Wallet Request Screen
 wallet-request-title = Minta Pembayaran

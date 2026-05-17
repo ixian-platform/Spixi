@@ -8,6 +8,7 @@ using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.MiniApps;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -288,10 +289,10 @@ namespace SPIXI
                 return;
             }
 
-            var recipientPage = new WalletRecipientPage();
+            var recipientPage = new WalletRecipientPage(false, false);
             recipientPage.pickSucceeded += (sender, e) =>
             {
-                HandlePickAppMultiUserSucceeded(sender, e, appId);
+                HandlePickAppMultiUserSucceeded(sender, e.Value.Item1, appId);
             };
 
             MainThread.BeginInvokeOnMainThread(() =>
@@ -300,11 +301,10 @@ namespace SPIXI
             });
         }
 
-        private async void HandlePickAppMultiUserSucceeded(object sender, SPIXI.EventArgs<string> e, string appId)
+        private async void HandlePickAppMultiUserSucceeded(object? sender, List<ExtendedAddress> e, string appId)
         {
-            string id = e.Value;
-            Address id_bytes = new Address(id);
-            Friend friend = FriendList.getFriend(id_bytes);
+            Address address = e.First().RoutingAddress;
+            Friend? friend = FriendList.getFriend(address);
 
             if (friend == null)
             {
@@ -315,7 +315,7 @@ namespace SPIXI
             {
                 popPageAsync();
 
-                byte[] session_id = onJoinApp(appId, new Address[] { id_bytes });
+                byte[] session_id = onJoinApp(appId, new Address[] { address });
 
                 var app_info = Node.MiniAppManager.getAppInfo(appId);
                 var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null, app_info);

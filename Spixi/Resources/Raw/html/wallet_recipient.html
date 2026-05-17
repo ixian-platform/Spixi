@@ -61,23 +61,73 @@
                 <i class="fa-solid fa-plus"></i> *SL{wallet-recipient-new-contact-button}
             </div>
 
+            <div id="newchat" class="spixi-flat-button margin" style="display: none;">
+                <i class="fa-solid fa-plus"></i> *SL{wallet-recipient-new-chat-button}
+            </div>
+
+            <div id="newgroup" class="spixi-flat-button margin" style="display: none;">
+                <i class="fa-solid fa-plus"></i> *SL{wallet-recipient-new-group-button}
+            </div>
+
             <hr class="spixi-separator-main" />
 
             <div id="contactslist" class="container">
             </div>
             <!--
-    <hr class="spixi-separator-main" />
+        <hr class="spixi-separator-main" />
 
-    <div id="recipientslabel" class="spixi-textsection-holder">
-        *SL{wallet-recipient-empty}
-    </div>
-    <hr class="spixi-separator" />
+        <div id="recipientslabel" class="spixi-textsection-holder">
+            *SL{wallet-recipient-empty}
+        </div>
+        <hr class="spixi-separator" />
 
-    <div id="sendrequest" class="spixi-button small center padding-top disabled">
-        *SL{wallet-recipient-add}
-    </div>
-        -->
+        <div id="sendrequest" class="spixi-button small center padding-top disabled">
+            *SL{wallet-recipient-add}
+        </div>
+            -->
             <div class="spixi-holder-20"></div>
+        </div>
+
+        <div id="createGroupModal" class="spixi-modal" onclick="this.style.display = 'none';">
+            <!-- Modal content -->
+            <div class="modal-content" onclick="event.stopPropagation();">
+                <div class="spixi-modal-header warn">
+                    *SL{wallet-recipient-group-settings}
+                </div>
+
+                <div class="spixi-textsection-holder spixi-textsection-header2">
+                    *SL{wallet-recipient-group-image-edit}
+                </div>
+
+                <div id="avatar" class="spixi-button round padding-left padding-top" style="display: block;" onclick="location.href='ixian:avatar';">
+                    <i id="avatar_icon" class="fas fa-image"></i>
+                    <img id="avatar_image" class="spixi-avatar" src="" style="display: none" />
+                </div>
+
+                <div class="spixi-textsection-holder2 spixi-textsection-header2">
+                    *SL{wallet-recipient-group-name}
+                </div>
+                <div class="spixi-textfield-holder2">
+                    <input type="text" class="spixi-textfield" id="groupNameInput" onkeyup="enableButton();" placeholder="*SL{wallet-recipient-group-name-placeholder}">
+                    <span class="fa fa-pencil-alt spixi-textfield-holder-icon"></span>
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+
+                <div class="spixi-textsection-holder2 spixi-textsection-header2">
+                    <label class="spixi-switch-label" for="blindModeInput">*SL{wallet-recipient-group-blind-mode}</label>
+                    <input type="checkbox" id="blindModeInput" class="spixi-switch" />
+                </div>
+
+                <div class="spixi-textsection-holder2 spixi-textsection-header2">
+                    *SL{wallet-recipient-group-blind-mode-info}
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div id="createGroupButton" class="spixi-button small center padding-top disabled" onclick="selectContacts();">*SL{wallet-recipient-new-group-button}</div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -86,6 +136,11 @@
     <script type="text/javascript">
         var recipients = [];
         var searchingContacts = false;
+        var multiContactMode = false;
+
+        function setMultiContactMode() {
+            multiContactMode = true;
+        }
 
         //var sendrequest = document.getElementById("sendrequest");
 
@@ -104,13 +159,26 @@
             location.href = "ixian:newcontact";
         }
 
+        document.getElementById("newgroup").onclick = function () {
+            document.getElementById("createGroupModal").style.display = "block";
+        }
+
+        document.getElementById("newchat").onclick = function () {
+            selectContacts();
+        }
+
         function selectContacts() {
             var suffix = "";
             var i;
             for (i = 0; i < recipients.length; i++) {
                 suffix = suffix + "|" + recipients[i];
             }
-            location.href = "ixian:select:" + suffix;
+            let blindMode = "0";
+            if (document.getElementById("blindModeInput").checked) {
+                blindMode = "1";
+            }
+            const name = document.getElementById("groupNameInput").value;
+            location.href = "ixian:select:" + blindMode + name + ":" + suffix;
         }
 
         // Filter in the CONTACTS tab
@@ -135,6 +203,8 @@
                 a = b.getElementsByTagName("div")[0];
 
                 if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    c_items[i].style.display = "";
+                } else if (row.id.toUpperCase().indexOf(filter) > -1) {
                     c_items[i].style.display = "";
                 } else {
                     c_items[i].style.display = "none";
@@ -161,7 +231,7 @@
         }
 
         // Adds a contact to the contacts page
-        function addContact(wal, name, avatar, online) {            
+        function addContact(wal, name, avatar, online, type) {
             if (searchingContacts == true) {
                 return;
             }
@@ -178,14 +248,17 @@
 
             var contactEntry = document.createElement("div");
             contactEntry.className = "spixi-list-item";
-            //contactEntry.innerHTML = '<a href="javascript:selectRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="fa fa-square spixi-list-item-action-icon"></i></div></div></a>';
-            contactEntry.innerHTML = '<a href="javascript:selectSingleRecipient(\'' + wal + '\')"><div class="row" style="flex-wrap: unset" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-10 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+            if (multiContactMode && type == 0) {
+                contactEntry.innerHTML = '<a href="javascript:selectRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="fa fa-square spixi-list-item-action-icon"></i></div></div></a>';
+            } else {
+                contactEntry.innerHTML = '<a href="javascript:selectSingleRecipient(\'' + wal + '\')"><div class="row" style="flex-wrap: unset" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-10 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+            }
 
             contactsNode.appendChild(contactEntry);
         }
 
         function selectSingleRecipient(rep) {
-            location.href = "ixian:select:|" + rep;
+            location.href = "ixian:select:0:|" + rep;
         }
 
         function selectRecipient(rep) {
@@ -206,7 +279,8 @@
             for (i = 0; i < recipients.length; i++) {
                 if (rep == recipients[i]) {
                     recipients.splice(i, 1);
-                    updateRecipientsLabel();
+                    //updateRecipientsLabel();
+                    updateButton();
                     return;
                 }
             }
@@ -215,7 +289,28 @@
             check.className = "fa fa-check-square spixi-list-item-action-icon";
 
             recipients.push(rep);
-            updateRecipientsLabel();
+            //updateRecipientsLabel();
+            updateButton();
+        }
+
+        function updateButton() {
+            switch (recipients.length) {
+                case 0:
+                    document.getElementById("newcontact").style.display = "";
+                    document.getElementById("newchat").style.display = "none";
+                    document.getElementById("newgroup").style.display = "none";
+                    break;
+                case 1:
+                    document.getElementById("newcontact").style.display = "none";
+                    document.getElementById("newchat").style.display = "";
+                    document.getElementById("newgroup").style.display = "none";
+                    break;
+                case 2:
+                    document.getElementById("newcontact").style.display = "none";
+                    document.getElementById("newchat").style.display = "none";
+                    document.getElementById("newgroup").style.display = "";
+                    break;
+            }
         }
 
         function updateRecipientsLabel() {
@@ -228,6 +323,22 @@
                 document.getElementById("sendrequest").className = "spixi-button small center padding-top";
             else
                 document.getElementById("sendrequest").className = "spixi-button small center padding-top disabled";
+        }
+
+        function loadAvatar(avatar_path) {
+            avatar_path = avatar_path.replace(/&bsol;/g, '/');
+
+            document.getElementById("avatar_image").src = avatar_path + "?t=" + new Date().getTime();
+            document.getElementById("avatar_icon").style.display = "none";
+            document.getElementById("avatar_image").style.display = "block";
+        }
+
+        function enableButton() {
+            if (document.getElementById("groupNameInput").value != "") {
+                document.getElementById("createGroupButton").className = "spixi-button small center padding-top";
+            } else {
+                document.getElementById("createGroupButton").className = "spixi-button small center padding-top disabled";
+            }
         }
 
 

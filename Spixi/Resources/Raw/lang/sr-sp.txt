@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = Da, obriši čet
 contact-details-delete-contact-modal-title = Ukloniti iz kontakata
 contact-details-delete-contact-modal-subtitle = Ovo će kontakt ukloniti sa vaše liste. Nećete moći slati ni primati poruke dok ga ponovo ne dodate.
 contact-details-delete-contact-modal-confirm = Da, ukloni kontakt
+contact-details-cannotremovecontact-title = Nije moguće ukloniti kontakt
+contact-details-cannotremovecontact-text = Ovaj kontakt nije moguće ukloniti jer je učesnik grupe.
 
 ; New Contact Screen
 contact-new-title = Dodaj novi kontakt
@@ -499,6 +501,14 @@ wallet-recipient-add = Dodaj primaoce
 wallet-recipient-selected = Izabrani primaoci
 wallet-recipient-new-contact-button = Dodaj novi kontakt
 wallet-recipient-no-contact-button = Novi kontakt
+wallet-recipient-new-chat-button = Novo ćaskanje
+wallet-recipient-new-group-button = Kreiraj grupu
+wallet-recipient-group-settings = Podešavanja grupe
+wallet-recipient-group-image-edit = Izmeni sliku grupe
+wallet-recipient-group-name = Naziv grupe
+wallet-recipient-group-name-placeholder = Unesite naziv grupe
+wallet-recipient-group-blind-mode = Slepi režim
+wallet-recipient-group-blind-mode-info = Kada je omogućeno, samo kreator grupe može videti listu adresa kontakata. Ostali članovi će videti samo nadimke.
 
 ; Wallet Request Screen
 wallet-request-title = Zahtevaj uplatu

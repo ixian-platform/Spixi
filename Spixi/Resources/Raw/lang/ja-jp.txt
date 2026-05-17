@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = はい、チャットを消去
 contact-details-delete-contact-modal-title = 連絡先から削除
 contact-details-delete-contact-modal-subtitle = これにより相手が連絡先リストから削除されます。再追加するまでメッセージの送受信はできません。
 contact-details-delete-contact-modal-confirm = はい、連絡先を削除
+contact-details-cannotremovecontact-title = 連絡先を削除できません
+contact-details-cannotremovecontact-text = この連絡先はグループの参加者であるため、削除できません。
 
 ; New Contact Screen
 contact-new-title = 新しい連絡先を追加
@@ -499,6 +501,14 @@ wallet-recipient-add = 受取人を追加
 wallet-recipient-selected = 選択された受取人
 wallet-recipient-new-contact-button = 新しい連絡先を追加
 wallet-recipient-no-contact-button = 新しい連絡先
+wallet-recipient-new-chat-button = 新しいチャット
+wallet-recipient-new-group-button = グループを作成
+wallet-recipient-group-settings = グループ設定
+wallet-recipient-group-image-edit = グループ画像を編集
+wallet-recipient-group-name = グループ名
+wallet-recipient-group-name-placeholder = グループ名を入力
+wallet-recipient-group-blind-mode = ブラインドモード
+wallet-recipient-group-blind-mode-info = 有効にすると、グループ作成者のみが連絡先アドレスの一覧を表示できます。他のメンバーにはニックネームのみ表示されます。
 
 ; Wallet Request Screen
 wallet-request-title = 支払いをリクエスト

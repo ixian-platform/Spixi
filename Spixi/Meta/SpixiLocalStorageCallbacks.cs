@@ -8,7 +8,7 @@ namespace SPIXI.Meta
 {
     internal class SpixiLocalStorageCallbacks : LocalStorageCallbacks
     {
-        public void processMessage(FriendMessage friendMessage)
+        public void processMessage(Friend friend, int channel, FriendMessage friendMessage)
         {
             if (friendMessage.filePath != "")
             {
@@ -21,7 +21,17 @@ namespace SPIXI.Meta
                         {
                             // TODO may not work on Android/iOS due to unauthorized access
                             FileStream fs = new FileStream(friendMessage.filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                            TransferManager.prepareFileTransfer(t_file_name, fs, friendMessage.filePath, friendMessage.transferId);
+                            var ft = TransferManager.prepareFileTransfer(t_file_name, fs, friendMessage.filePath, friendMessage.transferId);
+                            if (ft == null)
+                            {
+                                Logging.error("Failed to prepare file transfer for file '{0}' - friend '{1}', full path '{2}'", t_file_name, friend.walletAddress.ToString(), friendMessage.filePath);
+                                return;
+                            }
+                            if (friend.bot || friend.type == FriendType.Group)
+                            {
+                                ft.channel = channel;
+                                ft.groupAddress = friend.walletAddress;
+                            }
                         }
                     }
                 }

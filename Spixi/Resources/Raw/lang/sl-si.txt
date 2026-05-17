@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = Da, izbrišem klepet
 contact-details-delete-contact-modal-title = Odstranim iz stikov
 contact-details-delete-contact-modal-subtitle = S tem boste kontakt odstranili s svojega seznama. Do takrat ne boste mogli pošiljati ali prejemati sporočil, razen če ga znova dodate.
 contact-details-delete-contact-modal-confirm = Da, odstranim stik
+contact-details-cannotremovecontact-title = Stika ni mogoče odstraniti
+contact-details-cannotremovecontact-text = Tega stika ni mogoče odstraniti, ker je udeleženec skupine.
 
 ; New Contact Screen
 contact-new-title = Dodaj nov stik
@@ -499,6 +501,14 @@ wallet-recipient-add = Dodaj prejemnika/e
 wallet-recipient-selected = Izbrani prejemniki
 wallet-recipient-new-contact-button = Dodaj nov stik
 wallet-recipient-no-contact-button = Nov stik
+wallet-recipient-new-chat-button = Nov klepet
+wallet-recipient-new-group-button = Ustvari skupino
+wallet-recipient-group-settings = Nastavitve skupine
+wallet-recipient-group-image-edit = Uredi sliko skupine
+wallet-recipient-group-name = Ime skupine
+wallet-recipient-group-name-placeholder = Vnesite ime skupine
+wallet-recipient-group-blind-mode = Slepi način
+wallet-recipient-group-blind-mode-info = Ko je omogočeno, lahko samo ustvarjalec skupine vidi seznam naslovov stikov. Ostali člani bodo videli samo vzdevke.
 
 ; Wallet Request Screen
 wallet-request-title = Zahtevaj plačilo

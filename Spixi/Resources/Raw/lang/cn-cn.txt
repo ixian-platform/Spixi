@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = 是，清除聊天
 contact-details-delete-contact-modal-title = 从联系人中移除
 contact-details-delete-contact-modal-subtitle = 这将把联系人从您的列表中移除。在您重新添加之前，将无法发送或接收消息。
 contact-details-delete-contact-modal-confirm = 是，移除联系人
+contact-details-cannotremovecontact-title = 无法移除联系人
+contact-details-cannotremovecontact-text = 无法移除此联系人，因为他们是某个群组的参与者。
 
 ; New Contact Screen
 contact-new-title = 添加新联系人
@@ -499,6 +501,14 @@ wallet-recipient-add = 添加收款人
 wallet-recipient-selected = 已选择的收款人
 wallet-recipient-new-contact-button = 添加新联系人
 wallet-recipient-no-contact-button = 新联系人
+wallet-recipient-new-chat-button = 新聊天
+wallet-recipient-new-group-button = 创建群组
+wallet-recipient-group-settings = 群组设置
+wallet-recipient-group-image-edit = 编辑群组图片
+wallet-recipient-group-name = 群组名称
+wallet-recipient-group-name-placeholder = 输入群组名称
+wallet-recipient-group-blind-mode = 盲模式
+wallet-recipient-group-blind-mode-info = 启用后，只有群组创建者可以查看联系人地址列表。其他成员只能看到昵称。
 
 ; Wallet Request Screen
 wallet-request-title = 请求付款

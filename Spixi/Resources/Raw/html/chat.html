@@ -62,7 +62,7 @@
                 </div>
                 <div class="spixi-toolbar-chat-body">
                     <div>
-                        <span id="title" class="spixi-toolbar-chat-name" onclick="showBotDetails();"></span>
+                        <span id="title" class="spixi-toolbar-chat-name" onclick="showGroupDetails();"></span>
                         <span id="status" class="spixi-toolbar-chat-status"></span>
                     </div>
                 </div>
@@ -208,7 +208,7 @@
             </div>
         </div>
         <div id="UserTyping"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
-        
+
         <div id="chatbar">
             <div class="chatbar-container">
                 <div class="chat_attach" onclick="toggleAttachBar()">
@@ -233,7 +233,7 @@
                 <i class="fa fa-arrow-down iconRequest"></i>
                 <span class="body-sm">*SL{chat-request-payment}</span>
             </div>
-            <div class="single-attach-bar-item" onclick="toggleAnimatedSlider('AppsMenu')">
+            <div class="single-attach-bar-item" id="ca_app" onclick="toggleAnimatedSlider('AppsMenu')">
                 <i class="fa fa-rocket iconApp"></i>
                 <span class="body-sm">*SL{chat-app}</span>
             </div>
@@ -242,7 +242,7 @@
             <p class="label-md s-text-01 text-center">Choose App</p>
             <div>
                 <input type="text" class="spixi-textfield search-mini-apps" id="searchMiniApps"
-                       oninput="searchMiniApps()" placeholder="Find installed mini apps"/>
+                       oninput="searchMiniApps()" placeholder="Find installed mini apps" />
                 <span class="fa fa-search spixi-textfield-holder-icon mini-apps-search-icon"></span>
             </div>
             <div class="choose-apps-items-container">
@@ -254,7 +254,7 @@
             </div>
         </div>
     </div>
-    <div id="BotDetails" class="spixi-bot-details">
+    <div id="GroupDetails" class="spixi-bot-details">
         <div class="spixi-textsection-holder spixi-textsection-header2">
             *SL{chat-bot-details-info}
         </div>
@@ -262,7 +262,7 @@
         </div>
         <hr class="spixi-separator noheightmargins" />
 
-        <div class="spixi-textsection-holder spixi-textsection-header2">
+        <div id="BotAddressTitle" class="spixi-textsection-holder spixi-textsection-header2" style="display: none;">
             *SL{chat-bot-address} <span class="float-right"><i class="fa fa-chevron-down" onclick="toggleSpixiBotAddress(this, 'BotAddress');"></i></span>
         </div>
         <div id="BotAddress" class="spixi-textsection-holder spixi-bot-address" style="display:none;">
@@ -407,7 +407,7 @@
         const SL_InviteSentTo = "*SL{apps-session-invite-sent-to}";
         const SL_CancelInvite = "*SL{apps-session-invite-cancel}";
 
-        function toggleAttachBar(){
+        function toggleAttachBar() {
             const attachBar = document.getElementById("attach-bar");
 
             if (!attachBar) return;

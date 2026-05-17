@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = Sí, borrar chat
 contact-details-delete-contact-modal-title = Eliminar contacto
 contact-details-delete-contact-modal-subtitle = Este contacto será eliminado de tu lista. No podrás enviar ni recibir mensajes a menos que lo agregues nuevamente.
 contact-details-delete-contact-modal-confirm = Sí, eliminar contacto
+contact-details-cannotremovecontact-title = No se puede eliminar el contacto
+contact-details-cannotremovecontact-text = Este contacto no se puede eliminar porque es participante de un grupo.
 
 ; New Contact Screen
 contact-new-title = Agregar nuevo contacto
@@ -499,6 +501,15 @@ wallet-recipient-add = Agregar destinatarios
 wallet-recipient-selected = Destinatarios seleccionados
 wallet-recipient-new-contact-button = Agregar nuevo contacto
 wallet-recipient-no-contact-button = Nuevo contacto
+wallet-recipient-new-chat-button = Nuevo chat
+wallet-recipient-new-group-button = Crear grupo
+wallet-recipient-group-settings = Configuración del grupo
+wallet-recipient-group-image-edit = Editar imagen del grupo
+wallet-recipient-group-name = Nombre del grupo
+wallet-recipient-group-name-placeholder = Ingrese el nombre del grupo
+wallet-recipient-group-blind-mode = Modo oculto
+wallet-recipient-group-blind-mode-info = Cuando está habilitado, solo el creador del grupo puede ver la lista de direcciones de contacto. Los demás miembros solo verán los apodos.
+
 
 ; Wallet Request Screen
 wallet-request-title = Solicitar pago

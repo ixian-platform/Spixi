@@ -220,6 +220,8 @@ contact-details-delete-history-modal-confirm = Taip, išvalyti pokalbius
 contact-details-delete-contact-modal-title = Pašalinti iš kontaktų
 contact-details-delete-contact-modal-subtitle = Tai pašalins kontaktą iš jūsų sąrašo. Nebelauksite ir siųsti žinučių, kol vėl jo nepridėsite.
 contact-details-delete-contact-modal-confirm = Taip, pašalinti kontaktą
+contact-details-cannotremovecontact-title = Nepavyko pašalinti kontakto
+contact-details-cannotremovecontact-text = Šio kontakto negalima pašalinti, nes jis yra grupės dalyvis.
 
 ; New Contact Screen
 contact-new-title = Pridėti naują kontaktą
@@ -499,6 +501,14 @@ wallet-recipient-add = Pridėti gavėją / -us
 wallet-recipient-selected = Pasirinkta gavėjų
 wallet-recipient-new-contact-button = Pridėti naują kontaktą
 wallet-recipient-no-contact-button = Naujas kontaktas
+wallet-recipient-new-chat-button = Naujas pokalbis
+wallet-recipient-new-group-button = Sukurti grupę
+wallet-recipient-group-settings = Grupės nustatymai
+wallet-recipient-group-image-edit = Redaguoti grupės paveikslėlį
+wallet-recipient-group-name = Grupės pavadinimas
+wallet-recipient-group-name-placeholder = Įveskite grupės pavadinimą
+wallet-recipient-group-blind-mode = Slaptasis režimas
+wallet-recipient-group-blind-mode-info = Kai įjungta, tik grupės kūrėjas gali matyti kontaktų adresų sąrašą. Kiti nariai matys tik slapyvardžius.
 
 ; Wallet Request Screen
 wallet-request-title = Gauti mokėjimą

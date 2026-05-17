@@ -7,6 +7,7 @@ using Microsoft.Maui.Controls.Xaml;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -313,23 +314,19 @@ namespace SPIXI
             }
         }
 
-        private async void HandlePickSucceeded(object? sender, SPIXI.EventArgs<string> e)
+        private async void HandlePickSucceeded(object? sender, SPIXI.EventArgs<(List<ExtendedAddress>, string?, bool)> e)
         {
-            string wallets_to_send = e.Value;
-
-            string[] wallet_arr = wallets_to_send.Split('|');
-
-            foreach (string wallet_to_send in wallet_arr)
+            foreach (var wallet_to_send in e.Value.Item1)
             {
-                var ea = new ExtendedAddress(wallet_to_send);
-                string nickname = ea.ToString();
+                Friend? friend = FriendList.getFriend(wallet_to_send.RoutingAddress);
 
-                Friend? friend = FriendList.getFriend(ea.RoutingAddress);
+                string nickname = wallet_to_send.PaymentAddress.ToString();
                 if (friend != null)
                     nickname = friend.nickname;
 
-                Utils.sendUiCommand(this, "addRecipient", nickname, ea.ToString());
+                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send.ToString());
             }
+
             popPageAsync();
         }
 
