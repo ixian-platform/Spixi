@@ -59,10 +59,11 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:remove", StringComparison.Ordinal))
             {
-                onRemove();
-
-                popToRootAsync();
-                HomePage.Instance().removeDetailContent();
+                if (onRemove())
+                {
+                    popToRootAsync();
+                    HomePage.Instance().removeDetailContent();
+                }
             }
             else if (current_url.Equals("ixian:removehistory", StringComparison.Ordinal))
             {
@@ -118,7 +119,7 @@ namespace SPIXI
 
         }
 
-        private void onRemove()
+        private bool onRemove()
         {
             if (friend.bot && friend.metaData.botInfo != null)
             {
@@ -127,6 +128,7 @@ namespace SPIXI
                 UIHelpers.shouldRefreshContacts = true;
                 CoreStreamProcessor.sendLeave(friend, null);
                 displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
+                return true;
             }
             else
             {
@@ -134,8 +136,14 @@ namespace SPIXI
                 {
                     UIHelpers.shouldRefreshContacts = true;
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    return true;
+                }
+                else
+                {
+                    displaySpixiAlert(SpixiLocalization._SL("contact-details-cannotremovecontact-title"), SpixiLocalization._SL("contact-details-cannotremovecontact-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
+            return false;
         }
 
         private void onRemoveHistory()
@@ -151,40 +159,13 @@ namespace SPIXI
         public void loadTransactions()
         {
             Utils.sendUiCommand(this, "clearRecentActivity");
-            foreach (var activity in Node.activityStorage.getActivitiesByStatus(IXICore.Activity.ActivityStatus.Pending))
-            {
-                Transaction utransaction = activity.transaction;
-                Address from_address = utransaction.pubKey;
-                // Filter out unrelated transactions
-                if (from_address.addressNoChecksum.SequenceEqual(friend.walletAddress.addressNoChecksum) == false)
-                {
-                    if (utransaction.toList.ContainsKey(friend.walletAddress) == false)
-                        continue;
-                }
-
-                string tx_type = SpixiLocalization._SL("global-received");
-                if (from_address.addressNoChecksum.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum))
-                {
-                    tx_type = SpixiLocalization._SL("global-sent");
-                }
-                string time = Utils.unixTimeStampToString(Convert.ToDouble(activity.timestamp));
-                Utils.sendUiCommand(this, "addPaymentActivity", utransaction.getTxIdString(), tx_type, time, utransaction.amount.ToString(), "false");
-            }
-
-            foreach (var activity in Node.activityStorage.getActivitiesBySeedHashAndType(IxianHandler.getWalletStorage().getSeedHash(), null))
+            foreach (var activity in Node.activityStorage.getActivitiesByAddress(friend.walletAddress, null, null, 0, true))
             {
                 Transaction transaction = Node.activityStorage.getActivityById(activity.id, null, true).transaction;
-
-                Address from_address = transaction.pubKey;
-                // Filter out unrelated transactions
-                if (from_address.addressNoChecksum.SequenceEqual(friend.walletAddress.addressNoChecksum) == false)
-                {
-                    if (transaction.toList.ContainsKey(friend.walletAddress) == false)
-                        continue;
-                }
-
+                
                 string tx_type = SpixiLocalization._SL("global-received");
-                if (from_address.addressNoChecksum.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum))
+                if (activity.type == IXICore.Activity.ActivityType.TransactionSent
+                    || activity.type == IXICore.Activity.ActivityType.IxiName)
                 {
                     tx_type = SpixiLocalization._SL("global-sent");
                 }

@@ -21,6 +21,9 @@
 </head>
 <body onload="ixian:onload();">
 <div id="wrap" class="container-fluid noselect">
+    <!-- Debug Overlay -->
+    <div id="DebugOverlay" onclick="disableDevMode();">
+    </div>
 
     <!-- Toolbar Main-->
     <div class="spixi-toolbar shadow">
@@ -589,9 +592,11 @@
     if (isDevModeEnabled == "true") {
         document.getElementById("SendLogMenuItem").style.display = "";
         document.getElementById("DevMenuItem").style.display = "";
+        document.getElementById("DebugOverlay").style.display = "block";
     } else {
         document.getElementById("SendLogMenuItem").style.display = "none";
         document.getElementById("DevMenuItem").style.display = "none";
+        document.getElementById("DebugOverlay").style.display = "none";
     }
 
     function hideMiniAppsStartNote() {

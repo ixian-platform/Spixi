@@ -13,23 +13,21 @@ function onMainMenuClose() {
     leftSidebar.classList.remove('open');
 }
 
-function onMaskWalletAddressHandler(){
+function onMaskWalletAddressHandler() {
     selectTab("tab4");
     onMainMenuClose()
 }
 
-function onHomeMenuAction()
-{
+function onHomeMenuAction() {
     homeModal.style.display = "block";
 }
 
-function onHomeMenuClose()
-{
+function onHomeMenuClose() {
     homeModal.style.display = "none";
 }
 
 // Handle modals outside tap
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target == homeModal) {
         onHomeMenuClose();
     }
@@ -47,7 +45,7 @@ document.getElementById("activity_balance_toggle").onclick = function () {
 }
 
 // Toolbar
-document.getElementById("MainMenu").onclick = function() {
+document.getElementById("MainMenu").onclick = function () {
     leftSidebar.style.transition = '';
     leftSidebar.style.transform = '';
     leftSidebar.classList.add('open');
@@ -93,15 +91,13 @@ function setBalance(bal, fiatBal, theNick) {
     }
 }
 
-function toggleBalance()
-{
+function toggleBalance() {
     hideBalance = !hideBalance;
     displayBalance(hideBalance);
     location.href = `ixian:balance:${hideBalance ? 'hide' : 'show'}`;
 }
 
-function setHideBalance(hide)
-{
+function setHideBalance(hide) {
     hideBalance = hide === "True";
     displayBalance(hideBalance);
 }
@@ -123,9 +119,8 @@ function loadAvatar(avatar_path) {
 }
 
 // Filter in the CONTACTS tab
-function contactSearch()
-{
-    var a,b,i,row;
+function contactSearch() {
+    var a, b, i, row;
     var input = document.getElementById('contactInput');
     var filter = input.value.toUpperCase();
     var c_contactlist = document.getElementById("contactslist");
@@ -153,8 +148,7 @@ function contactSearch()
 }
 
 // Clears all contacts from contacts page
-function clearContacts()
-{
+function clearContacts() {
     if (searchingContacts == true) {
         return;
     }
@@ -166,8 +160,7 @@ function clearContacts()
 }
 
 // Adds a contact to the contacts page
-function addContact(wal, name, avatar, online, unread)
-{
+function addContact(wal, name, avatar, online, unread) {
     if (searchingContacts == true) {
         return;
     }
@@ -192,15 +185,13 @@ function addContact(wal, name, avatar, online, unread)
     contactsNode.appendChild(contactEntry);
 }
 
-function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
-{
+function setContactStatus(wal, online, unread, excerpt, msgTimestamp) {
     // Update for contacts
     var el = document.getElementById("c_" + wal);
-    if(el == null)
-    {
+    if (el == null) {
         return;
     }
-    
+
     var indicator = " offline";
     if (("" + online).toLowerCase() == "true") {
         online = "true";
@@ -212,11 +203,10 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
         unreadIndicator = " unread";
     }
     el.className = "spixi-list-item" + indicator + unreadIndicator;
-    
+
     // update for chats
     var chatEl = document.getElementById("ch_" + wal);
-    if(chatEl != null)
-    {
+    if (chatEl != null) {
         chatEl.className = "spixi-list-item" + indicator + unreadIndicator;
         if (selectedItemId == chatEl.id) {
             chatEl.className += " selected";
@@ -232,8 +222,7 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
 
 
 // Clears payment activity from wallet page
-function clearPaymentActivity(filter)
-{
+function clearPaymentActivity(filter) {
     var paymentsNode = document.getElementById("paymentlist");
     while (paymentsNode.firstChild) {
         paymentsNode.removeChild(paymentsNode.firstChild);
@@ -248,17 +237,15 @@ function clearPaymentActivity(filter)
     else if (filter == "sent")
         updateFilterButton("filter-sent", "active");
     else if (filter == "received")
-        updateFilterButton("filter-received", "active");       
+        updateFilterButton("filter-received", "active");
 }
 
-function updateFilterButton(btnid, filter)
-{
+function updateFilterButton(btnid, filter) {
     document.getElementById(btnid).className = "spixi-activity-filterbutton " + filter;
 }
 
 // Adds a payment
-function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, confirmed)
-{
+function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, confirmed) {
     document.getElementById("section_transactions").style = "display:block";
     document.getElementById("section_no_transactions").style = "display:none";
 
@@ -382,7 +369,7 @@ function selectTx(wallet) {
     items.forEach(function (item) {
         item.classList.remove('selected');
     });
-    
+
     const item = document.getElementById(selectedItemId);
     if (item) {
         item.classList.add('selected');
@@ -390,8 +377,7 @@ function selectTx(wallet) {
 }
 
 // Adds a chat
-function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unread, insertToTop)
-{
+function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unread, insertToTop) {
     var excerpt = excerpt_msg;
 
     let indicator = online === "true" ? " online" : " offline";
@@ -418,7 +404,7 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
         unreadIndicator = " unread";
         readIndicator = "";
     }
-    
+
     const excerpt_style = type === "typing" ? "typing" : "";
 
     let timeClass = "spixi-timestamp";
@@ -453,11 +439,9 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
         </a>`;
 
     const chatsNode = document.getElementById("chatlist");
-    if(insertToTop)
-    {
+    if (insertToTop) {
         chatsNode.insertBefore(readmsg, chatsNode.firstElementChild);
-    }else
-    {
+    } else {
         chatsNode.appendChild(readmsg);
     }
 
@@ -518,7 +502,7 @@ $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
 
 // Handle sidebar swiping
 addSwipe(document.querySelector("#leftSidebarHelper"), {
-threshold: 10,
+    threshold: 10,
     swipeStatus: (event, phase, direction) => {
         if (direction === "right") {
             leftSidebar.style.transition = "";
@@ -573,13 +557,24 @@ function selectTab(tab) {
 
 var logoClicked = 0;
 
-function countLogoClick()
-{
+function countLogoClick() {
     logoClicked++;
-    if(logoClicked > 10)
-    {
-        document.getElementById("SendLogMenuItem").style.display = "";
+    if (logoClicked > 10) {
+        document.getElementById("SendLogMenuItem").style.display = "block";
+        document.getElementById("DevMenuItem").style.display = "block";
+        document.getElementById("DebugOverlay").style.display = "block";
         alert(SL_DevMode);
         location.href = "ixian:enableDevMode";
     }
+}
+
+function disableDevMode() {
+    document.getElementById("SendLogMenuItem").style.display = "none";
+    document.getElementById("DevMenuItem").style.display = "none";
+    document.getElementById("DebugOverlay").style.display = "none";
+    location.href = "ixian:disableDevMode";
+}
+
+function updateDebugInfo(info) {
+    document.getElementById("DebugOverlay").innerHTML = unescapeParameter(info);
 }

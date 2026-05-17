@@ -200,9 +200,9 @@ namespace SPIXI
 
                     StreamProcessor.sendContactRequest(friend);
 
-                    UIHelpers.shouldRefreshContacts = true;
-
                     Node.addMessageWithType(null, FriendMessageType.requestAddSent, recipient_address, 0, "", true);
+
+                    UIHelpers.shouldRefreshContacts = true;
                 }
             }
             catch(Exception)

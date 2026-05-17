@@ -305,6 +305,29 @@ img.emoji {
     height: 64px;
 }
 
+/* Debug Overlay */
+#DebugOverlay {
+    font-size: 11px;
+    font-weight: bold;
+    position: fixed;
+    top: 0;
+    left: 50px;
+    width: calc(100vw - 50px);
+    height: 50px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none;
+}
+
+#DebugOverlay a {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+#DebugOverlay a span {
+}
+
 /* Toolbar */
 .spixi-toolbar {
     width: 100%;
@@ -561,12 +584,6 @@ img.emoji {
     vertical-align: middle;
     text-align: right;
 }
-
-.spixi-channel-selector .channel-name:before,
-.spixi-channel-bar .channel-name:before {
-    content: "#";
-}
-
 
 .spixi-channel-selector .channel-name,
 .spixi-channel-bar .channel-name {
@@ -1470,6 +1487,13 @@ img.emoji {
     padding-bottom: 24px;
 }
 
+.spixi-textfield-holder2 {
+    margin: auto;
+    width: calc(100% - 32px);
+    max-width: 640px;
+    padding-bottom: 8px;
+}
+
 .spixi-textfield-holder.multiline {
     margin: 16px auto;
     max-width: 640px;
@@ -1505,6 +1529,14 @@ img.emoji {
 
 .spixi-textsection-holder {
     margin: 16px auto;
+    width: calc(100% - 32px);
+    max-width: 640px;
+    font-size: 12pt;
+    color: var(--colors-text-01);
+}
+
+.spixi-textsection-holder2 {
+    margin: 8px auto;
     width: calc(100% - 32px);
     max-width: 640px;
     font-size: 12pt;
@@ -1606,6 +1638,16 @@ img.emoji {
     margin-right: auto;
 }
 
+input.spixi-switch {
+    background-image: url("../img/switch-off.png");
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+input.spixi-switch:checked {
+    background-image: url("../img/switch-on.png");
+}
+
 .spixi-switch:hover {
     cursor: pointer;
 }
@@ -1619,6 +1661,10 @@ img.emoji {
     margin-left: 20px;
     color: var(--colors-text-01);
     font-weight: 400;
+}
+
+.spixi-switch-label {
+    line-height: 50px;
 }
 
 
@@ -2251,8 +2297,7 @@ img.emoji {
     overflow-y: auto;
     height: calc(100vh - 120px);
     position: relative;
-    background-image: url('../img/pattern_dark.svg'),
-    linear-gradient(337deg, #0E051A 6.47%, #031017 61.69%, #05141F 90.25%);
+    background-image: url('../img/pattern_dark.svg'), linear-gradient(337deg, #0E051A 6.47%, #031017 61.69%, #05141F 90.25%);
     background-repeat: repeat, no-repeat;
     background-size: 280px 280px, cover;
     padding-top: 12px;
@@ -2516,7 +2561,7 @@ img.emoji {
 }
 
 .spixi-bubble.error-sending {
-    border: red;
+    border: 1px solid red;
 }
 
 .spixi-bubble .title {
@@ -2733,7 +2778,6 @@ img.emoji {
 
     width: 100%;
     bottom: 0;
-    height: 64px;
     background-color: var(--colors-surface-01);
 
 }
@@ -2750,9 +2794,9 @@ img.emoji {
     display: table-cell;
     z-index: 2;
     width: 56px;
-    vertical-align: middle;
+    vertical-align: bottom;
 
-    padding-right: 12px;
+    padding: 10px 12px 10px 0px;
 }
 
 .chatbar-sendbutton {
@@ -2794,7 +2838,7 @@ img.emoji {
 #chat_input {
     width: 100%;
     max-width: 100%;
-    max-height: 60px;
+    max-height: 33vh;
     margin-top: 0px;
     border: 0px;
     background-color: var(--colors-surface-01);
@@ -2806,11 +2850,14 @@ img.emoji {
     word-wrap: break-word;
     word-break: break-word;
     overflow: auto;
+    overflow-x: hidden;
     overflow-wrap: break-word;
     -webkit-user-select: text;
     user-select: text;
     color: var(--colors-text-01);
     cursor: auto;
+    transition: height 0.08s ease;
+    overscroll-behavior: contain;
 }
 
 #chat_input.placeholder::before {
@@ -2826,10 +2873,8 @@ img.emoji {
     font-size: 18pt;
     text-align: left;
     color: var(--colors-icon-action);
-    vertical-align: middle;
-    padding-top: 6px;
-    padding-left: 16px;
-    padding-right: 8px;
+    vertical-align: bottom;
+    padding: 11px 8px 11px 16px;
 }
 
 .chat_attach:hover {
@@ -2838,10 +2883,6 @@ img.emoji {
     font-size: 18pt;
     text-align: left;
     color: var(--colors-icon-action-hover);
-    vertical-align: middle;
-    padding-top: 6px;
-    padding-left: 16px;
-    padding-right: 8px;
     cursor: pointer;
 }
 
@@ -2875,6 +2916,11 @@ img.emoji {
     text-align: center;
     align-items: center;
     justify-content: center;
+}
+
+#contactslist {
+    height: calc(100vh - 260px);
+    overflow: auto;
 }
 
 #contactslist .spixi-chat-unread-indicator {
@@ -3337,7 +3383,8 @@ img.emoji {
     background: var(--colors-surface-01);
     margin: auto; /* 15% from the top and centered */
     border-radius: 16px;
-    width: 258px; /* Could be more or less, depending on screen size */
+    width: 80%;
+    max-width: 450px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
@@ -3349,6 +3396,7 @@ img.emoji {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     max-height: 80%;
+    overflow: hidden auto;
 }
 
 .modal-content.wide {
@@ -4370,7 +4418,7 @@ img.emoji {
     opacity: 0;
     transition: none;
     pointer-events: none;
-    z-index: 7;
+    z-index: 1001;
 }
 
 .new-attach-bar.show {
