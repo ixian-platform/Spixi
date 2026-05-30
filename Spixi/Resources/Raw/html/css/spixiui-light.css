@@ -2697,6 +2697,18 @@ input.spixi-switch:checked {
     color: var(--colors-icon-error);
 }
 
+.spixi-bubble .text,
+.spixi-bubble .time,
+.spixi-bubble .nick {
+    -webkit-touch-callout: initial; /* iOS Safari */
+    -webkit-user-select: auto; /* Safari */
+    -khtml-user-select: auto; /* Konqueror HTML */
+    -moz-user-select: all; /* Firefox */
+    -ms-user-select: text; /* Internet Explorer/Edge */
+    user-select: text; /* Non-prefixed version, currently
+                       supported by Chrome and Opera */
+}
+
 .spixi-callbubble {
     display: table;
     font-size: 10pt;
@@ -3591,8 +3603,7 @@ input.spixi-switch:checked {
     -khtml-user-select: auto; /* Konqueror HTML */
     -moz-user-select: all; /* Firefox */
     -ms-user-select: text; /* Internet Explorer/Edge */
-    user-select: text;
-    /* Non-prefixed version, currently
+    user-select: text; /* Non-prefixed version, currently
                        supported by Chrome and Opera */
 }
 

@@ -20,6 +20,9 @@ const messagesEl = document.getElementById("messages");
 const chatBarEl = document.getElementById("chatbar");
 const wrapEl = document.getElementById("wrap");
 
+// Mobile long press
+var longPressTimer = 0;
+
 function onChatScreenLoad() {
 
     if (SL_Platform == "Xamarin-WPF") {
@@ -41,6 +44,53 @@ function onChatScreenLoad() {
         };
     }
 
+    messagesEl.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
+
+    messagesEl.addEventListener("touchstart", function (e) {
+
+        var msgEl = null;
+        for (var tmpEl = e.target; tmpEl != null && tmpEl != messagesEl; tmpEl = tmpEl.parentNode) {
+            msgEl = tmpEl;
+        }
+
+        if (msgEl == null) {
+            return;
+        }
+
+        longPressTimer = setTimeout(function () {
+
+            hideContextMenus();
+
+            // Use first touch point for coordinates
+            const touch = e.touches[0];
+
+            // Create a fake mouse event-like object
+            const simulatedEvent = {
+                clientX: touch.clientX,
+                clientY: touch.clientY,
+                target: e.target,
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            };
+
+            displayContextMenu(simulatedEvent);
+
+        }, 500); // long press duration in ms
+
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+    });
+
+    messagesEl.addEventListener("touchend", function (e) {
+        clearTimeout(longPressTimer);
+    });
+
+    messagesEl.addEventListener("touchmove", function () {
+        clearTimeout(longPressTimer);
+    });
 
     messagesEl.addEventListener("click", function (e) {
         hideAttachBar();
@@ -117,7 +167,6 @@ function setChatMode(type, cost, costText, admin, botDescription, notificationsS
         // Disable action options
         document.getElementById("ca_send").style.display = "none";
         document.getElementById("ca_request").style.display = "none";
-        document.getElementById("ca_app").style.display = "none";
         if (isPaid) {
             topMessageOffset = "115px";
         } else {
@@ -134,7 +183,6 @@ function setChatMode(type, cost, costText, admin, botDescription, notificationsS
         document.getElementById("ca_sendfile").style.display = "none";
         document.getElementById("ca_send").style.display = "none";
         document.getElementById("ca_request").style.display = "none";
-        document.getElementById("ca_app").style.display = "none";
         if (isPaid) {
             topMessageOffset = "115px";
         } else {
@@ -150,7 +198,6 @@ function setChatMode(type, cost, costText, admin, botDescription, notificationsS
         document.getElementById("ca_sendfile").style.display = "none";
         document.getElementById("ca_send").style.display = "none";
         document.getElementById("ca_request").style.display = "none";
-        document.getElementById("ca_app").style.display = "none";
 
         setBotAddress(userAddress);
 
@@ -640,7 +687,7 @@ function addText(id, address, nick, avatar, text, time, className) {
     text = text.replace(/\n/g, "<br>");
 
     var textEl = document.createElement('div');
-    textEl.className = "text selectable";
+    textEl.className = "text";
 
     text = parseMessageText(text);
     textEl.innerHTML = text;
@@ -669,7 +716,7 @@ function addText(id, address, nick, avatar, text, time, className) {
 
     var timeEl = document.createElement('div');
     timeEl.setAttribute("data-timestamp", time);
-    timeEl.className = "time selectable " + timeClass;
+    timeEl.className = "time " + timeClass;
     timeEl.innerHTML = formattedTimestamp;
 
     var bubbleContentWrapEl = document.createElement('div');
@@ -681,7 +728,7 @@ function addText(id, address, nick, avatar, text, time, className) {
         }
         nickEl.setAttribute("nick", nick);
         nickEl.setAttribute("address", address);
-        nickEl.className = "nick selectable";
+        nickEl.className = "nick";
         nickEl.innerHTML = nick;
         bubbleContentWrapEl.appendChild(nickEl);
     }
@@ -844,7 +891,7 @@ function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, 
     }
 
     var textEl = document.createElement('div');
-    textEl.className = "text selectable";
+    textEl.className = "text";
     textEl.innerHTML = name;
 
     var icon = document.createElement('i');
@@ -883,7 +930,7 @@ function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, 
 
 function addCall(id, message, declined, time) {
     var textEl = document.createElement('div');
-    textEl.className = "text selectable";
+    textEl.className = "text";
     textEl.innerHTML = message;
 
     var timeClass = "spixi-timestamp";
@@ -894,7 +941,7 @@ function addCall(id, message, declined, time) {
 
     var timeEl = document.createElement('div');
     timeEl.setAttribute("data-timestamp", time);
-    timeEl.className = "time selectable " + timeClass;
+    timeEl.className = "time " + timeClass;
     timeEl.innerHTML = relativeTime;
 
     var icon = document.createElement('div');
@@ -1374,7 +1421,9 @@ function displayContextMenu(e) {
     var menuHtml = "";
     //menuHtml += "<div onclick=\"contextAction('pin', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-map-pin\"></i></span> " + SL_ContextMenu["pinMessage"] + "</div>";
     menuHtml += "<div onclick=\"contextAction('copy', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-quote-right\"></i></span> " + SL_ContextMenu["copyMessage"] + "</div>";
-    menuHtml += "<div onclick=\"contextAction('copySelected', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-copy\"></i></span> " + SL_ContextMenu["copySelected"] + "</div>";
+    if (SL_Platform == "Xamarin-WPF") {
+        menuHtml += "<div onclick=\"contextAction('copySelected', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-copy\"></i></span> " + SL_ContextMenu["copySelected"] + "</div>";
+    }
     if (!localMsg) {
         menuHtml += "<div onclick=\"contextAction('like', '" + msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-heart\"></i></span> " + SL_ContextMenu["likeMessage"] + "</div>";
         if (!isBlindGroup) {
@@ -1399,7 +1448,7 @@ function displayContextMenu(e) {
 
     contextMenuEl = document.createElement("div");
     contextMenuEl.id = "ContextMenu";
-    contextMenuEl.className = "chat-context-menu";
+    contextMenuEl.className = "chat-context-menu noselect";
     contextMenuEl.onclick = function (e) {
         e.stopPropagation();
         return false;
