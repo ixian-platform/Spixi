@@ -136,7 +136,7 @@ namespace SPIXI.MiniApps
             return null;
         }
 
-        public string installFromUrl(MiniApp fetchedAppInfo)
+        public string? installFromUrl(MiniApp fetchedAppInfo)
         {
             // Check for contentUrl first
             if (string.IsNullOrWhiteSpace(fetchedAppInfo.contentUrl) || !IxiUtils.IsValidUrl(fetchedAppInfo.contentUrl))
@@ -184,7 +184,7 @@ namespace SPIXI.MiniApps
             return app_name;
         }
 
-        public MiniApp extractAppInfo(string source_path, string? url = null)
+        public MiniApp? extractAppInfo(string source_path, string? url = null)
         {
             string app_name = "";
 
@@ -346,7 +346,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public MiniApp getApp(string app_id)
+        public MiniApp? getApp(string app_id)
         {
             lock(appList)
             {
@@ -358,7 +358,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public string getAppEntryPoint(string app_id)
+        public string? getAppEntryPoint(string app_id)
         {
             if(getApp(app_id) != null)
             {
@@ -367,7 +367,7 @@ namespace SPIXI.MiniApps
             return null;
         }
 
-        public string getAppIconPath(string app_id)
+        public string? getAppIconPath(string app_id)
         {
             if (getApp(app_id) != null)
             {
@@ -380,7 +380,7 @@ namespace SPIXI.MiniApps
             return null;
         }
 
-        public string getAppInstallURL(string app_id)
+        public string? getAppInstallURL(string app_id)
         {
             MiniApp mini_app = getApp(app_id);
             if (mini_app != null)
@@ -390,9 +390,9 @@ namespace SPIXI.MiniApps
             return null;
         }
 
-        public string getAppName(string app_id)
+        public string? getAppName(string app_id)
         {
-            MiniApp mini_app = getApp(app_id);
+            MiniApp? mini_app = getApp(app_id);
             if (mini_app != null)
             {
                 return mini_app.name;
@@ -415,7 +415,7 @@ namespace SPIXI.MiniApps
             return appList;
         }
 
-        public MiniAppPage getAppPage(Address sender_address, byte[] session_id)
+        public MiniAppPage? getAppPage(Address sender_address, byte[] session_id)
         {
             lock (appPages)
             {
@@ -430,8 +430,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-
-        public MiniAppPage getAppPageByProtocol(Address sender_address, byte[] protocol_id)
+        public MiniAppPage? getAppPageByProtocol(Address sender_address, byte[] protocol_id)
         {
             lock (appPages)
             {
@@ -448,7 +447,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public MiniAppPage getAppPage(Address sender_address, string app_id)
+        public MiniAppPage? getAppPage(Address sender_address, string app_id)
         {
             lock (appPages)
             {
@@ -461,7 +460,7 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public MiniAppPage getAppPage(Address sender_address)
+        public MiniAppPage? getAppPage(Address sender_address)
         {
             lock (appPages)
             {
@@ -495,9 +494,9 @@ namespace SPIXI.MiniApps
             }
         }
 
-        public MiniAppPage acceptAppRequest(Address sender_address, byte[] session_id)
+        public MiniAppPage? acceptAppRequest(Address sender_address, byte[] session_id)
         {
-            MiniAppPage app_page = getAppPage(sender_address, session_id);
+            MiniAppPage? app_page = getAppPage(sender_address, session_id);
             if (app_page != null)
             {
                 app_page.accepted = true;
@@ -508,7 +507,7 @@ namespace SPIXI.MiniApps
 
         public void rejectAppRequest(Address sender_address, byte[] session_id)
         {
-            MiniAppPage app_page = getAppPage(sender_address, session_id);
+            MiniAppPage? app_page = getAppPage(sender_address, session_id);
             if (app_page != null)
             {
                 if (removeAppPage(session_id))

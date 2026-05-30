@@ -40,6 +40,7 @@ namespace SPIXI
         private HomePage? homePage;
 
         private bool warningDisplayed = false;
+        private int connectivityWarningDelayCounter = 0;
         private bool unreadIndicatorDisplayed = false;
         private string setNickname = "";
         private bool setOnlineStatus = false;
@@ -638,7 +639,7 @@ namespace SPIXI
             CoreStreamProcessor.sendChatMessage(friend, friend_message, selectedChannel);
         }
 
-        public async Task onSendFile()
+        public async Task onSendFile(bool media = true)
         {
             if (friend.bot
                 || (friend.type == FriendType.Group && friend.metaData.botInfo.hideParticipantAddresses))
@@ -654,7 +655,8 @@ namespace SPIXI
                 string filePath = null;
 
                 SpixiImageData spixi_img_data;
-                if (Device.RuntimePlatform == Device.iOS)
+                if (Device.RuntimePlatform == Device.iOS
+                    && media)
                 {
                     spixi_img_data = await SFilePicker.PickImageAsync();
                 }
@@ -823,23 +825,20 @@ namespace SPIXI
 
         public void onApp(string app_id)
         {
-            if (friend.bot
-                || friend.type == FriendType.Group)
+            if (friend.bot)
             {
                 Logging.error("App Sending is not supported in this chat.");
                 return;
             }
 
-            Address[] user_addresses = new Address[] { friend.walletAddress };
-
             byte[]? session_id = null;
             if (homePage != null)
             {
-                session_id = homePage.onJoinApp(app_id, user_addresses);
+                session_id = homePage.onJoinApp(app_id, friend);
             }
             else
             {
-                MiniAppPage custom_app_page = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.MiniAppManager.getAppEntryPoint(app_id));
+                MiniAppPage custom_app_page = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), friend, Node.MiniAppManager.getAppEntryPoint(app_id));
                 custom_app_page.accepted = true;
                 Node.MiniAppManager.addAppPage(custom_app_page);
                 session_id = custom_app_page.sessionId;
@@ -856,21 +855,19 @@ namespace SPIXI
             }
 
             var app_info = Node.MiniAppManager.getAppInfo(app_id);
-            var msg = StreamProcessor.sendAppRequest(friend, app_id, session_id, null, app_info);
-            Node.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
+            var msg_id = StreamProcessor.sendAppRequest(friend, app_id, session_id, null, app_info);
+            Node.addMessageWithType(msg_id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
         }
 
         public void onJoinApp(string app_id)
         {
-            
-            Address[] user_addresses = new Address[] { friend.walletAddress };
             if (homePage != null)
             {
-                homePage.onJoinApp(app_id, user_addresses);
+                homePage.onJoinApp(app_id, friend);
                 return;
             }
 
-            MiniAppPage miniAppPage = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.MiniAppManager.getAppEntryPoint(app_id));
+            MiniAppPage miniAppPage = new MiniAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), friend, Node.MiniAppManager.getAppEntryPoint(app_id));
             miniAppPage.accepted = true;
             Node.MiniAppManager.addAppPage(miniAppPage);
 
@@ -885,7 +882,7 @@ namespace SPIXI
         {
             if (homePage != null)
             {
-                homePage.onInstallApp(app_url, [friend.walletAddress]);
+                homePage.onInstallApp(app_url, friend);
                 return;
             }
 
@@ -899,7 +896,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app, null, true, [friend.walletAddress]), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, null, true, friend), Config.defaultXamarinAnimations);
             });
         }
 
@@ -1731,16 +1728,32 @@ namespace SPIXI
                         warningDisplayed = true;
                     }
                 }
-                else if (warningDisplayed)
+                else
                 {
-                    Utils.sendUiCommand(this, "showWarning", "");
-                    warningDisplayed = false;
+                    if (warningDisplayed)
+                    {
+                        Utils.sendUiCommand(this, "showWarning", "");
+                        warningDisplayed = false;
+                    }
+                    connectivityWarningDelayCounter = 0;
                 }
             }
             else
             {
-                Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
-                warningDisplayed = true;
+                // delay warning for one refresh cycle
+                if (connectivityWarningDelayCounter > 0)
+                {
+                    if (!warningDisplayed)
+                    {
+                        Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                        warningDisplayed = true;
+                    }
+                    connectivityWarningDelayCounter = 0;
+                }
+                else
+                {
+                    connectivityWarningDelayCounter++;
+                }
             }
             
                 

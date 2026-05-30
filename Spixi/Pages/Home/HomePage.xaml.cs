@@ -11,7 +11,6 @@ using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Devices;
-using Microsoft.Maui.Dispatching;
 using Microsoft.Maui.Storage;
 using Spixi;
 using SPIXI.Lang;
@@ -65,6 +64,9 @@ namespace SPIXI
 
         public bool devMode = false;
 
+        private bool warningDisplayed = false;
+        private int connectivityWarningDelayCounter = 0;
+
         // Interal cache object to store contact status items
         private struct contactStatusCacheItem
         {
@@ -75,7 +77,6 @@ namespace SPIXI
             public long timestamp;
         }
         private static List<contactStatusCacheItem> contactStatusCache = new List<contactStatusCacheItem>();
-        private IDispatcherTimer? timer;
         private HomePage ()
         {
             Node.preStart();
@@ -126,22 +127,6 @@ namespace SPIXI
                         await displaySpixiAlert("Fatal Exception", "Fatal error has occurred. Please send the log files to the developers.\n\nError: " + e.Message, "OK");
                     }
                 });
-
-                // Setup a timer to handle UI updates
-                timer = Dispatcher.CreateTimer();
-                timer.Interval = TimeSpan.FromMilliseconds(2000);
-                timer.Tick += (s, e) =>
-                {
-                    if (running)
-                    {
-                        onUpdateUI();
-                    }
-                    else
-                    {
-                        timer.Stop();
-                    }
-                };
-                timer.Start();
             }
         }
 
@@ -170,8 +155,6 @@ namespace SPIXI
         {
             running = false;
             _singletonInstance = null;
-            timer?.Stop();
-            timer = null;
             removeDetailContent(false);
         }
 
@@ -1300,11 +1283,29 @@ namespace SPIXI
                         // Check the ixian dlt
                         if (NetworkClientManager.getConnectedClients(true).Count() > 0)
                         {
-                            Utils.sendUiCommand(this, "showWarning", "");
+                            if (warningDisplayed)
+                            {
+                                Utils.sendUiCommand(this, "showWarning", "");
+                                warningDisplayed = false;
+                            }
+                            connectivityWarningDelayCounter = 0;
                         }
                         else
                         {
-                            Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                            // delay warning for one refresh cycle
+                            if (connectivityWarningDelayCounter > 0)
+                            {
+                                if (!warningDisplayed)
+                                {
+                                    Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                                    warningDisplayed = true;
+                                }
+                                connectivityWarningDelayCounter = 0;
+                            }
+                            else
+                            {
+                                connectivityWarningDelayCounter++;
+                            }
                         }
 
                     }
@@ -1335,18 +1336,24 @@ namespace SPIXI
             }
         }
 
-        private void onUpdateUI(/*object source, ElapsedEventArgs e*/)
+        public void OnUpdateUI()
         {
             try
             {
-                if (!webView.IsEnabled || !App.isInForeground)
+                if (!App.isInForeground)
                 {
                     return;
                 }
                 Page page = Navigation.NavigationStack.Last();
                 if (page is not null and SpixiContentPage)
                 {
-                    ((SpixiContentPage)page).updateScreen();
+                    var scPage = (SpixiContentPage)page;
+                    if (scPage.pageLoaded
+                        && scPage.WebView != null
+                        && scPage.WebView.IsEnabled)
+                    {
+                        scPage.updateScreen();
+                    }
                 }
 
                 if (page == this
@@ -1566,11 +1573,11 @@ namespace SPIXI
             {
                 popPageAsync();
 
-                byte[] session_id = onJoinApp(appId, new Address[] { address });
+                byte[] session_id = onJoinApp(appId, friend);
 
                 var app_info = Node.MiniAppManager.getAppInfo(appId);
-                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null, app_info);
-                Node.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
+                var msg_id = StreamProcessor.sendAppRequest(friend, appId, session_id, null, app_info);
+                Node.addMessageWithType(msg_id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
             }
             catch (Exception ex)
             {
@@ -1578,9 +1585,9 @@ namespace SPIXI
             }
         }
 
-        public byte[] onJoinApp(string appId, Address[] userAddresses)
+        public byte[] onJoinApp(string appId, Friend friendOrGroup)
         {
-            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), userAddresses, Node.MiniAppManager.getAppEntryPoint(appId));
+            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), friendOrGroup, Node.MiniAppManager.getAppEntryPoint(appId));
             miniAppPage.accepted = true;
             Node.MiniAppManager.addAppPage(miniAppPage);
 
@@ -1593,7 +1600,7 @@ namespace SPIXI
             return miniAppPage.sessionId;
         }
 
-        public async void onInstallApp(string appUrl, Address[] remoteUserAddresses)
+        public async void onInstallApp(string appUrl, Friend? friendOrGroup)
         {
             MiniApp? app = await Node.MiniAppManager.fetch(appUrl);
             if (app == null)
@@ -1605,7 +1612,7 @@ namespace SPIXI
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PushAsync(new AppDetailsPage(app, null, true, remoteUserAddresses), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new AppDetailsPage(app, null, true, friendOrGroup), Config.defaultXamarinAnimations);
             });
         }
 

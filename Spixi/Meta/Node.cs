@@ -7,6 +7,7 @@ using IXICore.Network;
 using IXICore.RegNames;
 using IXICore.Storage;
 using IXICore.Streaming;
+using IXICore.Streaming.Models;
 using IXICore.Utils;
 using Microsoft.Maui.Storage;
 using Newtonsoft.Json;
@@ -53,6 +54,7 @@ namespace SPIXI.Meta
 
         private static CancellationTokenSource? ctsLoop;
         private static Task? mainLoopTask;
+        private static Task? updateUITask;
 
         public static Node Instance = null;
 
@@ -368,7 +370,7 @@ namespace SPIXI.Meta
                     }
                     catch (Exception e)
                     {
-                        Logging.error("Exception occured in mainLoop: " + e);
+                        Logging.error("Exception occurred in mainLoop: " + e);
                     }
                     await Task.Delay(2500, ct);
                 }
@@ -379,7 +381,34 @@ namespace SPIXI.Meta
             }
             catch (Exception e)
             {
-                Logging.error("Exception occured in mainLoop: " + e);
+                Logging.error("Exception occurred in mainLoop: " + e);
+            }
+        }
+
+        static public async void updateUILoop(CancellationToken ct)
+        {
+            try
+            {
+                while (!ct.IsCancellationRequested)
+                {
+                    try
+                    {
+                        HomePage.Instance()?.OnUpdateUI();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception occurred in updateUILoop: " + e);
+                    }
+                    await Task.Delay(2000, ct);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // normal shutdown
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occurred in updateUILoop: " + e);
             }
         }
 
@@ -497,7 +526,7 @@ namespace SPIXI.Meta
                 storage?.sleep();
                 activityStorage?.sleep();
 
-                ctsLoop!.Cancel();
+                ctsLoop?.Cancel();
                 try
                 {
                     mainLoopTask.GetAwaiter().GetResult();
@@ -509,9 +538,23 @@ namespace SPIXI.Meta
                 }
                 finally
                 {
-                    ctsLoop.Dispose();
+                    ctsLoop?.Dispose();
                     ctsLoop = null;
                     mainLoopTask = null;
+                }
+
+                try
+                {
+                    updateUITask?.GetAwaiter().GetResult();
+                }
+                catch (OperationCanceledException) { }
+                catch (Exception e)
+                {
+                    Logging.error("Error while pausing " + e);
+                }
+                finally
+                {
+                    updateUITask = null;
                 }
             }
         }
@@ -532,6 +575,8 @@ namespace SPIXI.Meta
 
                 ctsLoop = new CancellationTokenSource();
                 mainLoopTask = Task.Run(() => mainLoop(ctsLoop.Token));
+                updateUITask = Task.Run(() => updateUILoop(ctsLoop.Token));
+                updateUITask.ConfigureAwait(false);
             }
         }
 
@@ -701,7 +746,12 @@ namespace SPIXI.Meta
 
         public static FriendMessage? addMessageWithType(byte[]? id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address? sender_address = null, long timestamp = 0, bool fire_local_notification = true, bool alert = true, int payable_data_len = 0)
         {
-            FriendMessage? friend_message = FriendList.addMessageWithType(id, type, wallet_address, channel, message, local_sender, sender_address, timestamp, fire_local_notification, payable_data_len);
+            return addMessageWithType(type, wallet_address, channel, new ChatStreamMessage(id, message, 0, false), local_sender, sender_address, timestamp, fire_local_notification, alert, payable_data_len);
+        }
+
+        public static FriendMessage? addMessageWithType(FriendMessageType type, Address wallet_address, int channel, ChatStreamMessage chat_stream_message, bool local_sender = false, Address? sender_address = null, long timestamp = 0, bool fire_local_notification = true, bool alert = true, int payable_data_len = 0)
+        {
+            FriendMessage? friend_message = FriendList.addMessageWithType(type, wallet_address, channel, chat_stream_message, local_sender, sender_address, timestamp, fire_local_notification, payable_data_len);
             if (friend_message != null)
             {
                 bool oldMessage = false;
