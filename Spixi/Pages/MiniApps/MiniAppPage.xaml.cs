@@ -15,6 +15,7 @@ using System.Net.Http;
 using System.Linq;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
+using System.Collections.Generic;
 
 
 namespace SPIXI
@@ -28,8 +29,8 @@ namespace SPIXI
         //public Address myRequestAddress = null; // which address the app request was sent to
         //public Address requestedByAddress = null; // which address sent the app request to us
 
-        public Address hostUserAddress = null; // address of the user that initiated the app
-        private Address[] userAddresses = null; // addresses of all users connected to/using the app
+        public Address hostUserAddress; // address of the local user
+        public Friend? friendOrGroup = null; // if the app is a multi-user app, this will be the friend or group that the app session is associated with
 
         public bool accepted = false;
         public long requestReceivedTimestamp = 0;
@@ -38,7 +39,7 @@ namespace SPIXI
 
         private MiniAppActionHandler? miniAppActionHandler;
 
-        public MiniAppPage(string app_id, Address host_user_address, Address[] user_addresses, string app_entry_point)
+        public MiniAppPage(string app_id, Address host_user_address, Friend? friend_or_group, string app_entry_point)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
@@ -50,7 +51,7 @@ namespace SPIXI
             appId = app_id;
 
             hostUserAddress = host_user_address;
-            userAddresses = user_addresses;
+            friendOrGroup = friend_or_group;
 
             // Load the app entry point
             var source = new UrlWebViewSource();
@@ -62,15 +63,25 @@ namespace SPIXI
 
             requestReceivedTimestamp = Clock.getTimestamp();
 
-            if (user_addresses != null)
+            if (friend_or_group != null)
             {
-                foreach (Address address in user_addresses)
+                if (friend_or_group.type == FriendType.Group)
                 {
-                    Friend friend = FriendList.getFriend(address);
-                    if (friend != null)
+                    if (!friend_or_group.metaData.botInfo.hideParticipantAddresses)
                     {
-                        StreamProcessor.fetchFriendsPresence(friend, true);
+                        foreach (var contact in friend_or_group.users.contacts)
+                        {
+                            Friend? friend = FriendList.getFriend(contact.Key);
+                            if (friend != null)
+                            {
+                                StreamProcessor.fetchFriendsPresence(friend, true);
+                            }
+                        }
                     }
+                }
+                else
+                {
+                    StreamProcessor.fetchFriendsPresence(friend_or_group, true);
                 }
             }
         }
@@ -317,6 +328,33 @@ namespace SPIXI
             // Deprecated due to WPF, use onLoad
         }
 
+        private IEnumerable<string>? getMembers()
+        {
+            IEnumerable<string> contacts;
+
+            if (friendOrGroup == null)
+            {
+                return null;
+            }
+
+            if (friendOrGroup.type == FriendType.Group)
+            {
+                if (friendOrGroup.metaData.botInfo.hideParticipantAddresses)
+                {
+                    contacts = friendOrGroup.users.contacts.Select(x => maskSenderAddress(x.Key));
+                }
+                else
+                {
+                    contacts = friendOrGroup.users.contacts.Select(x => x.Key.ToString());
+                }
+            }
+            else
+            {
+                contacts = new[] { friendOrGroup.walletAddress.ToString() };
+            }
+            return contacts;
+        }
+
         private void onLoad(string sdkVersion)
         {
             if (sdkVersion != "")
@@ -324,15 +362,18 @@ namespace SPIXI
                 this.sdkVersion = (int)(float.Parse(sdkVersion) * 100);
             }
 
-            miniAppActionHandler = new MiniAppActionHandler(appId, sessionId, hostUserAddress, userAddresses, this.sdkVersion, Node.MiniAppStorage);
+            miniAppActionHandler = new MiniAppActionHandler(appId, sessionId, hostUserAddress, friendOrGroup, this.sdkVersion, Node.MiniAppStorage);
+
+            string hostUserAddressString = maskSenderAddress(hostUserAddress, true);
+            IEnumerable<string>? contacts = getMembers();
 
             if (this.sdkVersion >= 50)
             {
-                if (userAddresses != null)
+                if (contacts != null)
                 {
                     string[] args = (new[] { Crypto.hashToString(sessionId) })
-                        .Concat([hostUserAddress.ToString()])
-                        .Concat(userAddresses.Select(x => x.ToString()))
+                        .Concat([hostUserAddressString])
+                        .Concat(contacts)
                         .ToArray();
 
                     // Multi User App
@@ -341,15 +382,15 @@ namespace SPIXI
                 else
                 {
                     // Single User App
-                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), hostUserAddress.ToString());
+                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), hostUserAddressString);
                 }
             }
             else
             {
-                if (userAddresses != null)
+                if (contacts != null)
                 {
                     // Multi User App
-                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), string.Join(',', userAddresses.Select(x => x.ToString())));
+                    Utils.sendUiCommand(this, "SpixiAppSdk.onInit", Crypto.hashToString(sessionId), string.Join(',', contacts));
                 }
                 else
                 {
@@ -370,102 +411,132 @@ namespace SPIXI
 
         private void sendNetworkData(byte[] data)
         {
-            foreach (Address address in userAddresses)
+            Friend? f = friendOrGroup;
+            if (f != null)
             {
-                Friend? f = FriendList.getFriend(address);
-                if (f != null)
-                {
-                    StreamProcessor.sendAppData(f, sessionId, data);
-                }
-                else
-                {
-                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
-                }
+                StreamProcessor.sendAppData(f, sessionId, data);
+            }
+            else
+            {
+                Logging.error("Cannot send network data: App is probably in single mode.");
             }
         }
 
 
         private void sendNetworkProtocolData(byte[] protocolId, byte[] data)
         {
-            foreach (Address address in userAddresses)
+            Friend? f = friendOrGroup;
+            if (f != null)
             {
-                Friend? f = FriendList.getFriend(address);
-                if (f != null)
-                {
-                    StreamProcessor.sendAppProtocolData(f, protocolId, data);
-                }
-                else
-                {
-                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
-                }
+                StreamProcessor.sendAppProtocolData(f, protocolId, data);
+            }
+            else
+            {
+                Logging.error("Cannot send network protocol data: App is probably in single mode.");
             }
         }
 
         private void onBack()
         {
-            if (userAddresses != null)
+            Friend? f = friendOrGroup;
+            if (f != null)
             {
-                foreach (Address address in userAddresses)
-                {
-                    Friend f = FriendList.getFriend(address);
-                    if (f != null)
-                    {
-                        // TODO TODO TODO probably a different encoding should be used for data
-                        StreamProcessor.sendAppEndSession(f, sessionId, UTF8Encoding.UTF8.GetBytes(IxianHandler.primaryWalletAddress.ToString()));
-                    }
-                    else
-                    {
-                        Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
-                    }
-                }
+                StreamProcessor.sendAppEndSession(f, sessionId, null);
             }
 
             Node.MiniAppManager.removeAppPage(sessionId);
             popPageAsync();
         }
 
+        public string maskSenderAddress(Address senderAddress, bool forceDeriveIfBlind = false)
+        {
+            if (friendOrGroup != null
+                && friendOrGroup.type == FriendType.Group
+                && friendOrGroup.metaData.botInfo.hideParticipantAddresses)
+            {
+                if (friendOrGroup.users.getOwner().SequenceEqual(hostUserAddress))
+                {
+                    // We're the owner, derive all addresses
+                    senderAddress = GroupChat.DeriveGroupAddress(senderAddress, friendOrGroup.metaData.botInfo.randomId);
+                }
+                else
+                {
+                    // Derive only owner's address or if forced, as others are already derived
+                    if (forceDeriveIfBlind
+                        || friendOrGroup.users.getOwner().SequenceEqual(senderAddress))
+                    {
+                        senderAddress = GroupChat.DeriveGroupAddress(senderAddress, friendOrGroup.metaData.botInfo.randomId);
+                    }
+                }
+                // Truncate addresses to 32 characters to prevent apps from accidentally sending IXI to virtual/hidden addresses.
+                return senderAddress.ToString().Substring(0, 32);
+            }
+
+            return senderAddress.ToString();
+        }
+
         public void networkDataReceived(Address sender_address, byte[] data)
         {
+            string sender_address_str = maskSenderAddress(sender_address);
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 // TODO TODO TODO probably a different encoding should be used for data
-                Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkData", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+                Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkData", sender_address_str, UTF8Encoding.UTF8.GetString(data));
             });
         }
 
         public void networkProtocolDataReceived(Address sender_address, string protocol_name, byte[] data)
         {
+            string sender_address_str = maskSenderAddress(sender_address);
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 // TODO TODO TODO probably a different encoding should be used for data
-                Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkProtocolData", sender_address.ToString(), protocol_name, UTF8Encoding.UTF8.GetString(data));
+                Utils.sendUiCommand(this, "SpixiAppSdk.onNetworkProtocolData", sender_address_str, protocol_name, UTF8Encoding.UTF8.GetString(data));
             });
         }
 
         public void appRequestAcceptReceived(Address sender_address, byte[] data)
         {
+            string sender_address_str = maskSenderAddress(sender_address);
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 // TODO TODO TODO probably a different encoding should be used for data
-                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+                string dataStr = "";
+                if (data != null)
+                {
+                    dataStr = UTF8Encoding.UTF8.GetString(data);
+                }
+                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestAccept", sender_address_str, dataStr);
             });
         }
 
         public void appRequestRejectReceived(Address sender_address, byte[] data)
         {
+            string sender_address_str = maskSenderAddress(sender_address);
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 // TODO TODO TODO probably a different encoding should be used for data
-                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+                string dataStr = "";
+                if (data != null)
+                {
+                    dataStr = UTF8Encoding.UTF8.GetString(data);
+                }
+                Utils.sendUiCommand(this, "SpixiAppSdk.onRequestReject", sender_address_str, dataStr);
             });
         }
 
         public void appEndSessionReceived(Address sender_address, byte[] data)
         {
+            string sender_address_str = maskSenderAddress(sender_address);
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 // TODO TODO TODO probably a different encoding should be used for data
-                Utils.sendUiCommand(this, "SpixiAppSdk.onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+                string dataStr = "";
+                if (data != null)
+                {
+                    dataStr = UTF8Encoding.UTF8.GetString(data);
+                }
+                Utils.sendUiCommand(this, "SpixiAppSdk.onAppEndSession", sender_address_str, dataStr);
             });
         }
 
@@ -493,7 +564,22 @@ namespace SPIXI
 
         public bool hasUser(Address user)
         {
-            return userAddresses.Any(x => x.addressNoChecksum.SequenceEqual(user.addressNoChecksum));
+            if (friendOrGroup == null)
+            {
+                return false;
+            }
+
+            if (friendOrGroup.walletAddress.SequenceEqual(user))
+            {
+                return true;
+            }
+
+            if (friendOrGroup.users == null)
+            {
+                return false;
+            }
+
+            return friendOrGroup.users.hasUser(user);
         }
 
         protected override bool OnBackButtonPressed()

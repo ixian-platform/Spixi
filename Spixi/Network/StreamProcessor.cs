@@ -221,8 +221,8 @@ namespace SPIXI
                             {
                                 string msg_id_tx_id = Encoding.UTF8.GetString(spixi_message.data);
                                 string[] msg_id_tx_id_split = msg_id_tx_id.Split(':');
-                                byte[] msg_id = null;
-                                string tx_id = null;
+                                byte[] msg_id;
+                                string? tx_id = null;
                                 if (msg_id_tx_id_split.Length == 2)
                                 {
                                     msg_id = Crypto.stringToHash(msg_id_tx_id_split[0]);
@@ -233,7 +233,7 @@ namespace SPIXI
                                     msg_id = Crypto.stringToHash(msg_id_tx_id);
                                 }
 
-                                FriendMessage msg = friend.getMessages(0).Find(x => x.id != null && x.id.SequenceEqual(msg_id));
+                                FriendMessage? msg = friend.getMessages(0).Find(x => x.id != null && x.id.SequenceEqual(msg_id));
 
                                 string status = SpixiLocalization._SL("chat-payment-status-pending");
                                 if (tx_id != null)
@@ -262,59 +262,58 @@ namespace SPIXI
                     case SpixiMessageCode.acceptFile:
                         {
                             handleAcceptFile(sender_address, spixi_message);
-                            break;
                         }
+                        break;
 
                     case SpixiMessageCode.requestFileData:
                         {
                             handleRequestFileData(sender_address, spixi_message);
-                            // don't send confirmation back, so just return
-                            return rdr;
                         }
+                        break;
 
                     case SpixiMessageCode.fileData:
                         {
                             handleFileData(sender_address, spixi_message);
-                            // don't send confirmation back, so just return
-                            return rdr;
                         }
+                        break;
 
                     case SpixiMessageCode.fileFullyReceived:
                         {
                             handleFileFullyReceived(sender_address, spixi_message);
-                            return rdr;
                         }
+                        break;
 
                     case SpixiMessageCode.appData:
                         {
                             // app data received, find the session id of the app and forward the data to it
-                            handleAppData(sender_address, spixi_message.data);
-                            return rdr;
+                            handleAppData(sender_address, spixi_message.data, group_sender_address);
                         }
+                        break;
 
                     case SpixiMessageCode.appRequest:
                         {
                             // app request received
                             handleAppRequest(message.id, sender_address, message.recipient, spixi_message.data);
-                            break;
                         }
+                        break;
 
                     case SpixiMessageCode.appRequestAccept:
                         {
-                            handleAppRequestAccept(sender_address, spixi_message.data);
-                            break;
+                            handleAppRequestAccept(sender_address, spixi_message.data, group_sender_address);
                         }
+                        break;
 
                     case SpixiMessageCode.appRequestReject:
                         {
-                            handleAppRequestReject(sender_address, spixi_message.data);
-                            break;
+                            handleAppRequestReject(sender_address, spixi_message.data, group_sender_address);
                         }
+                        break;
+
                     case SpixiMessageCode.appEndSession:
                         {
-                            handleAppEndSession(sender_address, spixi_message.data);
-                            break;
+                            handleAppEndSession(sender_address, spixi_message.data, group_sender_address);
                         }
+                        break;
 
                     case SpixiMessageCode.requestAdd:
                     case SpixiMessageCode.requestAdd2:
@@ -370,7 +369,7 @@ namespace SPIXI
 
                     case SpixiMessageCode.msgTyping:
                         handleFriendIsTyping(friend);
-                        return rdr;
+                        break;
 
                     case SpixiMessageCode.avatar:
                         if (spixi_message.data != null && spixi_message.data.Length < 500000)
@@ -399,6 +398,28 @@ namespace SPIXI
                         if (friend != null && !friend.bot)
                         {
                             sendReceivedConfirmation(friend, sender_address, message.id, channel);
+                        }
+                        break;
+
+                    case SpixiMessageCode.chatStream:
+                        {
+                            var csm = new ChatStreamMessage(spixi_message.data);
+                            var fm = Node.addMessageWithType(FriendMessageType.standard, sender_address, spixi_message.channel, csm, false, group_sender_address, message.timestamp, fireLocalNotification, alert, 0);
+                            if (fm == null)
+                            {
+                                fm = friend.getMessage(spixi_message.channel, csm.MessageId);
+                                if (fm == null
+                                    || fm.sequence >= csm.Sequence)
+                                {
+                                    // already have this message or a newer one, ignore
+                                    sendReceivedConfirmation(friend, sender_address, message.id, channel);
+                                    return null;
+                                }
+                            }
+                            if (friend != null && !friend.bot)
+                            {
+                                sendReceivedConfirmation(friend, sender_address, message.id, channel);
+                            }
                         }
                         break;
 
@@ -454,8 +475,7 @@ namespace SPIXI
 
                     case SpixiMessageCode.appProtocolData:
                         // app data received, find the protocol id of the app and forward the data to it
-                        handleAppProtocolData(sender_address, spixi_message.data);
-                        return rdr;
+                        handleAppProtocolData(sender_address, spixi_message.data, group_sender_address);
                         break;
 
                     case SpixiMessageCode.transactionRequest:
@@ -519,7 +539,7 @@ namespace SPIXI
 
         private static void handleAppProtocols(Address sender_address, AppProtocolsMessage data)
         {
-            Friend friend = FriendList.getFriend(sender_address);
+            Friend? friend = FriendList.getFriend(sender_address);
             if (friend == null)
             {
                 Logging.error("Received app protocols from an unknown contact.");
@@ -530,8 +550,12 @@ namespace SPIXI
             friend.save();
         }
 
-        private static void handleAppData(Address sender_address, byte[] app_data_raw)
+        private static void handleAppData(Address sender_address, byte[] app_data_raw, Address? group_sender_address)
         {
+            if (group_sender_address == null)
+            {
+                group_sender_address = sender_address;
+            }
             // TODO use channels and drop AppDataMessage
             AppDataMessage app_data = new AppDataMessage(app_data_raw);
             if (VoIPManager.hasSession(app_data.sessionId))
@@ -539,31 +563,35 @@ namespace SPIXI
                 VoIPManager.onData(app_data.sessionId, app_data.data);
                 return;
             }
-            MiniAppPage app_page = Node.MiniAppManager.getAppPage(sender_address, app_data.sessionId);
+            MiniAppPage? app_page = Node.MiniAppManager.getAppPage(group_sender_address, app_data.sessionId);
             if(app_page == null)
             {
                 Logging.error("App with session id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
                 return;
             }
-            app_page.networkDataReceived(sender_address, app_data.data);
+            app_page.networkDataReceived(group_sender_address, app_data.data);
         }
 
 
-        private static void handleAppProtocolData(Address sender_address, byte[] app_data_raw)
+        private static void handleAppProtocolData(Address sender_address, byte[] app_data_raw, Address? group_sender_address)
         {
+            if (group_sender_address == null)
+            {
+                group_sender_address = sender_address;
+            }
             // TODO use channels and drop AppDataMessage
             AppDataMessage app_data = new AppDataMessage(app_data_raw);
-            MiniAppPage app_page = Node.MiniAppManager.getAppPageByProtocol(sender_address, app_data.sessionId);
+            MiniAppPage? app_page = Node.MiniAppManager.getAppPageByProtocol(group_sender_address, app_data.sessionId);
             if (app_page == null)
             {
                 Logging.error("App with protocol id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
                 return;
             }
             string protocol_name = Node.MiniAppManager.getApp(app_page.appId).getProtocolName(app_data.sessionId);
-            app_page.networkProtocolDataReceived(sender_address, protocol_name, app_data.data);
+            app_page.networkProtocolDataReceived(group_sender_address, protocol_name, app_data.data);
         }
 
-        private static StreamMessage sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
+        private static byte[] sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
         {
             string app_install_url = Node.MiniAppManager.getAppInstallURL(app_id);
             string app_name = Node.MiniAppManager.getAppName(app_id);
@@ -575,7 +603,7 @@ namespace SPIXI
         {
             MiniAppManager am = Node.MiniAppManager;
 
-            Friend friend = FriendList.getFriend(sender_address);
+            Friend? friend = FriendList.getFriend(sender_address);
             if (friend == null)
             {
                 Logging.error("Received app request from an unknown contact.");
@@ -651,8 +679,12 @@ namespace SPIXI
             });
         }
 
-        private static void handleAppRequestAccept(Address sender_address, byte[] app_data_raw)
+        private static void handleAppRequestAccept(Address sender_address, byte[] app_data_raw, Address? group_sender_address)
         {
+            if (group_sender_address == null)
+            {
+                group_sender_address = sender_address;
+            }
             // TODO use channels and drop AppDataMessage
             AppDataMessage app_data = new AppDataMessage(app_data_raw);
 
@@ -663,7 +695,7 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, app_data.sessionId);
+            MiniAppPage? page = Node.MiniAppManager.getAppPage(group_sender_address, app_data.sessionId);
             if(page == null)
             {
                 Logging.info("App session does not exist.");
@@ -672,13 +704,17 @@ namespace SPIXI
 
             page.accepted = true;
 
-            page.appRequestAcceptReceived(sender_address, app_data.data);
+            page.appRequestAcceptReceived(group_sender_address, app_data.data);
 
             UIHelpers.refreshAppRequests = true;
         }
 
-        public static void handleAppRequestReject(Address sender_address, byte[] app_data_raw)
+        public static void handleAppRequestReject(Address sender_address, byte[] app_data_raw, Address? group_sender_address)
         {
+            if (group_sender_address == null)
+            {
+                group_sender_address = sender_address;
+            }
             // TODO use channels and drop AppDataMessage
             AppDataMessage app_data = new AppDataMessage(app_data_raw);
             byte[] session_id = app_data.sessionId;
@@ -690,20 +726,24 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, session_id);
+            MiniAppPage page = Node.MiniAppManager.getAppPage(group_sender_address, session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");
                 return;
             }
 
-            page.appRequestRejectReceived(sender_address, app_data.data);
+            page.appRequestRejectReceived(group_sender_address, app_data.data);
 
             UIHelpers.refreshAppRequests = true;
         }
 
-        public static void handleAppEndSession(Address sender_address, byte[] app_data_raw)
+        public static void handleAppEndSession(Address sender_address, byte[] app_data_raw, Address? group_sender_address)
         {
+            if (group_sender_address == null)
+            {
+                group_sender_address = sender_address;
+            }
             // TODO use channels and drop SpixiAppData
             AppDataMessage app_data = new AppDataMessage(app_data_raw);
             byte[] session_id = app_data.sessionId;
@@ -715,14 +755,14 @@ namespace SPIXI
                 return;
             }
 
-            MiniAppPage page = Node.MiniAppManager.getAppPage(sender_address, session_id);
+            MiniAppPage? page = Node.MiniAppManager.getAppPage(group_sender_address, session_id);
             if (page == null)
             {
                 Logging.info("App session does not exist.");
                 return;
             }
 
-            page.appEndSessionReceived(sender_address, app_data.data);
+            page.appEndSessionReceived(group_sender_address, app_data.data);
             UIHelpers.refreshAppRequests = true;
         }
 

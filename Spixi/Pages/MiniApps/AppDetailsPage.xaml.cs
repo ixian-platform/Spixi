@@ -23,7 +23,7 @@ namespace SPIXI
 
         MiniApp fetchedApp = null;
 
-        Address[] remoteContactAddresses = null;
+        Friend? friendOrGroup = null;
 
         private bool shouldReloadDetailView = false;
 
@@ -44,11 +44,11 @@ namespace SPIXI
             loadPage(webView, "app_details.html");
         }
 
-        public AppDetailsPage(MiniApp app, string? path = null, bool installing = false, Address[] remoteContactAddresses = null, bool shouldReloadDetailView = false)
+        public AppDetailsPage(MiniApp app, string? path = null, bool installing = false, Friend? friendOrGroup = null, bool shouldReloadDetailView = false)
         {
             InitializeComponent();
 
-            this.remoteContactAddresses = remoteContactAddresses;
+            this.friendOrGroup = friendOrGroup;
             this.shouldReloadDetailView = shouldReloadDetailView;
             fetchedApp = app;
             this.path = path;
@@ -243,7 +243,7 @@ namespace SPIXI
 
             app.image = Node.MiniAppManager.getAppIconPath(appId);
 
-            Navigation.PushAsync(new AppDetailsPage(app, null, false, remoteContactAddresses, true), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new AppDetailsPage(app, null, false, friendOrGroup, true), Config.defaultXamarinAnimations);
             removePage(this);          
         }
 
@@ -283,9 +283,9 @@ namespace SPIXI
 
         private void onStartAppMulti(string appId)
         {
-            if (remoteContactAddresses != null)
+            if (friendOrGroup != null)
             {
-                onJoinApp(appId, remoteContactAddresses);
+                onJoinApp(appId, friendOrGroup);
                 return;
             }
 
@@ -315,11 +315,11 @@ namespace SPIXI
             {
                 popPageAsync();
 
-                byte[] session_id = onJoinApp(appId, new Address[] { address });
+                byte[] session_id = onJoinApp(appId, friend);
 
                 var app_info = Node.MiniAppManager.getAppInfo(appId);
-                var msg = StreamProcessor.sendAppRequest(friend, appId, session_id, null, app_info);
-                FriendList.addMessageWithType(msg.id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
+                var msg_id = StreamProcessor.sendAppRequest(friend, appId, session_id, null, app_info);
+                FriendList.addMessageWithType(msg_id, FriendMessageType.appSession, friend.walletAddress, 0, app_info, true, null, 0, false);
             }
             catch (Exception ex)
             {
@@ -327,9 +327,9 @@ namespace SPIXI
             }
         }
 
-        public byte[] onJoinApp(string appId, Address[] userAddresses)
+        public byte[] onJoinApp(string appId, Friend friendOrGroup)
         {
-            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), userAddresses, Node.MiniAppManager.getAppEntryPoint(appId));
+            MiniAppPage miniAppPage = new MiniAppPage(appId, IxianHandler.getWalletStorage().getPrimaryAddress(), friendOrGroup, Node.MiniAppManager.getAppEntryPoint(appId));
             miniAppPage.accepted = true;
             Node.MiniAppManager.addAppPage(miniAppPage);
 

@@ -294,7 +294,7 @@ namespace SPIXI
                     {
                         continue;
                     }
-                    Friend f = FriendList.getFriend(page.hostUserAddress);
+                    Friend f = page.friendOrGroup;
                     MiniApp app = Node.MiniAppManager.getApp(page.appId);
                     string text = string.Format(SpixiLocalization._SL("global-app-wants-to-use"), f.nickname, app.name);
                     Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(page.sessionId), text, SpixiLocalization._SL("global-app-accept"), SpixiLocalization._SL("global-app-reject"));

@@ -36,7 +36,7 @@ namespace SPIXI.MiniApps
         private byte[] sessionId;
 
         private Address localUserAddress;
-        private Address[] remoteUserAddresses;
+        private Friend? friendOrGroup;
 
         private int sdkVersion = 40;
 
@@ -46,14 +46,14 @@ namespace SPIXI.MiniApps
             string appId,
             byte[] sessionId,
             Address localUserAddress,
-            Address[] remoteUserAddresses,
+            Friend? friendOrGroup,
             int sdkVersion,
             MiniAppStorage miniAppStorage)
         {
             this.appId = appId;
             this.sessionId = sessionId;
             this.localUserAddress = localUserAddress;
-            this.remoteUserAddresses = remoteUserAddresses;
+            this.friendOrGroup = friendOrGroup;
             this.sdkVersion = sdkVersion;
             this.miniAppStorage = miniAppStorage;
         }
@@ -116,7 +116,6 @@ namespace SPIXI.MiniApps
             byte[] d = UTF8Encoding.UTF8.GetBytes(ndsAction.d);
             string? pid = ndsAction.pid;
             Address? recipient = ndsAction.r;
-            Address[] sendTo = remoteUserAddresses;
 
             byte[]? protocolIdBytes = null;
             if (!string.IsNullOrEmpty(pid))
@@ -124,26 +123,32 @@ namespace SPIXI.MiniApps
                 protocolIdBytes = CryptoManager.lib.sha3_512Trunc(UTF8Encoding.UTF8.GetBytes(pid));
             }
 
+            Friend? sendTo = friendOrGroup;
             if (recipient != null)
             {
-                sendTo = [recipient];
-            }
-
-            foreach (Address address in sendTo)
-            {
-                Friend f = FriendList.getFriend(address);
-                if (f != null)
+                if (friendOrGroup.users.hasUser(recipient))
                 {
-                    // Send as normal app data to SessionID or as protocol data if ProtocolID is specified.
-                    if (protocolIdBytes != null)
-                        StreamProcessor.sendAppProtocolData(f, protocolIdBytes, d);
-                    else
-                        StreamProcessor.sendAppData(f, sessionId, d);
+                    sendTo = FriendList.getFriend(recipient);
                 }
                 else
                 {
-                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
+                    return "Recipient not found in the current group";
                 }
+            }
+
+            if (sendTo == null)
+            {
+                return "No recipient specified and current context is not a group";
+            }
+
+            // Send as normal app data to SessionID or as protocol data if ProtocolID is specified.
+            if (protocolIdBytes != null)
+            {
+                StreamProcessor.sendAppProtocolData(sendTo, protocolIdBytes, d);
+            }
+            else
+            {
+                StreamProcessor.sendAppData(sendTo, sessionId, d);
             }
 
             return "";
